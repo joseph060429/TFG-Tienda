@@ -33,8 +33,6 @@ public class SecurityConfig {
     @Autowired
     JwtAuthorizationFilter jwtAuthorizationFilter;
 
-
-    // Esto es una autenticacion basica para un usuario en memoria
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpsSecurity, AuthenticationManager authenticationManager) throws Exception {
 

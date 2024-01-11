@@ -1,17 +1,20 @@
 package com.proyecto.tienda.backend.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.proyecto.tienda.backend.controllers.request.UsuarioActualizacionDTO;
 import com.proyecto.tienda.backend.models.ERol;
 import com.proyecto.tienda.backend.models.Roles;
 import com.proyecto.tienda.backend.models.Usuarios;
 import com.proyecto.tienda.backend.repositorios.RolesRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
+import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
 @Service
 public class AdminServicio {
@@ -21,6 +24,10 @@ public class AdminServicio {
 
     @Autowired
     private RolesRepositorio rolesRepositorio;
+
+
+     @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Metodo para listar todos los usuarios
     public List<Usuarios> listarUsuarios() {
@@ -40,60 +47,106 @@ public class AdminServicio {
         }
     }
 
-    // REVISAR EL METODO ACTUALIZAR Y EL SERVICIO ACTUALIZAR 
+    // Metodo para actualizar el rol del usuario siendo ADMIN
+    public ResponseEntity<?> actualizarRolUsuario(String usuarioId, Set<String> nuevosRoles) {
 
-    // Metodo para cambiarle el rol a un usuario //El Optional lo pongo porque puede
-    // o no estar un Usuario
-//     public String editarRolUsuario(String _id, List<ERol> nuevosRoles) {
-        
-//         Usuarios usuario = usuarioRepositorio.findBy_id(_id);
-//         System.out.println("Usuario: " + usuario);
-//         System.out.println("------------------------------------------");
-//         if (usuario == null) {
-//             return "No existe el usuario en la base de datos";
-//         }
+        if (nuevosRoles.isEmpty()) {
+            return ResponseEntity.badRequest().body("Debes proporcionar al menos un rol");
+        }
 
-//         Set<Roles> roles = nuevosRoles.stream()
-//                 .map(this::buscarRolPorNombre)
-//                 .collect(Collectors.toSet());
+        Set<Roles> roles = obtenerRolesPorNombresExistentes(nuevosRoles);
 
-//         usuario.setRoles(roles);
-//         System.out.println("Roles: " + roles);
-//         System.out.println("------------------------------------------");
+        if (roles.isEmpty()) {
+            return ResponseEntity.badRequest().body("Los roles proporcionados no son válidos");
+        }
 
-//         usuarioRepositorio.save(usuario);
-//         System.out.println("Usuario actualizado: " + usuario);
+        Optional<Usuarios> optionalUsuario = usuarioRepositorio.findById(usuarioId);
 
-//         return "Rol del usuario actualizado";
-// }
+        if (optionalUsuario.isPresent()) {
+            Usuarios usuario = optionalUsuario.get();
 
-// public String editarRolUsuario(String _id, List<ERol> nuevosRoles) {
-//     Usuarios usuario = usuarioRepositorio.findBy_id(_id);
-//     if (usuario == null) {
-//         return "No existe el usuario en la base de datos";
-//     }
+            usuario.setRoles(roles);
+            usuarioRepositorio.save(usuario);
 
-//     Set<Roles> rolesActualizados = nuevosRoles.stream()
-//             .map(this::buscarRolPorNombre)
-//             .collect(Collectors.toSet());
+            return ResponseEntity.ok("Rol actualizado correctamente");
+        } else {
+            return ResponseEntity.badRequest().body("Usuario no encontrado");
+        }
+    }
 
-//     usuario.setRoles(rolesActualizados);
-
-//     usuarioRepositorio.save(usuario);
-
-//     return "Rol del usuario actualizado";
-// }
-
-// private Roles buscarRolPorNombre(ERol nombreRol) {
-//     String nombreRolString = nombreRol.toString(); // Convertir el enum a String
+    //Metodo para actualizar el PERFIL de un usuario siendo ADMIN
+    public String actualizarUsuarioSiendoAdmin(String userId, UsuarioActualizacionDTO actualizarUsuarioDTO, String token, JwtUtils jwtUtils) {
+        String jwtToken = token.replace("Bearer ", "");
+        String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
     
-//     Roles rol = rolesRepositorio.findByName(nombreRol)
-//             .orElseThrow(() -> new RuntimeException("Rol no encontrado: " + nombreRol));
-
-//     rol.setName(nombreRolString); // Asignar el nombre del rol en la entidad Roles como String
+        Optional<Usuarios> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
     
-//     return rolesRepositorio.save(rol); // Guardar los cambios
-// }
+        if (usuarioOptional.isPresent() && usuarioOptional.get().getRoles().stream().anyMatch(role -> ERol.ADMIN.equals(role.getName()))) {
+            Optional<Usuarios> usuarioAActualizarOptional = usuarioRepositorio.findById(userId);
+    
+            if (usuarioAActualizarOptional.isPresent()) {
+                Usuarios usuario = usuarioAActualizarOptional.get();
+    
+                // Validar y actualizar los campos que sean diferentes de null
+                if (actualizarUsuarioDTO.getNombre() != null && !actualizarUsuarioDTO.getNombre().isEmpty()) {
+                    usuario.setNombre(actualizarUsuarioDTO.getNombre());
+                }
+    
+                if (actualizarUsuarioDTO.getApellido() != null && !actualizarUsuarioDTO.getApellido().isEmpty()) {
+                    usuario.setApellido(actualizarUsuarioDTO.getApellido());
+                }
+    
+                if (actualizarUsuarioDTO.getEmail() != null && !actualizarUsuarioDTO.getEmail().isEmpty()) {
+                    // Validar que el nuevo email no exista
+                    Optional<Usuarios> existeEmail = usuarioRepositorio.findByEmail(actualizarUsuarioDTO.getEmail());
+                    if (existeEmail.isPresent()) {
+                        return "El email ya está en uso";
+                    }
+                    usuario.setEmail(actualizarUsuarioDTO.getEmail());
+                }
+    
+                if (actualizarUsuarioDTO.getPassword() != null && !actualizarUsuarioDTO.getPassword().isEmpty()) {
+                    usuario.setPassword(passwordEncoder.encode(actualizarUsuarioDTO.getPassword()));
+                }
+    
+                // Actualizar la fecha de modificación
+                actualizarUsuarioDTO.setFechaModificacion();
+                usuario.setFechaModificacion(actualizarUsuarioDTO.getFechaModificacion());
+    
+                // Guardar los cambios en la base de datos
+                usuarioRepositorio.save(usuario);
+    
+                return "Usuario actualizado correctamente POR EL ADMINISTRADOR";
+            } else {
+                return "Usuario no encontrado";
+            }
+        } else {
+            return "No tienes permisos para realizar esta acción";
+        }
+    }
+    
+    // //Metodo para obtener los roles existentes del ENUM
+    private Set<Roles> obtenerRolesPorNombresExistentes(Set<String> nombresRoles) {
+        Set<Roles> rolesExistentes = new HashSet<>();
+
+        for (String nombreRol : nombresRoles) {
+            try {
+                ERol rolEnum = ERol.valueOf(nombreRol);
+                Roles rol = rolesRepositorio.findByName(rolEnum.name()).orElse(null);
+
+                if (rol != null) {
+                    rolesExistentes.add(rol);
+                }
+            } catch (IllegalArgumentException ignored) {
+                // Esta excecption como es de un for y no quiero que coja un rol malo y salga
+                // del programa, le
+                // pongo un continue para que siga su flujo normal.
+                continue;
+            }
+        }
+
+        return rolesExistentes;
+    }
 
 
 }

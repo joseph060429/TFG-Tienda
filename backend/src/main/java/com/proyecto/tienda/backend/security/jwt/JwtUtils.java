@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.security.Key;
 import java.util.function.Function;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -44,14 +43,13 @@ public class JwtUtils {
                     .getBody();
             return true;
         } catch (Exception e) {
-            log.error("Token invalido, error: ".concat(e.getMessage()));
-
             return false;
         }
     }
 
     // Obtener email del token
     public String getEmailFromToken(String token) {
+
         String email = getClaim(token, Claims::getSubject);
         return (email != null) ? email : ""; // Devuelve una cadena vacía si el email es nuulo
     }
@@ -63,6 +61,7 @@ public class JwtUtils {
 
     // Obtener un solo claim del token
     public <T> T getClaim(String token, Function<Claims, T> claimsFunction) {
+
         Claims claims = extractAllClaims(token);
         return (claims != null) ? claimsFunction.apply(claims) : null; // Manejo si los reclamos son nulos
     }
@@ -70,12 +69,14 @@ public class JwtUtils {
     // Obtener todos los claims del token
     public Claims extractAllClaims(String token) {
         try {
+
             return Jwts.parserBuilder()
                     .setSigningKey(getSignatureKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (JwtException ex) {
+        } catch (Exception ex) {
+
             ex.printStackTrace();
             return null; // Otra acción dependiendo del flujo de tu aplicación.
         }
@@ -83,47 +84,10 @@ public class JwtUtils {
 
     // Obtener firma del token
     public Key getSignatureKey() {
+
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
 }
-
-// Generar Token de acceso
-// public String generateJwtToken(String userId) {
-// return Jwts.builder()
-// .setSubject(userId)
-// .setIssuedAt(new Date(System.currentTimeMillis()))
-// .setExpiration(new Date(System.currentTimeMillis() +
-// Long.parseLong(jwtExpirationTime.trim())))
-// .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
-// .compact();
-// }
-
-// Obtener email del token
-// public String getEmailFromToken(String token) {
-// return getClaim(token, Claims::getSubject);
-// }
-
-
-
-
-
-    // Obtener un solo claim del token
-    // public <T> T getClaim(String token, Function<Claims, T> claimsFunction) {
-    // Claims claims = extractAllClaims(token);
-    // return claimsFunction.apply(claims);
-
-    // }
-
-
-
-
-        // Obtener todos los claims del token
-    // public Claims extractAllClaims(String token) {
-    // return Jwts.parserBuilder()
-    // .setSigningKey(getSignatureKey())
-    // .build()
-    // .parseClaimsJws(token)
-    // .getBody();
-    // }

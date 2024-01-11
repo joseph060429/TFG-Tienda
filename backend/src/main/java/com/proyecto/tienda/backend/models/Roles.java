@@ -23,12 +23,12 @@ public class Roles {
 
     private String name;
     
-
     public void setName(ERol eRol){
         this.name = eRol.toString();
     }
-
     public ERol getName(){
         return ERol.valueOf(this.name);
     }
+
+   
 }

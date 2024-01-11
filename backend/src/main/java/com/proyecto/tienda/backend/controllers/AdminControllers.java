@@ -1,22 +1,28 @@
 package com.proyecto.tienda.backend.controllers;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.tienda.backend.service.AdminServicio;
-import com.proyecto.tienda.backend.models.*;;
+
+import jakarta.validation.Valid;
+
+import com.proyecto.tienda.backend.controllers.request.UsuarioActualizacionDTO;
+import com.proyecto.tienda.backend.models.*;
+import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
 @RestController
 @RequestMapping("/admin")
@@ -25,6 +31,9 @@ public class AdminControllers {
 
     @Autowired
     private AdminServicio adminServicio;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     // Metodo para listar todos los usuarios (Este metodo solo se lo he implemenatdo
     // al Admin)
@@ -42,17 +51,26 @@ public class AdminControllers {
         return ResponseEntity.ok(resultado);
     }
 
+    // Metodo para actualizar el rol de un usuario
+    @PatchMapping("/{id}/actualizarRol")
+    public ResponseEntity<?> actualizarRolUsuario(@PathVariable("id") String usuarioId,
+            @RequestBody Map<String, String> requestBody) {
+        String nuevoRol = requestBody.get("nombreRol");
 
+        Set<String> nuevosRoles = new HashSet<>();
+        nuevosRoles.add(nuevoRol);
 
-    
-    // REVISAR EL METODO ACTUALIZAR Y EL SERVICIO ACTUALIZAR
-    // @PatchMapping("/{id}/editarRol")
-    // public ResponseEntity<String> editarRolUsuario(@PathVariable String id, @RequestBody List<ERol> nuevosRoles) {
-    //     String mensaje = adminServicio.editarRolUsuario(id, nuevosRoles);
-    //     if (mensaje.equals("No existe el usuario en la base de datos")) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    //     return ResponseEntity.ok(mensaje);
-    // }
+        return adminServicio.actualizarRolUsuario(usuarioId, nuevosRoles);
+    }
+
+    // Metodo para actualizar el PERFIL de un usuario SIENDO ADMIN
+    @PatchMapping("/{id}/actualizarUsuario")
+    public ResponseEntity<String> actualizarUsuario(@PathVariable String id,
+            @RequestBody  @Valid UsuarioActualizacionDTO actualizarUsuarioDTO,
+            @RequestHeader("Authorization") String token) {
+
+        String mensaje = adminServicio.actualizarUsuarioSiendoAdmin(id, actualizarUsuarioDTO, token, jwtUtils);
+        return ResponseEntity.ok(mensaje);
+    }
 
 }

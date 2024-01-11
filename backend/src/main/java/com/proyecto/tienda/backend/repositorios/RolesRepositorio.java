@@ -13,4 +13,8 @@ import com.proyecto.tienda.backend.models.Roles;
 public interface RolesRepositorio extends MongoRepository <Roles, String>{
 
     Optional <Roles> findByName(ERol name);
+
+    Optional<Roles> findByName(String name);
+
+
 }

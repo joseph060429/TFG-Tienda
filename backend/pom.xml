@@ -83,6 +83,13 @@
 		</dependency>
 
 
+		<dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.9</version> <!-- La versión más reciente de Gson -->
+    </dependency>
+
+
 	</dependencies>
 
 	<build>
