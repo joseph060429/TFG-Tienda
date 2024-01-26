@@ -1,8 +1,8 @@
-package com.proyecto.tienda.backend.controllers.request;
+package com.proyecto.tienda.backend.DTO.DTOUsuario;
 
 import java.util.Set;
 
-import com.proyecto.tienda.backend.models.ERol;
+import com.proyecto.tienda.backend.UtilEnum.ERol;
 
 import lombok.Data;
 

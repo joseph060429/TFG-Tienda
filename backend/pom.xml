@@ -82,12 +82,58 @@
 			<version>0.11.5</version>
 		</dependency>
 
+		<dependency>
+        	<groupId>com.google.code.gson</groupId>
+        	<artifactId>gson</artifactId>
+        	<version>2.8.9</version> <!-- La versión más reciente de Gson -->
+    	</dependency>
 
 		<dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version>2.8.9</version> <!-- La versión más reciente de Gson -->
+    		<groupId>com.resend</groupId>
+    		<artifactId>resend-java</artifactId>
+    		<version>2.2.1</version>
+		</dependency>
+
+		
+
+
+
+    <!-- Google API Client -->
+    <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client</artifactId>
+        <version>2.0.0</version>
     </dependency>
+
+    <!-- Google OAuth Client Jetty -->
+    <dependency>
+        <groupId>com.google.oauth-client</groupId>
+        <artifactId>google-oauth-client-jetty</artifactId>
+        <version>1.34.1</version>
+    </dependency>
+
+    <!-- Gmail API Services -->
+    <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-gmail</artifactId>
+        <version>v1-rev20220404-2.0.0</version>
+    </dependency>
+
+	<dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>1.4.7</version>
+    </dependency>
+
+
+
+
+	
+
+
+
+	
+
 
 
 	</dependencies>

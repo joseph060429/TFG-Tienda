@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.proyecto.tienda.backend.security.filter.JwtAuthenticationFilter;
@@ -19,7 +20,7 @@ import com.proyecto.tienda.backend.security.filter.JwtAuthorizationFilter;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
 @Configuration
-//Habilito las anotacionaciones de Spring Security
+// Habilito las anotacionaciones de Spring Security
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
@@ -29,18 +30,18 @@ public class SecurityConfig {
     @Autowired
     UserDetailsService userDetailsService;
 
-
     @Autowired
     JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpsSecurity, AuthenticationManager authenticationManager) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity httpsSecurity, AuthenticationManager authenticationManager)
+            throws Exception {
 
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
-    return httpsSecurity
+        return httpsSecurity
                 .csrf(config -> config.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/hello").permitAll();
@@ -48,6 +49,12 @@ public class SecurityConfig {
                     auth.requestMatchers("/login").permitAll();
                     auth.requestMatchers("/crearUsuario").permitAll();
                     auth.requestMatchers("/admin/*").hasRole("ADMIN");
+                    auth.requestMatchers("/envio-codigo-recuperacion").permitAll();
+                    auth.requestMatchers("/verificar-codigo").permitAll();
+                    auth.requestMatchers("/cambiar-contrasenia")
+                            .access(new WebExpressionAuthorizationManager("hasAuthority('USER')"));
+                    // auth.requestMatchers("/cambiar-contraseña").hasAnyRole("ADMIN", "USER");
+
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
@@ -78,3 +85,4 @@ public class SecurityConfig {
     }
 
 }
+

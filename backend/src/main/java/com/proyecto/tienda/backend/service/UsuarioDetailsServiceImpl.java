@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.proyecto.tienda.backend.models.Usuarios;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 
 
@@ -17,9 +17,9 @@ public class UsuarioDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuarios usuario = usuarioRepositorio.findByEmail(email)
+        UsuarioModelo usuario = usuarioRepositorio.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email + " me quieres joder? "));
-
+        
         return UsuariosDetailsPersonalizados.build(usuario);
     }
 }

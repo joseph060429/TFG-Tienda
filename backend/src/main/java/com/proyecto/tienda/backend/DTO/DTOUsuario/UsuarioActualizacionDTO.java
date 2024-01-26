@@ -1,4 +1,4 @@
-package com.proyecto.tienda.backend.controllers.request;
+package com.proyecto.tienda.backend.DTO.DTOUsuario;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

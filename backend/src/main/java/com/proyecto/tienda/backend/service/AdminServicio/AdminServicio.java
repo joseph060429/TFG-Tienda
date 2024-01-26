@@ -1,4 +1,4 @@
-package com.proyecto.tienda.backend.service;
+package com.proyecto.tienda.backend.service.AdminServicio;
 
 import java.util.HashSet;
 import java.util.List;
@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.proyecto.tienda.backend.controllers.request.UsuarioActualizacionDTO;
-import com.proyecto.tienda.backend.models.ERol;
+// import com.proyecto.tienda.backend.controllers.request.UsuarioActualizacionDTO;
+import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
+import com.proyecto.tienda.backend.UtilEnum.ERol;
 import com.proyecto.tienda.backend.models.Roles;
-import com.proyecto.tienda.backend.models.Usuarios;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.RolesRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
@@ -30,16 +31,16 @@ public class AdminServicio {
     private PasswordEncoder passwordEncoder;
 
     // Metodo para listar todos los usuarios
-    public List<Usuarios> listarUsuarios() {
+    public List<UsuarioModelo> listarUsuarios() {
         return usuarioRepositorio.findAll();
     }
 
     // Metodo para borrar usuario siendo Admin
     public String eliminarUsuarioSiendoAdmin(String email) {
-        Optional<Usuarios> usuarioOptional = usuarioRepositorio.findByEmail(email);
+        Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(email);
 
         if (usuarioOptional.isPresent()) {
-            Usuarios usuario = usuarioOptional.get();
+            UsuarioModelo usuario = usuarioOptional.get();
             usuarioRepositorio.deleteBy_id(usuario.get_id());
             return "Usuario eliminado correctamente";
         } else {
@@ -60,10 +61,10 @@ public class AdminServicio {
             return ResponseEntity.badRequest().body("Los roles proporcionados no son válidos");
         }
 
-        Optional<Usuarios> optionalUsuario = usuarioRepositorio.findById(usuarioId);
+        Optional<UsuarioModelo> optionalUsuario = usuarioRepositorio.findById(usuarioId);
 
         if (optionalUsuario.isPresent()) {
-            Usuarios usuario = optionalUsuario.get();
+            UsuarioModelo usuario = optionalUsuario.get();
 
             usuario.setRoles(roles);
             usuarioRepositorio.save(usuario);
@@ -79,13 +80,13 @@ public class AdminServicio {
         String jwtToken = token.replace("Bearer ", "");
         String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
     
-        Optional<Usuarios> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
+        Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
     
         if (usuarioOptional.isPresent() && usuarioOptional.get().getRoles().stream().anyMatch(role -> ERol.ADMIN.equals(role.getName()))) {
-            Optional<Usuarios> usuarioAActualizarOptional = usuarioRepositorio.findById(userId);
+            Optional<UsuarioModelo> usuarioAActualizarOptional = usuarioRepositorio.findById(userId);
     
             if (usuarioAActualizarOptional.isPresent()) {
-                Usuarios usuario = usuarioAActualizarOptional.get();
+                UsuarioModelo usuario = usuarioAActualizarOptional.get();
     
                 // Validar y actualizar los campos que sean diferentes de null
                 if (actualizarUsuarioDTO.getNombre() != null && !actualizarUsuarioDTO.getNombre().isEmpty()) {
@@ -98,7 +99,7 @@ public class AdminServicio {
     
                 if (actualizarUsuarioDTO.getEmail() != null && !actualizarUsuarioDTO.getEmail().isEmpty()) {
                     // Validar que el nuevo email no exista
-                    Optional<Usuarios> existeEmail = usuarioRepositorio.findByEmail(actualizarUsuarioDTO.getEmail());
+                    Optional<UsuarioModelo> existeEmail = usuarioRepositorio.findByEmail(actualizarUsuarioDTO.getEmail());
                     if (existeEmail.isPresent()) {
                         return "El email ya está en uso";
                     }

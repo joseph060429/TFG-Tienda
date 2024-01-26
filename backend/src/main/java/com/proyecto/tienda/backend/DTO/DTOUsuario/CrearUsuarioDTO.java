@@ -1,4 +1,5 @@
-package com.proyecto.tienda.backend.controllers.request;
+// package com.proyecto.tienda.backend.controllers.request;
+package com.proyecto.tienda.backend.DTO.DTOUsuario;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioDTO {
+public class CrearUsuarioDTO {
 
     @Size(min = 2, max = 70, message = "El nombre no puede tener menos de 2 y más de 70 caracteres USUARIODTO")
     @NotBlank(message = "El nombre no puede estar en blanco")
@@ -51,6 +52,8 @@ public class UsuarioDTO {
         // Formateo la fecha y la guardo en la propiedad fechaCreacion
         this.fechaCreacion = fechaActual.format(formatearFecha);
     }
+
+    
 
     
 }

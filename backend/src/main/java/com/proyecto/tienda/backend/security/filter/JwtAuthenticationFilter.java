@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.proyecto.tienda.backend.models.Usuarios;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.*;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private JwtUtils jwtUtils;
 
     @Autowired
-     Usuarios usuarios;
+     UsuarioModelo usuarios;
 
     @Autowired
     UsuarioRepositorio usuarioRepositorio;
@@ -42,15 +42,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
 
-        Usuarios usuario = null;
+        UsuarioModelo usuario = null;
         String email = "";
         String password = "";
 
         try {
             
-            usuario = new ObjectMapper().readValue(request.getInputStream(), Usuarios.class);
-            email = usuario.getEmail();
-            password = usuario.getPassword();
+            usuario = new ObjectMapper().readValue(request.getInputStream(), UsuarioModelo.class);
+            email = usuario.getEmail().trim();
+            password = usuario.getPassword().trim();
             
         } catch (StreamReadException e) {
             throw new RuntimeException(e);

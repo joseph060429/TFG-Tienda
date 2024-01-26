@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import com.proyecto.tienda.backend.models.Usuarios;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
 
 public class UsuariosDetailsPersonalizados extends User {
     
@@ -21,7 +21,7 @@ public class UsuariosDetailsPersonalizados extends User {
     public String getUserId() {
         return userId;
     }
-    public static UsuariosDetailsPersonalizados build(Usuarios usuario) {
+    public static UsuariosDetailsPersonalizados build(UsuarioModelo usuario) {
         Collection<GrantedAuthority> authorities = usuario.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().name()))
                 .collect(Collectors.toList());
