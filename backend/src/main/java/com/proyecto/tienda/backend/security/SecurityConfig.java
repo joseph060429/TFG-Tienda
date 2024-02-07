@@ -1,8 +1,12 @@
 package com.proyecto.tienda.backend.security;
 
+import java.util.Properties;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -49,10 +53,15 @@ public class SecurityConfig {
                     auth.requestMatchers("/login").permitAll();
                     auth.requestMatchers("/crearUsuario").permitAll();
                     auth.requestMatchers("/admin/*").hasRole("ADMIN");
-                    auth.requestMatchers("/envio-codigo-recuperacion").permitAll();
-                    auth.requestMatchers("/verificar-codigo").permitAll();
-                    auth.requestMatchers("/cambiar-contrasenia")
-                            .access(new WebExpressionAuthorizationManager("hasAuthority('USER')"));
+                    auth.requestMatchers("/envioCodigoRecuperacion").permitAll();
+                    auth.requestMatchers("/verificarCodigo").permitAll();
+                    auth.requestMatchers("/listarProductos").permitAll();
+                    auth.requestMatchers("/buscarPorCamposImportantes").permitAll();
+                    auth.requestMatchers("/buscarPorEspecificacion").permitAll();
+                    auth.requestMatchers("/buscarPorRangoDePrecio").permitAll();
+                    auth.requestMatchers("/cambiarContrasenia").permitAll();
+                    // auth.requestMatchers("/cambiar-contrasenia")
+                    //         .access(new WebExpressionAuthorizationManager("hasAuthority('USER')"));
                     // auth.requestMatchers("/cambiar-contraseña").hasAnyRole("ADMIN", "USER");
 
                     auth.anyRequest().authenticated();
@@ -84,5 +93,23 @@ public class SecurityConfig {
                 .and().build();
     }
 
-}
+    // Configuracion email:
+    @Bean
+    public JavaMailSender javaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("imap.ionos.es"); // Configura el servidor SMTP de Ionos
+        mailSender.setPort(993); // Configura el puerto (puedes usar 587 o 465 según las configuraciones de
+                                 // Ionos)
+        mailSender.setUsername("administracion@jastoredcomponents.es"); // Tu dirección de correo de Ionos
+        mailSender.setPassword("***REMOVED***"); // Tu contraseña de correo de Ionos
 
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
+    }
+
+}

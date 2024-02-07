@@ -8,8 +8,9 @@ import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 // import com.proyecto.tienda.backend.controllers.request.UsuarioActualizacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
 import com.proyecto.tienda.backend.models.*;
-import java.util.Optional;
 
+import java.text.Normalizer;
+import java.util.Optional;
 
 @Service
 public class UsuarioServicio {
@@ -54,16 +55,19 @@ public class UsuarioServicio {
 
             // Validar y actualizar los campos que sean diferentes de null
             if (actualizarUsuarioDTO.getNombre() != null && !actualizarUsuarioDTO.getNombre().isEmpty()) {
-                usuario.setNombre(actualizarUsuarioDTO.getNombre().trim());
+                // usuario.setNombre(actualizarUsuarioDTO.getNombre().trim());
+                usuario.setNombre(normalizeText(actualizarUsuarioDTO.getNombre().trim()));
             }
 
             if (actualizarUsuarioDTO.getApellido() != null && !actualizarUsuarioDTO.getApellido().isEmpty()) {
-                usuario.setApellido(actualizarUsuarioDTO.getApellido().trim());
+                // usuario.setApellido(actualizarUsuarioDTO.getApellido().trim());
+                usuario.setApellido(normalizeText(actualizarUsuarioDTO.getApellido().trim()));
             }
 
             if (actualizarUsuarioDTO.getEmail() != null && !actualizarUsuarioDTO.getEmail().isEmpty()) {
                 // Validar que el nuevo email no exista
-                Optional<UsuarioModelo> existeEmail = usuarioRepositorio.findByEmail(actualizarUsuarioDTO.getEmail().trim());
+                Optional<UsuarioModelo> existeEmail = usuarioRepositorio
+                        .findByEmail(actualizarUsuarioDTO.getEmail().trim());
                 if (existeEmail.isPresent()) {
                     return "El email ya esta en uso";
                 }
@@ -86,14 +90,11 @@ public class UsuarioServicio {
             return "No se pudo actualizar el usuario debido a un problema desconocido";
         }
     }
-    
+
+    // Insertar campos sin tilde
+    private String normalizeText(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
 
 }
-    
-  
-
-   
-
-
-
-

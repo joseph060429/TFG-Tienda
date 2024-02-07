@@ -1,6 +1,7 @@
 package com.proyecto.tienda.backend.repositorios;
 
 
+
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ public interface UsuarioRepositorio extends MongoRepository<UsuarioModelo, Strin
     UsuarioModelo findBy_id(String _id);
 
     Optional<UsuarioModelo> findByRecuperarContrasenia(String recuperarContrasenia);
+    
     Optional<UsuarioModelo> findByExpiracionRecuperarContrasenia(String expiracionRecuperarContrasenia);
 
     // // Nuevo método para guardar el código de recuperación y la fecha actual

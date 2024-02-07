@@ -6,16 +6,11 @@ package com.proyecto.tienda.backend.controllers.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-// import com.proyecto.tienda.backend.controllers.request.CrearUsuarioDTO;
-// import com.proyecto.tienda.backend.controllers.request.UsuarioActualizacionDTO;
-import com.proyecto.tienda.backend.DTO.DTOUsuario.CrearUsuarioDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
 
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.UsuarioServicio.UsuarioServicio;
-import com.proyecto.tienda.backend.util.Gmailer;
-
+// import com.proyecto.tienda.backend.util.Gmailer;
 import jakarta.validation.Valid;
 
 

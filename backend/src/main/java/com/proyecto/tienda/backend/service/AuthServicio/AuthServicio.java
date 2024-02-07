@@ -1,5 +1,6 @@
 package com.proyecto.tienda.backend.service.AuthServicio;
 
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.CrearUsuarioDTO;
@@ -31,7 +33,7 @@ public class AuthServicio {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    //  @Autowired
+    // @Autowired
     // private JwtUtils jwtUtils;
 
     // Metodo para crear un nuevo Usuario
@@ -88,10 +90,13 @@ public class AuthServicio {
     }
 
     // Metodo para construir un nuevo usuario
+
+    // nuevoProducto.setNombreProducto(normalizeText(crearProductoDTO.getNombreProducto().trim()));
+
     private UsuarioModelo construirUsuario(CrearUsuarioDTO crearUsuarioDTO, Set<Roles> roles) {
         UsuarioModelo usuario = UsuarioModelo.builder()
-                .nombre(crearUsuarioDTO.getNombre().trim())
-                .apellido(crearUsuarioDTO.getApellido().trim())
+                .nombre(normalizeText(crearUsuarioDTO.getNombre().trim()))
+                .apellido(normalizeText(crearUsuarioDTO.getApellido().trim()))
                 .email(crearUsuarioDTO.getEmail().trim())
                 .password(passwordEncoder.encode(crearUsuarioDTO.getPassword()).trim())
                 .direccionEnvio("".trim())
@@ -125,13 +130,10 @@ public class AuthServicio {
 
         // Busco el usuario por el código de recuperación
         Optional<UsuarioModelo> optionalUsuario = usuarioRepositorio.findByRecuperarContrasenia(codigoRecuperacion);
-
-        System.out.println("Código proporcionado: " + codigoRecuperacion);
-        System.out.println("Usuario optional: " + optionalUsuario);
-
+        
         if (optionalUsuario.isPresent()) {
             UsuarioModelo usuario = optionalUsuario.get();
-            System.out.println("Usuario: " + usuario);
+            // System.out.println("Usuario: " + usuario);
             System.out
                     .println("Fecha de expiración en la base de datos: " + usuario.getExpiracionRecuperarContrasenia());
 
@@ -149,96 +151,67 @@ public class AuthServicio {
                 System.out.println("El código ha expirado");
             }
         } else {
-            System.out.println("Usuario no encontrado");
+            // System.out.println("Usuario no encontrado");
         }
 
         return false;
     }
 
-    // public boolean verificarCodigoYExpiracionGenerarToken(RecuperarContraseniaDTO recuperarContraseniaDTO) {
-    //     try {
-    //         String codigoRecuperacion = recuperarContraseniaDTO.getRecuperarContrasenia().trim();
+    // Metodo para cambiar la contraseña, verifica el codigo de envio, si este es
+    // exitoso procedo a cambiar la contraseña con el metodo
+    // procesarCambioContrasenia
+    // Solo me cambiara la contraseña si y solo si el codigo es exitoso
+    public ResponseEntity<String> cambiarContrasenia(RecuperarContraseniaDTO recuperarContraseniaDTO) {
+        try {
+            // Verificar que las contraseñas coincidan
+            if (!recuperarContraseniaDTO.getPassword().equals(recuperarContraseniaDTO.getRepitaPassword())) {
+                return ResponseEntity.badRequest()
+                        .body("Las contraseñas no coinciden. Por favor, inténtalo nuevamente.");
+            }
 
-    //         if (codigoRecuperacion.isEmpty()) {
-    //             System.out.println("Error: El código de recuperación está vacío.");
-    //             return false;
-    //         }
+            // Verifico el código y la expiración
+            boolean exitoso = verificarCodigoYExpiracion(recuperarContraseniaDTO);
 
-    //         Optional<Usuarios> optionalUsuario = usuarioRepositorio.findByRecuperarContrasenia(codigoRecuperacion);
+            if (exitoso) {
+                return procesarCambioContrasenia(recuperarContraseniaDTO);
+            } else {
+                return ResponseEntity.badRequest()
+                        .body("Error: Código incorrecto o la fecha de expiración ha pasado. Verifique el código o solicite uno nuevo.");
+            }
 
-    //         System.out.println("Código proporcionado: " + codigoRecuperacion);
-    //         System.out.println("Usuario optional: " + optionalUsuario);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error interno del servidor");
+        }
+    }
 
-    //         if (optionalUsuario.isPresent()) {
-    //             Usuarios usuario = optionalUsuario.get();
-    //             System.out.println("Usuario: " + usuario);
-    //             System.out.println("Fecha de expiración en la base de datos: " + usuario.getExpiracionRecuperarContrasenia());
+    // Metodo para procesar todos los datos del cambio de contraseña
+    private ResponseEntity<String> procesarCambioContrasenia(RecuperarContraseniaDTO recuperarContraseniaDTO) {
+        // Busco el usuario por el código de recuperación
+        Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio
+                .findByRecuperarContrasenia(recuperarContraseniaDTO.getRecuperarContrasenia().trim());
 
-    //             LocalDateTime fechaExpiracionBD = LocalDateTime.parse(
-    //                     usuario.getExpiracionRecuperarContrasenia(),
-    //                     DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        // Verifico si el usuario existe a traves del codigo de recuperación
+        if (usuarioOptional.isPresent()) {
+            // Codifico la nueva contraseña
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String encodedPassword = encoder.encode(recuperarContraseniaDTO.getPassword());
 
-    //             LocalDateTime fechaActual = LocalDateTime.now();
+            // Actualizo la contraseña del usuario
+            UsuarioModelo usuario = usuarioOptional.get();
+            usuario.setPassword(encodedPassword);
+            usuarioRepositorio.save(usuario);
 
-    //             if (fechaActual.isBefore(fechaExpiracionBD)) {
-    //                 if (codigoRecuperacion.equals(usuario.getRecuperarContrasenia())) {
-    //                     Set<Roles> rolesUsuario = usuario.getRoles();
-    //                     usuario.setRoles(rolesUsuario);
-    //                     System.out.println("ROLES USUARIO: " + rolesUsuario);
+            return ResponseEntity.ok("Contraseña cambiada correctamente");
+        } else {
+            return ResponseEntity.badRequest()
+                    .body("No se encontró un usuario con el código de recuperación proporcionado.");
+        }
+    }
 
-    //                     // Guardar el usuario actualizado en la base de datos
-    //                     usuarioRepositorio.save(usuario);
-
-    //                     // Generar y devolver el token
-    //                     String token = jwtUtils.generateJwtToken(usuario.getEmail());
-    //                     System.out.println("Token generado con éxito: " + token);
-    //                     return true;
-    //                 } else {
-    //                     System.out.println("Los códigos no coinciden");
-    //                 }
-    //             } else {
-    //                 System.out.println("El código ha expirado");
-    //             }
-    //         } else {
-    //             System.out.println("Usuario no encontrado");
-    //         }
-
-    //         return false;
-    //     } catch (Exception e) {
-    //         System.out.println("Error al verificar el código y la expiración");
-    //         e.printStackTrace();
-    //         return false;
-    //     }
-    // }
-    
-
-
-    // public boolean cambiarContraseniaSiVerificacionExitosa(RecuperarContraseniaDTO recuperarContraseniaDTO, String nuevaContrasenia) {
-    //     if (verificarCodigoYExpiracion(recuperarContraseniaDTO)) {
-    //         String codigoRecuperacion = recuperarContraseniaDTO.getRecuperarContrasenia().trim();
-    //         Optional<Usuarios> optionalUsuario = usuarioRepositorio.findByRecuperarContrasenia(codigoRecuperacion);
-    
-    //         if (optionalUsuario.isPresent()) {
-    //             Usuarios usuario = optionalUsuario.get();
-    
-    //             try {
-    //                 String contraseniaHasheada = passwordEncoder.encode(nuevaContrasenia);
-    
-    //                 // Actualizar la contraseña en la base de datos
-    //                 usuario.setPassword(contraseniaHasheada);
-    //                 usuario.setRecuperarContrasenia(null);
-    
-    //                 usuarioRepositorio.save(usuario);
-    
-    //                 return true;
-    //             } catch (Exception e) {
-    //                 // Manejar excepciones específicas aquí (puede depender del tipo de passwordEncoder)
-    //                 return false;
-    //             }
-    //         }
-    //     }
-    
-    //     return false;
-    // }
-
+      // Metodo para normalizar los textos que ponga el usuario y me busque sin tilde
+    // los campos
+    private String normalizeText(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
 }

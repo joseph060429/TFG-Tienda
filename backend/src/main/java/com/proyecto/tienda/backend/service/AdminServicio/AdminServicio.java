@@ -1,5 +1,6 @@
 package com.proyecto.tienda.backend.service.AdminServicio;
 
+import java.text.Normalizer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -26,13 +27,26 @@ public class AdminServicio {
     @Autowired
     private RolesRepositorio rolesRepositorio;
 
-
-     @Autowired
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     // Metodo para listar todos los usuarios
     public List<UsuarioModelo> listarUsuarios() {
         return usuarioRepositorio.findAll();
+    }
+
+    // Metodo para listar un usuario por id
+    public UsuarioModelo listarUnUsuario(String _id) {
+        Optional<UsuarioModelo> optionalUsuario = usuarioRepositorio.findById(_id);
+
+        // Verifica si el usuario está presente en la base de datos
+        if (optionalUsuario.isPresent()) {
+            // Devuelve el usuario si ha sido encontrado
+            return optionalUsuario.get();
+        } else {
+            // Devuelve null si el usuario no ha sido encontrado
+            return null;
+        }
     }
 
     // Metodo para borrar usuario siendo Admin
@@ -75,48 +89,51 @@ public class AdminServicio {
         }
     }
 
-    //Metodo para actualizar el PERFIL de un usuario siendo ADMIN
-    public String actualizarUsuarioSiendoAdmin(String userId, UsuarioActualizacionDTO actualizarUsuarioDTO, String token, JwtUtils jwtUtils) {
+    // Metodo para actualizar el PERFIL de un usuario siendo ADMIN
+    public String actualizarUsuarioSiendoAdmin(String userId, UsuarioActualizacionDTO actualizarUsuarioDTO,
+            String token, JwtUtils jwtUtils) {
         String jwtToken = token.replace("Bearer ", "");
         String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
-    
+
         Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
-    
-        if (usuarioOptional.isPresent() && usuarioOptional.get().getRoles().stream().anyMatch(role -> ERol.ADMIN.equals(role.getName()))) {
+
+        if (usuarioOptional.isPresent()
+                && usuarioOptional.get().getRoles().stream().anyMatch(role -> ERol.ADMIN.equals(role.getName()))) {
             Optional<UsuarioModelo> usuarioAActualizarOptional = usuarioRepositorio.findById(userId);
-    
+
             if (usuarioAActualizarOptional.isPresent()) {
                 UsuarioModelo usuario = usuarioAActualizarOptional.get();
-    
+
                 // Validar y actualizar los campos que sean diferentes de null
                 if (actualizarUsuarioDTO.getNombre() != null && !actualizarUsuarioDTO.getNombre().isEmpty()) {
-                    usuario.setNombre(actualizarUsuarioDTO.getNombre());
+                    usuario.setNombre(normalizeText(actualizarUsuarioDTO.getNombre().trim()));
                 }
-    
+
                 if (actualizarUsuarioDTO.getApellido() != null && !actualizarUsuarioDTO.getApellido().isEmpty()) {
-                    usuario.setApellido(actualizarUsuarioDTO.getApellido());
+                    usuario.setApellido(normalizeText(actualizarUsuarioDTO.getApellido().trim()));
                 }
-    
+
                 if (actualizarUsuarioDTO.getEmail() != null && !actualizarUsuarioDTO.getEmail().isEmpty()) {
                     // Validar que el nuevo email no exista
-                    Optional<UsuarioModelo> existeEmail = usuarioRepositorio.findByEmail(actualizarUsuarioDTO.getEmail());
+                    Optional<UsuarioModelo> existeEmail = usuarioRepositorio
+                            .findByEmail(actualizarUsuarioDTO.getEmail());
                     if (existeEmail.isPresent()) {
                         return "El email ya está en uso";
                     }
                     usuario.setEmail(actualizarUsuarioDTO.getEmail());
                 }
-    
+
                 if (actualizarUsuarioDTO.getPassword() != null && !actualizarUsuarioDTO.getPassword().isEmpty()) {
                     usuario.setPassword(passwordEncoder.encode(actualizarUsuarioDTO.getPassword()));
                 }
-    
+
                 // Actualizar la fecha de modificación
                 actualizarUsuarioDTO.setFechaModificacion();
                 usuario.setFechaModificacion(actualizarUsuarioDTO.getFechaModificacion());
-    
+
                 // Guardar los cambios en la base de datos
                 usuarioRepositorio.save(usuario);
-    
+
                 return "Usuario actualizado correctamente POR EL ADMINISTRADOR";
             } else {
                 return "Usuario no encontrado";
@@ -125,7 +142,7 @@ public class AdminServicio {
             return "No tienes permisos para realizar esta acción";
         }
     }
-    
+
     // //Metodo para obtener los roles existentes del ENUM
     private Set<Roles> obtenerRolesPorNombresExistentes(Set<String> nombresRoles) {
         Set<Roles> rolesExistentes = new HashSet<>();
@@ -149,5 +166,9 @@ public class AdminServicio {
         return rolesExistentes;
     }
 
+    private String normalizeText(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
 
 }

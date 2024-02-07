@@ -1,12 +1,16 @@
 package com.proyecto.tienda.backend.service.ProductoServicio;
 
-
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
-import com.proyecto.tienda.backend.UtilEnum.EProducto;
+import java.text.Normalizer;
 import com.proyecto.tienda.backend.models.Producto;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 
@@ -16,86 +20,157 @@ public class ProductoServicio {
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
-    public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO) {
+    // Listar TODOS LOS PRODUCTOS solo me muestra lo que quiero que vea el
+    // usuario
+    public List<Map<String, Object>> listarProductos(int page, int size) {
 
-        // Validar la categoría del producto
-        if (!esCategoriaValida(crearProductoDTO.getCategoriaProducto())) {
-            System.out.println("La categoría del producto no es válida " + crearProductoDTO.getCategoriaProducto());
-            return ResponseEntity.badRequest().body("La categoría del producto no es válida");
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Producto> productosPage;
+
+        productosPage = productoRepositorio.findAll(pageable);
+
+        List<Map<String, Object>> productosResponse = new ArrayList<>();
+
+        for (Producto producto : productosPage.getContent()) {
+            Map<String, Object> mapaProductos = new HashMap<>();
+            mapaProductos.put("descripcion", producto.getDescripcionProducto());
+            mapaProductos.put("categoria", producto.getCategoriaProducto());
+            mapaProductos.put("nombre", producto.getNombreProducto());
+            mapaProductos.put("precio", producto.getPrecioProducto());
+            mapaProductos.put("marca", producto.getMarcaProducto());
+            mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+            mapaProductos.put("imagenProducto", producto.getImagenProducto());
+            mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+
+            productosResponse.add(mapaProductos);
         }
+        return productosResponse;
+    }
 
-        //Creo el nuevo producto
-        Producto nuevoProducto = construirProducto(crearProductoDTO);
+    // Busqueda por campos importantes y solo me muestra lo que quiero que vea el
+    // usuario
+    public List<Map<String, Object>> buscarProductos(String descripcion, String categoria, String nombre, String marca,
+            int page, int size) {
 
-        // Valido si el identificador ya existe en la base de datos
-        String identificador = nuevoProducto.getIdentificador();
-        System.out.println("Identificador a comprobar: " + identificador);
+        Pageable pageable = PageRequest.of(page, size);
 
-        if (productoRepositorio.existsByIdentificador(identificador)) {
-            System.out.println("Identificador existe: " + identificador);
-            return ResponseEntity.badRequest().body("Ya existe un producto con el mismo identificador");
+        Page<Producto> productosPage;
+
+        if (categoria != null && !categoria.isEmpty()) {
+            String normalizedCategoria = normalizeText(categoria);
+            productosPage = productoRepositorio.findByCategoriaProductoIgnoreCase(normalizedCategoria, pageable);
+
+        } else if (nombre != null && !nombre.isEmpty()) {
+            String normalizedNombre = normalizeText(nombre);
+            productosPage = productoRepositorio.findByNombreProductoContainingIgnoreCase(normalizedNombre, pageable);
+
+        } else if (marca != null && !marca.isEmpty()) {
+            String normalizedMarca = normalizeText(marca);
+            productosPage = productoRepositorio.findByMarcaProductoContainingIgnoreCase(normalizedMarca, pageable);
+
+        } else if (descripcion != null && !descripcion.isEmpty()) {
+            String normalizedDescripcion = normalizeText(descripcion);
+            productosPage = productoRepositorio.findByDescripcionProductoContainingIgnoreCase(normalizedDescripcion,
+                    pageable);
+
         } else {
-            System.out.println("Identificador NO existe en la base de datos: " + identificador);
-
-            // Guardar el producto en la base de datos
-            productoRepositorio.save(nuevoProducto);
-
-            return ResponseEntity.ok("Producto creado exitosamente");
+            productosPage = productoRepositorio.findAll(pageable);
         }
+
+        List<Map<String, Object>> productosResponse = new ArrayList<>();
+
+        for (Producto producto : productosPage.getContent()) {
+            Map<String, Object> mapaProductos = new HashMap<>();
+            mapaProductos.put("descripcion", producto.getDescripcionProducto());
+            mapaProductos.put("categoria", producto.getCategoriaProducto());
+            mapaProductos.put("nombre", producto.getNombreProducto());
+            mapaProductos.put("precio", producto.getPrecioProducto());
+            mapaProductos.put("marca", producto.getMarcaProducto());
+            mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+            mapaProductos.put("imagenProducto", producto.getImagenProducto());
+            mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+
+            productosResponse.add(mapaProductos);
+        }
+        return productosResponse;
     }
 
-    // Metodo para comprobar si la categoria que le estoy poniendo es valida
-    private boolean esCategoriaValida(String categoria) {
-        // Obtengo todas las categorías del enum
-        EProducto[] categoriasEnum = EProducto.values();
+    // Metodo para buscar producto por cualquier especificacion
+    public List<Map<String, Object>> buscarProductosPorEspecificacion(String especificacion, int page, int size) {
+        // System.out.println("Especificación: " + especificacion);
 
-        // Verifico si la categoría del DTO coincide con alguna categoría del enum
-        for (EProducto categoriaEnum : categoriasEnum) {
-            if (categoriaEnum.name().equalsIgnoreCase(categoria)) {
-                return true; // Categoría es válida
+        // ConfigurO la paginación
+        Pageable pageable = PageRequest.of(page, size);
+
+        // NormalizO la especificación
+        String normalizedEspecificacion = normalizeText(especificacion);
+
+        // UtilizO el método del repositorio con paginación
+        Page<Producto> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
+                pageable);
+
+        // Transformo los productos con los campos que quiero en la respuesta
+        List<Map<String, Object>> productosResponse = new ArrayList<>();
+
+        for (Producto producto : productosPage.getContent()) {
+            Map<String, Object> mapaProductos = new HashMap<>();
+            mapaProductos.put("descripcion", producto.getDescripcionProducto());
+            mapaProductos.put("categoria", producto.getCategoriaProducto());
+            mapaProductos.put("nombre", producto.getNombreProducto());
+            mapaProductos.put("precio", producto.getPrecioProducto());
+            mapaProductos.put("marca", producto.getMarcaProducto());
+            mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+            mapaProductos.put("imagenProducto", producto.getImagenProducto());
+            mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+
+            productosResponse.add(mapaProductos);
+        }
+
+        return productosResponse;
+    }
+
+    // Metodo para normalizar los textos que ponga el usuario y me busque sin tilde
+    // los campos
+    private String normalizeText(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .toLowerCase();
+    }
+
+    // Metodo para hacer una busqueda de minimo a maximo
+    public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax,
+            int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        try {
+            Page<Producto> productosPage = productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax,
+                    pageable);
+
+            List<Map<String, Object>> productosResponse = new ArrayList<>();
+
+            for (Producto producto : productosPage.getContent()) {
+                Map<String, Object> mapaProductos = new HashMap<>();
+                mapaProductos.put("descripcion", producto.getDescripcionProducto());
+                mapaProductos.put("categoria", producto.getCategoriaProducto());
+                mapaProductos.put("nombre", producto.getNombreProducto());
+                mapaProductos.put("precio", producto.getPrecioProducto());
+                mapaProductos.put("marca", producto.getMarcaProducto());
+                mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+                mapaProductos.put("imagenProducto", producto.getImagenProducto());
+                mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+
+                productosResponse.add(mapaProductos);
             }
+            return productosResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Mensaje de error, DEVUELVO LA LISTA VACÍA
+            System.out.println("Error al buscar productos por rango de precio: " + e.getMessage());
+            return Collections.emptyList();
         }
-
-        return false; // Categoría no válida
     }
 
-    private Producto construirProducto(CrearProductoDTO crearProductoDTO) {
-        Producto nuevoProducto = new Producto();
-
-        // Convierto el EProduct a String
-        EProducto categoriaProductoEnum = EProducto.valueOf(crearProductoDTO.getCategoriaProducto());
-        nuevoProducto.setCategoriaProducto(categoriaProductoEnum);
-
-        nuevoProducto.setNombreProducto(crearProductoDTO.getNombreProducto().trim());
-        nuevoProducto.setDescripcionProducto(crearProductoDTO.getDescripcionProducto().trim());
-        nuevoProducto.setPrecioProducto(crearProductoDTO.getPrecioProducto());
-        nuevoProducto.setDisponibilidadProducto(crearProductoDTO.getCantidadProducto() > 0);
-        nuevoProducto.setCantidadProducto(crearProductoDTO.getCantidadProducto());
-        nuevoProducto.setMarcaProducto(crearProductoDTO.getMarcaProducto().trim());
-        nuevoProducto.setEspecificacionesTecnicas(crearProductoDTO.getEspecificacionesTecnicas().trim());
-
-        // Construir el identificador con la categoría, nombre y marca separados por
-        // guiones
-        String identificador = construirIdentificador(crearProductoDTO);
-
-        nuevoProducto.setIdentificador(identificador);
-        System.out.println("Identificador: " + identificador);
-        nuevoProducto.setImagenProducto(crearProductoDTO.getImagenProducto());
-
-        if (nuevoProducto.get_id() == null) {
-            nuevoProducto.set_id(UUID.randomUUID().toString());
-        }
-
-        return nuevoProducto;
-    }
-
-    // Identificador para no insertar el mismo producto 2 veces
-    private String construirIdentificador(CrearProductoDTO crearProductoDTO) {
-        String categoria = crearProductoDTO.getCategoriaProducto().toLowerCase();
-        String nombre = crearProductoDTO.getNombreProducto().toLowerCase().replaceAll("\\s+", "");
-        String marca = crearProductoDTO.getMarcaProducto().toLowerCase().replaceAll("\\s+", "");
-
-        return String.format("%s-%s-%s", categoria, nombre, marca);
-    }
-
+    
 }

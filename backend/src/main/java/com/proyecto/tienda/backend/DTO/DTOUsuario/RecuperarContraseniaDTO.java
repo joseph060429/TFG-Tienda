@@ -22,12 +22,14 @@ public class RecuperarContraseniaDTO {
 
     private String expiracionRecuperarContrasenia = "";
 
+    private String repitaPassword = "";
+
     public void setFechaExpiracion() {
         // Obtengo la fecha actual
         LocalDateTime fechaActual = LocalDateTime.now();
 
-        // Añado 3 minutos a la fecha actual para obtener la fecha de expiración
-        LocalDateTime fechaExpiracion = fechaActual.plusMinutes(3);
+        // Añado 10 minutos a la fecha actual para obtener la fecha de expiración
+        LocalDateTime fechaExpiracion = fechaActual.plusMinutes(10);
 
         // Defino el formato para la fecha
         DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");

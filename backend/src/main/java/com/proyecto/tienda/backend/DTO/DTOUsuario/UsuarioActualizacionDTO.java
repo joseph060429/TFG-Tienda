@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor //Genera el constructor vacío
 public class UsuarioActualizacionDTO {
     
-    @Size(min = 2, max = 70, message = "El nombre no puede tener menos de 2 y más de 70 caracteres ACTUALIZACIONDTO")
+    @Size(min = 2, max = 70, message = "El nombre no puede tener menos de 2 y más de 70 caracteres")
     private String nombre;
 
     @Size(min = 2, max = 70, message = "El apellido no puede tener menos de 2 y más de 70 caracteres")
