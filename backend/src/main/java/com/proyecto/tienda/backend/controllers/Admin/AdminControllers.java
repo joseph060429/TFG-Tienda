@@ -45,6 +45,7 @@ public class AdminControllers {
     // Metodo para listar un usuario por id
     @GetMapping("/listarUsuario")
     public ResponseEntity<?> listarUnUsuario(@RequestParam("id") String usuarioId) {
+
         UsuarioModelo usuario = adminServicio.listarUnUsuario(usuarioId);
 
         if (usuario != null) {

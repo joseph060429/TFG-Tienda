@@ -18,15 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 public class AuthControllers {
 
+    // @Autowired
+    // private AuthServicioImpl authServicio;
+
     @Autowired
     private AuthServicio authServicio;
 
     @Autowired
     private ResendUtil resend;
 
-   
-
-    @GetMapping("/hello")
+   @GetMapping("/hello")
     public String hello() {
         return "Hello World SIN SEGURIDAD";
     }
@@ -76,7 +77,7 @@ public class AuthControllers {
                     "Error: Código incorrecto o la fecha de expiración ha pasado. Verifique el código o solicite uno nuevo.");
         }
     }
-
+    
     // Controlador de cambio de contraseña
     @PostMapping("/cambiarContrasenia")
     public ResponseEntity<String> cambiarContrasenia(@RequestBody @Valid RecuperarContraseniaDTO recuperarContraseniaDTO) {

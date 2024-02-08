@@ -1,10 +1,9 @@
 package com.proyecto.tienda.backend.controllers.Producto;
 
-import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.proyecto.tienda.backend.DTO.DTOProducto.ActualizarProductoDTO;
 import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
 import com.proyecto.tienda.backend.models.Producto;
-import com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio;
-
+import com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio.AuthProductoServicio;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -87,7 +84,6 @@ public class AuthProductoControllers {
         }
     }
 
-    
     // Listar todos los productos ADMIN
     @GetMapping("/listarProductos")
     public ResponseEntity<List<Producto>> listarProductos(
@@ -98,30 +94,28 @@ public class AuthProductoControllers {
         return ResponseEntity.ok(productos);
     }
 
-    // Busqueda por campos importantes EN EL PRECIO TENGO QUE PONERLE EL CAMPO, me
-    // muestra todos los campos porque es
-    // EXACTO PARA QUE LO HAGA
+    // Busqueda por campos importantes
     @GetMapping("/buscarPorCamposImportantes")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorCamposImportantes(
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) BigDecimal precio,
+            // @RequestParam(required = false) BigDecimal precio,
             @RequestParam(required = false) String marca,
             @RequestParam(required = false) Boolean disponibilidad,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
             List<Map<String, Object>> productos = authproductoServicio.buscarProductosAdmin(descripcion, categoria,
-                    nombre,
-                    precio, marca, page, size);
+                    nombre, marca, page, size);
+                    // precio,);
             // Se puede quitar el for pero lo dejo para imprimir en pantalla lo que me sale
             return ResponseEntity.ok(productos);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
     }
-
+   
     // Busqueda por cualquier especificacion que ponga el ADMIN y le muestro TODOS
     // LOS CAMPOS
     @GetMapping("/buscarProductosPorEspecificacion")

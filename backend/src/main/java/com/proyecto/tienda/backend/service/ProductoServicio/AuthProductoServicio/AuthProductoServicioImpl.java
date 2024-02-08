@@ -1,6 +1,6 @@
-package com.proyecto.tienda.backend.service.ProductoServicio;
+package com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio;
 
-import java.math.BigDecimal;
+
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,12 +22,12 @@ import com.proyecto.tienda.backend.models.Producto;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 
 @Service
-public class AuthProductoServicio {
+public class AuthProductoServicioImpl implements AuthProductoServicio {
 
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
-    // Crear producto
+    @Override
     public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO) {
 
         // Validar la categoría del producto
@@ -51,6 +51,20 @@ public class AuthProductoServicio {
         }
     }
 
+    @Override
+    public String eliminarProducto(String _id) {
+
+        Optional<Producto> productOptional = productoRepositorio.findById(_id);
+
+        if (productOptional.isPresent()) {
+            Producto producto = productOptional.get();
+            productoRepositorio.deleteBy(producto.get_id());
+            return "Producto eliminado correctamente";
+        } else {
+            return "Producto no encontrado";
+        }
+    }
+
     // Metodo para comprobar si la categoria que le estoy poniendo es valida
     private boolean esCategoriaValida(String categoria) {
         // Obtengo todas las categorías del enum
@@ -65,7 +79,7 @@ public class AuthProductoServicio {
         return false; // Categoría no válida
     }
 
-    // Construccion del producto
+    // // Construccion del producto
     private Producto construirProducto(CrearProductoDTO crearProductoDTO) {
         Producto nuevoProducto = new Producto();
 
@@ -104,20 +118,7 @@ public class AuthProductoServicio {
         return String.format("%s-%s-%s", categoria, nombre, marca);
     }
 
-    // Metodo para eliminar el producto por id
-    public String eliminarProducto(String _id) {
-        Optional<Producto> productOptional = productoRepositorio.findById(_id);
-
-        if (productOptional.isPresent()) {
-            Producto producto = productOptional.get();
-            productoRepositorio.deleteBy(producto.get_id());
-            return "Producto eliminado correctamente";
-        } else {
-            return "Producto no encontrado";
-        }
-    }
-
-    // Método para actualizar producto por id
+    @Override
     public ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO) {
         Optional<Producto> productOptional = productoRepositorio.findById(_id);
 
@@ -218,7 +219,8 @@ public class AuthProductoServicio {
         return String.format("%s-%s-%s", categoria, nombre, marca);
     }
 
-    // Metodo para listar un producto por id:
+    // // Metodo para listar un producto por id:
+    @Override
     public ResponseEntity<?> listarUnProducto(String _id) {
         Optional<Producto> productOptional = productoRepositorio.findById(_id);
         if (productOptional.isPresent()) {
@@ -230,15 +232,19 @@ public class AuthProductoServicio {
     }
 
     // Listar todos los productos
+    @Override
     public Page<Producto> listarProductosAdmin(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return productoRepositorio.findAll(pageable);
     }
 
-    // // Busqueda por campos importantes y ME MUESTRA TODOS LOS CAMPOS PORQUE ES
-    // PARA EL ADMIN
-    public List<Map<String, Object>> buscarProductosAdmin(String descripcion, String categoria, String nombre,
-            BigDecimal precio, String marca,
+    // // // Busqueda por campos importantes y ME MUESTRA TODOS LOS CAMPOS PORQUE ES PARA EL ADMIN
+    @Override
+    public List<Map<String, Object>> buscarProductosAdmin(
+            // BigDecimal precio,
+            String descripcion,
+            String categoria, String nombre,
+            String marca,
             int page, int size) {
 
         // System.out.println("Descripcion: " + descripcion);
@@ -253,15 +259,18 @@ public class AuthProductoServicio {
 
         if (categoria != null && !categoria.isEmpty()) {
             String normalizedCategoria = normalizeText(categoria);
-            productosPage = productoRepositorio.findByCategoriaProductoIgnoreCase(normalizedCategoria, pageable);
+            productosPage = productoRepositorio.findByCategoriaProductoIgnoreCase(normalizedCategoria,
+                    pageable);
 
         } else if (nombre != null && !nombre.isEmpty()) {
             String normalizedNombre = normalizeText(nombre);
-            productosPage = productoRepositorio.findByNombreProductoContainingIgnoreCase(normalizedNombre, pageable);
+            productosPage = productoRepositorio.findByNombreProductoContainingIgnoreCase(normalizedNombre,
+                    pageable);
 
         } else if (marca != null && !marca.isEmpty()) {
             String normalizedMarca = normalizeText(marca);
-            productosPage = productoRepositorio.findByMarcaProductoContainingIgnoreCase(normalizedMarca, pageable);
+            productosPage = productoRepositorio.findByMarcaProductoContainingIgnoreCase(normalizedMarca,
+                    pageable);
 
         } else if (descripcion != null && !descripcion.isEmpty()) {
             String normalizedDescripcion = normalizeText(descripcion);
@@ -282,7 +291,8 @@ public class AuthProductoServicio {
             mapaProductos.put("nombre", producto.getNombreProducto());
             mapaProductos.put("precio", producto.getPrecioProducto());
             mapaProductos.put("marca", producto.getMarcaProducto());
-            mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+            mapaProductos.put("especificacionesTecnicas",
+                    producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
             mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
             mapaProductos.put("cantidad", producto.getCantidadProducto());
@@ -295,6 +305,7 @@ public class AuthProductoServicio {
 
     // Metodo para buscar producto por cualquier especificacion y que le muestre
     // todos los campos al admin
+    @Override
     public List<Map<String, Object>> buscarProductosPorEspecificacionAdmin(String especificacion, int page, int size) {
         System.out.println("Especificación: " + especificacion);
 
@@ -319,7 +330,8 @@ public class AuthProductoServicio {
             mapaProductos.put("nombre", producto.getNombreProducto());
             mapaProductos.put("precio", producto.getPrecioProducto());
             mapaProductos.put("marca", producto.getMarcaProducto());
-            mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+            mapaProductos.put("especificacionesTecnicas",
+                    producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
             mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
             mapaProductos.put("cantidad", producto.getCantidadProducto());
@@ -332,13 +344,15 @@ public class AuthProductoServicio {
     }
 
     // Metodo para normalizar los textos que ponga el usuario y me busque sin tilde
-    // los campos
+    // los campos, TAMBIEN LO USO PARA TEXTOS TODOS SIN TILDE EN LA BASE DE DATOS
+
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
-    
+
     // Metodo para hacer una busqueda de minimo a maximo
+    @Override
     public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax,
             int page, int size) {
 
@@ -358,19 +372,21 @@ public class AuthProductoServicio {
                 mapaProductos.put("nombre", producto.getNombreProducto());
                 mapaProductos.put("precio", producto.getPrecioProducto());
                 mapaProductos.put("marca", producto.getMarcaProducto());
-                mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+                mapaProductos.put("especificacionesTecnicas",
+                        producto.getEspecificacionesTecnicas());
                 mapaProductos.put("imagenProducto", producto.getImagenProducto());
                 mapaProductos.put("cantidad", producto.getCantidadProducto());
                 mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
                 mapaProductos.put("identificador", producto.getIdentificador());
-                
+
                 productosResponse.add(mapaProductos);
             }
             return productosResponse;
         } catch (Exception e) {
             e.printStackTrace();
             // Mensaje de error, DEVUELVO LA LISTA VACÍA
-            System.out.println("Error al buscar productos por rango de precio: " + e.getMessage());
+            System.out.println("Error al buscar productos por rango de precio: " +
+                    e.getMessage());
             return Collections.emptyList();
         }
     }

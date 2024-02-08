@@ -1,16 +1,17 @@
 package com.proyecto.tienda.backend.controllers.Producto;
 
-import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.proyecto.tienda.backend.service.ProductoServicio.ProductoServicio;
+
 
 @RestController
 public class ProductosController {
@@ -43,7 +44,7 @@ public class ProductosController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
-            List<Map<String, Object>> productos = productoServicio.buscarProductos(descripcion, categoria, nombre,
+            List<Map<String, Object>> productos = productoServicio.buscarProductosPorCampos(descripcion, categoria, nombre,
                     marca, page, size);
             return ResponseEntity.ok(productos);
         } catch (Exception e) {

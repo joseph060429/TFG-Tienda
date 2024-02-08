@@ -60,10 +60,6 @@ public class SecurityConfig {
                     auth.requestMatchers("/buscarPorEspecificacion").permitAll();
                     auth.requestMatchers("/buscarPorRangoDePrecio").permitAll();
                     auth.requestMatchers("/cambiarContrasenia").permitAll();
-                    // auth.requestMatchers("/cambiar-contrasenia")
-                    //         .access(new WebExpressionAuthorizationManager("hasAuthority('USER')"));
-                    // auth.requestMatchers("/cambiar-contraseña").hasAnyRole("ADMIN", "USER");
-
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
