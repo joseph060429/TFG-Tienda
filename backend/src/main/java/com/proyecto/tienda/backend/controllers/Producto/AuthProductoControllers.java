@@ -35,14 +35,13 @@ public class AuthProductoControllers {
 
     // Crear producto
     @PostMapping("/crearProducto" )
-    public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO, @RequestParam("kaka") MultipartFile file) {
+    public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO, @RequestParam("img") MultipartFile file) {
         try {
             System.out.println(crearProductoDTO.toString()+" "+file.getContentType());
             // Validar y crear el producto
             ResponseEntity<?> response = authproductoServicio.crearProducto(crearProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
-            // Manejar cualquier excepción general y devolver una respuesta de error
             return ResponseEntity.status(500).body("Error interno del servidor");
         }
     }
@@ -157,21 +156,5 @@ public class AuthProductoControllers {
         }
     }
 
-    //Subir imagen
-    // @PostMapping("/subirImagen")
-    // public ResponseEntity<String> subirImg(@RequestParam("file") MultipartFile file) throws Exception{
-    //     return new ResponseEntity<>(authproductoServicio.subirImagen(file), HttpStatus.OK);
-    // }
 
-    // @PostMapping("/subirImagen")
-    // public ResponseEntity<String> subirImg(@RequestParam("file") MultipartFile file,
-    //                                       @ModelAttribute CrearProductoDTO crearProductoDTO) {
-    //     try {
-    //         String resultadoSubida = authproductoServicio.subirImagen(file, crearProductoDTO);
-    //         return new ResponseEntity<>(resultadoSubida, HttpStatus.OK);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return new ResponseEntity<>("Error al subir la imagen: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-    // }
 }

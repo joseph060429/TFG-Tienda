@@ -1,6 +1,6 @@
 package com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.*;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +31,15 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
+    @Value("${directorio.imagenes.path}")
+    private String directorioImagenesPath;
+
     // Construccion del producto
-    private Producto construirProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
+    private ResponseEntity<?> construirProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
 
         Producto nuevoProducto = new Producto();
 
         try {
-
             EProducto categoriaProductoEnum = EProducto.valueOf(crearProductoDTO.getCategoriaProducto());
             nuevoProducto.setCategoriaProducto(categoriaProductoEnum);
 
@@ -49,48 +52,63 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             nuevoProducto
                     .setEspecificacionesTecnicas(normalizeText(crearProductoDTO.getEspecificacionesTecnicas().trim()));
 
-            // Construir el identificador
+            // Construyo el identificador
             String identificador = construirIdentificador(crearProductoDTO);
             nuevoProducto.setIdentificador(normalizeText(identificador));
 
-            // Construir la imagen
-            String nombreImagen = subirImagen(file, crearProductoDTO);
-            nuevoProducto.setImagenProducto(nombreImagen);
+            // Subo la imagen
+            ResponseEntity<String> responseImagen = subirImagen(file, crearProductoDTO);
+            if (responseImagen.getStatusCode().is2xxSuccessful()) {
+                String nombreImagen = responseImagen.getBody();
+                nuevoProducto.setImagenProducto(nombreImagen);
+            } else {
+                return ResponseEntity.badRequest().body("Error al construir el producto: " + responseImagen.getBody());
+            }
+
+            if (nuevoProducto.get_id() == null) {
+                nuevoProducto.set_id(UUID.randomUUID().toString());
+            }
+
+            return ResponseEntity.ok(nuevoProducto);
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Error al subir el archivo: " + e.getMessage());
+            throw new RuntimeException("Error al construir el producto: " + e.getMessage());
         }
 
-        if (nuevoProducto.get_id() == null) {
-            nuevoProducto.set_id(UUID.randomUUID().toString());
-        }
-
-        return nuevoProducto;
     }
 
     // Crear Producto
+    @Override
     public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
         try {
-            // Validar la categoría del producto
+            // Valido la categoría del producto
             if (!esCategoriaValida(crearProductoDTO.getCategoriaProducto())) {
                 System.out.println("La categoría del producto no es válida " + crearProductoDTO.getCategoriaProducto());
                 return ResponseEntity.badRequest().body("La categoría del producto no es válida");
             }
+            // Construyo el nuevo producto
+            ResponseEntity<?> construirProductoResponse = construirProducto(crearProductoDTO, file);
 
-            // Construir el nuevo producto con la subida de la imagen
-            Producto nuevoProducto = construirProducto(crearProductoDTO, file);
+            // Verifico si la construcción del producto fue exitosa
+            if (construirProductoResponse.getStatusCode().is2xxSuccessful()) {
+                Producto nuevoProducto = (Producto) construirProductoResponse.getBody();
 
-            // Valido si el identificador ya existe en la base de datos
-            String identificador = nuevoProducto.getIdentificador();
+                // Valido si el identificador ya existe en la base de datos
+                String identificador = nuevoProducto.getIdentificador();
 
-            if (productoRepositorio.existsByIdentificador(identificador)) {
-                return ResponseEntity.badRequest().body("Ya existe un producto con el mismo identificador");
+                if (productoRepositorio.existsByIdentificador(identificador)) {
+                    // Elimino la imagen subida por el error
+                    borrarImagen(nuevoProducto.getImagenProducto());
+                    return ResponseEntity.status(400).body("Ya existe un producto con el mismo identificador");
+                } else {
+                    // Guardo el producto en la base de datos
+                    productoRepositorio.save(nuevoProducto);
+
+                    return ResponseEntity.ok("Producto creado exitosamente");
+                }
             } else {
-                // Guardar el producto en la base de datos
-                productoRepositorio.save(nuevoProducto);
-
-                return ResponseEntity.ok("Producto creado exitosamente");
+                return construirProductoResponse;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -364,7 +382,6 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
     // Metodo para normalizar los textos que ponga el usuario y me busque sin tilde
     // los campos, TAMBIEN LO USO PARA TEXTOS TODOS SIN TILDE EN LA BASE DE DATOS
-
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -410,11 +427,14 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    @Override
-    public String subirImagen(MultipartFile file, CrearProductoDTO crearProductoDTO) throws Exception {
-        
+    // Metodo para subir imagenes
+    public ResponseEntity<String> subirImagen(MultipartFile file, CrearProductoDTO crearProductoDTO) {
         try {
-            
+
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("La imágen no puede estar vacío");
+            }
+
             String fileName = UUID.randomUUID().toString();
             byte[] bytes = file.getBytes();
             String fileOriginalName = file.getOriginalFilename();
@@ -423,25 +443,37 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             long maxFile = 5 * 1024 * 1024; // 5 MB
 
             if (fileSize > maxFile) {
-                throw new Exception("Error: El archivo es demasiado grande");
+                return ResponseEntity.badRequest().body("La imágen es demasiado grande");
             }
 
             if (!fileOriginalName.endsWith(".jpg") && !fileOriginalName.endsWith(".png")
                     && !fileOriginalName.endsWith(".jpeg")) {
-                throw new Exception("Error: El archivo debe ser JPG, PNG o JPEG");
+                return ResponseEntity.badRequest().body("La imágen debe ser JPG, PNG o JPEG");
             }
 
             String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf(".") + 1);
             String newFileName = fileName + "." + fileExtension;
 
-            Path path = Paths.get("C:\\Users\\jrsm\\Desktop\\img\\" + newFileName);
+            // Viene del path
+            Path path = Paths.get(directorioImagenesPath + newFileName);
             Files.write(path, bytes);
 
-            return newFileName;
-
+            return ResponseEntity.ok(newFileName);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("Error al subir la imagen" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al subir la imagen: " + e.getMessage());
+        }
+    }
+
+    // Metodo para eliminar una imagen de la carpeta imagenes
+    private void borrarImagen(String nombreImagen) {
+        try {
+            Path path = Paths.get(directorioImagenesPath + nombreImagen);
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al intentar eliminar la imagen: " + e.getMessage());
         }
     }
 

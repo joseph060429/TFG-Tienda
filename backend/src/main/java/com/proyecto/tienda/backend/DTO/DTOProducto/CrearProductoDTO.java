@@ -57,13 +57,9 @@ public class CrearProductoDTO {
     @NotBlank(message = "Las especificaciones tecnicas del producto no puede estar en blanco")
     private String especificacionesTecnicas;
 
-    // @NotBlank(message = "La imagen del producto no puede estar en blanco")
-    // @Size(min = 2, message = "La imagen del producto no puede tener menos de 2 caracteres")
     private String imagenProducto;
 
     private String identificador;
-
-    // private File imageSubida;
 
     public void ajustarDisponibilidad() {
         if (cantidadProducto == 0) {

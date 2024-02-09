@@ -67,9 +67,6 @@ public class Producto {
 
     private String identificador;
 
-    @Field("informacionImagen") //Anotacion para identificar la colección con la informacion de la imágen
-    private InformacionImagen informacionImagen;
-
     public void setCategoriaProducto(EProducto eProducto) {
         this.categoriaProducto = eProducto.toString();
     }
@@ -78,9 +75,6 @@ public class Producto {
         return EProducto.valueOf(this.categoriaProducto);
     }
 
-    //Metodo para subir imagen
-    // public void setImagenProducto(InformacionImagen informacionImagen) {
-    //     this.informacionImagen = informacionImagen;
-    // }
+   
 
 }

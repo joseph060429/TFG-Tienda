@@ -5,19 +5,13 @@ import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
 import com.proyecto.tienda.backend.models.Producto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-// import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Map;
 
-// @Service
 public interface AuthProductoServicio {
 
-        // ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO); // HECHO
-
         ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO, MultipartFile file);
-
 
         String eliminarProducto(String _id);
 
@@ -36,15 +30,5 @@ public interface AuthProductoServicio {
                         int page, int size);
 
         Page<Producto> listarProductosAdmin(int page, int size);
-
-        // // Para subir imagen
-        // String subirImagen(MultipartFile file) throws Exception;
-
-        String subirImagen(MultipartFile file, CrearProductoDTO crearProductoDTO) throws Exception;
-
-        // Probando Subir Imagen a la base de datos
-
-        // ResponseEntity<?> crearProductoConImagen(CrearProductoDTO crearProductoDTO,
-        // MultipartFile imagen);
 
 }
