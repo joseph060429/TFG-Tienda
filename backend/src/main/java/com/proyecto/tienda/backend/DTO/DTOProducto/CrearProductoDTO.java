@@ -1,7 +1,13 @@
 package com.proyecto.tienda.backend.DTO.DTOProducto;
 
 
+import java.io.File;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.proyecto.tienda.backend.util.InformacionImagen;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -51,11 +57,13 @@ public class CrearProductoDTO {
     @NotBlank(message = "Las especificaciones tecnicas del producto no puede estar en blanco")
     private String especificacionesTecnicas;
 
-    @NotBlank(message = "La imagen del producto no puede estar en blanco")
-    @Size(min = 2, message = "La imagen del producto no puede tener menos de 2 caracteres")
+    // @NotBlank(message = "La imagen del producto no puede estar en blanco")
+    // @Size(min = 2, message = "La imagen del producto no puede tener menos de 2 caracteres")
     private String imagenProducto;
 
     private String identificador;
+
+    // private File imageSubida;
 
     public void ajustarDisponibilidad() {
         if (cantidadProducto == 0) {

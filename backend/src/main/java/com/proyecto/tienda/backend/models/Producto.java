@@ -2,8 +2,11 @@ package com.proyecto.tienda.backend.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.http.ResponseEntity;
 
 import com.proyecto.tienda.backend.UtilEnum.EProducto;
+import com.proyecto.tienda.backend.util.InformacionImagen;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -64,6 +67,9 @@ public class Producto {
 
     private String identificador;
 
+    @Field("informacionImagen") //Anotacion para identificar la colección con la informacion de la imágen
+    private InformacionImagen informacionImagen;
+
     public void setCategoriaProducto(EProducto eProducto) {
         this.categoriaProducto = eProducto.toString();
     }
@@ -71,5 +77,10 @@ public class Producto {
     public EProducto getCategoria() {
         return EProducto.valueOf(this.categoriaProducto);
     }
+
+    //Metodo para subir imagen
+    // public void setImagenProducto(InformacionImagen informacionImagen) {
+    //     this.informacionImagen = informacionImagen;
+    // }
 
 }

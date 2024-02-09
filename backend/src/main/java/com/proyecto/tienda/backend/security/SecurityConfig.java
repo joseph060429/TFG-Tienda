@@ -59,6 +59,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/buscarPorCamposImportantes").permitAll();
                     auth.requestMatchers("/buscarPorEspecificacion").permitAll();
                     auth.requestMatchers("/buscarPorRangoDePrecio").permitAll();
+                    auth.requestMatchers("/subirImagen").permitAll();
                     auth.requestMatchers("/cambiarContrasenia").permitAll();
                     auth.anyRequest().authenticated();
                 })

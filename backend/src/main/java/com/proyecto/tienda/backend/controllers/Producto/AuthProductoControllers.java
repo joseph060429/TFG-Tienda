@@ -21,6 +21,9 @@ import com.proyecto.tienda.backend.models.Producto;
 import com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio.AuthProductoServicio;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+//SUBIR IMAGEN
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin/productos")
@@ -31,11 +34,12 @@ public class AuthProductoControllers {
     private AuthProductoServicio authproductoServicio;
 
     // Crear producto
-    @PostMapping("/crearProducto")
-    public ResponseEntity<?> crearProducto(@Valid @RequestBody CrearProductoDTO crearProductoDTO) {
+    @PostMapping("/crearProducto" )
+    public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO, @RequestParam("kaka") MultipartFile file) {
         try {
+            System.out.println(crearProductoDTO.toString()+" "+file.getContentType());
             // Validar y crear el producto
-            ResponseEntity<?> response = authproductoServicio.crearProducto(crearProductoDTO);
+            ResponseEntity<?> response = authproductoServicio.crearProducto(crearProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             // Manejar cualquier excepción general y devolver una respuesta de error
@@ -153,4 +157,21 @@ public class AuthProductoControllers {
         }
     }
 
+    //Subir imagen
+    // @PostMapping("/subirImagen")
+    // public ResponseEntity<String> subirImg(@RequestParam("file") MultipartFile file) throws Exception{
+    //     return new ResponseEntity<>(authproductoServicio.subirImagen(file), HttpStatus.OK);
+    // }
+
+    // @PostMapping("/subirImagen")
+    // public ResponseEntity<String> subirImg(@RequestParam("file") MultipartFile file,
+    //                                       @ModelAttribute CrearProductoDTO crearProductoDTO) {
+    //     try {
+    //         String resultadoSubida = authproductoServicio.subirImagen(file, crearProductoDTO);
+    //         return new ResponseEntity<>(resultadoSubida, HttpStatus.OK);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return new ResponseEntity<>("Error al subir la imagen: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 }

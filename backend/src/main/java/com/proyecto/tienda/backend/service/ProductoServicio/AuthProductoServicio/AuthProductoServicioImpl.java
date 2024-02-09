@@ -1,6 +1,7 @@
 package com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio;
 
-
+import java.io.File;
+import java.nio.file.*;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import com.proyecto.tienda.backend.DTO.DTOProducto.ActualizarProductoDTO;
 import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EProducto;
@@ -27,27 +30,72 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
-    @Override
-    public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO) {
+    // Construccion del producto
+    private Producto construirProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
 
-        // Validar la categoría del producto
-        if (!esCategoriaValida(crearProductoDTO.getCategoriaProducto())) {
-            System.out.println("La categoría del producto no es válida " + crearProductoDTO.getCategoriaProducto());
-            return ResponseEntity.badRequest().body("La categoría del producto no es válida");
+        Producto nuevoProducto = new Producto();
+
+        try {
+
+            EProducto categoriaProductoEnum = EProducto.valueOf(crearProductoDTO.getCategoriaProducto());
+            nuevoProducto.setCategoriaProducto(categoriaProductoEnum);
+
+            nuevoProducto.setNombreProducto(normalizeText(crearProductoDTO.getNombreProducto().trim()));
+            nuevoProducto.setDescripcionProducto(normalizeText(crearProductoDTO.getDescripcionProducto().trim()));
+            nuevoProducto.setPrecioProducto(crearProductoDTO.getPrecioProducto());
+            nuevoProducto.setDisponibilidadProducto(crearProductoDTO.getCantidadProducto() > 0);
+            nuevoProducto.setCantidadProducto(crearProductoDTO.getCantidadProducto());
+            nuevoProducto.setMarcaProducto(normalizeText(crearProductoDTO.getMarcaProducto().trim()));
+            nuevoProducto
+                    .setEspecificacionesTecnicas(normalizeText(crearProductoDTO.getEspecificacionesTecnicas().trim()));
+
+            // Construir el identificador
+            String identificador = construirIdentificador(crearProductoDTO);
+            nuevoProducto.setIdentificador(normalizeText(identificador));
+
+            // Construir la imagen
+            String nombreImagen = subirImagen(file, crearProductoDTO);
+            nuevoProducto.setImagenProducto(nombreImagen);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al subir el archivo: " + e.getMessage());
         }
-        // Creo el nuevo producto
-        Producto nuevoProducto = construirProducto(crearProductoDTO);
 
-        // Valido si el identificador ya existe en la base de datos
-        String identificador = nuevoProducto.getIdentificador();
+        if (nuevoProducto.get_id() == null) {
+            nuevoProducto.set_id(UUID.randomUUID().toString());
+        }
 
-        if (productoRepositorio.existsByIdentificador(identificador)) {
-            return ResponseEntity.badRequest().body("Ya existe un producto con el mismo identificador");
-        } else {
-            // Guardar el producto en la base de datos
-            productoRepositorio.save(nuevoProducto);
+        return nuevoProducto;
+    }
 
-            return ResponseEntity.ok("Producto creado exitosamente");
+    // Crear Producto
+    public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
+        try {
+            // Validar la categoría del producto
+            if (!esCategoriaValida(crearProductoDTO.getCategoriaProducto())) {
+                System.out.println("La categoría del producto no es válida " + crearProductoDTO.getCategoriaProducto());
+                return ResponseEntity.badRequest().body("La categoría del producto no es válida");
+            }
+
+            // Construir el nuevo producto con la subida de la imagen
+            Producto nuevoProducto = construirProducto(crearProductoDTO, file);
+
+            // Valido si el identificador ya existe en la base de datos
+            String identificador = nuevoProducto.getIdentificador();
+
+            if (productoRepositorio.existsByIdentificador(identificador)) {
+                return ResponseEntity.badRequest().body("Ya existe un producto con el mismo identificador");
+            } else {
+                // Guardar el producto en la base de datos
+                productoRepositorio.save(nuevoProducto);
+
+                return ResponseEntity.ok("Producto creado exitosamente");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al crear el producto: " + e.getMessage());
         }
     }
 
@@ -77,36 +125,6 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             }
         }
         return false; // Categoría no válida
-    }
-
-    // // Construccion del producto
-    private Producto construirProducto(CrearProductoDTO crearProductoDTO) {
-        Producto nuevoProducto = new Producto();
-
-        // Convierto el EProduct a String
-        EProducto categoriaProductoEnum = EProducto.valueOf(crearProductoDTO.getCategoriaProducto());
-        nuevoProducto.setCategoriaProducto(categoriaProductoEnum);
-
-        nuevoProducto.setNombreProducto(normalizeText(crearProductoDTO.getNombreProducto().trim()));
-        nuevoProducto.setDescripcionProducto(normalizeText(crearProductoDTO.getDescripcionProducto().trim()));
-        nuevoProducto.setPrecioProducto(crearProductoDTO.getPrecioProducto());
-        nuevoProducto.setDisponibilidadProducto(crearProductoDTO.getCantidadProducto() > 0);
-        nuevoProducto.setCantidadProducto(crearProductoDTO.getCantidadProducto());
-        nuevoProducto.setMarcaProducto(normalizeText(crearProductoDTO.getMarcaProducto().trim()));
-        nuevoProducto.setEspecificacionesTecnicas(normalizeText(crearProductoDTO.getEspecificacionesTecnicas().trim()));
-
-        // Construyo el identificador con la categoría, nombre y marca separados por
-        // guiones
-        String identificador = construirIdentificador(crearProductoDTO);
-
-        nuevoProducto.setIdentificador(normalizeText(identificador));
-        nuevoProducto.setImagenProducto(crearProductoDTO.getImagenProducto());
-
-        if (nuevoProducto.get_id() == null) {
-            nuevoProducto.set_id(UUID.randomUUID().toString());
-        }
-
-        return nuevoProducto;
     }
 
     // Identificador para no insertar el mismo producto 2 veces en la creacion
@@ -238,7 +256,8 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return productoRepositorio.findAll(pageable);
     }
 
-    // // // Busqueda por campos importantes y ME MUESTRA TODOS LOS CAMPOS PORQUE ES PARA EL ADMIN
+    // // // Busqueda por campos importantes y ME MUESTRA TODOS LOS CAMPOS PORQUE ES
+    // PARA EL ADMIN
     @Override
     public List<Map<String, Object>> buscarProductosAdmin(
             // BigDecimal precio,
@@ -388,6 +407,41 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             System.out.println("Error al buscar productos por rango de precio: " +
                     e.getMessage());
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public String subirImagen(MultipartFile file, CrearProductoDTO crearProductoDTO) throws Exception {
+        
+        try {
+            
+            String fileName = UUID.randomUUID().toString();
+            byte[] bytes = file.getBytes();
+            String fileOriginalName = file.getOriginalFilename();
+
+            long fileSize = file.getSize();
+            long maxFile = 5 * 1024 * 1024; // 5 MB
+
+            if (fileSize > maxFile) {
+                throw new Exception("Error: El archivo es demasiado grande");
+            }
+
+            if (!fileOriginalName.endsWith(".jpg") && !fileOriginalName.endsWith(".png")
+                    && !fileOriginalName.endsWith(".jpeg")) {
+                throw new Exception("Error: El archivo debe ser JPG, PNG o JPEG");
+            }
+
+            String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf(".") + 1);
+            String newFileName = fileName + "." + fileExtension;
+
+            Path path = Paths.get("C:\\Users\\jrsm\\Desktop\\img\\" + newFileName);
+            Files.write(path, bytes);
+
+            return newFileName;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Error al subir la imagen" + e.getMessage());
         }
     }
 
