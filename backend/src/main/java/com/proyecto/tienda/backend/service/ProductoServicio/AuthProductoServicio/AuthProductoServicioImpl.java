@@ -40,9 +40,11 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         Producto nuevoProducto = new Producto();
 
         try {
+            // Para verificar la categoria
             EProducto categoriaProductoEnum = EProducto.valueOf(crearProductoDTO.getCategoriaProducto());
             nuevoProducto.setCategoriaProducto(categoriaProductoEnum);
 
+            // Construyo los demas campos
             nuevoProducto.setNombreProducto(normalizeText(crearProductoDTO.getNombreProducto().trim()));
             nuevoProducto.setDescripcionProducto(normalizeText(crearProductoDTO.getDescripcionProducto().trim()));
             nuevoProducto.setPrecioProducto(crearProductoDTO.getPrecioProducto());
@@ -57,7 +59,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             nuevoProducto.setIdentificador(normalizeText(identificador));
 
             // Subo la imagen
-            ResponseEntity<String> responseImagen = subirImagen(file, crearProductoDTO);
+            ResponseEntity<String> responseImagen = subirImagen(file);
             if (responseImagen.getStatusCode().is2xxSuccessful()) {
                 String nombreImagen = responseImagen.getBody();
                 nuevoProducto.setImagenProducto(nombreImagen);
@@ -82,12 +84,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     @Override
     public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
         try {
-            // Valido la categoría del producto
-            if (!esCategoriaValida(crearProductoDTO.getCategoriaProducto())) {
-                System.out.println("La categoría del producto no es válida " + crearProductoDTO.getCategoriaProducto());
-                return ResponseEntity.badRequest().body("La categoría del producto no es válida");
-            }
-            // Construyo el nuevo producto
+
             ResponseEntity<?> construirProductoResponse = construirProducto(crearProductoDTO, file);
 
             // Verifico si la construcción del producto fue exitosa
@@ -104,7 +101,6 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
                 } else {
                     // Guardo el producto en la base de datos
                     productoRepositorio.save(nuevoProducto);
-
                     return ResponseEntity.ok("Producto creado exitosamente");
                 }
             } else {
@@ -131,20 +127,6 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    // Metodo para comprobar si la categoria que le estoy poniendo es valida
-    private boolean esCategoriaValida(String categoria) {
-        // Obtengo todas las categorías del enum
-        EProducto[] categoriasEnum = EProducto.values();
-
-        // Verifico si la categoría del DTO coincide con alguna categoría del enum
-        for (EProducto categoriaEnum : categoriasEnum) {
-            if (categoriaEnum.name().equalsIgnoreCase(categoria)) {
-                return true; // Categoría es válida
-            }
-        }
-        return false; // Categoría no válida
-    }
-
     // Identificador para no insertar el mismo producto 2 veces en la creacion
     private String construirIdentificador(CrearProductoDTO crearProductoDTO) {
         String categoria = crearProductoDTO.getCategoriaProducto().toLowerCase();
@@ -154,75 +136,93 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return String.format("%s-%s-%s", categoria, nombre, marca);
     }
 
+    // Metodo para actualizar
     @Override
-    public ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO) {
-        Optional<Producto> productOptional = productoRepositorio.findById(_id);
+    public ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO,
+            MultipartFile file) {
 
-        if (productOptional.isPresent()) {
-            // Obtengo el objeto de la base de datos
-            Producto producto = productOptional.get();
+        try {
 
-            // Actualizo la categoria
-            if (actualizarProductoDTO.getCategoriaProducto() != null) {
-                EProducto categoriaProductoEnum = EProducto.valueOf(actualizarProductoDTO.getCategoriaProducto());
-                producto.setCategoriaProducto(categoriaProductoEnum);
-            }
+            Optional<Producto> productOptional = productoRepositorio.findById(_id);
 
-            // nuevoProducto.setNombreProducto(normalizeText(crearProductoDTO.getNombreProducto().trim()));
+            if (productOptional.isPresent()) {
+                // Obtengo el objeto de la base de datos
+                Producto producto = productOptional.get();
 
-            // Actualizo el nombre del producto
-            String nombreProducto = actualizarProductoDTO.getNombreProducto();
-            if (nombreProducto != null && !nombreProducto.isEmpty()) {
-                // producto.setNombreProducto(nombreProducto.trim());
-                producto.setNombreProducto(normalizeText(actualizarProductoDTO.getNombreProducto().trim()));
-            }
-            // Actualizo la descripcion del producto
-            String descripcionProducto = actualizarProductoDTO.getDescripcionProducto();
-            if (descripcionProducto != null && !descripcionProducto.isEmpty()) {
-                producto.setDescripcionProducto(normalizeText(actualizarProductoDTO.getDescripcionProducto().trim()));
-            }
-            // Actualizo la marca del producto
-            String marcaProducto = actualizarProductoDTO.getMarcaProducto();
-            if (marcaProducto != null && !marcaProducto.isEmpty()) {
-                producto.setMarcaProducto(normalizeText(actualizarProductoDTO.getMarcaProducto().trim()));
-            }
-            // Actualizo el precio del producto
-            Double precioProducto = actualizarProductoDTO.getPrecioProducto();
-            if (precioProducto != null) {
-                producto.setPrecioProducto(precioProducto);
-            }
-            // Actualizo la cantidad del producto
-            Integer cantidadProducto = actualizarProductoDTO.getCantidadProducto();
-            if (cantidadProducto != null) {
-                if (cantidadProducto > 0) {
-                    producto.setDisponibilidadProducto(true);
-                } else if (cantidadProducto == 0) {
-                    producto.setDisponibilidadProducto(false);
+                // Actualizo la categoria
+                if (actualizarProductoDTO.getCategoriaProducto() != null) {
+                    producto.setCategoriaProducto(EProducto.valueOf(actualizarProductoDTO.getCategoriaProducto()));
                 }
-                producto.setCantidadProducto(cantidadProducto);
-            }
-            // Actualizo las especificaciones tecnicas
-            String especificacionesTecnicas = actualizarProductoDTO.getEspecificacionesTecnicas();
-            if (especificacionesTecnicas != null) {
-                producto.setEspecificacionesTecnicas(
-                        normalizeText(actualizarProductoDTO.getEspecificacionesTecnicas().trim()));
-            }
-            // Actualizo la imagen del producto
-            String imagenProducto = actualizarProductoDTO.getImagenProducto();
-            if (imagenProducto != null) {
-                producto.setImagenProducto(imagenProducto.trim());
-            }
 
-            // Construir el identificador con la categoría, nombre y marca separados por
-            // guiones
-            String identificadorActualizado = construirIdentificadorActualizado(actualizarProductoDTO, producto);
-            producto.setIdentificador(normalizeText(identificadorActualizado));
+                // Actualizo el nombre del producto
+                if (actualizarProductoDTO.getNombreProducto() != null
+                        && !actualizarProductoDTO.getNombreProducto().isEmpty()) {
+                    producto.setNombreProducto(normalizeText(actualizarProductoDTO.getNombreProducto().trim()));
+                }
 
-            productoRepositorio.save(producto);
+                // Actualizo la descripcion del producto
+                if (actualizarProductoDTO.getDescripcionProducto() != null
+                        && !actualizarProductoDTO.getDescripcionProducto().isEmpty()) {
+                    producto.setDescripcionProducto(
+                            normalizeText(actualizarProductoDTO.getDescripcionProducto().trim()));
 
-            return ResponseEntity.ok("Producto actualizado correctamente");
-        } else {
-            return ResponseEntity.status(404).body("Producto no encontrado");
+                }
+                // Actualizo la marca del producto
+                if (actualizarProductoDTO.getMarcaProducto() != null
+                        && !actualizarProductoDTO.getMarcaProducto().isEmpty()) {
+                    producto.setMarcaProducto(normalizeText(actualizarProductoDTO.getMarcaProducto().trim()));
+                }
+
+                // Actualizo el precio del producto
+                if (actualizarProductoDTO.getPrecioProducto() != null) {
+                    if (actualizarProductoDTO.getPrecioProducto() > 0) {
+                        producto.setPrecioProducto(actualizarProductoDTO.getPrecioProducto());
+                    }
+                }
+
+                // Actualizo la cantidad del producto
+                Integer cantidadProducto = actualizarProductoDTO.getCantidadProducto();
+                if (cantidadProducto != null) {
+                    if (cantidadProducto > 0) {
+                        producto.setDisponibilidadProducto(true);
+                    } else if (cantidadProducto == 0) {
+                        producto.setDisponibilidadProducto(false);
+                    }
+                    producto.setCantidadProducto(cantidadProducto);
+                }
+                // Actualizo las especificaciones tecnicas
+                if (actualizarProductoDTO.getEspecificacionesTecnicas() != null
+                        && !actualizarProductoDTO.getEspecificacionesTecnicas().isEmpty()) {
+                    producto.setEspecificacionesTecnicas(
+                            normalizeText(actualizarProductoDTO.getEspecificacionesTecnicas().trim()));
+                }
+
+                // Actualizo la imagen del producto
+                if (file != null) {
+                    ResponseEntity<String> responseImagen = subirImagen(file);
+                    if (responseImagen.getStatusCode().is2xxSuccessful()) {
+                        String nombreImagen = responseImagen.getBody();
+                        producto.setImagenProducto(nombreImagen);
+                    } else {
+                        return ResponseEntity.badRequest()
+                                .body("Error al construir el producto: " + responseImagen.getBody());
+                    }
+                }
+                // Construir el identificador con la categoría, nombre y marca separados por
+                // guiones
+                String identificadorActualizado = construirIdentificadorActualizado(actualizarProductoDTO, producto);
+                producto.setIdentificador(normalizeText(identificadorActualizado));
+
+                productoRepositorio.save(producto);
+
+                return ResponseEntity.ok("Producto actualizado correctamente");
+            } else {
+                return ResponseEntity.status(404).body("Producto no encontrado");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al ACTUALIZAR el producto: " + e.getMessage());
         }
     }
 
@@ -381,7 +381,8 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     }
 
     // Metodo para normalizar los textos que ponga el usuario y me busque sin tilde
-    // los campos, TAMBIEN LO USO PARA TEXTOS TODOS SIN TILDE EN LA BASE DE DATOS
+    // los campos, TAMBIEN LO USO PARA introducir TEXTOS SIN TILDE EN LA BASE DE
+    // DATOS
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -428,11 +429,11 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     }
 
     // Metodo para subir imagenes
-    public ResponseEntity<String> subirImagen(MultipartFile file, CrearProductoDTO crearProductoDTO) {
+    public ResponseEntity<String> subirImagen(MultipartFile file) {
         try {
 
             if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("La imágen no puede estar vacío");
+                return ResponseEntity.badRequest().body("La imágen no puede estar vacía");
             }
 
             String fileName = UUID.randomUUID().toString();

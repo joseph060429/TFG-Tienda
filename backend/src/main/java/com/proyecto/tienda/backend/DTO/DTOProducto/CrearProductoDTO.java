@@ -1,13 +1,6 @@
 package com.proyecto.tienda.backend.DTO.DTOProducto;
 
-
-import java.io.File;
-
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import com.proyecto.tienda.backend.util.InformacionImagen;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -26,7 +19,7 @@ public class CrearProductoDTO {
     @Id
     private String _id;
 
-    @NotBlank(message = "El nombre del producto no puede estar en blanco")
+    @NotBlank(message = "La categoria del producto no puede estar en blanco")
     @Pattern(regexp = "^(Portatil|Sobremesa|Componentes)$", message = "La categoría debe ser 'Portatil', 'Sobremesa' o 'Componentes'")
     private String categoriaProducto;
 

@@ -1,6 +1,5 @@
 package com.proyecto.tienda.backend.controllers.Producto;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +20,6 @@ import com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-//SUBIR IMAGEN
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -34,14 +31,28 @@ public class AuthProductoControllers {
     private AuthProductoServicio authproductoServicio;
 
     // Crear producto
-    @PostMapping("/crearProducto" )
-    public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO, @RequestParam("img") MultipartFile file) {
+    @PostMapping("/crearProducto")
+    public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO,
+            @RequestParam("img") MultipartFile file) {
         try {
-            System.out.println(crearProductoDTO.toString()+" "+file.getContentType());
+            // System.out.println(crearProductoDTO.toString()+" "+file.getContentType());
             // Validar y crear el producto
             ResponseEntity<?> response = authproductoServicio.crearProducto(crearProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error interno del servidor");
+        }
+    }
+
+    // Actualizar producto
+    @PatchMapping("/actualizarProducto")
+    public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id, @RequestParam(required = false, value = "img") MultipartFile file,
+            @Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO) {
+        try {
+            ResponseEntity<?> response = authproductoServicio.actualizarProducto(id, actualizarProductoDTO, file);
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Error interno del servidor");
         }
     }
@@ -62,18 +73,6 @@ public class AuthProductoControllers {
         }
     }
 
-    // Actualizar producto
-    @PatchMapping("/actualizarProducto")
-    public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id,
-            @Valid @RequestBody ActualizarProductoDTO actualizarProductoDTO) {
-        try {
-            ResponseEntity<?> response = authproductoServicio.actualizarProducto(id, actualizarProductoDTO);
-            return ResponseEntity.ok(response.getBody());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor");
-        }
-    }
-
     // Buscar un producto por id
     @GetMapping("/listarUnProducto")
     public ResponseEntity<?> listarUnProducto(@RequestParam("id") String id) {
@@ -81,7 +80,6 @@ public class AuthProductoControllers {
         try {
             ResponseEntity<?> response = authproductoServicio.listarUnProducto(id);
             return ResponseEntity.ok(response.getBody());
-
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error interno del servidor");
         }
@@ -111,14 +109,14 @@ public class AuthProductoControllers {
         try {
             List<Map<String, Object>> productos = authproductoServicio.buscarProductosAdmin(descripcion, categoria,
                     nombre, marca, page, size);
-                    // precio,);
+            // precio,);
             // Se puede quitar el for pero lo dejo para imprimir en pantalla lo que me sale
             return ResponseEntity.ok(productos);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
     }
-   
+
     // Busqueda por cualquier especificacion que ponga el ADMIN y le muestro TODOS
     // LOS CAMPOS
     @GetMapping("/buscarProductosPorEspecificacion")
@@ -155,6 +153,5 @@ public class AuthProductoControllers {
             return ResponseEntity.status(500).body(null);
         }
     }
-
 
 }

@@ -1,6 +1,6 @@
 package com.proyecto.tienda.backend.DTO.DTOProducto;
 
-import com.proyecto.tienda.backend.UtilEnum.EProducto;
+// import com.proyecto.tienda.backend.UtilEnum.EProducto;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -15,11 +15,11 @@ import lombok.NoArgsConstructor;
 public class ActualizarProductoDTO {
 
 
-    // @NotBlank(message = "La categoria del producto no puede estar en blanco")
+   
     @Pattern(regexp = "^(Portatil|Sobremesa|Componentes)$", message = "La categoría debe ser 'Portatil', 'Sobremesa' o 'Componentes'")
     private String categoriaProducto;
 
-    @Size(min = 2, max = 70, message = "El nombre del producto no puede tener menos de 2 y más de 70 caracteres")
+    @Size(min = 2, max = 70, message = "El nombre del producto no puede tener menos de 2 y más de 70 caracteresesss")
     private String nombreProducto;
 
     @Size(min = 2, message = "La descripcion del producto no puede tener menos de 2 caracteres")
@@ -44,16 +44,16 @@ public class ActualizarProductoDTO {
     private String especificacionesTecnicas;
 
     // @NotBlank(message = "La imagen del producto no puede estar en blanco")
-    @Size(min = 2, message = "La imagen del producto no puede tener menos de 2 caracteres")
+    // @Size(min = 2, message = "La imagen del producto no puede tener menos de 2 caracteres")
     private String imagenProducto;
 
     private String identificador;
 
-    public void setCategoriaProducto(EProducto eProducto) {
-        this.categoriaProducto = eProducto.toString();
-    }
+    // public void setCategoriaProducto(EProducto eProducto) {
+    //     this.categoriaProducto = eProducto.toString();
+    // }
 
-    public EProducto getCategoria() {
-        return EProducto.valueOf(this.categoriaProducto);
-    }
+    // public EProducto getCategoria() {
+    //     return EProducto.valueOf(this.categoriaProducto);
+    // }
 }

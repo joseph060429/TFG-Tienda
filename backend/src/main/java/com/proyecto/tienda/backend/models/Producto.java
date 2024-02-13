@@ -30,7 +30,7 @@ public class Producto {
     @Id
     private String _id;
 
-    @NotBlank(message = "El nombre del producto no puede estar en blanco")
+    @NotBlank(message = "La categoria del producto no puede estar en blanco")
     @Pattern(regexp = "^(Portatil|Sobremesa|Componentes)$", message = "La categoría debe ser 'Portatil', 'Sobremesa' o 'Componentes'")
     private String categoriaProducto;
 

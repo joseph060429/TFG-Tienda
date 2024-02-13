@@ -15,7 +15,7 @@ public interface AuthProductoServicio {
 
         String eliminarProducto(String _id);
 
-        ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO);
+        ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO, MultipartFile file);
 
         ResponseEntity<?> listarUnProducto(String _id);
 

@@ -19,6 +19,7 @@ public class ValidacionErrores {
         Map<String, String> errors = new HashMap<>();
         if (result.hasErrors()) {
             result.getAllErrors().forEach((error) -> {
+                System.err.println(error);
                 String fieldName = ((FieldError) error).getField();
                 String errorMessage = error.getDefaultMessage();
                 errors.put(fieldName, errorMessage);
