@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private JwtUtils jwtUtils;
 
     @Autowired
-     UsuarioModelo usuarios;
+    UsuarioModelo usuarios;
 
     @Autowired
     UsuarioRepositorio usuarioRepositorio;
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
-    
+
     // Este es el proceso de autenticacion
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
@@ -47,11 +47,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String password = "";
 
         try {
-            
+
             usuario = new ObjectMapper().readValue(request.getInputStream(), UsuarioModelo.class);
             email = usuario.getEmail().trim();
             password = usuario.getPassword().trim();
-            
+
         } catch (StreamReadException e) {
             throw new RuntimeException(e);
         } catch (DatabindException e) {
@@ -62,7 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,
                 password);
-                
+
         return getAuthenticationManager().authenticate(authenticationToken);
     }
 
@@ -75,7 +75,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Este user es el de Spring Security para obtener los detalles del usuario
         User user = (User) authResult.getPrincipal();
-        
+
         // Obtenemos el token
         String token = jwtUtils.generateJwtToken(user.getUsername());
 
@@ -96,76 +96,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         super.successfulAuthentication(request, response, chain, authResult);
     }
 
-    //PROBANDO
-
-
-
-    //Cuando las credenciales son correctas probando
-//     @Override
-// public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-//         throws AuthenticationException {
-
-//     Usuarios usuario = null;
-//     String email = "";
-//     String password = "";
-
-//     try {
-//         usuario = new ObjectMapper().readValue(request.getInputStream(), Usuarios.class);
-//         email = usuario.getEmail();
-//         password = usuario.getPassword();
-
-//     } catch (IOException e) {
-//         throw new RuntimeException(e);
-//     }
-
-//     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,
-//             password);
-
-//     return getAuthenticationManager().authenticate(authenticationToken);
-// }
-
-// @Override
-// protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-//         FilterChain chain, Authentication authResult) throws IOException, ServletException {
-
-//     // Este user es el de Spring Security para obtener los detalles del usuario
-//     User user = (User) authResult.getPrincipal();
-    
-//     // Obtener el correo electrónico del usuario autenticado
-//     String userEmail = user.getUsername();
-    
-//     // Buscar el ID del usuario a partir del correo electrónico
-//     String userId = usuarioRepositorio.findUserIdByEmail(userEmail);
-
-//     if (userId == null) {
-//         throw new UsernameNotFoundException("El usuario con correo " + userEmail + " no tiene un ID asociado.");
-//     }
-
-//     // Generar el token usando el ID del usuario
-//     String token = jwtUtils.generateJwtToken(userId);
-
-//     response.addHeader("Authorization", token);
-
-//     Map<String, Object> httpResponse = new HashMap<>();
-//     httpResponse.put("token", token);
-//     httpResponse.put("Message", "Autenticacion Correcta");
-//     httpResponse.put("userId", userId); // Agregar el ID del usuario a la respuesta
-
-//     // Convertir el mapa en el JSON de respuesta
-//     response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
-
-//     response.setStatus(HttpStatus.OK.value());
-//     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//     response.getWriter().flush();
-
-//     super.successfulAuthentication(request, response, chain, authResult);
-// }
-
-    
-
-
-
-//Cuando las credenciales son invalidas
+    // Cuando las credenciales son invalidas
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {

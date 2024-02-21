@@ -23,9 +23,7 @@ public class ResendUtil {
     @Value("${envio.email.token}")
     private String envioEmailToken;
 
-    // @Autowired
-    // private Resend resend;
-
+    
     // Envio de email de recuperacion
     public void enviarEmailDeRecuperacion(String destinatarioEmail) {
 

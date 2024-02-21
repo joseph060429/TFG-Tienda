@@ -35,7 +35,7 @@ public class AuthProductoControllers {
     public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO,
             @RequestParam("img") MultipartFile file) {
         try {
-            // System.out.println(crearProductoDTO.toString()+" "+file.getContentType());
+
             // Validar y crear el producto
             ResponseEntity<?> response = authproductoServicio.crearProducto(crearProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
@@ -46,7 +46,8 @@ public class AuthProductoControllers {
 
     // Actualizar producto
     @PatchMapping("/actualizarProducto")
-    public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id, @RequestParam(required = false, value = "img") MultipartFile file,
+    public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id,
+            @RequestParam(required = false, value = "img") MultipartFile file,
             @Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO) {
         try {
             ResponseEntity<?> response = authproductoServicio.actualizarProducto(id, actualizarProductoDTO, file);

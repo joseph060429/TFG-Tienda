@@ -34,7 +34,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     @Value("${directorio.imagenes.path}")
     private String directorioImagenesPath;
 
-    // Construccion del producto
+    // CONSTRUCCION DEL PRODUCTO
     private ResponseEntity<?> construirProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
 
         Producto nuevoProducto = new Producto();
@@ -62,6 +62,8 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             ResponseEntity<String> responseImagen = subirImagen(file);
             if (responseImagen.getStatusCode().is2xxSuccessful()) {
                 String nombreImagen = responseImagen.getBody();
+                // String nombreSinExtension = nombreImagen.substring(0,
+                // nombreImagen.lastIndexOf("."));
                 nuevoProducto.setImagenProducto(nombreImagen);
             } else {
                 return ResponseEntity.badRequest().body("Error al construir el producto: " + responseImagen.getBody());
@@ -80,7 +82,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
     }
 
-    // Crear Producto
+    // CREAR PRODUCTO
     @Override
     public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
         try {
@@ -95,8 +97,14 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
                 String identificador = nuevoProducto.getIdentificador();
 
                 if (productoRepositorio.existsByIdentificador(identificador)) {
-                    // Elimino la imagen subida por el error
-                    borrarImagen(nuevoProducto.getImagenProducto());
+                    // // Elimino la imagen subida por el error asi no se me almacena en la carpeta
+                    // imagenes, ya que hubo un error
+                    String nombreImagen = nuevoProducto.getImagenProducto();
+
+                    if (nombreImagen.endsWith(".jpg") || nombreImagen.endsWith(".jpng")
+                            || nombreImagen.endsWith(".png")) {
+                        borrarImagen(nombreImagen);
+                    }
                     return ResponseEntity.status(400).body("Ya existe un producto con el mismo identificador");
                 } else {
                     // Guardo el producto en la base de datos
@@ -113,6 +121,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
+    //METODO PARA ELIMINAR EL PRODUCTO
     @Override
     public String eliminarProducto(String _id) {
 
@@ -121,13 +130,20 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         if (productOptional.isPresent()) {
             Producto producto = productOptional.get();
             productoRepositorio.deleteBy(producto.get_id());
+            
+            //Eliminar la imagen de la carpeta imagen cuando el id existe en la base de datos
+            String nombreImagenActual = producto.getImagenProducto();
+            if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {
+                System.out.println("Eliminando imagen: " + nombreImagenActual);
+                borrarImagen(nombreImagenActual);
+            }
             return "Producto eliminado correctamente";
         } else {
             return "Producto no encontrado";
         }
     }
 
-    // Identificador para no insertar el mismo producto 2 veces en la creacion
+    // IDENTIFICADOR PARA NO INSERTAR EL MISMO PRODUCTO 2 VECES EN LA CREACIÓN
     private String construirIdentificador(CrearProductoDTO crearProductoDTO) {
         String categoria = crearProductoDTO.getCategoriaProducto().toLowerCase();
         String nombre = crearProductoDTO.getNombreProducto().toLowerCase().replaceAll("\\s+", "");
@@ -136,7 +152,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return String.format("%s-%s-%s", categoria, nombre, marca);
     }
 
-    // Metodo para actualizar
+    // METODO PARA ACTUALIZAR PRODUCTO
     @Override
     public ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO,
             MultipartFile file) {
@@ -149,9 +165,48 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
                 // Obtengo el objeto de la base de datos
                 Producto producto = productOptional.get();
 
+                // Construyo el nuevo Identificador para comprobar luego si existe o no en mi
+                // base de datos
+                String identificadorActualizado = construirIdentificadorActualizado(actualizarProductoDTO, producto);
+
+                // Verifico si al menos uno de los campos con los que se construye el
+                // identificador(categoria, nombre, marca) NO es nulo
+                if (actualizarProductoDTO.getCategoriaProducto() != null ||
+                        actualizarProductoDTO.getNombreProducto() != null ||
+                        actualizarProductoDTO.getMarcaProducto() != null) {
+
+                    // Construyo el identificador solo si al menos uno de los campos NO es nulo
+                    producto.setIdentificador(identificadorActualizado);
+
+                    // Verifico si el identificador ya existe en la base de datos
+                    if (productoRepositorio.existsByIdentificador(identificadorActualizado)) {
+                        return ResponseEntity.status(400).body("Ya existe un producto con el mismo identificador");
+                    }
+                }
+                // Si todo va bien osea si el identificador no existe en la base de datos, tanto
+                // si he puesto los campos importantes o no actualizo la imagen
+                else if (file != null) {
+                    ResponseEntity<String> responseImagen = subirImagen(file);
+                    if (responseImagen.getStatusCode().is2xxSuccessful()) {
+                        String nombreImagenNueva = responseImagen.getBody();
+
+                        // Borrar la imagen anterior
+                        String nombreImagenActual = producto.getImagenProducto();
+                        if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {
+                            borrarImagen(nombreImagenActual);
+                        }
+
+                        // Actualizo la imagen del producto con la nueva imagen subida
+                        producto.setImagenProducto(nombreImagenNueva);
+                    } else {
+                        return ResponseEntity.badRequest()
+                                .body("Error al construir el producto: " + responseImagen.getBody());
+                    }
+                }
                 // Actualizo la categoria
                 if (actualizarProductoDTO.getCategoriaProducto() != null) {
                     producto.setCategoriaProducto(EProducto.valueOf(actualizarProductoDTO.getCategoriaProducto()));
+                    System.out.println("CATEGORIA: " + actualizarProductoDTO.getCategoriaProducto());
                 }
 
                 // Actualizo el nombre del producto
@@ -167,6 +222,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
                             normalizeText(actualizarProductoDTO.getDescripcionProducto().trim()));
 
                 }
+
                 // Actualizo la marca del producto
                 if (actualizarProductoDTO.getMarcaProducto() != null
                         && !actualizarProductoDTO.getMarcaProducto().isEmpty()) {
@@ -197,25 +253,9 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
                             normalizeText(actualizarProductoDTO.getEspecificacionesTecnicas().trim()));
                 }
 
-                // Actualizo la imagen del producto
-                if (file != null) {
-                    ResponseEntity<String> responseImagen = subirImagen(file);
-                    if (responseImagen.getStatusCode().is2xxSuccessful()) {
-                        String nombreImagen = responseImagen.getBody();
-                        producto.setImagenProducto(nombreImagen);
-                    } else {
-                        return ResponseEntity.badRequest()
-                                .body("Error al construir el producto: " + responseImagen.getBody());
-                    }
-                }
-                // Construir el identificador con la categoría, nombre y marca separados por
-                // guiones
-                String identificadorActualizado = construirIdentificadorActualizado(actualizarProductoDTO, producto);
-                producto.setIdentificador(normalizeText(identificadorActualizado));
-
+                // Guardo el producto en la base de datos
                 productoRepositorio.save(producto);
-
-                return ResponseEntity.ok("Producto actualizado correctamente");
+                return ResponseEntity.ok("Producto actualizado exitosamente");
             } else {
                 return ResponseEntity.status(404).body("Producto no encontrado");
             }
@@ -226,7 +266,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    // Identificador para no insertar el mismo producto 2 veces en la actualizacion
+    // IDENTIFICADOR PARA NO INSERTAR EL MISMO PRODUCTO 2 VECES EN LA ACTUALIZACIÓN
     private String construirIdentificadorActualizado(ActualizarProductoDTO actualizarProductoDTO,
             Producto productoExistente) {
 
@@ -255,27 +295,27 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return String.format("%s-%s-%s", categoria, nombre, marca);
     }
 
-    // // Metodo para listar un producto por id:
+    //METODO PARA LISTAR UN PRODUCTO POR ID
     @Override
     public ResponseEntity<?> listarUnProducto(String _id) {
         Optional<Producto> productOptional = productoRepositorio.findById(_id);
         if (productOptional.isPresent()) {
-            System.out.println("Producto: " + productOptional.get());
+            // System.out.println("Producto: " + productOptional.get());
             return ResponseEntity.ok(productOptional);
         } else {
             return ResponseEntity.status(404).body("Producto no encontrado");
         }
     }
 
-    // Listar todos los productos
+    // LISTAR TODOS LOS PRODUCTOS
     @Override
     public Page<Producto> listarProductosAdmin(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
+        System.out.println("Hay " + productoRepositorio.count() + " productos");
         return productoRepositorio.findAll(pageable);
     }
 
-    // // // Busqueda por campos importantes y ME MUESTRA TODOS LOS CAMPOS PORQUE ES
-    // PARA EL ADMIN
+    // BUSQUEDA POR CAMPOS IMPORTANTES Y MUESTRA TODOS LOS CAMPOS PARA EL ADMIN
     @Override
     public List<Map<String, Object>> buscarProductosAdmin(
             // BigDecimal precio,
@@ -334,19 +374,18 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
             mapaProductos.put("cantidad", producto.getCantidadProducto());
             mapaProductos.put("identificador", producto.getIdentificador());
-
             productosResponse.add(mapaProductos);
         }
         return productosResponse;
     }
 
-    // Metodo para buscar producto por cualquier especificacion y que le muestre
-    // todos los campos al admin
+    // MÉTODO PARA BUSCAR PRODUCTO POR CUALQUIER ESPECIFICACIÓN Y QUE LE MUESTRE
+    // TODOS LOS CAMPOS AL ADMIN
     @Override
     public List<Map<String, Object>> buscarProductosPorEspecificacionAdmin(String especificacion, int page, int size) {
-        System.out.println("Especificación: " + especificacion);
+        // System.out.println("Especificación: " + especificacion);
 
-        // ConfigurO la paginación
+        // Configuro la paginación
         Pageable pageable = PageRequest.of(page, size);
 
         // NormalizO la especificación
@@ -373,22 +412,21 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
             mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
             mapaProductos.put("cantidad", producto.getCantidadProducto());
             mapaProductos.put("identificador", producto.getIdentificador());
-
             productosResponse.add(mapaProductos);
         }
 
         return productosResponse;
     }
 
-    // Metodo para normalizar los textos que ponga el usuario y me busque sin tilde
-    // los campos, TAMBIEN LO USO PARA introducir TEXTOS SIN TILDE EN LA BASE DE
+    // METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y ME BUSQUE SIN TILDE
+    // LOS CAMPOS, TAMBIÉN LO USO PARA INTRODUCIR TEXTOS SIN TILDE EN LA BASE DE
     // DATOS
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
-    // Metodo para hacer una busqueda de minimo a maximo
+    // METODO PARA BUSCAR PRODUCTOS POR PRECIO, MAYOR A MENOR Y VICEVERSA
     @Override
     public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax,
             int page, int size) {
@@ -428,7 +466,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    // Metodo para subir imagenes
+    // METODO PARA SUBIR IMAGENES
     public ResponseEntity<String> subirImagen(MultipartFile file) {
         try {
 
@@ -467,11 +505,20 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    // Metodo para eliminar una imagen de la carpeta imagenes
-    private void borrarImagen(String nombreImagen) {
+    // METODO PARA BORRAR IMAGEN
+    private void borrarImagen(String nombreImagenActual) {
         try {
-            Path path = Paths.get(directorioImagenesPath + nombreImagen);
-            Files.deleteIfExists(path);
+            if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {
+                // Crear la ruta completa del archivo
+                String nombreCompleto = nombreImagenActual;
+                Path path = Paths.get(directorioImagenesPath, nombreCompleto);
+
+                // Intentar eliminar el archivo con la extensión actual
+                Files.deleteIfExists(path);
+                System.out.println("Imagen eliminada: " + nombreCompleto);
+            } else {
+                System.out.println("La cadena de nombre de imagen actual es nula o vacía.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error al intentar eliminar la imagen: " + e.getMessage());

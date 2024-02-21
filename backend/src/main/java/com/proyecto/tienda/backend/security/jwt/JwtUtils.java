@@ -27,7 +27,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim())))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim()))) // Tiempo de expiración por eso se cierrra la sesion despues de 30 minutos
                 .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -51,7 +51,7 @@ public class JwtUtils {
     public String getEmailFromToken(String token) {
 
         String email = getClaim(token, Claims::getSubject);
-        return (email != null) ? email : ""; // Devuelve una cadena vacía si el email es nuulo
+        return (email != null) ? email : ""; // Devuelve una cadena vacía si el email es nulo
     }
 
     // Obtener el id del token

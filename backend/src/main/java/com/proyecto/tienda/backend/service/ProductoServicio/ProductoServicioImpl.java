@@ -20,8 +20,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
-    // Listar TODOS LOS PRODUCTOS solo me muestra lo que quiero que vea el
-    // usuario
+    // LISTAR TODOS LOS PRODUCTOS SOLO ME MUESTRA LO QUE QUIERO QUE VEA EL USUARIO
     @Override
     public List<Map<String, Object>> listarProductos(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -48,8 +47,7 @@ public class ProductoServicioImpl implements ProductoServicio {
         return productosResponse;
     }
 
-    // Busqueda por campos importantes y solo me muestra lo que quiero que vea el
-    // usuario
+    // BUSQUEDA POR CAMPOS IMPORTANTES Y SOLO ME MUESTRE LO QUE QUIERO QUE VEA EL USUARIO
     @Override
     public List<Map<String, Object>> buscarProductosPorCampos(String descripcion, String categoria, String nombre,
             String marca,
@@ -98,7 +96,7 @@ public class ProductoServicioImpl implements ProductoServicio {
         return productosResponse;
     }
 
-    // Metodo para buscar producto por cualquier especificacion
+    //METODO PARA BUSCAR PRODUCTO POR CUALQUIER ESPECIFICACION
     @Override
     public List<Map<String, Object>> buscarProductosPorEspecificacion(String especificacion, int page, int size) {
         System.out.println("Especificación: " + especificacion);
@@ -109,7 +107,7 @@ public class ProductoServicioImpl implements ProductoServicio {
         // NormalizO la especificación
         String normalizedEspecificacion = normalizeText(especificacion);
 
-        // UtilizO el método del repositorio con paginación
+        // Utilizo el método del repositorio con paginación
         Page<Producto> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
                 pageable);
 
@@ -133,15 +131,14 @@ public class ProductoServicioImpl implements ProductoServicio {
         return productosResponse;
     }
 
-    // Metodo para normalizar los textos que ponga el usuario y me busque sin tilde
-    // los campos
+    // METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y ME BUSQUE SIN TILDE LOS CAMPOS
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                 .toLowerCase();
     }
 
-    // Metodo para hacer una busqueda de precio
+    // METODO PARA HACER UNA BUSQUEDA DE PRECIO
     @Override
     public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax, int page,
             int size) {

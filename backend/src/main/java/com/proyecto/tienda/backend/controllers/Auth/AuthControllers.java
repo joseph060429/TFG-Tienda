@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 public class AuthControllers {
 
-    // @Autowired
-    // private AuthServicioImpl authServicio;
-
     @Autowired
     private AuthServicio authServicio;
 

@@ -1,6 +1,5 @@
 package com.proyecto.tienda.backend.controllers.Producto;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,8 +18,7 @@ public class ProductosController {
     @Autowired
     private ProductoServicio productoServicio;
 
-    // Listar todos los productos y que me traiga solo los campos que quiero que
-    // muestre
+    //LISTAR TODOS LOS PRODUCTOS Y QUE ME TRAIGA SOLO LOS CAMPOS QUE QUIERO QUE MUESTRE AL USUARIO
     @GetMapping("/listarProductos")
     public ResponseEntity<List<Map<String, Object>>> listarProductos(
             @RequestParam(defaultValue = "0") int page,
@@ -33,8 +31,7 @@ public class ProductosController {
         }
     }
 
-    // Busqueda por campos importantes EN EL PRECIO TENGO QUE PONERLE EL CAMPO
-    // EXACTO PARA QUE LO HAGA
+    // BUSQUEDA POR CAMPOS IMPORTANTES EN EL PRECIO TENGO QUE PONERLE EL CAMPO EXACTO PARA QUE LO HAGA
     @GetMapping("/buscarPorCamposImportantes")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorCamposImportantes(
             @RequestParam(required = false) String descripcion,
@@ -52,8 +49,7 @@ public class ProductosController {
         }
     }
 
-    // Busqueda por cualquier especificacion que ponga el usuario y le muestro al
-    // usuario solo lo que yo quiero que vea
+    //BUSQUEDA POR CUALQUIER ESPECIFICACION QUE PONGA EL USUARIO Y LE MUESTRO LO QUE YO QUIERO QUE VEA
     @GetMapping("/buscarPorEspecificacion")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorEspecificacion(
             @RequestParam(required = false) String especificacion,
@@ -84,7 +80,7 @@ public class ProductosController {
         }
     }
 
-    // Para buscar por rango de precio
+    // PARA BUSCAR POR RANGO DE PRECIO
     @GetMapping("/buscarPorRangoDePrecio")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorRangoDePrecio(
             @RequestParam(required = false) Optional<Double> precioMin,

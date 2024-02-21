@@ -2,12 +2,7 @@ package com.proyecto.tienda.backend.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.http.ResponseEntity;
-
 import com.proyecto.tienda.backend.UtilEnum.EProducto;
-import com.proyecto.tienda.backend.util.InformacionImagen;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
