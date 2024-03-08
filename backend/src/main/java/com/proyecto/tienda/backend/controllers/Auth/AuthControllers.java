@@ -24,7 +24,7 @@ public class AuthControllers {
     @Autowired
     private ResendUtil resend;
 
-   @GetMapping("/hello")
+    @GetMapping("/hello")
     public String hello() {
         return "Hello World SIN SEGURIDAD";
     }
@@ -35,7 +35,7 @@ public class AuthControllers {
         return "Hello World CON SEGURIDAD";
     }
 
-    // Controlador para crear
+    // CONTROLADOR PARA CREAR UN USUARIO
     @PostMapping("/crearUsuario")
     public ResponseEntity<?> crearUsuario(@RequestBody @Valid CrearUsuarioDTO crearUsuarioDTO) {
         // return authServicio.crearNuevoUsuario(crearUsuarioDTO);
@@ -49,14 +49,14 @@ public class AuthControllers {
         }
     }
 
+    //CONTROLADOR PARA ENVIAR CORREO CON CODIGO DE RECUPERACION
     @PostMapping("/envioCodigoRecuperacion")
     public String enviarCorreo(@RequestBody EnviarCorreoDTO correoDTO) {
         resend.enviarEmailDeRecuperacion(correoDTO.getEmail());
         return "Correo de recuperación enviado con éxito.";
     }
 
-    // Controlador para verificar si el codigo existe en la base de datos y a si no
-    // esta caducado
+    // CONTROLADOR PARA VERIFICAR SI EL CÓDIGO EXISTE EN LA BASE DE DATOS Y SI NO ESTÁ CADUCADO
     @PostMapping("/verificarCodigo")
     public ResponseEntity<String> verificarCodigo(@RequestBody Map<String, String> requestBody) {
         // Creo un nuevo objeto RecuperarContraseniaDTO y le asigno el código
@@ -74,12 +74,12 @@ public class AuthControllers {
                     "Error: Código incorrecto o la fecha de expiración ha pasado. Verifique el código o solicite uno nuevo.");
         }
     }
-    
-    // Controlador de cambio de contraseña
+
+    // CONTROLADOR PARA CAMBIAR LA CONTRASEÑA
     @PostMapping("/cambiarContrasenia")
-    public ResponseEntity<String> cambiarContrasenia(@RequestBody @Valid RecuperarContraseniaDTO recuperarContraseniaDTO) {
-        return authServicio.cambiarContrasenia(recuperarContraseniaDTO);
-    }
+    public ResponseEntity<String> cambiarContrasenia(@RequestBody @Valid
+    RecuperarContraseniaDTO recuperarContraseniaDTO) {
+    return authServicio.cambiarContrasenia(recuperarContraseniaDTO);
+    }    
+
 }
-
-

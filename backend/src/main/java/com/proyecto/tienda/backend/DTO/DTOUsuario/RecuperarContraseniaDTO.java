@@ -24,6 +24,7 @@ public class RecuperarContraseniaDTO {
 
     private String repitaPassword = "";
 
+    // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE TERMINA LA VALIDEZ DEL CODIGO QUE SE LE ENVIA AL USUARIO PARA RECUPERAR CONTRASEÑA
     public void setFechaExpiracion() {
         // Obtengo la fecha actual
         LocalDateTime fechaActual = LocalDateTime.now();

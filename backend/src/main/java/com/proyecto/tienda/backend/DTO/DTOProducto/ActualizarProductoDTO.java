@@ -1,6 +1,6 @@
 package com.proyecto.tienda.backend.DTO.DTOProducto;
 
-// import com.proyecto.tienda.backend.UtilEnum.EProducto;
+
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;

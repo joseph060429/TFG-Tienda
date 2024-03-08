@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.tienda.backend.DTO.DTOProducto.ActualizarProductoDTO;
 import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
-import com.proyecto.tienda.backend.models.Producto;
+import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio.AuthProductoServicio;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,7 @@ public class AuthProductoControllers {
     @Autowired
     private AuthProductoServicio authproductoServicio;
 
-    // Crear producto
+    // CONTROLADOR PARA CREAR UN PRODUCTO
     @PostMapping("/crearProducto")
     public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO,
             @RequestParam("img") MultipartFile file) {
@@ -44,7 +44,7 @@ public class AuthProductoControllers {
         }
     }
 
-    // Actualizar producto
+    // CONTROLADOR PARA ACTUALIZAR UN PRODUCTO
     @PatchMapping("/actualizarProducto")
     public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id,
             @RequestParam(required = false, value = "img") MultipartFile file,
@@ -58,7 +58,7 @@ public class AuthProductoControllers {
         }
     }
 
-    // Eliminar producto
+    // CONTROLADOR PARA ELIMINAR UN PRODUCTO
     @DeleteMapping("/eliminarProducto")
     public ResponseEntity<String> eliminarProducto(@RequestParam("id") String id) {
         try {
@@ -74,7 +74,7 @@ public class AuthProductoControllers {
         }
     }
 
-    // Buscar un producto por id
+    // CONTROLADOR PARA BUSCAR UN PRODUCTO POR ID
     @GetMapping("/listarUnProducto")
     public ResponseEntity<?> listarUnProducto(@RequestParam("id") String id) {
 
@@ -86,17 +86,17 @@ public class AuthProductoControllers {
         }
     }
 
-    // Listar todos los productos ADMIN
+    // CONTROLADOR PARA LISTAR TODOS LOS PRODUCTOS SIENDO ADMIN
     @GetMapping("/listarProductos")
-    public ResponseEntity<List<Producto>> listarProductos(
+    public ResponseEntity<List<ProductoModelo>> listarProductos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        Page<Producto> productosPage = authproductoServicio.listarProductosAdmin(page, size);
-        List<Producto> productos = productosPage.getContent();
+        Page<ProductoModelo> productosPage = authproductoServicio.listarProductosAdmin(page, size);
+        List<ProductoModelo> productos = productosPage.getContent();
         return ResponseEntity.ok(productos);
     }
 
-    // Busqueda por campos importantes
+    // CONTROLADOR PARA BUSCAR UN PRODUCTO POR CAMPOS IMPORTANTES
     @GetMapping("/buscarPorCamposImportantes")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorCamposImportantes(
             @RequestParam(required = false) String descripcion,
@@ -118,8 +118,8 @@ public class AuthProductoControllers {
         }
     }
 
-    // Busqueda por cualquier especificacion que ponga el ADMIN y le muestro TODOS
-    // LOS CAMPOS
+    // CONTROLADOR PARA BUSCAR PRODUCTOS POR CUALQUIER ESPECIFICACION DEL ADMIN Y
+    // MOSTRAR TODOS LOS CAMPOS
     @GetMapping("/buscarProductosPorEspecificacion")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorEspecificacionAdmin(
             @RequestParam(required = false) String especificacion,
@@ -135,7 +135,7 @@ public class AuthProductoControllers {
         }
     }
 
-    // Para buscar por rango de precio
+    // CONTROLADOR PARA BUSCAR PRODUCTOS POR RANGO DE PRECIO
     @GetMapping("/buscarPorRangoDePrecio")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorRangoDePrecio(
             @RequestParam(required = false) Optional<Double> precioMin,

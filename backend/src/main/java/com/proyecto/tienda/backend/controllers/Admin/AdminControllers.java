@@ -33,15 +33,15 @@ public class AdminControllers {
     @Autowired
     private JwtUtils jwtUtils;
 
-    // Metodo para listar todos los usuarios (Este metodo solo se lo he implemenatdo
-    // al Admin)
+    // CONTROLADOR PARA LISTAR TODOS LOS USUARIOS (ESTE MÉTODO SOLO SE LO HE IMPLEMENTADO
+    // AL ADMIN)
     @GetMapping("/listarUsuarios")
     public ResponseEntity<List<UsuarioModelo>> listarUsuarios() {
         List<UsuarioModelo> usuarios = adminServicio.listarUsuarios();
         return ResponseEntity.ok(usuarios);
     }
 
-    // Metodo para listar un usuario por id
+    // CONTROLADOR PARA LISTAR UN USUARIO POR ID
     @GetMapping("/listarUsuario")
     public ResponseEntity<?> listarUnUsuario(@RequestParam("id") String usuarioId) {
 
@@ -55,7 +55,7 @@ public class AdminControllers {
         }
     }
 
-    // Metodo para borrar usuario siendo Admin
+    // CONTROLADOR PARA BORRAR UN USUARIO SIENDO ADMIN
     @DeleteMapping("/borrarUsuario")
     public ResponseEntity<String> eliminarUsuario(@RequestBody Map<String, String> requestBody) {
         String email = requestBody.get("email");
@@ -63,28 +63,26 @@ public class AdminControllers {
         return ResponseEntity.ok(resultado);
     }
 
-    // Metodo para actualizar el rol de un usuario
+    // CONTROLADOR PARA ACTUALIZAR EL ROL DE UN USUARIO
     @PatchMapping("/actualizarRolUsuario")
     public ResponseEntity<?> actualizarRolUsuario(@RequestParam("id") String usuarioId,
             @RequestBody Map<String, String> requestBody) {
         String nuevoRol = requestBody.get("nombreRol");
-    
+
         Set<String> nuevosRoles = new HashSet<>();
         nuevosRoles.add(nuevoRol);
-    
+
         return adminServicio.actualizarRolUsuario(usuarioId, nuevosRoles);
     }
-    
 
-    // Metodo para actualizar el PERFIL de un usuario SIENDO ADMIN
+    // CONTROLADOR PARA ACTUALIZAR EL PERFIL DE UN USUARIO SIENDO ADMIN
     @PatchMapping("/actualizarUsuario")
     public ResponseEntity<String> actualizarUsuario(@RequestParam("id") String usuarioId,
             @RequestBody @Valid UsuarioActualizacionDTO actualizarUsuarioDTO,
             @RequestHeader("Authorization") String token) {
-    
+
         String mensaje = adminServicio.actualizarUsuarioSiendoAdmin(usuarioId, actualizarUsuarioDTO, token, jwtUtils);
         return ResponseEntity.ok(mensaje);
     }
-    
 
 }

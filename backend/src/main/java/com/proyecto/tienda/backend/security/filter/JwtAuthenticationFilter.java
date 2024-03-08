@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.*;
 import org.springframework.security.core.userdetails.User;
 
-//Este metodo es para cuando el usuario intente autenticarse
+//CLASE PARA CUANDO EL USUARIO INTENTE AUTENTICARSE
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private JwtUtils jwtUtils;
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.jwtUtils = jwtUtils;
     }
 
-    // Este es el proceso de autenticacion
+    // PROCESO DE AUTENTICACION
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return getAuthenticationManager().authenticate(authenticationToken);
     }
 
-    // Esto es cuando la autenticacion es correcta
+    // CUANDO LA AUTENTICACION ES CORRECTA
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
             HttpServletResponse response,
@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         super.successfulAuthentication(request, response, chain, authResult);
     }
 
-    // Cuando las credenciales son invalidas
+    // CUANDO LAS CREDENCIALES SON INVALIDAS
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {

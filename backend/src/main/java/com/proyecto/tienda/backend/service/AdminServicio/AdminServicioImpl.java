@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
 import com.proyecto.tienda.backend.UtilEnum.ERol;
-import com.proyecto.tienda.backend.models.Roles;
+import com.proyecto.tienda.backend.models.RolesModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.RolesRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
@@ -29,18 +29,19 @@ public class AdminServicioImpl implements AdminServicio {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Metodo para listar todos los usuarios
+    // IMPLEMENTADCION DEL METODO PARA LISTAR TODOS LOS USUARIOS
     @Override
     public List<UsuarioModelo> listarUsuarios() {
         return usuarioRepositorio.findAll();
     }
 
+    // IMPLEMENTACION DEL METODO PARA LISTAR UN USUARIO
     @Override
     public UsuarioModelo listarUnUsuario(String _id) {
 
         Optional<UsuarioModelo> optionalUsuario = usuarioRepositorio.findById(_id);
 
-        // // Verifica si el usuario está presente en la base de datos
+        // Verifica si el usuario está presente en la base de datos
         if (optionalUsuario.isPresent()) {
             // Devuelve el usuario si ha sido encontrado
             return optionalUsuario.get();
@@ -50,7 +51,7 @@ public class AdminServicioImpl implements AdminServicio {
         }
     }
 
-    // Metodo para borrar usuario por email siendo Admin
+    // IMPLEMENTACION DEL METODO PARA ELIMINAR UN USUARIO POR EMAIL
     @Override
     public String eliminarUsuarioSiendoAdmin(String email) {
 
@@ -65,14 +66,14 @@ public class AdminServicioImpl implements AdminServicio {
         }
     }
 
-    // Metodo para actualizar el rol de un usuario
+    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ROL DE UN USUARIO
     @Override
     public ResponseEntity<?> actualizarRolUsuario(String usuarioId, Set<String> nuevosRoles) {
         if (nuevosRoles.isEmpty()) {
             return ResponseEntity.badRequest().body("Debes proporcionar al menos un rol");
         }
 
-        Set<Roles> roles = obtenerRolesPorNombresExistentes(nuevosRoles);
+        Set<RolesModelo> roles = obtenerRolesPorNombresExistentes(nuevosRoles);
 
         if (roles.isEmpty()) {
             return ResponseEntity.badRequest().body("Los roles proporcionados no son  válidos");
@@ -92,7 +93,7 @@ public class AdminServicioImpl implements AdminServicio {
         }
     }
 
-    // Metodo para actualizar el PERFIL de un usuario SIENDO ADMIN
+    // IMPLEMENTYCION DEL METODO PARA ACTUALIZAR EL PERFIL DE UN USUARIO
     @Override
     public String actualizarUsuarioSiendoAdmin(String userId, UsuarioActualizacionDTO actualizarUsuarioDTO,
             String token, JwtUtils jwtUtils) {
@@ -151,14 +152,15 @@ public class AdminServicioImpl implements AdminServicio {
         }
     }
 
+    // IMPLEMENTACION DEL METODO PARA OBTENER LOS NOMBRES DE LOS ROLES EXISTENTES
     @Override
-    public Set<Roles> obtenerRolesPorNombresExistentes(Set<String> nombresRoles) {
-        Set<Roles> rolesExistentes = new HashSet<>();
+    public Set<RolesModelo> obtenerRolesPorNombresExistentes(Set<String> nombresRoles) {
+        Set<RolesModelo> rolesExistentes = new HashSet<>();
 
         for (String nombreRol : nombresRoles) {
             try {
                 ERol rolEnum = ERol.valueOf(nombreRol);
-                Roles rol = rolesRepositorio.findByName(rolEnum.name()).orElse(null);
+                RolesModelo rol = rolesRepositorio.findByName(rolEnum.name()).orElse(null);
 
                 if (rol != null) {
                     rolesExistentes.add(rol);
@@ -173,6 +175,7 @@ public class AdminServicioImpl implements AdminServicio {
         return rolesExistentes;
     }
 
+    // IMPLEMENTACION DEL METODO PARA NORMALIZAR TEXTO, SIN TILDES Y CARACTERES ESPECIALES
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");

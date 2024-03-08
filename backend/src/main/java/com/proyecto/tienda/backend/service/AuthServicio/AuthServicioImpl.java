@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.CrearUsuarioDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.RecuperarContraseniaDTO;
 import com.proyecto.tienda.backend.UtilEnum.ERol;
-import com.proyecto.tienda.backend.models.Roles;
+import com.proyecto.tienda.backend.models.RolesModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.RolesRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
@@ -33,7 +33,7 @@ public class AuthServicioImpl implements AuthServicio {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Metodo para crear el usuario
+    // IMPLEMENTACION DEL METODO PARA CREAR UN NUEVO USUARIO
     @Override
     public ResponseEntity<?> crearNuevoUsuario(CrearUsuarioDTO crearUsuarioDTO) {
         String email = crearUsuarioDTO.getEmail().trim();
@@ -45,7 +45,11 @@ public class AuthServicioImpl implements AuthServicio {
             return ResponseEntity.badRequest().body("El email ya existe");
         }
 
-        Set<Roles> roles = obtenerRoles(crearUsuarioDTO);
+        // Traigo el rol de usuario y por defecto lo creo en rol usuario
+        RolesModelo rolUsuario = rolesRepositorio.findByName(ERol.USER).get();
+        Set<RolesModelo> roles = new HashSet<>();
+        roles.add(rolUsuario);
+        
 
         // Modificar el DTO antes de construir el usuario
         crearUsuarioDTO.setEmail(email);
@@ -60,6 +64,31 @@ public class AuthServicioImpl implements AuthServicio {
         return ResponseEntity.ok("Usuario creado correctamente");
     }
 
+
+    // IMPLEMENTACION DEL METODO PARA CONSTRUIR UN NUEVO USUARIO
+    private UsuarioModelo construirUsuario(CrearUsuarioDTO crearUsuarioDTO, Set<RolesModelo> roles) {
+        UsuarioModelo usuario = UsuarioModelo.builder()
+                .nombre(normalizeText(crearUsuarioDTO.getNombre().trim()))
+                .apellido(normalizeText(crearUsuarioDTO.getApellido().trim()))
+                .email(crearUsuarioDTO.getEmail().trim())
+                .password(passwordEncoder.encode(crearUsuarioDTO.getPassword()).trim())
+                .direccionEnvio("".trim())
+                .fechaModificacion("".trim())
+                .roles(roles)
+                .build();
+
+        if (usuario.get_id() == null) {
+            usuario.set_id(UUID.randomUUID().toString());
+        }
+
+        CrearUsuarioDTO usuarioDTO = new CrearUsuarioDTO();
+        usuarioDTO.setFechaCreacion();
+        usuario.setFechaCreacion(usuarioDTO.getFechaCreacion());
+
+        return usuario;
+    }
+
+    // IMPLEMENTACION DEL METODO PARA CAMBIAR LA CONTRASEÑA
     @Override
     public ResponseEntity<String> cambiarContrasenia(RecuperarContraseniaDTO recuperarContraseniaDTO) {
         try {
@@ -84,8 +113,9 @@ public class AuthServicioImpl implements AuthServicio {
         }
     }
 
-    // Metodo para verificar el codigo de recuperacion, si coincide con el de la
-    // base de datos y no esta caducado
+    // IMPLEMENTACION DEL METODO PARA VERIFICAR EL CODIGO DE RECUPERACION, SI
+    // COINCIDE CON EL DE LA
+    // BASE DE DATOS Y NO ESTÁ CADUCADO
     @Override
     public boolean verificarCodigoYExpiracion(RecuperarContraseniaDTO recuperarContraseniaDTO) {
         // Obtengo el código y la fecha de expiración del DTO, le pongo el trim para lo
@@ -124,62 +154,11 @@ public class AuthServicioImpl implements AuthServicio {
         } else {
             // System.out.println("Usuario no encontrado");
         }
-
         return false;
     }
 
-    // // Metodo para obtener todos los roles existentes
-    private Set<Roles> obtenerRoles(CrearUsuarioDTO crearUsuarioDTO) {
-        Set<Roles> roles = new HashSet<>();
-
-        if (crearUsuarioDTO.getRoles() == null ||
-                crearUsuarioDTO.getRoles().isEmpty()) {
-            Optional<Roles> userRole = rolesRepositorio.findByName(ERol.USER);
-            Roles defaultRole;
-            if (userRole.isPresent()) {
-                defaultRole = userRole.get();
-            } else {
-                defaultRole = new Roles();
-                defaultRole.setName(ERol.USER);
-                defaultRole.setId(UUID.randomUUID().toString());
-                rolesRepositorio.save(defaultRole);
-            }
-            roles.add(defaultRole);
-        } else {
-            roles = crearUsuarioDTO.getRoles().stream()
-                    .map(rol -> rolesRepositorio.findByName(rol))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toSet());
-        }
-        return roles;
-    }
-
-    // // Metodo para construir un nuevo usuario
-
-    private UsuarioModelo construirUsuario(CrearUsuarioDTO crearUsuarioDTO, Set<Roles> roles) {
-        UsuarioModelo usuario = UsuarioModelo.builder()
-                .nombre(normalizeText(crearUsuarioDTO.getNombre().trim()))
-                .apellido(normalizeText(crearUsuarioDTO.getApellido().trim()))
-                .email(crearUsuarioDTO.getEmail().trim())
-                .password(passwordEncoder.encode(crearUsuarioDTO.getPassword()).trim())
-                .direccionEnvio("".trim())
-                .fechaModificacion("".trim())
-                .roles(roles)
-                .build();
-
-        if (usuario.get_id() == null) {
-            usuario.set_id(UUID.randomUUID().toString());
-        }
-
-        CrearUsuarioDTO usuarioDTO = new CrearUsuarioDTO();
-        usuarioDTO.setFechaCreacion();
-        usuario.setFechaCreacion(usuarioDTO.getFechaCreacion());
-
-        return usuario;
-    }
-
-    // Metodo para procesar todos los datos del cambio de contraseña
+    // IMPLEMENTACION DEL METODO PARA PROCESAR TODOS LOS DATOS DEL CAMBIO DE
+    // CONTRASEÑA Y ENCRIPTARLA
     private ResponseEntity<String> procesarCambioContrasenia(RecuperarContraseniaDTO recuperarContraseniaDTO) {
         // Busco el usuario por el código de recuperación
         Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio
@@ -203,11 +182,12 @@ public class AuthServicioImpl implements AuthServicio {
         }
     }
 
-    // // Metodo para normalizar los textos que ponga el usuario y me busque sin
-    // tilde
-    // // los campos
+    // IMPLEMENTACION DEL METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y
+    // ME BUSQUE SIN TILDE
+    // LOS CAMPOS
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+
 }

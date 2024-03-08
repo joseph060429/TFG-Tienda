@@ -22,9 +22,9 @@ public class ResendUtil {
 
     @Value("${envio.email.token}")
     private String envioEmailToken;
-
     
-    // Envio de email de recuperacion
+
+    // METODO DE ENVÍO DE EMAIL DE RECUPERACIÓN
     public void enviarEmailDeRecuperacion(String destinatarioEmail) {
 
         // Configurar el envío del correo con Resend
@@ -81,7 +81,7 @@ public class ResendUtil {
         }
     }
 
-    // Este metodo es para leer la plantilla HTML
+    // MÉTODO ES PARA LEER LA PLANTILLA HTML DE MI CÓDIGO DE RECUPERACIÓN
     private String loadHtmlContent(InputStream inputStream, String codigoRecuperacion) throws IOException {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
@@ -98,7 +98,7 @@ public class ResendUtil {
         }
     }
 
-    // Genero mi codigo de recuperacion aleatorio con numeros y letras
+    // GENERO MI CÓDIGO DE RECUPERACIÓN ALEATORIO CON NÚMEROS Y LETRAS
     private String generarCodigoRecuperacion(int longitud) {
 
         StringBuilder codigoRecuperacion = new StringBuilder();
@@ -121,5 +121,94 @@ public class ResendUtil {
         }
 
         return codigoRecuperacion.toString();
+    }
+
+    // METODO DE ENVÍO DE EMAIL INFORMANDO DE UN RETRASO EN EL PEDIDO
+    public void enviarEmailDeRetrasoDelPedido(String destinatarioEmail) {
+
+        // Configurar el envío del correo con Resend
+        Resend resend = new Resend(envioEmailToken);
+
+        try (
+                InputStream htmlStream = getClass().getClassLoader()
+                        .getResourceAsStream("util/CuerpoGmailDisculpaRetrasoPedido.html")) {
+
+            String messageSubject = "Importante: Retraso en el Envío de tu Pedido";
+            String bodyText = loadHtmlContentRetrasoEnvio(htmlStream);
+
+            Tag tag = Tag.builder()
+                    .name("category")
+                    .value("retraso_pedido")
+                    .build();
+
+            SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                    .from("administracion@jastoredcomponents.es")
+                    .to(destinatarioEmail)
+                    .html(bodyText)
+                    .subject(messageSubject)
+                    .headers(Map.of(
+                            "X-Entity-Ref-ID", "123456789"))
+                    .tags(tag)
+                    .build();
+
+            // Enviar el correo electrónico
+            resend.emails().send(sendEmailRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // METODO DE ENVÍO DE EMAIL INFORMANDO DEL ENVIO DEL PEDIDO
+    public void enviarEmailEnvioDelPedido(String destinatarioEmail) {
+
+        // Configurar el envío del correo con Resend
+        Resend resend = new Resend(envioEmailToken);
+
+        try (
+                InputStream htmlStream = getClass().getClassLoader()
+                        .getResourceAsStream("util/CuerpoGmailEnvioPedido.html")) {
+
+            String messageSubject = "¡Tu Pedido ha sido Enviado!";
+            String bodyText = loadHtmlContentRetrasoEnvio(htmlStream);
+
+            Tag tag = Tag.builder()
+                    .name("category")
+                    .value("envio_pedido")
+                    .build();
+
+            SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                    .from("administracion@jastoredcomponents.es")
+                    .to(destinatarioEmail)
+                    .html(bodyText)
+                    .subject(messageSubject)
+                    .headers(Map.of(
+                            "X-Entity-Ref-ID", "123456789"))
+                    .tags(tag)
+                    .build();
+
+            // Enviar el correo electrónico
+            resend.emails().send(sendEmailRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // MÉTODO PARA LEER LA PLANTILLA HTML DEL RETRASO-ENVIO DEL PEDIDO
+    private String loadHtmlContentRetrasoEnvio(InputStream inputStream) throws IOException {
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+
+            // Puedes realizar modificaciones adicionales si es necesario
+
+            return stringBuilder.toString();
+        }
     }
 }

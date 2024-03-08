@@ -22,18 +22,29 @@ public class JwtUtils {
     @Value("${jwt.time.expiration}")
     private String jwtExpirationTime;
 
-    // Generar Token de acceso
+    // GENERAR TOKEN DE ACCESO
     public String generateJwtToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim()))) // Tiempo de expiración por eso se cierrra la sesion despues de 30 minutos
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim()))) // Tiempo
+                                                                                                                // de
+                                                                                                                // expiración
+                                                                                                                // por
+                                                                                                                // eso
+                                                                                                                // se
+                                                                                                                // cierrra
+                                                                                                                // la
+                                                                                                                // sesion
+                                                                                                                // despues
+                                                                                                                // de 30
+                                                                                                                // minutos
                 .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
                 .compact();
 
     }
 
-    // Validar token acceso este lee el token
+    // VALIDAR TOKEN DE ACCESO, AQUÍ SE LEE EL TOKEN
     public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
@@ -47,26 +58,26 @@ public class JwtUtils {
         }
     }
 
-    // Obtener email del token
+    // OBTIENE EL EMAIL DEL TOKEN
     public String getEmailFromToken(String token) {
 
         String email = getClaim(token, Claims::getSubject);
         return (email != null) ? email : ""; // Devuelve una cadena vacía si el email es nulo
     }
 
-    // Obtener el id del token
+    // OBTIENE EL ID DEL TOKEN
     public String getUserIdFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
 
-    // Obtener un solo claim del token
+    // OBTIENE UN SOLO CLAIM DEL TOKEN
     public <T> T getClaim(String token, Function<Claims, T> claimsFunction) {
 
         Claims claims = extractAllClaims(token);
         return (claims != null) ? claimsFunction.apply(claims) : null; // Manejo si los reclamos son nulos
     }
 
-    // Obtener todos los claims del token
+    // OBTIENE TODOS LOS CLAIMS DEL TOKEN
     public Claims extractAllClaims(String token) {
         try {
 
@@ -78,15 +89,23 @@ public class JwtUtils {
         } catch (Exception ex) {
 
             ex.printStackTrace();
-            return null; // Otra acción dependiendo del flujo de tu aplicación.
+            return null; // Otra acción dependiendo del flujo de mi aplicación.
         }
     }
 
-    // Obtener firma del token
+    // OBTIENE LA FIRMA DEL TOKEN
+    // public Key getSignatureKey() {
+
+    // byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+
+    // return Keys.hmacShaKeyFor(keyBytes);
+    // }
+
     public Key getSignatureKey() {
-
+        if (secretKey == null) {
+            throw new IllegalArgumentException("La clave secreta no puede ser nula");
+        }
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

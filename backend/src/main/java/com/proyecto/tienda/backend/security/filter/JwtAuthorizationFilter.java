@@ -30,6 +30,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     private UsuarioDetailsServiceImpl userDetailsService;
 
+    // FILTRO DE AUTORIZACIÓN JWT PARA VERIFICAR Y AUTENTICAR LAS SOLICITUDES CON
+    // TOKENS JWT.
+    // EXTIENDE ONCEPERREQUESTFILTER PARA GARANTIZAR LA EJECUCIÓN UNA VEZ POR CADA
+    // SOLICITUD.
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
@@ -54,7 +58,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
 
         }
-        //Si no entra por el if quiere decir que no tenemos un token y nos deniega el acceso
+        // Si no entra por el if quiere decir que no tenemos un token y nos deniega el
+        // acceso
         filterChain.doFilter(request, response);
 
     }

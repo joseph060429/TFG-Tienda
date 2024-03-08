@@ -41,7 +41,7 @@ public class CrearUsuarioDTO {
     private String fechaModificacion;
     private String direccionEnvio;
 
-    // Metodo para crear la fecha exacta en la que se registra el usuario
+    // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL USUARIO
     public void setFechaCreacion() {
         // Obtengo la fecha actual
         LocalDateTime fechaActual = LocalDateTime.now();

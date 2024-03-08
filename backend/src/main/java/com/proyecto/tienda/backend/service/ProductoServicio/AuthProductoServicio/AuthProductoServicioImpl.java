@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.proyecto.tienda.backend.DTO.DTOProducto.ActualizarProductoDTO;
 import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EProducto;
-import com.proyecto.tienda.backend.models.Producto;
+import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 
 @Service
@@ -34,10 +34,10 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     @Value("${directorio.imagenes.path}")
     private String directorioImagenesPath;
 
-    // CONSTRUCCION DEL PRODUCTO
+    // IMPLEMENTACION DEL METODO PARA LA CONSTRUCCION DEL PRODUCTO
     private ResponseEntity<?> construirProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
 
-        Producto nuevoProducto = new Producto();
+        ProductoModelo nuevoProducto = new ProductoModelo();
 
         try {
             // Para verificar la categoria
@@ -82,7 +82,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
     }
 
-    // CREAR PRODUCTO
+    // IMPLEMENTACION DEL METODO PARA CREAR PRODUCTO
     @Override
     public ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
         try {
@@ -91,7 +91,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
             // Verifico si la construcción del producto fue exitosa
             if (construirProductoResponse.getStatusCode().is2xxSuccessful()) {
-                Producto nuevoProducto = (Producto) construirProductoResponse.getBody();
+                ProductoModelo nuevoProducto = (ProductoModelo) construirProductoResponse.getBody();
 
                 // Valido si el identificador ya existe en la base de datos
                 String identificador = nuevoProducto.getIdentificador();
@@ -121,17 +121,18 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    //METODO PARA ELIMINAR EL PRODUCTO
+    // IMPLEMENTACION DEL METODO PARA ELIMINAR EL PRODUCTO
     @Override
     public String eliminarProducto(String _id) {
 
-        Optional<Producto> productOptional = productoRepositorio.findById(_id);
+        Optional<ProductoModelo> productOptional = productoRepositorio.findById(_id);
 
         if (productOptional.isPresent()) {
-            Producto producto = productOptional.get();
+            ProductoModelo producto = productOptional.get();
             productoRepositorio.deleteBy(producto.get_id());
-            
-            //Eliminar la imagen de la carpeta imagen cuando el id existe en la base de datos
+
+            // Eliminar la imagen de la carpeta imagen cuando el id existe en la base de
+            // datos
             String nombreImagenActual = producto.getImagenProducto();
             if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {
                 System.out.println("Eliminando imagen: " + nombreImagenActual);
@@ -152,18 +153,18 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return String.format("%s-%s-%s", categoria, nombre, marca);
     }
 
-    // METODO PARA ACTUALIZAR PRODUCTO
+    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR PRODUCTO
     @Override
     public ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO,
             MultipartFile file) {
 
         try {
 
-            Optional<Producto> productOptional = productoRepositorio.findById(_id);
+            Optional<ProductoModelo> productOptional = productoRepositorio.findById(_id);
 
             if (productOptional.isPresent()) {
                 // Obtengo el objeto de la base de datos
-                Producto producto = productOptional.get();
+                ProductoModelo producto = productOptional.get();
 
                 // Construyo el nuevo Identificador para comprobar luego si existe o no en mi
                 // base de datos
@@ -268,7 +269,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
     // IDENTIFICADOR PARA NO INSERTAR EL MISMO PRODUCTO 2 VECES EN LA ACTUALIZACIÓN
     private String construirIdentificadorActualizado(ActualizarProductoDTO actualizarProductoDTO,
-            Producto productoExistente) {
+            ProductoModelo productoExistente) {
 
         String categoria = "";
         if (actualizarProductoDTO.getCategoriaProducto() != null) {
@@ -295,10 +296,10 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return String.format("%s-%s-%s", categoria, nombre, marca);
     }
 
-    //METODO PARA LISTAR UN PRODUCTO POR ID
+    // IMPLEMENTACION DEL METODO PARA LISTAR UN PRODUCTO POR ID
     @Override
     public ResponseEntity<?> listarUnProducto(String _id) {
-        Optional<Producto> productOptional = productoRepositorio.findById(_id);
+        Optional<ProductoModelo> productOptional = productoRepositorio.findById(_id);
         if (productOptional.isPresent()) {
             // System.out.println("Producto: " + productOptional.get());
             return ResponseEntity.ok(productOptional);
@@ -307,15 +308,16 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    // LISTAR TODOS LOS PRODUCTOS
+    // IMPLEMENTACION DEL METODO PARA LISTAR TODOS LOS PRODUCTOS
     @Override
-    public Page<Producto> listarProductosAdmin(int page, int size) {
+    public Page<ProductoModelo> listarProductosAdmin(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         System.out.println("Hay " + productoRepositorio.count() + " productos");
         return productoRepositorio.findAll(pageable);
     }
 
-    // BUSQUEDA POR CAMPOS IMPORTANTES Y MUESTRA TODOS LOS CAMPOS PARA EL ADMIN
+    // IMPLEMENTACION DEL METODO PARA LA BUSQUEDA POR CAMPOS IMPORTANTES Y MOSTRAR
+    // TODOS LOS CAMPOS PARA EL ADMIN
     @Override
     public List<Map<String, Object>> buscarProductosAdmin(
             // BigDecimal precio,
@@ -332,7 +334,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Producto> productosPage;
+        Page<ProductoModelo> productosPage;
 
         if (categoria != null && !categoria.isEmpty()) {
             String normalizedCategoria = normalizeText(categoria);
@@ -360,7 +362,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
         List<Map<String, Object>> productosResponse = new ArrayList<>();
 
-        for (Producto producto : productosPage.getContent()) {
+        for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("id", producto.get_id());
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
@@ -379,8 +381,8 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return productosResponse;
     }
 
-    // MÉTODO PARA BUSCAR PRODUCTO POR CUALQUIER ESPECIFICACIÓN Y QUE LE MUESTRE
-    // TODOS LOS CAMPOS AL ADMIN
+    // IMPLEMENTACION DEL MÉTODO PARA BUSCAR PRODUCTO POR CUALQUIER ESPECIFICACIÓN Y
+    // QUE LE MUESTRE TODOS LOS CAMPOS AL ADMIN
     @Override
     public List<Map<String, Object>> buscarProductosPorEspecificacionAdmin(String especificacion, int page, int size) {
         // System.out.println("Especificación: " + especificacion);
@@ -392,13 +394,13 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         String normalizedEspecificacion = normalizeText(especificacion);
 
         // UtilizO el método del repositorio con paginación
-        Page<Producto> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
+        Page<ProductoModelo> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
                 pageable);
 
         // Transformo los productos con los campos que quiero en la respuesta
         List<Map<String, Object>> productosResponse = new ArrayList<>();
 
-        for (Producto producto : productosPage.getContent()) {
+        for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("id", producto.get_id());
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
@@ -418,7 +420,8 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         return productosResponse;
     }
 
-    // METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y ME BUSQUE SIN TILDE
+    // IMPLEMENTACION DEL METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y
+    // ME BUSQUE SIN TILDE
     // LOS CAMPOS, TAMBIÉN LO USO PARA INTRODUCIR TEXTOS SIN TILDE EN LA BASE DE
     // DATOS
     private String normalizeText(String text) {
@@ -426,7 +429,8 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
-    // METODO PARA BUSCAR PRODUCTOS POR PRECIO, MAYOR A MENOR Y VICEVERSA
+    // IMPLEMENTACION DEL METODO PARA BUSCAR PRODUCTOS POR PRECIO, MAYOR A MENOR Y
+    // VICEVERSA
     @Override
     public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax,
             int page, int size) {
@@ -434,12 +438,12 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         Pageable pageable = PageRequest.of(page, size);
 
         try {
-            Page<Producto> productosPage = productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax,
+            Page<ProductoModelo> productosPage = productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax,
                     pageable);
 
             List<Map<String, Object>> productosResponse = new ArrayList<>();
 
-            for (Producto producto : productosPage.getContent()) {
+            for (ProductoModelo producto : productosPage.getContent()) {
                 Map<String, Object> mapaProductos = new HashMap<>();
                 mapaProductos.put("id", producto.get_id());
                 mapaProductos.put("descripcion", producto.getDescripcionProducto());
@@ -466,7 +470,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    // METODO PARA SUBIR IMAGENES
+    // IMPLEMENTACION DEL METODO PARA SUBIR IMAGENES
     public ResponseEntity<String> subirImagen(MultipartFile file) {
         try {
 
@@ -505,7 +509,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
         }
     }
 
-    // METODO PARA BORRAR IMAGEN
+    // IMPLEMENTACION DEL METODO PARA BORRAR IMAGEN
     private void borrarImagen(String nombreImagenActual) {
         try {
             if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {

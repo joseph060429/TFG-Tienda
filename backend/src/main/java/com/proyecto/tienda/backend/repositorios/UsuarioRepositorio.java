@@ -1,7 +1,5 @@
 package com.proyecto.tienda.backend.repositorios;
 
-
-
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -10,25 +8,27 @@ import com.proyecto.tienda.backend.models.UsuarioModelo;
 @Repository
 public interface UsuarioRepositorio extends MongoRepository<UsuarioModelo, String> {
 
-    // El optinal es porque ese usuario puede o no puede estar en la base de datos
+    // EL OPTIONAL SE UTILIZA PARA REPRESENTAR UN VALOR QUE PUEDE ESTAR PRESENTE O
+    // NO.
 
+    // CONSULTA PARA BUSCAR UN USUARIO POR SU CORREO ELECTRONICO
     Optional<UsuarioModelo> findByEmail(String email);
 
+    // CONSULTA PARA COMPROBAR SI EXISTE UN USUARIO CON ESE EMAIL
     boolean existsByEmail(String email);
 
+    // COSULTA PARA BORRAR UN USUARIO POR ID
     void deleteBy_id(String _id);
 
-    UsuarioModelo findBy_id(String _id);
+    // CONSULTA PARA BUSCAR UN USUARIO POR SU ID
+    // UsuarioModelo findBy_id(String _id);
 
+    // CONSULTA PARA BUSCAR UN USUARIO POR EL CAMPO QUE TENGO EN MI BASE DE DATOS
+    // QUE SE LLAMA RECUPERAR CONTRASEÑA Y ES EL CODIGO DE RECUPERACION
     Optional<UsuarioModelo> findByRecuperarContrasenia(String recuperarContrasenia);
-    
+
+    // CONSULTA PARA BUSCAR UN USUARIO POR EL CAMPO QUE TENGO EN MI BASE DE DATOS
+    // QUE SE LLAMA EXPIRACION RECUPERAR CONTRASEÑA
     Optional<UsuarioModelo> findByExpiracionRecuperarContrasenia(String expiracionRecuperarContrasenia);
-
-    // // Nuevo método para guardar el código de recuperación y la fecha actual
-    // void guardarCodigoRecuperacion(String _id, String codigoRecuperacion,
-    // LocalDateTime fechaRecuperacion);
-
-    // // Nuevo método para verificar si el código de recuperación es válido
-    // boolean esCodigoRecuperacionValido(String _id, LocalDateTime fechaActual);
 
 }

@@ -5,13 +5,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 import java.text.Normalizer;
-import com.proyecto.tienda.backend.models.Producto;
+import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 
 @Service
@@ -20,18 +22,18 @@ public class ProductoServicioImpl implements ProductoServicio {
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
-    // LISTAR TODOS LOS PRODUCTOS SOLO ME MUESTRA LO QUE QUIERO QUE VEA EL USUARIO
+    // IMPLEMENTACION DEL LISTAR TODOS LOS PRODUCTOS SOLO ME MUESTRA LO QUE QUIERO QUE VEA EL USUARIO
     @Override
     public List<Map<String, Object>> listarProductos(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Producto> productosPage;
+        Page<ProductoModelo> productosPage;
 
         productosPage = productoRepositorio.findAll(pageable);
 
         List<Map<String, Object>> productosResponse = new ArrayList<>();
 
-        for (Producto producto : productosPage.getContent()) {
+        for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
             mapaProductos.put("categoria", producto.getCategoriaProducto());
@@ -47,7 +49,8 @@ public class ProductoServicioImpl implements ProductoServicio {
         return productosResponse;
     }
 
-    // BUSQUEDA POR CAMPOS IMPORTANTES Y SOLO ME MUESTRE LO QUE QUIERO QUE VEA EL USUARIO
+    // IMPLEMENTACION DEL METODO PARA BUSCAR POR CAMPOS IMPORTANTES Y SOLO ME MUESTRE LO QUE QUIERO QUE VEA EL
+    // USUARIO
     @Override
     public List<Map<String, Object>> buscarProductosPorCampos(String descripcion, String categoria, String nombre,
             String marca,
@@ -55,7 +58,7 @@ public class ProductoServicioImpl implements ProductoServicio {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Producto> productosPage;
+        Page<ProductoModelo> productosPage;
 
         if (categoria != null && !categoria.isEmpty()) {
             String normalizedCategoria = normalizeText(categoria);
@@ -80,7 +83,7 @@ public class ProductoServicioImpl implements ProductoServicio {
 
         List<Map<String, Object>> productosResponse = new ArrayList<>();
 
-        for (Producto producto : productosPage.getContent()) {
+        for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
             mapaProductos.put("categoria", producto.getCategoriaProducto());
@@ -96,7 +99,7 @@ public class ProductoServicioImpl implements ProductoServicio {
         return productosResponse;
     }
 
-    //METODO PARA BUSCAR PRODUCTO POR CUALQUIER ESPECIFICACION
+    // IMPLEMENTACION DEL METODO PARA BUSCAR PRODUCTO POR CUALQUIER ESPECIFICACION
     @Override
     public List<Map<String, Object>> buscarProductosPorEspecificacion(String especificacion, int page, int size) {
         System.out.println("Especificación: " + especificacion);
@@ -108,13 +111,13 @@ public class ProductoServicioImpl implements ProductoServicio {
         String normalizedEspecificacion = normalizeText(especificacion);
 
         // Utilizo el método del repositorio con paginación
-        Page<Producto> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
+        Page<ProductoModelo> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
                 pageable);
 
         // Transformo los productos con los campos que quiero en la respuesta
         List<Map<String, Object>> productosResponse = new ArrayList<>();
 
-        for (Producto producto : productosPage.getContent()) {
+        for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
             mapaProductos.put("categoria", producto.getCategoriaProducto());
@@ -131,26 +134,27 @@ public class ProductoServicioImpl implements ProductoServicio {
         return productosResponse;
     }
 
-    // METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y ME BUSQUE SIN TILDE LOS CAMPOS
+    // METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y ME BUSQUE SIN TILDE
+    // LOS CAMPOS
     private String normalizeText(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                 .toLowerCase();
     }
 
-    // METODO PARA HACER UNA BUSQUEDA DE PRECIO
+    // IMPLEMENTACION DEL METODO PARA HACER UNA BUSQUEDA DE PRECIO
     @Override
     public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax, int page,
             int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         try {
-            Page<Producto> productosPage = productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax,
+            Page<ProductoModelo> productosPage = productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax,
                     pageable);
 
             List<Map<String, Object>> productosResponse = new ArrayList<>();
 
-            for (Producto producto : productosPage.getContent()) {
+            for (ProductoModelo producto : productosPage.getContent()) {
                 Map<String, Object> mapaProductos = new HashMap<>();
                 mapaProductos.put("descripcion", producto.getDescripcionProducto());
                 mapaProductos.put("categoria", producto.getCategoriaProducto());
@@ -171,5 +175,5 @@ public class ProductoServicioImpl implements ProductoServicio {
             return Collections.emptyList();
         }
     }
-   
+
 }

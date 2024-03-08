@@ -18,7 +18,7 @@ public class ProductosController {
     @Autowired
     private ProductoServicio productoServicio;
 
-    //LISTAR TODOS LOS PRODUCTOS Y QUE ME TRAIGA SOLO LOS CAMPOS QUE QUIERO QUE MUESTRE AL USUARIO
+    //CONTROLADOR PARA LISTAR TODOS LOS PRODUCTOS Y QUE ME TRAIGA SOLO LOS CAMPOS QUE QUIERO QUE MUESTRE AL USUARIO
     @GetMapping("/listarProductos")
     public ResponseEntity<List<Map<String, Object>>> listarProductos(
             @RequestParam(defaultValue = "0") int page,
@@ -31,7 +31,7 @@ public class ProductosController {
         }
     }
 
-    // BUSQUEDA POR CAMPOS IMPORTANTES EN EL PRECIO TENGO QUE PONERLE EL CAMPO EXACTO PARA QUE LO HAGA
+    // CONTROLADOR DE BUSQUEDA POR CAMPOS IMPORTANTES EN EL PRECIO TENGO QUE PONERLE EL CAMPO EXACTO PARA QUE LO HAGA
     @GetMapping("/buscarPorCamposImportantes")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorCamposImportantes(
             @RequestParam(required = false) String descripcion,
@@ -49,7 +49,7 @@ public class ProductosController {
         }
     }
 
-    //BUSQUEDA POR CUALQUIER ESPECIFICACION QUE PONGA EL USUARIO Y LE MUESTRO LO QUE YO QUIERO QUE VEA
+    //CONTROLADOR DE BUSQUEDA POR CUALQUIER ESPECIFICACION QUE PONGA EL USUARIO Y LE MUESTRO LO QUE YO QUIERO QUE VEA
     @GetMapping("/buscarPorEspecificacion")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorEspecificacion(
             @RequestParam(required = false) String especificacion,
@@ -80,7 +80,7 @@ public class ProductosController {
         }
     }
 
-    // PARA BUSCAR POR RANGO DE PRECIO
+    // CONTROLADOR PARA BUSCAR POR RANGO DE PRECIO QUE PONGA EL USUARIO Y LE MUESTRO LO QUE YO QUIERO QUE VEA
     @GetMapping("/buscarPorRangoDePrecio")
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorRangoDePrecio(
             @RequestParam(required = false) Optional<Double> precioMin,

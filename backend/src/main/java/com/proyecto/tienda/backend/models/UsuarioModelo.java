@@ -38,7 +38,7 @@ public class UsuarioModelo {
         private String password;
 
         @DBRef
-        private Set<Roles> roles;
+        private Set<RolesModelo> roles;
 
         private String fechaCreacion;
         private String fechaModificacion;
@@ -47,12 +47,11 @@ public class UsuarioModelo {
         @Builder.Default // Lo puse porque ya tenia los otros campos creados
         private String recuperarContrasenia = "";
 
-        
+        @Builder.Default // Lo puse porque ya tenia los otros campos creados
+        private String expiracionRecuperarContrasenia = "";
+
         // El campo @Transient se utiliza para indicar a Spring Data que ignore este
         // campo durante la persistencia en la base de datos, ya que la expiración se
         // gestionará en la lógica de la aplicación y no necesariamente necesita
         // almacenarse permanentemente.
-        @Builder.Default
-        private String expiracionRecuperarContrasenia = "";
-
 }
