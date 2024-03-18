@@ -19,5 +19,8 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
   // CONSULTA DE BUSQUEDA POR ID DE PEDIDO
   Optional<PedidosModelo>  findBy_id(String _id);
 
+  // CONSULTA PARA BUSCAR PEDIDOS POR ESTADO PENDIENTE
+  List<PedidosModelo> findByEstado(String estado);
+
   
 }

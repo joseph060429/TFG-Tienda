@@ -14,6 +14,7 @@ public class ProductoPedido {
     private String _idProducto;
     private String nombre;
     private String marca;
+    private double precioProducto;
     private String categoria;
     private int cantidadPedida;
 

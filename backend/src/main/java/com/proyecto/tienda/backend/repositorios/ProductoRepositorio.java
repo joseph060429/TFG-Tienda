@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 import java.util.Optional;
 
 // ESTO SON LAS CONSULTAS CLAVES DE SPRING DATA, AL IGUAL QUE TODOS LOS REPOSITORIOS
@@ -45,11 +43,8 @@ public interface ProductoRepositorio extends MongoRepository<ProductoModelo, Str
   // CONSULTA PARA BUSCAR UN PRODUCTO POR ID
   ProductoModelo findBy_id(String _id);
 
-
-
-
   // CONSULTA PARA ELIMINAR UN PRODUCTO
-  Optional<ProductoModelo> deleteBy(String _id);
+  Optional<ProductoModelo> deleteBy_id(String _id);
 
   // CONSULTA PERSONALIZADA EN MONGODB QUE BUSCA PRODUCTOS DONDE ALGUNO DE LOS CAMPOS
   // COINCIDA CON LA EXPRESIÓN REGULAR PROPORCIONADA, IGNORANDO MAYÚSCULAS Y MINÚSCULAS.

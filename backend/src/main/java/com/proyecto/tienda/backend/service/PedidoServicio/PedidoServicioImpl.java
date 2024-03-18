@@ -131,16 +131,16 @@ public class PedidoServicioImpl implements PedidoServicio {
                             productoModelo.getCantidadProducto());
                     if (restarResultado == 1) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Se ha pedido mas productos de los disponibles");
+                                .body("Ha pedido más productos del stock disponible en algunos de los productos: " + productoEncontrado.getNombreProducto());
                     } else if (restarResultado == 2) {
                         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro el producto");
                     }
-                    ;
 
                     // Agrego el nuevo producto a la nueva lista, y le meto los campos que creo que
                     // son importantes
                     listaNueva.add(new ProductoPedido(productoEncontrado.get_id(),
                             productoEncontrado.getNombreProducto(), productoEncontrado.getMarcaProducto(),
+                            productoEncontrado.getPrecioProducto(),
                             productoEncontrado.getCategoria().toString(), productoModelo.getCantidadProducto()));
 
                 }
@@ -169,7 +169,7 @@ public class PedidoServicioImpl implements PedidoServicio {
         // Busco el producto por el Id
         ProductoModelo productoEncontrado = productoRepositorio.findBy_id(productoId);
 
-        // Si el proyecto existe
+        // Si el producto existe
         if (productoEncontrado != null) {
             // Cojo la cantidad actual de ese producto
             Integer cantidadActual = productoEncontrado.getCantidadProducto();

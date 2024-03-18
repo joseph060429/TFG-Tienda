@@ -69,6 +69,7 @@ public class AdminServicioImpl implements AdminServicio {
     // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ROL DE UN USUARIO
     @Override
     public ResponseEntity<?> actualizarRolUsuario(String usuarioId, Set<String> nuevosRoles) {
+        
         if (nuevosRoles.isEmpty()) {
             return ResponseEntity.badRequest().body("Debes proporcionar al menos un rol");
         }

@@ -129,7 +129,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
 
         if (productOptional.isPresent()) {
             ProductoModelo producto = productOptional.get();
-            productoRepositorio.deleteBy(producto.get_id());
+            productoRepositorio.deleteBy_id(producto.get_id());
 
             // Eliminar la imagen de la carpeta imagen cuando el id existe en la base de
             // datos

@@ -42,7 +42,7 @@ public class AuthServicioImpl implements AuthServicio {
         String password = crearUsuarioDTO.getPassword().trim();
 
         if (usuarioRepositorio.existsByEmail(crearUsuarioDTO.getEmail())) {
-            return ResponseEntity.badRequest().body("El email ya existe");
+            return ResponseEntity.badRequest().body("Prueba con otro email");
         }
 
         // Traigo el rol de usuario y por defecto lo creo en rol usuario
