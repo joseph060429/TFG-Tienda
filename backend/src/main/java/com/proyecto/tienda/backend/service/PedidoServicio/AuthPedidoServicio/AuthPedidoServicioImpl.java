@@ -45,9 +45,16 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             // Obtengo el pedido de la base de datos
             PedidosModelo pedido = pedidoOptional.get();
 
-            // Verifico que el pedido no este enviado
-            if (!EPedido.ENVIADO.equals(EPedido.valueOf(actualizarPedidoDTO.getEstado()))) {
+            // Verifico que el estado que ponga en el postman sea ENVIADO O enviado, SI PONE OTRO ESTADO que no este en el enum 
+            // lanzare la exception que no un estado valido para esta operacion
+            if (!EPedido.ENVIADO.equals(EPedido.valueOf(actualizarPedidoDTO.getEstado().toUpperCase()))) {
+                System.out.println("ESTADO: " + EPedido.valueOf(actualizarPedidoDTO.getEstado()));
                 return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
+            }
+
+            // Si el pedido ya tiene un estado valido que no sea ENVIADO, devuelvo un error
+            if (EPedido.ENVIADO.toString().equals(pedido.getEstado())) {
+                return ResponseEntity.status(400).body("El pedido ya ha sido enviado");
             }
             // Actualizo el estado del pedido
             pedido.setEstado(EPedido.ENVIADO.toString());
@@ -70,7 +77,7 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             return ResponseEntity.ok("Se actualizo correctamente el pedido");
 
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al actualizar el pedido: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");
         }
     }
 

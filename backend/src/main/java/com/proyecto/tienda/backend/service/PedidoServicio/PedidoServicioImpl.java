@@ -68,12 +68,7 @@ public class PedidoServicioImpl implements PedidoServicio {
             return ResponseEntity.ok("Pedido creado exitosamente");
         } catch (RuntimeException e) {
             e.getMessage();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error al crear el pedido: " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al crear el pedido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el pedido: " + e.getMessage());
         }
     }
 
@@ -137,8 +132,9 @@ public class PedidoServicioImpl implements PedidoServicio {
 
         pedido.setNumPedido(nuevoNumeroPedido);
     }
-     
-    // IMPLEMENTACION DEL METODO PARA VERIFICAR LOS PRODUCTOS PEDIDOS Y AÑADIRLO A LOS PEDIDOS
+
+    // IMPLEMENTACION DEL METODO PARA VERIFICAR LOS PRODUCTOS PEDIDOS Y AÑADIRLO A
+    // LOS PEDIDOS
     @Transactional
     private List<ProductoPedido> generarListaProductosPedido(List<ProductoModelo> listaProductosPedidos) {
         List<ProductoPedido> listaPedidoUsuario = new ArrayList<>(); // Lista para almacenar los productos del pedido
@@ -290,5 +286,92 @@ public class PedidoServicioImpl implements PedidoServicio {
 
         }
     }
+
+    // @Override
+    // public ResponseEntity<?> eliminarPedido(Long numeroPedido, String token, JwtUtils jwtUtils) {
+    //     try {
+    //         // Comprobar el email del token con el del usuario
+    //         String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
+    //         Optional<UsuarioModelo> usuarioOptional = buscarUsuarioPorEmail(emailFromToken);
+    
+    //         if (!usuarioOptional.isPresent()) {
+    //             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                     .body("Error al eliminar el pedido: Usuario no encontrado");
+    //         } else {
+    //             // Buscar el pedido por su número
+    //             Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findByNumPedido(numeroPedido);
+
+    //             if (pedidoOptional.isPresent()) {
+    //                 PedidosModelo pedido = pedidoOptional.get();
+    //                 // Verificar si el pedido está en estado "PENDIENTE"
+
+    //                 System.out.println("ESTADO PEDIDO " + pedido.getEstado());
+
+    //                 if (pedido.getEstado().equals(EPedido.PENDIENTE.toString())) {
+    //                     // Eliminar el pedido
+    //                     pedidoRepositorio.delete(pedido);
+    //                     return ResponseEntity.ok("Pedido eliminado exitosamente");
+    //                 } else {
+    //                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //                             .body("Error al eliminar el pedido: El pedido ya ha sido procesado");
+    //                 }
+    //             } else {
+    //                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
+
+    //                         .body("Error al eliminar el pedido: Pedido no encontrado");
+    //             }
+    //         }
+    //     } catch (RuntimeException e) {
+    //         e.getMessage();
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar el pedido: " + e.getMessage());
+    //     }
+    // }
+
+
+
+    @Override
+public ResponseEntity<?> eliminarPedido(Long numeroPedido, String token, JwtUtils jwtUtils) {
+    try {
+        // Comprobar el email del token con el del usuario
+        String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
+        Optional<UsuarioModelo> usuarioOptional = buscarUsuarioPorEmail(emailFromToken);
+
+        if (!usuarioOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el pedido: Usuario no encontrado");
+        } else {
+            UsuarioModelo usuario = usuarioOptional.get();
+            // Buscar el pedido por su número
+            Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findByNumPedido(numeroPedido);
+
+            if (pedidoOptional.isPresent()) {
+                PedidosModelo pedido = pedidoOptional.get();
+                // Verificar si el pedido pertenece al usuario actual
+                if (pedido.getUsuario().equals(usuario)) {
+                    // Verificar si el pedido está en estado "PENDIENTE"
+                    if (pedido.getEstado().equals(EPedido.PENDIENTE.toString())) {
+                        // Eliminar el pedido
+                        pedidoRepositorio.delete(pedido);
+                        return ResponseEntity.ok("Pedido eliminado exitosamente");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Error al eliminar el pedido: El pedido ya ha sido ENVIADO");
+                    }
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                            .body("Error al eliminar el pedido: Solo puedes eliminar tus pedidos chulo");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Error al eliminar el pedido: Pedido no encontrado");
+            }
+        }
+    } catch (RuntimeException e) {
+        e.getMessage();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar el pedido: " + e.getMessage());
+    }
+}
+
+    
 
 }

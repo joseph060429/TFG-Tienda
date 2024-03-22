@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
 
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
-import com.proyecto.tienda.backend.service.UsuarioServicio.UsuarioServicioImpl;
+import com.proyecto.tienda.backend.service.UsuarioServicio.UsuarioServicio;
 // import com.proyecto.tienda.backend.util.Gmailer;
 import jakarta.validation.Valid;
 
@@ -19,7 +19,7 @@ public class UsuariosControllers {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UsuarioServicioImpl usuarioServicio;
+    private UsuarioServicio usuarioServicio;
 
     // CONTROLADOR PARA BORRAR UN USUARIO SIENDO USUARIO
     @DeleteMapping("/borrarUsuario")
