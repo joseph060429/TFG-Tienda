@@ -13,6 +13,7 @@ public interface PedidoServicio {
     ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
             List<ProductoModelo> productosModelo);
 
+    // ResponseEntity<?> validarTipoPagoYSetearlo(String tipoDePago, PedidosModelo pedido);
    
 
 }

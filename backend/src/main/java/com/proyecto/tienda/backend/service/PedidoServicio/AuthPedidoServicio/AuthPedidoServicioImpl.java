@@ -25,10 +25,10 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
     @Autowired
     private ResendUtil resend;
 
-    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO
+    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENVIADO
     @Transactional
     @Override
-    public ResponseEntity<?> actualizarEstadoPedido(String _id, ActualizarPedidoDTO actualizarPedidoDTO) {
+    public ResponseEntity<?> actualizarEstadoPedidoEnviado(String _id, ActualizarPedidoDTO actualizarPedidoDTO) {
 
         // Busco el pedido por el Id
         Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findBy_id(_id);
@@ -45,7 +45,7 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             // Obtengo el pedido de la base de datos
             PedidosModelo pedido = pedidoOptional.get();
 
-
+            // Verifico que el pedido no este enviado
             if (!EPedido.ENVIADO.equals(EPedido.valueOf(actualizarPedidoDTO.getEstado()))) {
                 return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
             }
@@ -91,6 +91,8 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
         }
     }
+
+    // IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO 
     
     
     

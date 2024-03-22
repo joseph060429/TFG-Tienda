@@ -1,6 +1,5 @@
 package com.proyecto.tienda.backend.service.PedidoServicio;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.CrearPedidoDTO;
-import com.proyecto.tienda.backend.ErroresGlobales.ExcepcionesPersonalizadas;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.UtilEnum.EPedidoPago;
 import com.proyecto.tienda.backend.models.PedidosModelo;
@@ -125,7 +123,7 @@ public class PedidoServicioImpl implements PedidoServicio {
         }
     }
 
-    //
+    // IMPLEMENTACION DEL METODO PARA ASIGNAR EL NUMERO DE PEDIDO AL PEDIDO
     private void asignarNumeroPedido(PedidosModelo pedido) {
         List<PedidosModelo> listaUltimosPedidos = pedidoRepositorio.findTopByOrderByNumPedidoDesc();
         Long nuevoNumeroPedido = 1L;
@@ -139,45 +137,54 @@ public class PedidoServicioImpl implements PedidoServicio {
 
         pedido.setNumPedido(nuevoNumeroPedido);
     }
-
+     
+    // IMPLEMENTACION DEL METODO PARA VERIFICAR LOS PRODUCTOS PEDIDOS Y AÑADIRLO A LOS PEDIDOS
     @Transactional
-    private List<ProductoPedido> generarListaProductosPedido(List<ProductoModelo> productosModelo) {
+    private List<ProductoPedido> generarListaProductosPedido(List<ProductoModelo> listaProductosPedidos) {
         List<ProductoPedido> listaPedidoUsuario = new ArrayList<>(); // Lista para almacenar los productos del pedido
-        List<String> productosNoDisponibles = new ArrayList<>(); // Lista para almacenar los nombres de los productos no
-                                                                 // disponibles
 
         try {
 
-            for (ProductoModelo productoModelo : productosModelo) {
+            // Compruebo que todos los productos existen
+            for (ProductoModelo productoModelo : listaProductosPedidos) {
 
+                // Los productos que pide el usuario lo iniciare como null
                 ProductoPedido productoPedido = null; // Crear un objeto ProductoPedido
 
                 // Obtengo el producto por su ID
-                ProductoModelo productoEncontrado = productoRepositorio.findBy_id(productoModelo.get_id());
-                System.out.println("PRODUCTO ENCONTRADO: " + productoEncontrado);
+                ProductoModelo productoEncontradoEnBaseDeDatos = productoRepositorio.findBy_id(productoModelo.get_id());
+                System.out.println("PRODUCTO ENCONTRADO: " + productoEncontradoEnBaseDeDatos);
 
-                if (productoEncontrado == null) {
+                // Compruebo que el producto exista
+                if (productoEncontradoEnBaseDeDatos == null) {
                     System.out.println("Uno o más productos no existen");
-                    // todosDisponibles = false;
+                    // Si el producto NO existe lanzo una exception
                     throw new RuntimeException("Uno o más productos no existen");
                 } else {
-
-                    if (!verificarCantidadPedidaValida(productoModelo, productoEncontrado, productosModelo)) {
-                        // todosDisponibles = false;
-                        // System.out.println("PRODUCTO MODELO " + productoEncontrado.get_id());
-                        productosNoDisponibles.add(productoEncontrado.getNombreProducto());
+                    // Si el producto existe verifico que la cantidad que me hayan puesto no sea 0 o
+                    // menor que 0
+                    // productoModelo = modelo del producto que se está procesando actualmente en el
+                    // bucle
+                    // productoEncontradoEnBaseDeDatos = producto que se ha encontrado en la base de
+                    // datos
+                    // listaProductosModelo = lista de productos del pedido
+                    if (!verificarCantidadPedidaValida(productoModelo, productoEncontradoEnBaseDeDatos,
+                            listaProductosPedidos)) {
+                        // Si la cantidad del producto es 0 lanzo una exception
                         throw new RuntimeException("La cantidad del producto "
-                                + productoEncontrado.getNombreProducto().toUpperCase() + " debe ser mayor a 0");
-                    } else {
+                                + productoEncontradoEnBaseDeDatos.getNombreProducto().toUpperCase()
+                                + " debe ser mayor a 0");
 
+                    } else {
+                        // Creo un objeto ProductoPedido con los datos del producto encontrado y la
+                        // cantidad pedida
                         productoPedido = new ProductoPedido(
-                                productoEncontrado.get_id(),
-                                productoEncontrado.getNombreProducto(),
-                                productoEncontrado.getMarcaProducto(),
-                                productoEncontrado.getPrecioProducto(),
-                                productoEncontrado.getCategoria().toString(),
+                                productoEncontradoEnBaseDeDatos.get_id(),
+                                productoEncontradoEnBaseDeDatos.getNombreProducto(),
+                                productoEncontradoEnBaseDeDatos.getMarcaProducto(),
+                                productoEncontradoEnBaseDeDatos.getPrecioProducto(),
+                                productoEncontradoEnBaseDeDatos.getCategoria().toString(),
                                 productoModelo.getCantidadProducto());
-                        System.out.println("PRODUCTOS PEDIDOS " + productoPedido);
 
                     }
                     listaPedidoUsuario.add(productoPedido);
@@ -185,7 +192,7 @@ public class PedidoServicioImpl implements PedidoServicio {
             }
 
             int todosEnStock = 1;
-            // Itero sobre la lista de productos pedidos
+            // Ahora verifico los productos pedidos sobre la lista de productos pedidos
             for (ProductoPedido productoPedido : listaPedidoUsuario) {
                 // Verifico si hay suficiente stock para el producto actual
                 ProductoModelo productoEncontrado = productoRepositorio.findBy_id(productoPedido.get_idProducto());
@@ -204,7 +211,8 @@ public class PedidoServicioImpl implements PedidoServicio {
             // Verifico que todos los productos esten en stock
             if (todosEnStock == 1) {
                 System.out.println("TODOS EN STOCK " + todosEnStock);
-                // Significa que es posible restar a todos los productos pedidos. quiere decir, hay stock para todo lo que se pide.
+                // Significa que es posible restar a todos los productos pedidos. quiere decir,
+                // hay stock para todo lo que se pide.
                 for (ProductoPedido productoPedido : listaPedidoUsuario) {
                     ProductoModelo encontrado = productoRepositorio.findBy_id(productoPedido.get_idProducto());
                     restarCantidadProducto(encontrado.get_id(), productoPedido.getCantidadPedida());
@@ -222,19 +230,12 @@ public class PedidoServicioImpl implements PedidoServicio {
     }
 
     // IMPLEMENTACION DEL METODO PARA VERIFICAR LA CANTIDAD PEDIDA DE CADA PRODUCTO
-    private boolean verificarCantidadPedidaValida(ProductoModelo productoModelo, ProductoModelo productoEncontrado,
+    private boolean verificarCantidadPedidaValida(ProductoModelo productoPedido, ProductoModelo productoEncontrado,
             List<ProductoModelo> productosSolicitados) {
         try {
-            if (productoModelo.getCantidadProducto() <= 0) {
-                // Sumar la cantidad del producto al inventario de otros productos solicitados
-                for (ProductoModelo productoSolicitado : productosSolicitados) {
-                    if (productoSolicitado.get_id().equals(productoModelo.get_id())) {
-                        // Si el producto se encuentra en la lista de productos solicitados, se suma la
-                        // cantidad
-                        sumarCantidadProducto(productoModelo.get_id(), productoModelo.getCantidadProducto());
-                        continue; // No es necesario continuar buscando, ya se encontró y sumó la cantidad
-                    }
-                }
+            if (productoPedido.getCantidadProducto() <= 0) {
+                System.out.println("PRODUCTO PEDIDO EN POSTMAN " + productoPedido.getCantidadProducto());
+                // Si la cantidad es 0 o menor, la cantidad pedida no es válida
                 return false;
             }
             return true; // La cantidad pedida es válida
@@ -245,65 +246,33 @@ public class PedidoServicioImpl implements PedidoServicio {
         }
     }
 
-    // METODO PARA SUMAR LA CANTIDAD DE PRODUCTOS
-    private void sumarCantidadProducto(String productoId, int cantidadSumar) {
-
-        try {
-            // Busco el producto por su ID
-            Optional<ProductoModelo> productoEncontradoOptional = productoRepositorio.findById(productoId);
-
-            if (productoEncontradoOptional.isPresent()) {
-                ProductoModelo productoEncontrado = productoEncontradoOptional.get();
-                Integer cantidadActual = productoEncontrado.getCantidadProducto();
-
-                // Sumo la cantidad suministrada a la cantidad actual del producto
-                productoEncontrado.setCantidadProducto(cantidadActual + cantidadSumar);
-
-                // Mantengo la disponibilidad si la cantidad actual es mayor que cero
-                if (cantidadActual + cantidadSumar > 0) {
-                    productoEncontrado.setDisponibilidadProducto(true);
-                }
-
-                // Guardo el producto actualizado en el repositorio
-                productoRepositorio.save(productoEncontrado);
-            } else {
-                // Producto no fue encontrado
-                System.out.println("Producto no encontrado");
-            }
-        } catch (Exception e) {
-            // Manejo las excepciones
-            e.printStackTrace();
-            System.out.println("Error al sumar la cantidad del producto: " + e.getMessage());
-        }
-    }
-
     // METODO PARA RESTAR LA CANTIDAD DE PRODUCTOS
     public int restarCantidadProducto(String productoId, int cantidadRestar) {
 
         try {
             // Buscar el producto por su ID
             Optional<ProductoModelo> productoOptional = productoRepositorio.findById(productoId);
-    
+
             // Verificar si el producto existe en la base de datos
             if (productoOptional.isPresent()) {
                 ProductoModelo productoEncontrado = productoOptional.get();
-    
+
                 // Obtener la cantidad actual del producto
                 Integer cantidadActual = productoEncontrado.getCantidadProducto();
-    
+
                 // Verificar si hay suficiente stock para restar
                 if (cantidadActual >= cantidadRestar) {
                     // Restar la cantidad especificada del stock
                     productoEncontrado.setCantidadProducto(cantidadActual - cantidadRestar);
-    
+
                     // Si la cantidad actual es 0, establecer disponibilidad en false
                     if (productoEncontrado.getCantidadProducto() == 0) {
                         productoEncontrado.setDisponibilidadProducto(false);
                     }
-    
+
                     // Guardar el producto actualizado en la base de datos
                     productoRepositorio.save(productoEncontrado);
-    
+
                     // Todo bien, la resta se realizó con éxito
                     return 0;
                 } else {
@@ -314,11 +283,11 @@ public class PedidoServicioImpl implements PedidoServicio {
                 // El producto no fue encontrado
                 return 2;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             // Manejo de excepciones
             e.printStackTrace();
             return 3;
-           
+
         }
     }
 
