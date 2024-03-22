@@ -47,15 +47,6 @@ public class CrearPedidoDTO {
 
     private String estado;
 
-    // METODO PARA ESTABLECER EL ESTADO DEL PEDIDO CON UN ENUM
-    // public void setEstadoPedido(EPedido ePedido) {
-    // this.estado = ePedido.toString();
-    // }
-
-    // public EPedido getEstadoPedido() {
-    // return EPedido.valueOf(this.estado);
-    // }
-
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
     public void setFechaPedido() {
         // Obtengo la fecha actual

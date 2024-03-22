@@ -1,13 +1,10 @@
 package com.proyecto.tienda.backend.service.PedidoServicio.AuthPedidoServicio;
 
 
-import java.util.ArrayList;
+
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
-import com.proyecto.tienda.backend.UtilEnum.ERol;
 import com.proyecto.tienda.backend.models.PedidosModelo;
-import com.proyecto.tienda.backend.models.RolesModelo;
-import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.util.ResendUtil;
 

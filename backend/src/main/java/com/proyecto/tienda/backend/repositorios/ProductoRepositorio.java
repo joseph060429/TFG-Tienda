@@ -64,4 +64,7 @@ public interface ProductoRepositorio extends MongoRepository<ProductoModelo, Str
   // CONSULTA DE BUSQUEDA POR CUALQUIER ESPECIFICACION
   Page<ProductoModelo> findByAllFieldsContainingIgnoreCase(String especificacion, Pageable pageable);
 
+
+  
+
 }
