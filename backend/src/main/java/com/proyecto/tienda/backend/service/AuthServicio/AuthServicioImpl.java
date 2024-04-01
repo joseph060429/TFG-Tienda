@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -63,8 +62,7 @@ public class AuthServicioImpl implements AuthServicio {
 
         return ResponseEntity.ok("Usuario creado correctamente");
     }
-
-
+    
     // IMPLEMENTACION DEL METODO PARA CONSTRUIR UN NUEVO USUARIO
     private UsuarioModelo construirUsuario(CrearUsuarioDTO crearUsuarioDTO, Set<RolesModelo> roles) {
         UsuarioModelo usuario = UsuarioModelo.builder()

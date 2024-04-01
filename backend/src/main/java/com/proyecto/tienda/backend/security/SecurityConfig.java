@@ -62,14 +62,14 @@ public class SecurityConfig {
                     auth.requestMatchers("/hello").permitAll();
                     auth.requestMatchers("/login").permitAll();
                     auth.requestMatchers("/crearUsuario").permitAll();
-                    auth.requestMatchers("/admin/*").hasRole("ADMIN");
+                    // auth.requestMatchers("/admin/*").hasRole("ADMIN");
                     auth.requestMatchers("/envioCodigoRecuperacion").permitAll();
                     auth.requestMatchers("/verificarCodigo").permitAll();
                     auth.requestMatchers("/listarProductos").permitAll();
                     auth.requestMatchers("/buscarPorCamposImportantes").permitAll();
                     auth.requestMatchers("/buscarPorEspecificacion").permitAll();
                     auth.requestMatchers("/buscarPorRangoDePrecio").permitAll();
-                    auth.requestMatchers("/subirImagen").permitAll();
+                    // auth.requestMatchers("/subirImagen").permitAll();
                     auth.requestMatchers("/cambiarContrasenia").permitAll();
                     // auth.requestMatchers("/crearPedido").permitAll();
                     auth.anyRequest().authenticated();
@@ -109,7 +109,7 @@ public class SecurityConfig {
         mailSender.setPort(993); // Configuro el puerto
         mailSender.setUsername(emailIonos); // Dirección de correo de Ionos
         mailSender.setPassword(contraseniaIonos); // Contraseña de correo de Ionos
-
+        
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
