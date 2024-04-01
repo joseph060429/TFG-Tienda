@@ -3,6 +3,7 @@ package com.proyecto.tienda.backend.service.AuthServicio;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -48,7 +49,6 @@ public class AuthServicioImpl implements AuthServicio {
         RolesModelo rolUsuario = rolesRepositorio.findByName(ERol.USER).get();
         Set<RolesModelo> roles = new HashSet<>();
         roles.add(rolUsuario);
-        
 
         // Modificar el DTO antes de construir el usuario
         crearUsuarioDTO.setEmail(email);
@@ -62,15 +62,15 @@ public class AuthServicioImpl implements AuthServicio {
 
         return ResponseEntity.ok("Usuario creado correctamente");
     }
-    
+
     // IMPLEMENTACION DEL METODO PARA CONSTRUIR UN NUEVO USUARIO
     private UsuarioModelo construirUsuario(CrearUsuarioDTO crearUsuarioDTO, Set<RolesModelo> roles) {
         UsuarioModelo usuario = UsuarioModelo.builder()
-                .nombre(normalizeText(crearUsuarioDTO.getNombre().trim()))
-                .apellido(normalizeText(crearUsuarioDTO.getApellido().trim()))
+                .nombre(normalizarTextos(crearUsuarioDTO.getNombre().trim()))
+                .apellido(normalizarTextos(crearUsuarioDTO.getApellido().trim()))
                 .email(crearUsuarioDTO.getEmail().trim())
                 .password(passwordEncoder.encode(crearUsuarioDTO.getPassword()).trim())
-                .direccionEnvio("".trim())
+                .direccionesEnvio(Collections.emptyList()) // Inicio las direcciones en una lista vacia
                 .fechaModificacion("".trim())
                 .roles(roles)
                 .build();
@@ -180,10 +180,8 @@ public class AuthServicioImpl implements AuthServicio {
         }
     }
 
-    // IMPLEMENTACION DEL METODO PARA NORMALIZAR LOS TEXTOS QUE PONGA EL USUARIO Y
-    // ME BUSQUE SIN TILDE
-    // LOS CAMPOS
-    private String normalizeText(String text) {
+    // IMPLEMENTACION DEL METODO PARA NORMALIZAR TEXTOS Y GUARDAR A LOS USUARIOS SIN TILDES
+    private String normalizarTextos(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }

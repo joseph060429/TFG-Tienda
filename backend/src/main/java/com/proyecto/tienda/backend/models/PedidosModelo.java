@@ -44,13 +44,15 @@ public class PedidosModelo {
 
     @Field("productos") // Campo como seria almacenado en la base de datos
     private List<ProductoPedido> productos;
-    // private List<ProductoPedido> productos;
+    
 
     @NotNull(message = "El tipo de pago no puede estar en blanco")
     private String tipoPago;
 
     
     private String  estado;
+
+    private String direccionEnvio;
 
    
 

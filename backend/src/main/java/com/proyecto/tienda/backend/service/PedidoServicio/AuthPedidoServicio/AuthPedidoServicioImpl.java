@@ -1,7 +1,5 @@
 package com.proyecto.tienda.backend.service.PedidoServicio.AuthPedidoServicio;
 
-
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.models.PedidosModelo;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.util.ResendUtil;
 
@@ -45,7 +44,8 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             // Obtengo el pedido de la base de datos
             PedidosModelo pedido = pedidoOptional.get();
 
-            // Verifico que el estado que ponga en el postman sea ENVIADO O enviado, SI PONE OTRO ESTADO que no este en el enum 
+            // Verifico que el estado que ponga en el postman sea ENVIADO O enviado, SI PONE
+            // OTRO ESTADO que no este en el enum
             // lanzare la exception que no un estado valido para esta operacion
             if (!EPedido.ENVIADO.equals(EPedido.valueOf(actualizarPedidoDTO.getEstado().toUpperCase()))) {
                 System.out.println("ESTADO: " + EPedido.valueOf(actualizarPedidoDTO.getEstado()));
@@ -71,7 +71,6 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             resend.enviarEmailEnvioDelPedido(email);
             // Guardo el pedido
 
-            
             pedidoRepositorio.save(pedido);
 
             return ResponseEntity.ok("Se actualizo correctamente el pedido");
@@ -85,29 +84,29 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
     @Override
     public ResponseEntity<List<PedidosModelo>> obtenerPedidosPorEstado(String estado) {
         try {
-            // Obtengo el estado del pedido
             EPedido estadoPedido = EPedido.valueOf(estado.trim().toUpperCase());
-            System.out.println("ESTADO PEDIDO: " + estadoPedido);
-            
+
             List<PedidosModelo> pedidos = pedidoRepositorio.findByEstado(estadoPedido.name());
-    
+
+            // Mostrar solo los campos que creo que son necesarios
+            for (PedidosModelo pedido : pedidos) {
+                UsuarioModelo usuarioModelo = pedido.getUsuario();
+                UsuarioModelo usuarioFiltrado = new UsuarioModelo();
+                usuarioFiltrado.set_id(usuarioModelo.get_id());
+                usuarioFiltrado.setNombre(usuarioModelo.getNombre());
+                usuarioFiltrado.setApellido(usuarioModelo.getApellido());
+                usuarioFiltrado.setEmail(usuarioModelo.getEmail());
+                usuarioFiltrado.setDireccionesEnvio(usuarioModelo.getDireccionesEnvio());
+                pedido.setUsuario(usuarioFiltrado);
+            }
+
             return ResponseEntity.ok(pedidos);
         } catch (IllegalArgumentException e) {
             System.err.println("Error: Estado no válido");
-            // Devuelvo una lista vacía si no existe el estado
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
         }
     }
 
-    // IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO 
-    
-    
-    
-
-    
-
-
-
-    
+    // IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO
 
 }

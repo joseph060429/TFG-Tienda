@@ -47,6 +47,27 @@ public class CrearPedidoDTO {
 
     private String estado;
 
+    @NotNull(message = "El codigo postal no puede estar en blanco")
+    @NotBlank(message = "El codigo postal no puede estar en blanco")
+    private String codigoPostal;
+
+    @NotNull(message = "La direccion no puede estar en blanco")
+    @NotBlank(message = "La direccion no puede estar en blanco")
+    private String direccion;
+
+    @NotNull(message = "La provincia no puede estar en blanco")
+    @NotBlank(message = "La provincia no puede estar en blanco")
+    private String provincia;
+
+    @NotNull(message = "El numero no puede estar en blanco")
+    @NotBlank(message = "El numero no puede estar en blanco")
+    private String numero;
+
+    private String piso;
+    private String puerta;
+
+    private String direccionEnvio;
+
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
     public void setFechaPedido() {
         // Obtengo la fecha actual
@@ -57,6 +78,7 @@ public class CrearPedidoDTO {
 
         // Formateo la fecha y la guardo en la propiedad fechaCreacion
         this.fechaPedido = fechaActual.format(formatearFecha);
+
     }
 
 }

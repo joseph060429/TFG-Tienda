@@ -49,7 +49,13 @@ public class PedidoServicioImpl implements PedidoServicio {
             }
 
             UsuarioModelo usuario = usuarioModelo.get();
+
             PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
+
+            String direccionEnvio = anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
+                    crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(), crearPedidoDTO.getNumero(),
+                    crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
+
             ResponseEntity<?> resultadoPagoValidacion = validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
 
             if (resultadoPagoValidacion != null) {
@@ -63,12 +69,32 @@ public class PedidoServicioImpl implements PedidoServicio {
             crearPedidoDTO.setFechaPedido();
             pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
 
+            pedido.setDireccionEnvio(direccionEnvio);
+
             guardarPedido(pedido);
 
             return ResponseEntity.ok("Pedido creado exitosamente");
         } catch (RuntimeException e) {
             e.getMessage();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el pedido: " + e.getMessage());
+        }
+    }
+
+    // IMPLEMENTACION DEL METODO PARA LA DIRECCION DE ENVIO
+    private String anadirDireccionEnvio(String codigoPostal, String direccion, String provincia,
+            String numero, String piso, String puerta, UsuarioModelo usuario) {
+        try {
+            // Agregar la dirección de envío al usuario
+            String direccionEnvio = usuario.agregarDireccionCompleta(direccion, provincia, puerta, codigoPostal, piso,
+                    numero);
+
+            // Guardar el usuario con la nueva dirección de envío
+            usuarioRepositorio.save(usuario);
+
+            return direccionEnvio;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al anadir la dirección de envío: " + e.getMessage());
+            return ("Error al anadir la dirección de envío: " + e.getMessage());
         }
     }
 
@@ -149,7 +175,6 @@ public class PedidoServicioImpl implements PedidoServicio {
 
                 // Obtengo el producto por su ID
                 ProductoModelo productoEncontradoEnBaseDeDatos = productoRepositorio.findBy_id(productoModelo.get_id());
-                System.out.println("PRODUCTO ENCONTRADO: " + productoEncontradoEnBaseDeDatos);
 
                 // Compruebo que el producto exista
                 if (productoEncontradoEnBaseDeDatos == null) {
@@ -230,11 +255,10 @@ public class PedidoServicioImpl implements PedidoServicio {
             List<ProductoModelo> productosSolicitados) {
         try {
             if (productoPedido.getCantidadProducto() <= 0) {
-                System.out.println("PRODUCTO PEDIDO EN POSTMAN " + productoPedido.getCantidadProducto());
                 // Si la cantidad es 0 o menor, la cantidad pedida no es válida
                 return false;
             }
-            return true; // La cantidad pedida es válida
+            return true; // Cantidad pedida válida
         } catch (RuntimeException e) {
             // Manejo de excepciones
             e.getMessage();
@@ -299,15 +323,15 @@ public class PedidoServicioImpl implements PedidoServicio {
                         .body("Error al eliminar el pedido: Usuario no encontrado");
             } else {
                 UsuarioModelo usuario = usuarioModelo.get();
-                // Buscar el pedido por su número
+                // BuscO el pedido por su número
                 Optional<PedidosModelo> numPedido = pedidoRepositorio.findByNumPedido(numeroPedido);
 
                 // Verifico que el numero de pedido exista
                 if (numPedido.isPresent()) {
                     PedidosModelo pedido = numPedido.get();
-                    // Verificar si el pedido pertenece al usuario actual
+                    // Verifico si el pedido pertenece al usuario actual
                     if (pedido.getUsuario().equals(usuario)) {
-                        // Verificar si el pedido está en estado "PENDIENTE"
+                        // Verifico si el pedido está en estado "PENDIENTE"
                         if (pedido.getEstado().equals(EPedido.PENDIENTE.toString())) {
                             // Obtener la lista de productos pedidos del pedido
                             List<ProductoPedido> productosPedidos = pedido.getProductos();
@@ -322,9 +346,11 @@ public class PedidoServicioImpl implements PedidoServicio {
                                 // Si el producto esta en la base de datos
                                 if (productoOptional.isPresent()) {
                                     ProductoModelo producto = productoOptional.get();
-                                    // Sumo la cantidad pedida al stock del producto
+                                    // Sumo la cantidad pedida al stock del producto, ya que va se va a cancelar el
+                                    // pedido
+                                    // esa cantidad pedida, esta almacenada dentro de productos pedidos
                                     int cantidadPedida = productoPedido.getCantidadPedida();
-                                    // Verificar si la cantidad pedida es mayor que 0
+                                    // Verifico si la cantidad pedida es mayor que 0
                                     if (cantidadPedida > 0) {
                                         producto.setDisponibilidadProducto(true);
                                     }

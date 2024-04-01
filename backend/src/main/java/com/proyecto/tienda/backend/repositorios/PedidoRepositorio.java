@@ -3,6 +3,8 @@ package com.proyecto.tienda.backend.repositorios;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,9 +25,8 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
   List<PedidosModelo> findByEstado(String estado);
 
   // CONSULTA DE BUSQUEDA POR NUMERO DE PEDIDO
-  // Optional<PedidosModelo> findByNumPedido(String numPedido);
-
   Optional<PedidosModelo> findByNumPedido(Long numPedido);
+
 
 
     

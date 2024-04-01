@@ -320,7 +320,7 @@ public class AuthProductoServicioImpl implements AuthProductoServicio {
     // TODOS LOS CAMPOS PARA EL ADMIN
     @Override
     public List<Map<String, Object>> buscarProductosAdmin(
-            // BigDecimal precio,
+
             String descripcion,
             String categoria, String nombre,
             String marca,
