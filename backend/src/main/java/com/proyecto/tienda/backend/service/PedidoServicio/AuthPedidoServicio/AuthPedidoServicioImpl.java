@@ -1,9 +1,13 @@
 package com.proyecto.tienda.backend.service.PedidoServicio.AuthPedidoServicio;
 
-import java.util.Collections;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -69,8 +73,8 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
 
             // Envio el email al usuario
             resend.enviarEmailEnvioDelPedido(email);
+            
             // Guardo el pedido
-
             pedidoRepositorio.save(pedido);
 
             return ResponseEntity.ok("Se actualizo correctamente el pedido");
@@ -82,14 +86,16 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
 
     // IMPLEMENTACION DEL METODO PARA BUSCAR EL PEDIDO POR ESTADOS
     @Override
-    public ResponseEntity<List<PedidosModelo>> obtenerPedidosPorEstado(String estado) {
+    public ResponseEntity<List<PedidosModelo>> obtenerPedidosPorEstado(String estado, int page, int size) {
         try {
             EPedido estadoPedido = EPedido.valueOf(estado.trim().toUpperCase());
 
-            List<PedidosModelo> pedidos = pedidoRepositorio.findByEstado(estadoPedido.name());
+            Pageable pageable = PageRequest.of(page, size);
 
-            // Mostrar solo los campos que creo que son necesarios
-            for (PedidosModelo pedido : pedidos) {
+            Page<PedidosModelo> pedidosPage = pedidoRepositorio.findByEstado(estadoPedido.name(), pageable);
+
+            // Mostrar solo los campos necesarios
+            for (PedidosModelo pedido : pedidosPage.getContent()) {
                 UsuarioModelo usuarioModelo = pedido.getUsuario();
                 UsuarioModelo usuarioFiltrado = new UsuarioModelo();
                 usuarioFiltrado.set_id(usuarioModelo.get_id());
@@ -100,10 +106,12 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
                 pedido.setUsuario(usuarioFiltrado);
             }
 
-            return ResponseEntity.ok(pedidos);
+            List<PedidosModelo> contenido = pedidosPage.getContent();
+            
+            return ResponseEntity.ok(contenido);
         } catch (IllegalArgumentException e) {
             System.err.println("Error: Estado no válido");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<PedidosModelo>());
         }
     }
 

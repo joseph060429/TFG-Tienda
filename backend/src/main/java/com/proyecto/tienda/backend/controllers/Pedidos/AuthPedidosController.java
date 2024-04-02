@@ -1,7 +1,9 @@
 package com.proyecto.tienda.backend.controllers.Pedidos;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,8 @@ import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 import com.proyecto.tienda.backend.service.PedidoServicio.AuthPedidoServicio.AuthPedidoServicio;
 import com.proyecto.tienda.backend.util.ResendUtil;
-
 import jakarta.validation.Valid;
+
 
 @RequestMapping("/admin/pedidos")
 @PreAuthorize("hasAnyRole('ADMIN')")
@@ -56,12 +58,15 @@ public class AuthPedidosController {
     }
 
     // CONTROLADOR PARA BUSCAR LOS PEDIDOS POR SU ESTADO
-    @GetMapping("/buscarPedidoPorEstado")
-    public ResponseEntity<List<PedidosModelo>> buscarPedidosPorEstado(@RequestParam("estado") String estado) {
-        ResponseEntity<List<PedidosModelo>> estadoPedido = authPedidoServicio.obtenerPedidosPorEstado(estado);
-        System.out.println("ESTADO PUESTO POR MI " + estado);
-        return estadoPedido;
-    }
+   @GetMapping("/buscarPedidoPorEstado")
+public ResponseEntity<List<PedidosModelo>> buscarPedidosPorEstado(@RequestParam("estado") String estado,
+                                                                  @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "2") int size) {
+    ResponseEntity<List<PedidosModelo>> estadoPedido = authPedidoServicio.obtenerPedidosPorEstado(estado, page, size);
+    System.out.println("ESTADO PUESTO POR MI " + estado);
+    return estadoPedido;
+}
+
     
 
 }

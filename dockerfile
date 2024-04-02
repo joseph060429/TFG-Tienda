@@ -19,6 +19,6 @@ COPY --from=pepon /app/target/backend-0.0.1-SNAPSHOT.jar .
 EXPOSE 8080
 # Set the command to run the application
 # CMD ["java", "-jar", "backend-0.0.1-SNAPSHOT.jar"]
-CMD ["java", "-jar", "backend-0.0.1-SNAPSHOT.jar", "-Dhttp.proxyHost=172.28.0.3", "-Dhttp.proxyPort=80"]
+CMD ["java", "-jar", "backend-0.0.1-SNAPSHOT.jar", "-Dhttp.proxyHost=172.31.32.22", "-Dhttp.proxyPort=80"]
 
 # mvn spring-boot:run -Dhttp.proxyHost=your.proxy.net -Dhttp.proxyPort=8080

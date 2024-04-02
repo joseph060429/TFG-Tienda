@@ -19,16 +19,12 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
   List<PedidosModelo> findTopByOrderByNumPedidoDesc();
 
   // CONSULTA DE BUSQUEDA POR ID DE PEDIDO
-  Optional<PedidosModelo>  findBy_id(String _id);
+  Optional<PedidosModelo> findBy_id(String _id);
 
-  // CONSULTA PARA BUSCAR PEDIDOS POR ESTADO PENDIENTE
-  List<PedidosModelo> findByEstado(String estado);
+  // CONSULTA PARA BUSCAR PEDIDOS POR ESTADO PENDIENTE Y CON PAGINACION
+  Page<PedidosModelo> findByEstado(String estado, Pageable pageable);
 
   // CONSULTA DE BUSQUEDA POR NUMERO DE PEDIDO
   Optional<PedidosModelo> findByNumPedido(Long numPedido);
 
-
-
-    
-  
 }
