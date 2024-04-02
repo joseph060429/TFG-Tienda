@@ -8,7 +8,6 @@ COPY ./backend/src /app/src
 # Build the application using Maven
 RUN mvn clean package -DskipTests
 
-
 # Use an official OpenJDK image as the base image
 FROM eclipse-temurin:19 as runtime
 # Set the working directory in the container

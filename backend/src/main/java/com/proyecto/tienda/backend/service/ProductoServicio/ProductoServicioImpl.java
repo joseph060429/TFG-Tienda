@@ -44,6 +44,7 @@ public class ProductoServicioImpl implements ProductoServicio {
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
             mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
 
+            // CAMBIO
             productosResponse.add(mapaProductos);
         }
         return productosResponse;
