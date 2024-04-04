@@ -23,6 +23,9 @@ public class ActualizarPedidoDTO {
     // Actualizar fecha de envio
     private String fechaEnvio = "";
 
+    // Ponerle un numero de envio aleatoriamente
+    private String trackingNumber = "";
+
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE ENVIA EL PEDIDO
     public void setFechaEnvioPedido() {
         // Obtengo la fecha actual

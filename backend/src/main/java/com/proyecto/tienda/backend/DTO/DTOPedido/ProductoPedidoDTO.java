@@ -1,5 +1,4 @@
-package com.proyecto.tienda.backend.util;
-
+package com.proyecto.tienda.backend.DTO.DTOPedido;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor con todos los atributos
 @NoArgsConstructor // constructor sin atributos
 
-public class ProductoPedido {
+public class ProductoPedidoDTO {
 
     private String _idProducto;
     private String nombre;
@@ -17,6 +16,5 @@ public class ProductoPedido {
     private double precioProducto;
     private String categoria;
     private int cantidadPedida;
-
 
 }

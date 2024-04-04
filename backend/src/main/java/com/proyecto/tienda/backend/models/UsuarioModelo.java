@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,9 +43,8 @@ public class UsuarioModelo {
     private Set<RolesModelo> roles;
 
     private String fechaCreacion;
-    private String fechaModificacion;
 
-    // private String direccionEnvio;
+    private String fechaModificacion;
 
     private List<String> direccionesEnvio;
 

@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // constructor sin atributos
 @Builder
 @Document(value = "Producto")
-
 public class ProductoModelo {
 
     @Id

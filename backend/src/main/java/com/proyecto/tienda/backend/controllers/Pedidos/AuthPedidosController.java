@@ -22,7 +22,6 @@ import com.proyecto.tienda.backend.service.PedidoServicio.AuthPedidoServicio.Aut
 import com.proyecto.tienda.backend.util.ResendUtil;
 import jakarta.validation.Valid;
 
-
 @RequestMapping("/admin/pedidos")
 @PreAuthorize("hasAnyRole('ADMIN')")
 @RestController
@@ -58,15 +57,14 @@ public class AuthPedidosController {
     }
 
     // CONTROLADOR PARA BUSCAR LOS PEDIDOS POR SU ESTADO
-   @GetMapping("/buscarPedidoPorEstado")
-public ResponseEntity<List<PedidosModelo>> buscarPedidosPorEstado(@RequestParam("estado") String estado,
-                                                                  @RequestParam(defaultValue = "0") int page,
-                                                                  @RequestParam(defaultValue = "2") int size) {
-    ResponseEntity<List<PedidosModelo>> estadoPedido = authPedidoServicio.obtenerPedidosPorEstado(estado, page, size);
-    System.out.println("ESTADO PUESTO POR MI " + estado);
-    return estadoPedido;
-}
-
-    
+    @GetMapping("/buscarPedidoPorEstado")
+    public ResponseEntity<List<PedidosModelo>> buscarPedidosPorEstado(@RequestParam("estado") String estado,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size) {
+        ResponseEntity<List<PedidosModelo>> estadoPedido = authPedidoServicio.obtenerPedidosPorEstado(estado, page,
+                size);
+        System.out.println("ESTADO PUESTO POR MI " + estado);
+        return estadoPedido;
+    }
 
 }

@@ -1,9 +1,15 @@
 package com.proyecto.tienda.backend.service.PedidoServicio.AuthPedidoServicio;
 
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.UsuarioPedidoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
@@ -71,9 +78,17 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             pedido.setFechaEnvio(actualizarPedidoDTO.getFechaEnvio());
             pedido.setFechaEntregaEstimada(actualizarPedidoDTO.getFechaEntregaEstimada());
 
+            // Seteo el trackingNumber
+            int longitud = 10;
+            String trackingNumber = generarTrykinmNumber(longitud);
+
+            // Setear el trackingNumber en el objeto Pedido
+            pedido.setTrackingNumber(trackingNumber);
+            System.out.println("TRACKING: " + trackingNumber);
+
             // Envio el email al usuario
-            resend.enviarEmailEnvioDelPedido(email);
-            
+            resend.enviarEmailEnvioDelPedido(email, trackingNumber);
+
             // Guardo el pedido
             pedidoRepositorio.save(pedido);
 
@@ -83,6 +98,9 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");
         }
     }
+
+
+
 
     // IMPLEMENTACION DEL METODO PARA BUSCAR EL PEDIDO POR ESTADOS
     @Override
@@ -95,25 +113,69 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             Page<PedidosModelo> pedidosPage = pedidoRepositorio.findByEstado(estadoPedido.name(), pageable);
 
             // Mostrar solo los campos necesarios
+            List<PedidosModelo> contenido = new ArrayList<>();
             for (PedidosModelo pedido : pedidosPage.getContent()) {
+                // Actualizar los campos del pedido existente
+                pedido.setFechaPedido(pedido.getFechaPedido());
+                pedido.setEstado(pedido.getEstado());
+                pedido.setNumPedido(pedido.getNumPedido());
+                pedido.setProductos(pedido.getProductos());
+                pedido.setTipoPago(pedido.getTipoPago());
+                pedido.setDireccionEnvio(pedido.getDireccionEnvio());
+
+                // Crear DTO de usuario y establecerlo en el pedido existente
                 UsuarioModelo usuarioModelo = pedido.getUsuario();
-                UsuarioModelo usuarioFiltrado = new UsuarioModelo();
-                usuarioFiltrado.set_id(usuarioModelo.get_id());
-                usuarioFiltrado.setNombre(usuarioModelo.getNombre());
-                usuarioFiltrado.setApellido(usuarioModelo.getApellido());
-                usuarioFiltrado.setEmail(usuarioModelo.getEmail());
-                usuarioFiltrado.setDireccionesEnvio(usuarioModelo.getDireccionesEnvio());
-                pedido.setUsuario(usuarioFiltrado);
+                UsuarioPedidoDTO usuarioDTO = new UsuarioPedidoDTO();
+                usuarioDTO.set_id(usuarioModelo.get_id());
+                usuarioDTO.setNombre(usuarioModelo.getNombre());
+                usuarioDTO.setApellido(usuarioModelo.getApellido());
+                usuarioDTO.setEmail(usuarioModelo.getEmail());
+                pedido.setUsuarioFromModelo(usuarioModelo);
+
+                contenido.add(pedido);
             }
 
-            List<PedidosModelo> contenido = pedidosPage.getContent();
-            
             return ResponseEntity.ok(contenido);
         } catch (IllegalArgumentException e) {
             System.err.println("Error: Estado no válido");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<PedidosModelo>());
         }
     }
+
+    // METODO PARA GENERAR UN TRYKING NUMBER ALATORIO DEL 1 AL 10
+    private String generarTrykinmNumber(int longitud) {
+        StringBuilder trackingNumber = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < longitud; i++) {
+            // Generar un número aleatorio entre 0 y 9 (inclusive)
+            int digitoAleatorio = random.nextInt(10);
+
+            // Agregar el dígito al código de recuperación
+            trackingNumber.append(digitoAleatorio);
+        }
+
+        return trackingNumber.toString();
+    }
+
+    // // prueba
+    // private String carga(InputStream inputStream, String trackingNumber) throws IOException {
+
+    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+    //         StringBuilder stringBuilder = new StringBuilder();
+    //         String line;
+
+    //         while ((line = reader.readLine()) != null) {
+    //             stringBuilder.append(line).append("\n");
+    //         }
+
+    //         // Reemplazo el marcador de posición con el código real de recuperación que
+    //         // tengo en mi html
+    //         return stringBuilder.toString().replace("{{codigoRecuperacion}}", trackingNumber);
+    //     }
+    // }
+
+
 
     // IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO
 

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.CrearPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.UtilEnum.EPedidoPago;
 import com.proyecto.tienda.backend.models.PedidosModelo;
@@ -19,7 +20,6 @@ import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
-import com.proyecto.tienda.backend.util.ProductoPedido;
 
 @Service
 public class PedidoServicioImpl implements PedidoServicio {
@@ -62,7 +62,7 @@ public class PedidoServicioImpl implements PedidoServicio {
                 return resultadoPagoValidacion;
             }
 
-            List<ProductoPedido> listaNueva = generarListaProductosPedido(productosModelo);
+            List<ProductoPedidoDTO> listaNueva = generarListaProductosPedido(productosModelo);
             pedido.setProductos(listaNueva);
 
             // Establecezco la fecha del pedido
@@ -119,6 +119,7 @@ public class PedidoServicioImpl implements PedidoServicio {
         pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
         asignarNumeroPedido(pedido);
         pedido.setEstado(EPedido.PENDIENTE.toString());
+        pedido.setTrackingNumber("");
         return pedido;
     }
 
@@ -162,8 +163,8 @@ public class PedidoServicioImpl implements PedidoServicio {
     // IMPLEMENTACION DEL METODO PARA VERIFICAR LOS PRODUCTOS PEDIDOS Y AÑADIRLO A
     // LOS PEDIDOS
     @Transactional
-    private List<ProductoPedido> generarListaProductosPedido(List<ProductoModelo> listaProductosPedidos) {
-        List<ProductoPedido> listaPedidoUsuario = new ArrayList<>(); // Lista para almacenar los productos del pedido
+    private List<ProductoPedidoDTO> generarListaProductosPedido(List<ProductoModelo> listaProductosPedidos) {
+        List<ProductoPedidoDTO> listaPedidoUsuario = new ArrayList<>(); // Lista para almacenar los productos del pedido
 
         try {
 
@@ -171,7 +172,7 @@ public class PedidoServicioImpl implements PedidoServicio {
             for (ProductoModelo productoModelo : listaProductosPedidos) {
 
                 // Los productos que pide el usuario lo iniciare como null
-                ProductoPedido productoPedido = null; // Crear un objeto ProductoPedido
+                ProductoPedidoDTO productoPedido = null; // Crear un objeto ProductoPedido
 
                 // Obtengo el producto por su ID
                 ProductoModelo productoEncontradoEnBaseDeDatos = productoRepositorio.findBy_id(productoModelo.get_id());
@@ -199,7 +200,7 @@ public class PedidoServicioImpl implements PedidoServicio {
                     } else {
                         // Creo un objeto ProductoPedido con los datos del producto encontrado y la
                         // cantidad pedida
-                        productoPedido = new ProductoPedido(
+                        productoPedido = new ProductoPedidoDTO(
                                 productoEncontradoEnBaseDeDatos.get_id(),
                                 productoEncontradoEnBaseDeDatos.getNombreProducto(),
                                 productoEncontradoEnBaseDeDatos.getMarcaProducto(),
@@ -214,7 +215,7 @@ public class PedidoServicioImpl implements PedidoServicio {
 
             int todosEnStock = 1;
             // Ahora verifico los productos pedidos sobre la lista de productos pedidos
-            for (ProductoPedido productoPedido : listaPedidoUsuario) {
+            for (ProductoPedidoDTO productoPedido : listaPedidoUsuario) {
                 // Verifico si hay suficiente stock para el producto actual
                 ProductoModelo productoEncontrado = productoRepositorio.findBy_id(productoPedido.get_idProducto());
                 if (productoEncontrado.getCantidadProducto() >= productoPedido.getCantidadPedida()) {
@@ -234,7 +235,7 @@ public class PedidoServicioImpl implements PedidoServicio {
                 System.out.println("TODOS EN STOCK " + todosEnStock);
                 // Significa que es posible restar a todos los productos pedidos. quiere decir,
                 // hay stock para todo lo que se pide.
-                for (ProductoPedido productoPedido : listaPedidoUsuario) {
+                for (ProductoPedidoDTO productoPedido : listaPedidoUsuario) {
                     ProductoModelo encontrado = productoRepositorio.findBy_id(productoPedido.get_idProducto());
                     restarCantidadProducto(encontrado.get_id(), productoPedido.getCantidadPedida());
                 }
@@ -334,10 +335,10 @@ public class PedidoServicioImpl implements PedidoServicio {
                         // Verifico si el pedido está en estado "PENDIENTE"
                         if (pedido.getEstado().equals(EPedido.PENDIENTE.toString())) {
                             // Obtener la lista de productos pedidos del pedido
-                            List<ProductoPedido> productosPedidos = pedido.getProductos();
+                            List<ProductoPedidoDTO> productosPedidos = pedido.getProductos();
 
                             // Itero sobre cada producto pedido
-                            for (ProductoPedido productoPedido : productosPedidos) {
+                            for (ProductoPedidoDTO productoPedido : productosPedidos) {
                                 // Obtenego el ID del producto del pedido
                                 String productoId = productoPedido.get_idProducto();
 
@@ -386,4 +387,27 @@ public class PedidoServicioImpl implements PedidoServicio {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar el pedido: " + e.getMessage());
         }
     }
+
+    // METODO PARA VER TODOS LOS PEDIDOS QUE TIENE EL USUARIO
+    // public ResponseEntity<List<PedidosModelo>> historialPedidos(String token, JwtUtils jwtUtils) {
+    //     try {
+    //         String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
+    //         Optional<UsuarioModelo> usuarioModelo = buscarUsuarioPorEmail(emailFromToken);
+    
+    //         if (!usuarioModelo.isPresent()) {
+    //             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                                  .body(Collections.emptyList());
+    //         }
+    
+    //         UsuarioModelo usuario = usuarioModelo.get();
+    //         // List<PedidosModelo> pedidos = pedidoRepositorio.fyn(usuario);
+    
+    //         return ResponseEntity.ok(pedidos);
+    //     } catch (RuntimeException e) {
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //                              .body(Collections.emptyList());
+    //     }
+    // }
+    
 }
+

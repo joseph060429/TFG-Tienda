@@ -22,7 +22,6 @@ public class ResendUtil {
 
     @Value("${envio.email.token}")
     private String envioEmailToken;
-    
 
     // METODO DE ENVÍO DE EMAIL DE RECUPERACIÓN
     public void enviarEmailDeRecuperacion(String destinatarioEmail) {
@@ -35,12 +34,15 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailRecuperacion.html")) {
             String codigoRecuperacion = generarCodigoRecuperacion(10);
             String messageSubject = "Recuperación de contraseña";
-            String bodyText = loadHtmlContent(htmlStream, codigoRecuperacion);
+            String bodyText = loadHtmlContent(htmlStream, codigoRecuperacion, "");
 
+            // Busco el usuario por el email
             Optional<UsuarioModelo> optionalUsuario = usuarioRepositorio.findByEmail(destinatarioEmail);
-
+        
+            // Si el usuario existe
             if (optionalUsuario.isPresent()) {
                 UsuarioModelo usuario = optionalUsuario.get();
+                // Establezco el nuevo codigo de recuperación en mi base de datos
                 usuario.setRecuperarContrasenia(codigoRecuperacion);
 
                 // Establezco la fecha de expiracion que puse que tenia 3 minutos
@@ -82,21 +84,40 @@ public class ResendUtil {
     }
 
     // MÉTODO ES PARA LEER LA PLANTILLA HTML DE MI CÓDIGO DE RECUPERACIÓN
-    private String loadHtmlContent(InputStream inputStream, String codigoRecuperacion) throws IOException {
+    // private String loadHtmlContent(InputStream inputStream, String codigoRecuperacion) throws IOException {
 
+    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+    //         StringBuilder stringBuilder = new StringBuilder();
+    //         String line;
+
+    //         while ((line = reader.readLine()) != null) {
+    //             stringBuilder.append(line).append("\n");
+    //         }
+
+    //         // Reemplazo el marcador de posición con el código real de recuperación que
+    //         // tengo en mi html
+    //         return stringBuilder.toString().replace("{{codigoRecuperacion}}", codigoRecuperacion);
+    //     }
+    // }
+
+
+    private String loadHtmlContent(InputStream inputStream, String codigoRecuperacion, String trackingNumber) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line;
-
+    
             while ((line = reader.readLine()) != null) {
+                // Reemplazar el marcador de posición con el código de recuperación real
+                line = line.replace("{{codigoRecuperacion}}", codigoRecuperacion);
+                // Reemplazar el marcador de posición con el número de seguimiento real
+                line = line.replace("{{trackingNumber}}", trackingNumber);
                 stringBuilder.append(line).append("\n");
             }
-
-            // Reemplazo el marcador de posición con el código real de recuperación que
-            // tengo en mi html
-            return stringBuilder.toString().replace("{{codigoRecuperacion}}", codigoRecuperacion);
+    
+            return stringBuilder.toString();
         }
     }
+    
 
     // GENERO MI CÓDIGO DE RECUPERACIÓN ALEATORIO CON NÚMEROS Y LETRAS
     private String generarCodigoRecuperacion(int longitud) {
@@ -160,7 +181,7 @@ public class ResendUtil {
     }
 
     // METODO DE ENVÍO DE EMAIL INFORMANDO DEL ENVIO DEL PEDIDO
-    public void enviarEmailEnvioDelPedido(String destinatarioEmail) {
+    public void enviarEmailEnvioDelPedido(String destinatarioEmail, String trackingNumber) {
 
         // Configurar el envío del correo con Resend
         Resend resend = new Resend(envioEmailToken);
@@ -170,7 +191,7 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailEnvioPedido.html")) {
 
             String messageSubject = "¡Tu Pedido ha sido Enviado!";
-            String bodyText = loadHtmlContentRetrasoEnvio(htmlStream);
+            String bodyText = loadHtmlContent(htmlStream, "" , trackingNumber);
 
             Tag tag = Tag.builder()
                     .name("category")
@@ -194,6 +215,22 @@ public class ResendUtil {
             e.printStackTrace();
         }
     }
+
+    // MÉTODO ES PARA LEER LA PLANTILLA HTML DEL trackingNumber
+    // private String prueba(InputStream inputStream, String trackingNumber) throws IOException {
+    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+    //         StringBuilder stringBuilder = new StringBuilder();
+    //         String line;
+    
+    //         while ((line = reader.readLine()) != null) {
+    //             // Reemplazar el marcador de posición con el número de seguimiento real
+    //             line = line.replace("{{trackingNumber}}", trackingNumber);
+    //             stringBuilder.append(line).append("\n");
+    //         }
+    
+    //         return stringBuilder.toString();
+    //     }
+    // }
 
     // MÉTODO PARA LEER LA PLANTILLA HTML DEL RETRASO-ENVIO DEL PEDIDO
     private String loadHtmlContentRetrasoEnvio(InputStream inputStream) throws IOException {
