@@ -55,6 +55,11 @@ public class PedidoServicioImpl implements PedidoServicio {
 
             PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
 
+            // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya a casa y si la persona no esta, tenga un sitio donde dejarlo
+            Long numTele = crearPedidoDTO.getNumTelefono();
+            pedido.setNumTelefono(numTele);
+            
+
             String direccionEnvio = anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
                     crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(), crearPedidoDTO.getNumero(),
                     crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
@@ -397,24 +402,25 @@ public class PedidoServicioImpl implements PedidoServicio {
         try {
             String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
             Optional<UsuarioModelo> usuarioModelo = buscarUsuarioPorEmail(emailFromToken);
-    
+
             if (!usuarioModelo.isPresent()) {
                 return ResponseEntity.badRequest().body(Collections.emptyList());
             }
-    
+
             UsuarioModelo usuario = usuarioModelo.get();
             List<PedidosModelo> pedidos = pedidoRepositorio.findByUsuario(usuario);
-    
+
             List<PedidoInfoDTO> pedidosDTO = pedidos.stream()
                     .map(this::mapPedidoToDTO)
                     .collect(Collectors.toList());
-    
+
             return ResponseEntity.ok(pedidosDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
         }
     }
 
+    // METODO PARA MAPPEAR LOS PEDIDOS A UN DTO
     private PedidoInfoDTO mapPedidoToDTO(PedidosModelo pedido) {
         PedidoInfoDTO pedidoDTO = new PedidoInfoDTO();
         pedidoDTO.set_id(pedido.get_id());
@@ -428,6 +434,8 @@ public class PedidoServicioImpl implements PedidoServicio {
         return pedidoDTO;
     }
 
+
+    // METODO PARA MAPPEAR LOS PRODUCTOS A UN DTO
     private List<ProductoPedidoDTO> mapProductosToDTO(List<ProductoPedidoDTO> productos) {
         return productos.stream()
                 .map(producto -> {
@@ -443,9 +451,4 @@ public class PedidoServicioImpl implements PedidoServicio {
                 .collect(Collectors.toList());
     }
 
-  
 }
-
-    
-
-

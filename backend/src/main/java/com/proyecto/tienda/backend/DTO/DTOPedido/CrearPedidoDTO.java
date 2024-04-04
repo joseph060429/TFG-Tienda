@@ -3,13 +3,14 @@ package com.proyecto.tienda.backend.DTO.DTOPedido;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
 import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -67,6 +68,11 @@ public class CrearPedidoDTO {
     private String puerta;
 
     private String direccionEnvio;
+
+    @NotNull(message = "El número de teléfono, no puede estar en blanco")
+    @Min(value = 100000000, message = "El número de teléfono debe tener al menos 9 dígitos")
+    @Max(value = 999999999L, message = "El número de teléfono debe tener como máximo 9 dígitos")
+    private Long numTelefono;
 
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
     public void setFechaPedido() {

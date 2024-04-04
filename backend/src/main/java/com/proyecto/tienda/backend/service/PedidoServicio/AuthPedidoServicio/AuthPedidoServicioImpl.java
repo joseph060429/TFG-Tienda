@@ -1,15 +1,9 @@
 package com.proyecto.tienda.backend.service.PedidoServicio.AuthPedidoServicio;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,13 +52,15 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             // Verifico que el estado que ponga en el postman sea ENVIADO O enviado, SI PONE
             // OTRO ESTADO que no este en el enum
             // lanzare la exception que no un estado valido para esta operacion
-            if (!EPedido.ENVIADO.equals(EPedido.valueOf(actualizarPedidoDTO.getEstado().toUpperCase()))) {
-                System.out.println("ESTADO: " + EPedido.valueOf(actualizarPedidoDTO.getEstado()));
+            String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
+            System.out.println("ESTADO PEDIDO: " + estadoPedido);
+            if (!EPedido.ENVIADO.toString().equalsIgnoreCase(estadoPedido)) {
+                System.out.println("ESTADO: " + estadoPedido);
                 return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
             }
 
             // Si el pedido ya tiene un estado valido que no sea ENVIADO, devuelvo un error
-            if (EPedido.ENVIADO.toString().equals(pedido.getEstado())) {
+            if (EPedido.ENVIADO.toString().equals(pedido.getEstado().trim())) {
                 return ResponseEntity.status(400).body("El pedido ya ha sido enviado");
             }
             // Actualizo el estado del pedido
@@ -155,6 +151,47 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
         return trackingNumber.toString();
     }
 
-    // IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO
+    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENTREGADO,
+    // LO HARÉ MANUALMENTE CUANDO EL SUPUESTO REPARTIDOR ME ENTRGUE TODOS LOS
+    // PRODUCTOS (TANTO ENTREGADOS COMO NO ENTREGADOS)
+    @Override
+    public ResponseEntity<?> actualizarEstadoPedidoEntregado(String _id, ActualizarPedidoDTO actualizarPedidoDTO) {
+        // Busco el pedido por el Id
+        Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findBy_id(_id);
+
+        // Verfico que el pedido exista
+        if (pedidoOptional.isEmpty()) {
+            return ResponseEntity.status(404).body("No se encontró el pedido");
+        }
+
+        try {
+
+            // Traigo el pedido de la base de datos
+            PedidosModelo pedido = pedidoOptional.get();
+
+            // 
+            String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
+            System.out.println("ESTADO PEDIDO: " + estadoPedido);
+            if (!EPedido.ENTREGADO.toString().equalsIgnoreCase(estadoPedido)) {
+                System.out.println("ESTADO: " + estadoPedido);
+                return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
+            }
+
+
+            if (EPedido.ENTREGADO.toString().equals(pedido.getEstado().trim())) {
+                return ResponseEntity.status(400).body("El pedido ya ha sido marcado como entregado");
+            }
+
+            pedido.setEstado(EPedido.ENTREGADO.toString());
+            pedidoRepositorio.save(pedido);
+
+            return ResponseEntity.ok("Se actualizo correctamente el pedido");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");
+        }
+    }
+
+    // IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO SWITCH CASE
 
 }

@@ -4,6 +4,7 @@ public enum EPedido {
 
     PENDIENTE,
     ENVIADO,
+    EN_REVISION,
     ENTREGADO,
     DEVUELTO
 

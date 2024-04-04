@@ -3,7 +3,6 @@ package com.proyecto.tienda.backend.controllers.Pedidos;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +39,8 @@ public class AuthPedidosController {
     private ResendUtil resend;
 
     // CONTROLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO
-    @PatchMapping("/actualizarEstadoPedido")
-    public ResponseEntity<?> actualizarEstadoPedido(@RequestParam("id") String pedidoId,
+    @PatchMapping("/actualizarEstadoPedidoEnviado")
+    public ResponseEntity<?> actualizarEstadoPedidoEnviado(@RequestParam("id") String pedidoId,
             @RequestBody @Valid ActualizarPedidoDTO actualizarPedidoDTO) {
         return authPedidoServicio.actualizarEstadoPedidoEnviado(pedidoId,
                 actualizarPedidoDTO);
@@ -65,6 +64,15 @@ public class AuthPedidosController {
                 size);
         System.out.println("ESTADO PUESTO POR MI " + estado);
         return estadoPedido;
+    }
+
+    // CONTROLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENTREGADO
+    @PatchMapping("/actualizarEstadoPedidoEntregado")
+    public ResponseEntity<?> actualizarEstadoPedidoEntrEGADO(@RequestParam("id") String pedidoId,
+            @RequestBody @Valid ActualizarPedidoDTO actualizarPedidoDTO) {
+        return authPedidoServicio.actualizarEstadoPedidoEntregado(pedidoId,
+                actualizarPedidoDTO);
+
     }
 
 }

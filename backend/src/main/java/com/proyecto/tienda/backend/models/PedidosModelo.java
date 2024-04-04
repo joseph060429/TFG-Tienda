@@ -28,10 +28,11 @@ public class PedidosModelo {
     @DBRef
     @Field("id_usuario")
 
-    // Le pongo JsonIgnore para que no aparezca en el JSON con el usuario completo, solo con el dto que es lo que quiero
+    // Le pongo JsonIgnore para que no aparezca en el JSON con el usuario completo,
+    // solo con el dto que es lo que quiero
     @JsonIgnore
     private UsuarioModelo usuario;
-    
+
     private UsuarioPedidoDTO usuarioPedido;
 
     @NotNull(message = "La fecha del pedido no puede estar en blanco")
@@ -59,12 +60,15 @@ public class PedidosModelo {
 
     private String direccionEnvio;
 
+    private Long numTelefono;
+
     // METODO PARA ESTABLECER EL USUARIO A PARTIR DE UN USUARIOPEDIDODTO
     public void setUsuarioFromModelo(UsuarioModelo usuarioModelo) {
         this.usuarioPedido = convertirAUsuarioDTO(usuarioModelo);
     }
 
-    // METODO PARA CONVERTIR UN USUARIOPEDIDODTO A USUARIOMODELO Y ASI MOSTRAR LOS CAMPOS QUE CONSIDERO IMPORTANTES
+    // METODO PARA CONVERTIR UN USUARIOPEDIDODTO A USUARIOMODELO Y ASI MOSTRAR LOS
+    // CAMPOS QUE CONSIDERO IMPORTANTES
     private UsuarioPedidoDTO convertirAUsuarioDTO(UsuarioModelo usuarioModelo) {
         UsuarioPedidoDTO usuarioPedidoDTO = new UsuarioPedidoDTO();
         usuarioPedidoDTO.set_id(usuarioModelo.get_id());

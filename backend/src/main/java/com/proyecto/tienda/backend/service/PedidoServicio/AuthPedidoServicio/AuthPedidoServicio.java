@@ -10,10 +10,14 @@ import com.proyecto.tienda.backend.models.PedidosModelo;
 
 public interface AuthPedidoServicio {
 
-    // METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO
+    // METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENVIADO
     ResponseEntity<?> actualizarEstadoPedidoEnviado(String _id, ActualizarPedidoDTO actualizarPedidoDTO);
 
     // METODO PARA BUSCAR EL PEDIDO POR ESTADOS
-    // public ResponseEntity<List<PedidosModelo>> obtenerPedidosPorEstado(String estado);
     ResponseEntity<List<PedidosModelo>> obtenerPedidosPorEstado(String estado, int page, int size);
+
+    // METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENTREGADO
+    ResponseEntity<?> actualizarEstadoPedidoEntregado(String _id, ActualizarPedidoDTO actualizarPedidoDTO);
+    
+
 }
