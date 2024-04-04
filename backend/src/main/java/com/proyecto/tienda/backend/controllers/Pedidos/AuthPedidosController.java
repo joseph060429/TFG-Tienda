@@ -56,11 +56,11 @@ public class AuthPedidosController {
         return "Correo de retraso enviado con éxito.";
     }
 
-    // CONTROLADOR PARA BUSCAR LOS PEDIDOS POR SU ESTADO
+    // CONTROLADOR PARA BUSCAR LOS PEDIDOS POR SU ESTADO, PAGINADO DE 10 EN 10
     @GetMapping("/buscarPedidoPorEstado")
     public ResponseEntity<List<PedidosModelo>> buscarPedidosPorEstado(@RequestParam("estado") String estado,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         ResponseEntity<List<PedidosModelo>> estadoPedido = authPedidoServicio.obtenerPedidosPorEstado(estado, page,
                 size);
         System.out.println("ESTADO PUESTO POR MI " + estado);

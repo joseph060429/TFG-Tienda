@@ -6,11 +6,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.UsuarioPedidoDTO;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +27,8 @@ public class PedidosModelo {
 
     @DBRef
     @Field("id_usuario")
+
+    // Le pongo JsonIgnore para que no aparezca en el JSON con el usuario completo, solo con el dto que es lo que quiero
     @JsonIgnore
     private UsuarioModelo usuario;
     
@@ -59,14 +59,12 @@ public class PedidosModelo {
 
     private String direccionEnvio;
 
-    
-
-    // Método para establecer el usuario a partir de un UsuarioPedidoDTO
+    // METODO PARA ESTABLECER EL USUARIO A PARTIR DE UN USUARIOPEDIDODTO
     public void setUsuarioFromModelo(UsuarioModelo usuarioModelo) {
         this.usuarioPedido = convertirAUsuarioDTO(usuarioModelo);
     }
 
-    // Método para convertir un UsuarioPedidoDTO a UsuarioModelo
+    // METODO PARA CONVERTIR UN USUARIOPEDIDODTO A USUARIOMODELO Y ASI MOSTRAR LOS CAMPOS QUE CONSIDERO IMPORTANTES
     private UsuarioPedidoDTO convertirAUsuarioDTO(UsuarioModelo usuarioModelo) {
         UsuarioPedidoDTO usuarioPedidoDTO = new UsuarioPedidoDTO();
         usuarioPedidoDTO.set_id(usuarioModelo.get_id());

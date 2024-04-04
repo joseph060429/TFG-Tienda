@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.proyecto.tienda.backend.models.PedidosModelo;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
 
 @Repository
 public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String> {
@@ -26,5 +27,8 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
 
   // CONSULTA DE BUSQUEDA POR NUMERO DE PEDIDO
   Optional<PedidosModelo> findByNumPedido(Long numPedido);
+
+  // CONSULTA DE BUSQUEDA PARA UN PEDIDO POR USUARIO
+  List<PedidosModelo> findByUsuario(UsuarioModelo usuario);
 
 }

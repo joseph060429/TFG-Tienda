@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.io.*;
-
 import com.proyecto.tienda.backend.DTO.DTOUsuario.RecuperarContraseniaDTO;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
@@ -34,14 +33,14 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailRecuperacion.html")) {
             String codigoRecuperacion = generarCodigoRecuperacion(10);
             String messageSubject = "Recuperación de contraseña";
-            String bodyText = loadHtmlContent(htmlStream, codigoRecuperacion, "");
+            String bodyText = cargarContenidoHtml(htmlStream, codigoRecuperacion, "");
 
             // Busco el usuario por el email
-            Optional<UsuarioModelo> optionalUsuario = usuarioRepositorio.findByEmail(destinatarioEmail);
-        
+            Optional<UsuarioModelo> usuarioModelo = usuarioRepositorio.findByEmail(destinatarioEmail);
+
             // Si el usuario existe
-            if (optionalUsuario.isPresent()) {
-                UsuarioModelo usuario = optionalUsuario.get();
+            if (usuarioModelo.isPresent()) {
+                UsuarioModelo usuario = usuarioModelo.get();
                 // Establezco el nuevo codigo de recuperación en mi base de datos
                 usuario.setRecuperarContrasenia(codigoRecuperacion);
 
@@ -83,42 +82,6 @@ public class ResendUtil {
         }
     }
 
-    // MÉTODO ES PARA LEER LA PLANTILLA HTML DE MI CÓDIGO DE RECUPERACIÓN
-    // private String loadHtmlContent(InputStream inputStream, String codigoRecuperacion) throws IOException {
-
-    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-    //         StringBuilder stringBuilder = new StringBuilder();
-    //         String line;
-
-    //         while ((line = reader.readLine()) != null) {
-    //             stringBuilder.append(line).append("\n");
-    //         }
-
-    //         // Reemplazo el marcador de posición con el código real de recuperación que
-    //         // tengo en mi html
-    //         return stringBuilder.toString().replace("{{codigoRecuperacion}}", codigoRecuperacion);
-    //     }
-    // }
-
-
-    private String loadHtmlContent(InputStream inputStream, String codigoRecuperacion, String trackingNumber) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-    
-            while ((line = reader.readLine()) != null) {
-                // Reemplazar el marcador de posición con el código de recuperación real
-                line = line.replace("{{codigoRecuperacion}}", codigoRecuperacion);
-                // Reemplazar el marcador de posición con el número de seguimiento real
-                line = line.replace("{{trackingNumber}}", trackingNumber);
-                stringBuilder.append(line).append("\n");
-            }
-    
-            return stringBuilder.toString();
-        }
-    }
-    
-
     // GENERO MI CÓDIGO DE RECUPERACIÓN ALEATORIO CON NÚMEROS Y LETRAS
     private String generarCodigoRecuperacion(int longitud) {
 
@@ -144,6 +107,25 @@ public class ResendUtil {
         return codigoRecuperacion.toString();
     }
 
+    // MÉTODO ES PARA LEER LA PLANTILLA HTML
+    private String cargarContenidoHtml(InputStream inputStream, String codigoRecuperacion, String trackingNumber)
+            throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                // Reemplazar el marcador de posición con el código de recuperación real
+                line = line.replace("{{codigoRecuperacion}}", codigoRecuperacion);
+                // Reemplazar el marcador de posición con el número de seguimiento real
+                line = line.replace("{{trackingNumber}}", trackingNumber);
+                stringBuilder.append(line).append("\n");
+            }
+
+            return stringBuilder.toString();
+        }
+    }
+
     // METODO DE ENVÍO DE EMAIL INFORMANDO DE UN RETRASO EN EL PEDIDO
     public void enviarEmailDeRetrasoDelPedido(String destinatarioEmail) {
 
@@ -155,7 +137,7 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailDisculpaRetrasoPedido.html")) {
 
             String messageSubject = "Importante: Retraso en el Envío de tu Pedido";
-            String bodyText = loadHtmlContentRetrasoEnvio(htmlStream);
+            String bodyText = cargarContenidoHtml(htmlStream, "", "");
 
             Tag tag = Tag.builder()
                     .name("category")
@@ -191,7 +173,7 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailEnvioPedido.html")) {
 
             String messageSubject = "¡Tu Pedido ha sido Enviado!";
-            String bodyText = loadHtmlContent(htmlStream, "" , trackingNumber);
+            String bodyText = cargarContenidoHtml(htmlStream, "", trackingNumber);
 
             Tag tag = Tag.builder()
                     .name("category")
@@ -216,36 +198,4 @@ public class ResendUtil {
         }
     }
 
-    // MÉTODO ES PARA LEER LA PLANTILLA HTML DEL trackingNumber
-    // private String prueba(InputStream inputStream, String trackingNumber) throws IOException {
-    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-    //         StringBuilder stringBuilder = new StringBuilder();
-    //         String line;
-    
-    //         while ((line = reader.readLine()) != null) {
-    //             // Reemplazar el marcador de posición con el número de seguimiento real
-    //             line = line.replace("{{trackingNumber}}", trackingNumber);
-    //             stringBuilder.append(line).append("\n");
-    //         }
-    
-    //         return stringBuilder.toString();
-    //     }
-    // }
-
-    // MÉTODO PARA LEER LA PLANTILLA HTML DEL RETRASO-ENVIO DEL PEDIDO
-    private String loadHtmlContentRetrasoEnvio(InputStream inputStream) throws IOException {
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-
-            // Puedes realizar modificaciones adicionales si es necesario
-
-            return stringBuilder.toString();
-        }
-    }
 }

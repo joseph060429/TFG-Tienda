@@ -1,15 +1,18 @@
 package com.proyecto.tienda.backend.service.PedidoServicio;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.CrearPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.UtilEnum.EPedidoPago;
@@ -268,7 +271,7 @@ public class PedidoServicioImpl implements PedidoServicio {
     }
 
     // METODO PARA RESTAR LA CANTIDAD DE PRODUCTOS
-    public int restarCantidadProducto(String productoId, int cantidadRestar) {
+    private int restarCantidadProducto(String productoId, int cantidadRestar) {
 
         try {
             // Buscar el producto por su ID
@@ -389,25 +392,60 @@ public class PedidoServicioImpl implements PedidoServicio {
     }
 
     // METODO PARA VER TODOS LOS PEDIDOS QUE TIENE EL USUARIO
-    // public ResponseEntity<List<PedidosModelo>> historialPedidos(String token, JwtUtils jwtUtils) {
-    //     try {
-    //         String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
-    //         Optional<UsuarioModelo> usuarioModelo = buscarUsuarioPorEmail(emailFromToken);
+    @Override
+    public ResponseEntity<List<PedidoInfoDTO>> historialPedidos(String token, JwtUtils jwtUtils) {
+        try {
+            String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
+            Optional<UsuarioModelo> usuarioModelo = buscarUsuarioPorEmail(emailFromToken);
     
-    //         if (!usuarioModelo.isPresent()) {
-    //             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    //                                  .body(Collections.emptyList());
-    //         }
+            if (!usuarioModelo.isPresent()) {
+                return ResponseEntity.badRequest().body(Collections.emptyList());
+            }
     
-    //         UsuarioModelo usuario = usuarioModelo.get();
-    //         // List<PedidosModelo> pedidos = pedidoRepositorio.fyn(usuario);
+            UsuarioModelo usuario = usuarioModelo.get();
+            List<PedidosModelo> pedidos = pedidoRepositorio.findByUsuario(usuario);
     
-    //         return ResponseEntity.ok(pedidos);
-    //     } catch (RuntimeException e) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    //                              .body(Collections.emptyList());
-    //     }
-    // }
+            List<PedidoInfoDTO> pedidosDTO = pedidos.stream()
+                    .map(this::mapPedidoToDTO)
+                    .collect(Collectors.toList());
     
+            return ResponseEntity.ok(pedidosDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
+        }
+    }
+
+    private PedidoInfoDTO mapPedidoToDTO(PedidosModelo pedido) {
+        PedidoInfoDTO pedidoDTO = new PedidoInfoDTO();
+        pedidoDTO.set_id(pedido.get_id());
+        pedidoDTO.setFechaPedido(pedido.getFechaPedido());
+        pedidoDTO.setFechaEnvio(pedido.getFechaEnvio());
+        pedidoDTO.setProductos(mapProductosToDTO(pedido.getProductos()));
+        pedidoDTO.setNumPedido(pedido.getNumPedido().intValue());
+        pedidoDTO.setTipoPago(pedido.getTipoPago());
+        pedidoDTO.setEstado(pedido.getEstado());
+        pedidoDTO.setDireccionEnvio(pedido.getDireccionEnvio());
+        return pedidoDTO;
+    }
+
+    private List<ProductoPedidoDTO> mapProductosToDTO(List<ProductoPedidoDTO> productos) {
+        return productos.stream()
+                .map(producto -> {
+                    ProductoPedidoDTO productoDTO = new ProductoPedidoDTO();
+                    productoDTO.set_idProducto(producto.get_idProducto());
+                    productoDTO.setNombre(producto.getNombre());
+                    productoDTO.setMarca(producto.getMarca());
+                    productoDTO.setPrecioProducto(producto.getPrecioProducto());
+                    productoDTO.setCategoria(producto.getCategoria());
+                    productoDTO.setCantidadPedida(producto.getCantidadPedida());
+                    return productoDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+  
 }
+
+    
+
 

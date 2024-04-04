@@ -78,11 +78,11 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
             pedido.setFechaEnvio(actualizarPedidoDTO.getFechaEnvio());
             pedido.setFechaEntregaEstimada(actualizarPedidoDTO.getFechaEntregaEstimada());
 
-            // Seteo el trackingNumber
+            // Añado una longitud de 10 caracteres al trackingNumber
             int longitud = 10;
             String trackingNumber = generarTrykinmNumber(longitud);
 
-            // Setear el trackingNumber en el objeto Pedido
+            // Seteo el trackingNumber en el objeto Pedido
             pedido.setTrackingNumber(trackingNumber);
             System.out.println("TRACKING: " + trackingNumber);
 
@@ -99,9 +99,6 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
         }
     }
 
-
-
-
     // IMPLEMENTACION DEL METODO PARA BUSCAR EL PEDIDO POR ESTADOS
     @Override
     public ResponseEntity<List<PedidosModelo>> obtenerPedidosPorEstado(String estado, int page, int size) {
@@ -112,10 +109,10 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
 
             Page<PedidosModelo> pedidosPage = pedidoRepositorio.findByEstado(estadoPedido.name(), pageable);
 
-            // Mostrar solo los campos necesarios
+            // Muestro solo lo que yo quiero de pedidos
             List<PedidosModelo> contenido = new ArrayList<>();
             for (PedidosModelo pedido : pedidosPage.getContent()) {
-                // Actualizar los campos del pedido existente
+                // Actualizo los campos del pedido existente
                 pedido.setFechaPedido(pedido.getFechaPedido());
                 pedido.setEstado(pedido.getEstado());
                 pedido.setNumPedido(pedido.getNumPedido());
@@ -123,7 +120,7 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
                 pedido.setTipoPago(pedido.getTipoPago());
                 pedido.setDireccionEnvio(pedido.getDireccionEnvio());
 
-                // Crear DTO de usuario y establecerlo en el pedido existente
+                // Creo el DTO de usuarioPedido y establezco en el pedido existente
                 UsuarioModelo usuarioModelo = pedido.getUsuario();
                 UsuarioPedidoDTO usuarioDTO = new UsuarioPedidoDTO();
                 usuarioDTO.set_id(usuarioModelo.get_id());
@@ -157,25 +154,6 @@ public class AuthPedidoServicioImpl implements AuthPedidoServicio {
 
         return trackingNumber.toString();
     }
-
-    // // prueba
-    // private String carga(InputStream inputStream, String trackingNumber) throws IOException {
-
-    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-    //         StringBuilder stringBuilder = new StringBuilder();
-    //         String line;
-
-    //         while ((line = reader.readLine()) != null) {
-    //             stringBuilder.append(line).append("\n");
-    //         }
-
-    //         // Reemplazo el marcador de posición con el código real de recuperación que
-    //         // tengo en mi html
-    //         return stringBuilder.toString().replace("{{codigoRecuperacion}}", trackingNumber);
-    //     }
-    // }
-
-
 
     // IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO
 
