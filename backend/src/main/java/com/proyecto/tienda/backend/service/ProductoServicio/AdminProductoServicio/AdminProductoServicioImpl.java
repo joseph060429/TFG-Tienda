@@ -1,4 +1,4 @@
-package com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio;
+package com.proyecto.tienda.backend.service.ProductoServicio.AdminProductoServicio;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -26,7 +26,7 @@ import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 
 @Service
-public class AuthProductoServicioImpl implements AuthProductoServicio {
+public class AdminProductoServicioImpl implements AdminProductoServicio {
 
     @Autowired
     private ProductoRepositorio productoRepositorio;

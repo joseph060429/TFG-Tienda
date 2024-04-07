@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificación de Pedido No Entregado</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f44336;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin: 0 0 10px;
+            color: #333333;
+            font-size: 14px;
+        }
+
+        .error-box {
+            padding: 15px;
+            background-color: #f44336;
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .note {
+            margin-top: 20px;
+            border-top: 1px solid #dddddd;
+            padding-top: 10px;
+            font-size: 12px;
+            color: #777777;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333333;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p>Estimado/a Usuario,</p>
+        <p>Lamentamos informarte que tu pedido con el ID {{_idPedido}} no pudo ser entregado debido a una dirección no válida o incompleta. Para garantizar la entrega exitosa de tu pedido, necesitamos que nos proporciones una dirección de envío precisa y válida.</p>
+        <div class="error-box">¡Atención! Tu pedido no ha sido entregado debido a una dirección no válida.</div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <p style="font-size: 16px;">Por favor, responde a este correo electrónico con la dirección de envío corregida o actualizada.</p>
+        </div>
+        
+        <!-- Información sobre los campos obligatorios y opcionales -->
+        <div class="note">
+            <p>Para corregir la dirección y garantizar la entrega exitosa de tu pedido, necesitamos que nos proporciones la siguiente información obligatoria:</p>
+            <ul>
+                <li><strong>Código Postal:</strong> Asegúrate de incluir el código postal de tu dirección.</li>
+                <li><strong>Dirección:</strong> Proporciona la dirección completa donde deseas recibir tu pedido.</li>
+                <li><strong>Provincia:</strong> Indica la provincia o región a la que pertenece tu dirección.</li>
+                <li><strong>Número:</strong> Especifica el número de tu domicilio o apartamento.</li>
+            </ul>
+
+            <p>Además, los siguientes campos son opcionales pero puedes proporcionarlos si lo deseas:</p>
+            <ul>
+                <li><strong>Piso:</strong> Si tienes un número de piso, puedes incluirlo aquí.</li>
+                <li><strong>Puerta:</strong> Si tienes un número de puerta, puedes incluirlo aquí.</li>
+            </ul>
+        </div>
+        <p class="signature">Atentamente,<br />Tu Equipo de Soporte</p>
+    </div>
+</body>
+
+</html>

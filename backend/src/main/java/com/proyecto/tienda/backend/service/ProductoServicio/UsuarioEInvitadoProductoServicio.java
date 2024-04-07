@@ -3,7 +3,7 @@ package com.proyecto.tienda.backend.service.ProductoServicio;
 import java.util.List;
 import java.util.Map;
 
-public interface ProductoServicio {
+public interface UsuarioEInvitadoProductoServicio {
 
     // METODO PARA BUSCAR TODOS LOS PRODUCTOS
     List<Map<String, Object>> listarProductos(int page, int size);

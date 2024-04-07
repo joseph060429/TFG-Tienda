@@ -1,4 +1,4 @@
-package com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio;
+package com.proyecto.tienda.backend.service.ProductoServicio.AdminProductoServicio;
 
 import com.proyecto.tienda.backend.DTO.DTOProducto.ActualizarProductoDTO;
 import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
-public interface AuthProductoServicio {
+public interface AdminProductoServicio {
 
         // METODO PARA CREAR UN PRODUCTO
         ResponseEntity<?> crearProducto(CrearProductoDTO crearProductoDTO, MultipartFile file);

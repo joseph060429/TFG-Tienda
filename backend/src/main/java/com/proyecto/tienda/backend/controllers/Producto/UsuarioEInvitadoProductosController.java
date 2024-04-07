@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.tienda.backend.service.ProductoServicio.ProductoServicio;
+import com.proyecto.tienda.backend.service.ProductoServicio.UsuarioEInvitadoProductoServicio;
 
 
 @RestController
-public class ProductosController {
+public class UsuarioEInvitadoProductosController {
 
     @Autowired
-    private ProductoServicio productoServicio;
+    private UsuarioEInvitadoProductoServicio usuarioEInvitadoProductoServicio;
 
     //CONTROLADOR PARA LISTAR TODOS LOS PRODUCTOS Y QUE ME TRAIGA SOLO LOS CAMPOS QUE QUIERO QUE MUESTRE AL USUARIO
     @GetMapping("/listarProductos")
@@ -24,7 +24,7 @@ public class ProductosController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
-            List<Map<String, Object>> productos = productoServicio.listarProductos(page, size);
+            List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.listarProductos(page, size);
             return ResponseEntity.ok(productos);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
@@ -41,7 +41,7 @@ public class ProductosController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
-            List<Map<String, Object>> productos = productoServicio.buscarProductosPorCampos(descripcion, categoria, nombre,
+            List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.buscarProductosPorCampos(descripcion, categoria, nombre,
                     marca, page, size);
             return ResponseEntity.ok(productos);
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class ProductosController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
-            List<Map<String, Object>> productos = productoServicio.buscarProductosPorEspecificacion(especificacion,
+            List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.buscarProductosPorEspecificacion(especificacion,
                     page, size);
             // Se puede quitar el for pero lo dejo para imprimir en pantalla lo que me sale
             // for (Map<String, Object> producto : productos) {
@@ -92,7 +92,7 @@ public class ProductosController {
             double min = precioMin.orElse(0.0);
             double max = precioMax.orElse(Double.MAX_VALUE);
 
-            List<Map<String, Object>> productos = productoServicio.buscarProductosPorRangoDePrecio(min, max,
+            List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.buscarProductosPorRangoDePrecio(min, max,
                     page, size);
             return ResponseEntity.ok(productos);
         } catch (Exception e) {

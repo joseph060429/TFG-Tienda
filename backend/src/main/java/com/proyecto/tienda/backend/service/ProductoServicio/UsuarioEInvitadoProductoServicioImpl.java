@@ -17,7 +17,7 @@ import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 
 @Service
-public class ProductoServicioImpl implements ProductoServicio {
+public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoProductoServicio {
 
     @Autowired
     private ProductoRepositorio productoRepositorio;

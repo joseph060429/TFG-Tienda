@@ -3,6 +3,7 @@ package com.proyecto.tienda.backend.DTO.DTOPedido;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ActualizarPedidoDTO {
 
+    @NotBlank(message = "El id del pedido no puede estar en blanco")
+    @NotNull(message = "El id del pedido no puede estar en blanco")
+    private String pedidoId;
+
     // Actualizar estado del pedido
      @NotNull(message = "El campo 'estado' es obligatorio")
-    private String estado;
+     private String estado;
 
     // Actualizar fecha de entrega estimada
     private String fechaEntregaEstimada = "";

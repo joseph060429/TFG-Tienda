@@ -2,10 +2,14 @@ package com.proyecto.tienda.backend.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import java.io.*;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.RecuperarContraseniaDTO;
+import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
+import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.resend.Resend;
 import com.resend.services.emails.model.SendEmailRequest;
@@ -18,6 +22,9 @@ public class ResendUtil {
 
     @Autowired
     UsuarioRepositorio usuarioRepositorio;
+
+    @Autowired
+    PedidoRepositorio pedidoRepositorio;
 
     @Value("${envio.email.token}")
     private String envioEmailToken;
@@ -33,7 +40,7 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailRecuperacion.html")) {
             String codigoRecuperacion = generarCodigoRecuperacion(10);
             String messageSubject = "Recuperación de contraseña";
-            String bodyText = cargarContenidoHtml(htmlStream, codigoRecuperacion, "");
+            String bodyText = cargarContenidoHtml(htmlStream, codigoRecuperacion, "", "");
 
             // Busco el usuario por el email
             Optional<UsuarioModelo> usuarioModelo = usuarioRepositorio.findByEmail(destinatarioEmail);
@@ -108,7 +115,8 @@ public class ResendUtil {
     }
 
     // MÉTODO ES PARA LEER LA PLANTILLA HTML
-    private String cargarContenidoHtml(InputStream inputStream, String codigoRecuperacion, String trackingNumber)
+    private String cargarContenidoHtml(InputStream inputStream, String codigoRecuperacion, String trackingNumber,
+            String _idPedido)
             throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -119,6 +127,10 @@ public class ResendUtil {
                 line = line.replace("{{codigoRecuperacion}}", codigoRecuperacion);
                 // Reemplazar el marcador de posición con el número de seguimiento real
                 line = line.replace("{{trackingNumber}}", trackingNumber);
+
+                // Reemplazar el marcador de dirección con el id del pedido real
+                line = line.replace("{{_idPedido}}", _idPedido);
+
                 stringBuilder.append(line).append("\n");
             }
 
@@ -137,7 +149,7 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailDisculpaRetrasoPedido.html")) {
 
             String messageSubject = "Importante: Retraso en el Envío de tu Pedido";
-            String bodyText = cargarContenidoHtml(htmlStream, "", "");
+            String bodyText = cargarContenidoHtml(htmlStream, "", "", "");
 
             Tag tag = Tag.builder()
                     .name("category")
@@ -173,7 +185,7 @@ public class ResendUtil {
                         .getResourceAsStream("util/CuerpoGmailEnvioPedido.html")) {
 
             String messageSubject = "¡Tu Pedido ha sido Enviado!";
-            String bodyText = cargarContenidoHtml(htmlStream, "", trackingNumber);
+            String bodyText = cargarContenidoHtml(htmlStream, "", trackingNumber, "");
 
             Tag tag = Tag.builder()
                     .name("category")
@@ -197,5 +209,46 @@ public class ResendUtil {
             e.printStackTrace();
         }
     }
+
+    // METODO DE ENVÍO DE EMAIL INFORMANDO AL USUARIO QUE LA DIRECCION ES ERRONEA
+    public void enviarEmailDireccionErronea(String destinatarioEmail, String id_pedido) {
+
+        System.out.println("destinantario desde resend "+ destinatarioEmail);
+
+        System.out.println("ID PEDIDO desde resend: " + id_pedido);
+       
+        Resend resend = new Resend(envioEmailToken);
+
+        try (
+                InputStream htmlStream = getClass().getClassLoader()
+                        .getResourceAsStream("util/CuerpoGmailDireccionErronea.html")) {
+
+            String messageSubject = "Importante: DIRECCIÓN ERRONEA EN TU PEDIDO";
+            String bodyText = cargarContenidoHtml(htmlStream, "", "", id_pedido);
+            System.out.println("ID DEL PEDIDO DESDE RESEND 2 " + id_pedido);
+
+            Tag tag = Tag.builder()
+                    .name("category")
+                    .value("envio_pedido")
+                    .build();
+
+            SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                    .from("administracion@jastoredcomponents.es")
+                    .to(destinatarioEmail)
+                    .html(bodyText)
+                    .subject(messageSubject)
+                    .headers(Map.of(
+                            "X-Entity-Ref-ID", "123456789"))
+                    .tags(tag)
+                    .build();
+
+            // Enviar el correo electrónico
+            resend.emails().send(sendEmailRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 
 }

@@ -8,7 +8,7 @@ import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
-public interface PedidoServicio {
+public interface UsuarioPedidoServicio {
 
     // METODO PARA CREAR UN PRODUCTO
     ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,

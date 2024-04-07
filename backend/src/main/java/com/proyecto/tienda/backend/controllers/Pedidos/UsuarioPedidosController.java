@@ -18,14 +18,14 @@ import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
-import com.proyecto.tienda.backend.service.PedidoServicio.PedidoServicio;
+import com.proyecto.tienda.backend.service.PedidoServicio.UsuarioPedidoServicio;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RequestMapping("/usuarios/pedidos")
 @PreAuthorize("hasAnyRole('USER')")
 @RestController
-public class PedidosController {
+public class UsuarioPedidosController {
 
     @Autowired
     PedidoRepositorio pedidoRepositorio;
@@ -34,7 +34,7 @@ public class PedidosController {
     ProductoRepositorio productoRepositorio;
 
     @Autowired
-    private PedidoServicio pedidoServicio;
+    private UsuarioPedidoServicio usuarioPedidoServicio;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -43,7 +43,7 @@ public class PedidosController {
     @PostMapping("/crearPedido")
     public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
             @RequestHeader("Authorization") String token) {
-        return pedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils, crearPedidoDTO.getProductos());
+        return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils, crearPedidoDTO.getProductos());
     }
 
     // CONTROLADOR PARA ELIMINAR UN PEDIDO
@@ -51,12 +51,12 @@ public class PedidosController {
     public ResponseEntity<?> eliminarPedido(@RequestParam Long numeroPedido,
             @RequestHeader("Authorization") String token) {
         System.out.println("NUM PEDIDO CONTROLLER " + numeroPedido);
-        return pedidoServicio.eliminarPedido(numeroPedido, token, jwtUtils);
+        return usuarioPedidoServicio.eliminarPedido(numeroPedido, token, jwtUtils);
     }
 
     @GetMapping("/historialPedidos")
     public ResponseEntity<List<PedidoInfoDTO>> historialPedidos(@RequestHeader("Authorization") String token) {
-        ResponseEntity<List<PedidoInfoDTO>> responseEntity = pedidoServicio.historialPedidos(token, jwtUtils);
+        ResponseEntity<List<PedidoInfoDTO>> responseEntity = usuarioPedidoServicio.historialPedidos(token, jwtUtils);
         List<PedidoInfoDTO> historialPedidos = responseEntity.getBody();
 
         if (historialPedidos.isEmpty()) {

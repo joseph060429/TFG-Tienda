@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.data.mongodb.core.index.Indexed;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,17 +16,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor //Genera el constructor vacío
 public class UsuarioActualizacionDTO {
     
-    @Size(min = 2, max = 70, message = "El nombre no puede tener menos de 2 y más de 70 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-Z]+(\\s[a-zA-Z]+)*){2,70}(?!\\s)$", message = "El nombre debe tener entre 2 y 70 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String nombre;
 
-    @Size(min = 2, max = 70, message = "El apellido no puede tener menos de 2 y más de 70 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-Z]+(\\s[a-zA-Z]+)*){2,70}(?!\\s)$", message = "El apellido debe tener entre 2 y 70 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String apellido;
 
     @Email(message = "El formato del correo electrónico no es válido")
     @Indexed(unique = true)
     private String email;
 
-    @Size(min = 8, message = "La contraseña no puede tener menos de 8 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)(.{8,})(?!\\s)$", message = "La contraseña debe tener al menos 8 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String password;
 
     private String fechaModificacion;

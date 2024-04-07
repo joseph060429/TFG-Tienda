@@ -3,6 +3,7 @@ package com.proyecto.tienda.backend.DTO.DTOUsuario;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RecuperarContraseniaDTO {
 
-    @Size(min = 8, message = "La contraseña no puede tener menos de 8 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)(.{8,})(?!\\s)$", message = "La contraseña debe tener al menos 8 caracteres y no puede empezar ni terminar con espacios en blanco")
     @NotBlank(message = "La contraseña no puede estar en blanco")
     private String password;
 

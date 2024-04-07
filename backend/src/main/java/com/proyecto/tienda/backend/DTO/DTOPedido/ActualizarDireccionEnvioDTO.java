@@ -1,16 +1,5 @@
 package com.proyecto.tienda.backend.DTO.DTOPedido;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import org.checkerframework.common.aliasing.qual.Unique;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Field;
-import com.proyecto.tienda.backend.models.ProductoModelo;
-import com.proyecto.tienda.backend.models.UsuarioModelo;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -21,33 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CrearPedidoDTO {
+public class ActualizarDireccionEnvioDTO {
+    
 
-    @Id
-    private String _id;
-
-    @DBRef
-    @Field("id_usuario")
-    private UsuarioModelo usuario;
-
-    private String fechaPedido;
-
-    private String fechaEntregaEstimada = "";
-
-    private String fechaEnvio = "";
-
-    @Unique
-    private Long numPedido;
-
-    @DBRef
-    @Field("productos") // Campo como seria almacenado en la base de datos
-    private List<ProductoModelo> productos;
-
-    @NotNull(message = "El tipo de pago no puede estar en blanco")
-    @NotBlank(message = "El tipo de pago no puede estar en blanco")
-    private String tipoPago;
-
-    private String estado;
+    @NotBlank(message = "El id del pedido no puede estar en blanco")
+    @NotNull(message = "El id del pedido no puede estar en blanco")
+    private String pedidoId;
 
     @NotNull(message = "El codigo postal no puede estar en blanco")
     @NotBlank(message = "El codigo postal no puede estar en blanco")
@@ -74,25 +42,8 @@ public class CrearPedidoDTO {
 
     @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String puerta;
+   
+    private String emailUsuario; 
 
     private String direccionEnvio;
-
-    @NotNull(message = "El número de teléfono, no puede estar en blanco")
-    @Min(value = 100000000, message = "El número de teléfono debe tener al menos 9 dígitos")
-    @Max(value = 999999999L, message = "El número de teléfono debe tener como máximo 9 dígitos")
-    private Long numTelefono;
-
-    // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
-    public void setFechaPedido() {
-        // Obtengo la fecha actual
-        LocalDateTime fechaActual = LocalDateTime.now();
-
-        // Defino el formato para la fecha
-        DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
-        // Formateo la fecha y la guardo en la propiedad fechaCreacion
-        this.fechaPedido = fechaActual.format(formatearFecha);
-
-    }
-
 }

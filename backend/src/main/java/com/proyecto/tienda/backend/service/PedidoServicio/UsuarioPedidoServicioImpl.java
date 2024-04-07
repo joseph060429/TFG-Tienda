@@ -25,7 +25,7 @@ import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
 @Service
-public class PedidoServicioImpl implements PedidoServicio {
+public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
@@ -89,7 +89,7 @@ public class PedidoServicioImpl implements PedidoServicio {
     }
 
     // IMPLEMENTACION DEL METODO PARA LA DIRECCION DE ENVIO
-    private String anadirDireccionEnvio(String codigoPostal, String direccion, String provincia,
+    public String anadirDireccionEnvio(String codigoPostal, String direccion, String provincia,
             String numero, String piso, String puerta, UsuarioModelo usuario) {
         try {
             // Agregar la dirección de envío al usuario

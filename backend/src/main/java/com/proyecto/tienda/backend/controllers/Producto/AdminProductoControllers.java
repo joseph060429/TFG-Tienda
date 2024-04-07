@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.tienda.backend.DTO.DTOProducto.ActualizarProductoDTO;
 import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
 import com.proyecto.tienda.backend.models.ProductoModelo;
-import com.proyecto.tienda.backend.service.ProductoServicio.AuthProductoServicio.AuthProductoServicio;
+import com.proyecto.tienda.backend.service.ProductoServicio.AdminProductoServicio.AdminProductoServicio;
+
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,10 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/admin/productos")
 @PreAuthorize("hasRole('ADMIN')")
-public class AuthProductoControllers {
+public class AdminProductoControllers {
 
     @Autowired
-    private AuthProductoServicio authproductoServicio;
+    private AdminProductoServicio adminProductoServicio;
 
     // CONTROLADOR PARA CREAR UN PRODUCTO
     @PostMapping("/crearProducto")
@@ -37,7 +38,7 @@ public class AuthProductoControllers {
         try {
 
             // Validar y crear el producto
-            ResponseEntity<?> response = authproductoServicio.crearProducto(crearProductoDTO, file);
+            ResponseEntity<?> response = adminProductoServicio.crearProducto(crearProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error interno del servidor");
@@ -50,7 +51,7 @@ public class AuthProductoControllers {
             @RequestParam(required = false, value = "img") MultipartFile file,
             @Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO) {
         try {
-            ResponseEntity<?> response = authproductoServicio.actualizarProducto(id, actualizarProductoDTO, file);
+            ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id, actualizarProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,7 +63,7 @@ public class AuthProductoControllers {
     @DeleteMapping("/eliminarProducto")
     public ResponseEntity<String> eliminarProducto(@RequestParam("id") String id) {
         try {
-            String resultadoEliminacion = authproductoServicio.eliminarProducto(id);
+            String resultadoEliminacion = adminProductoServicio.eliminarProducto(id);
 
             if ("Producto eliminado correctamente".equals(resultadoEliminacion)) {
                 return ResponseEntity.ok(resultadoEliminacion);
@@ -79,7 +80,7 @@ public class AuthProductoControllers {
     public ResponseEntity<?> listarUnProducto(@RequestParam("id") String id) {
 
         try {
-            ResponseEntity<?> response = authproductoServicio.listarUnProducto(id);
+            ResponseEntity<?> response = adminProductoServicio.listarUnProducto(id);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error interno del servidor");
@@ -91,7 +92,7 @@ public class AuthProductoControllers {
     public ResponseEntity<List<ProductoModelo>> listarProductos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        Page<ProductoModelo> productosPage = authproductoServicio.listarProductosAdmin(page, size);
+        Page<ProductoModelo> productosPage = adminProductoServicio.listarProductosAdmin(page, size);
         List<ProductoModelo> productos = productosPage.getContent();
         return ResponseEntity.ok(productos);
     }
@@ -108,7 +109,7 @@ public class AuthProductoControllers {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
-            List<Map<String, Object>> productos = authproductoServicio.buscarProductosAdmin(descripcion, categoria,
+            List<Map<String, Object>> productos = adminProductoServicio.buscarProductosAdmin(descripcion, categoria,
                     nombre, marca, page, size);
             // precio,);
             // Se puede quitar el for pero lo dejo para imprimir en pantalla lo que me sale
@@ -126,7 +127,7 @@ public class AuthProductoControllers {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
-            List<Map<String, Object>> productos = authproductoServicio.buscarProductosPorEspecificacionAdmin(
+            List<Map<String, Object>> productos = adminProductoServicio.buscarProductosPorEspecificacionAdmin(
                     especificacion,
                     page, size);
             return ResponseEntity.ok(productos);
@@ -147,7 +148,7 @@ public class AuthProductoControllers {
             double min = precioMin.orElse(0.0);
             double max = precioMax.orElse(Double.MAX_VALUE);
 
-            List<Map<String, Object>> productos = authproductoServicio.buscarProductosPorRangoDePrecio(min, max,
+            List<Map<String, Object>> productos = adminProductoServicio.buscarProductosPorRangoDePrecio(min, max,
                     page, size);
             return ResponseEntity.ok(productos);
         } catch (Exception e) {

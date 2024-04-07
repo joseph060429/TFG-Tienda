@@ -24,11 +24,13 @@ public class CrearProductoDTO {
     private String categoriaProducto;
 
     @NotBlank(message = "El nombre del producto no puede estar en blanco")
-    @Size(min = 2, max = 70, message = "El nombre del producto no puede tener menos de 2 y más de 70 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)(.{2,70})(?!\\s)$", message = "El nombre del producto debe tener entre 2 y 70 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String nombreProducto;
 
     @NotBlank(message = "La descripcion del producto no puede estar en blanco")
-    @Size(min = 2, message = "La descripcion del producto no puede tener menos de 2 caracteres")
+    @Pattern(regexp = "^\\S.{0,}$", message = "La descripción del producto debe tener como mínimo 2 caracteres y no puede empezar con espacio en blanco")
+    private String descripcion;
+
     private String descripcionProducto;
 
     @NotNull(message = "El precio del producto no puede estar en blanco")
@@ -43,10 +45,10 @@ public class CrearProductoDTO {
     private Integer cantidadProducto;
 
     @NotBlank(message = "La marca del producto no puede estar en blanco")
-    @Size(min = 2, max = 50, message = "La marca del producto no puede tener menos de 2 y más de 50 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)(.{2,50})(?!\\s)$", message = "La marca del producto debe tener entre 2 y 50 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String marcaProducto;
 
-    @Size(min = 2, message = "Las especificaciones tecnicas del producto no puede tener menos de 2 caracteres")
+    @Pattern(regexp = "^\\S.{0,}$", message = "Las especificaciones tecnicas del producto debe tener como mínimo 2 caracteres y no puede empezar con espacio en blanco")
     @NotBlank(message = "Las especificaciones tecnicas del producto no puede estar en blanco")
     private String especificacionesTecnicas;
 
@@ -59,7 +61,5 @@ public class CrearProductoDTO {
             disponibilidadProducto = false;
         }
     }
-
-    
 
 }

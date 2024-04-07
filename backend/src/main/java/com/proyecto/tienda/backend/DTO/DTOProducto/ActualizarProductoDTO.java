@@ -19,10 +19,10 @@ public class ActualizarProductoDTO {
     @Pattern(regexp = "^(Portatil|Sobremesa|Componentes)$", message = "La categoría debe ser 'Portatil', 'Sobremesa' o 'Componentes'")
     private String categoriaProducto;
 
-    @Size(min = 2, max = 70, message = "El nombre del producto no puede tener menos de 2 y más de 70 caracteresesss")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)(.{2,70})(?!\\s)$", message = "El nombre del producto debe tener entre 2 y 70 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String nombreProducto;
 
-    @Size(min = 2, message = "La descripcion del producto no puede tener menos de 2 caracteres")
+     @Pattern(regexp = "^\\S.{0,}$", message = "La descripción del producto debe tener como mínimo 2 caracteres y no puede empezar con espacio en blanco")
     private String descripcionProducto;
 
     
@@ -37,10 +37,10 @@ public class ActualizarProductoDTO {
     private Integer cantidadProducto;
 
     
-    @Size(min = 2, max = 50, message = "La marca del producto no puede tener menos de 2 y más de 50 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)(.{2,50})(?!\\s)$", message = "La marca del producto debe tener entre 2 y 50 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String marcaProducto;
 
-    @Size(min = 2, message = "Las especificaciones tecnicas del producto no puede tener menos de 2 caracteres")
+    @Pattern(regexp = "^\\S.{0,}$", message = "Las especificaciones tecnicas del producto debe tener como mínimo 2 caracteres y no puede empezar con espacio en blanco")
     private String especificacionesTecnicas;
 
     // @NotBlank(message = "La imagen del producto no puede estar en blanco")

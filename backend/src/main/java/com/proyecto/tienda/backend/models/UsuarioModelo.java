@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,11 +26,11 @@ public class UsuarioModelo {
     private String _id;
 
     @NotBlank(message = "El nombre no puede estar en blanco")
-    @Size(max = 70, message = "El nombre no puede tener más de 70 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-Z]+(\\s[a-zA-Z]+)*){2,70}(?!\\s)$", message = "El nombre debe tener entre 2 y 70 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String nombre;
 
     @NotBlank(message = "El apellido no puede estar en blanco")
-    @Size(max = 70, message = "El apellido no puede tener más de 70 caracteres")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-Z]+(\\s[a-zA-Z]+)*){2,70}(?!\\s)$", message = "El apellido debe tener entre 2 y 70 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String apellido;
 
     @Email(message = "El formato del correo electrónico no es válido")
@@ -59,7 +60,7 @@ public class UsuarioModelo {
     // gestionará en la lógica de la aplicación y no necesariamente necesita
     // almacenarse permanentemente.
 
-    // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO
+    // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO, SI SE REPITEN NO SE AGREGAN AL ARRAY
     public String agregarDireccionCompleta(String direccion, String provincia, String puerta,
             String codigoPostal, String piso, String numero) {
 
