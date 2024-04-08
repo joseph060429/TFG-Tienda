@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notificación de Retraso en el Pedido</title>
+    <title>Notificación de entrega de pedido</title>
     <style>
-        body {
+       body {
             font-family: 'Arial', sans-serif;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background-color: #f44336;
+            color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -20,32 +22,30 @@
         .container {
             max-width: 600px;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            color: #333333;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         p {
-            margin: 0 0 15px;
+            margin: 0 0 10px;
+            color: #333333;
             font-size: 14px;
-            line-height: 1.5;
-            color: #555555;
         }
 
-        .warning-box {
-            background-color: #ffc107;
-            color: #333333;
+        .error-box {
             padding: 15px;
+            background-color: #f44336;
+            color: #ffffff;
+            font-size: 16px;
             border-radius: 8px;
             margin-top: 20px;
-            font-size: 16px;
             font-weight: bold;
         }
 
         .note {
             margin-top: 20px;
-            border-top: 2px solid #dddddd;
+            border-top: 1px solid #dddddd;
             padding-top: 10px;
             font-size: 12px;
             color: #777777;
@@ -54,20 +54,27 @@
         .signature {
             margin-top: 20px;
             font-size: 14px;
-            color: #444444;
+            color: #333333;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <p>Estimado/a usuario,</p>
-        <p>Queremos informarte que tu pedido experimentará un ligero retraso y se entregará en unos días adicionales a la fecha originalmente prevista. Nos disculpamos por cualquier inconveniente que esto pueda causar.</p>
-        <div class="warning-box">¡Atención! Estamos trabajando diligentemente para resolver la situación y enviaremos tu pedido lo más pronto posible.</div>
-        <p>Te agradecemos tu comprensión y paciencia en este asunto.</p>
+        <p>Lamentamos informarle que no pudimos entregar su pedido debido a que no hubo nadie en casa o no contestó a la llamada que le hizo nuestro repartidor.</p>
+        <p>Su pedido será reprogramado para una nueva entrega. Por favor, esté atento/a a las actualizaciones de su pedido para conocer la nueva fecha de entrega.</p>
+        <p>Gracias por su comprensión.</p>
         <p class="note">Nota: Esta es una notificación automática, por favor, no respondas a este correo electrónico.</p>
         <p class="signature">Atentamente,<br />Tu Equipo de Soporte</p>
     </div>
 </body>
-
 </html>

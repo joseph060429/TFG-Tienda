@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarDireccionEnvioDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.UsuarioPedidoDTO;
@@ -297,7 +296,6 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
 
         // Busco el pedido por id
         Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findBy_id(_idPedido);
-        System.out.println("PEDIDO: " + pedidoOptional);
 
         if (pedidoOptional.isEmpty()) {
             return ResponseEntity.status(404).body("No se encontró el pedido");
@@ -308,7 +306,18 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // Obtengo el pedido de la base de datos para actualizale la direccion
             PedidosModelo pedidoModelo = pedidoOptional.get();
 
+            // Obtengo el email del usuario
             String emailUsuario = pedidoModelo.getUsuario().getEmail();
+
+            // Busco el usuario por email:
+            Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailUsuario);
+
+            // Obtengo el usuario de la base de datos
+            UsuarioModelo usuarioBD = usuarioOptional.get();
+
+            // Obtengo las direcciones de envío de ese usuario
+            List<String> direccionesUsuario = usuarioBD.getDireccionesEnvio();
+            System.out.println("DIRECCIONES ENVIO USUARIO " + direccionesUsuario);
 
             // Obtengo los datos del DTO
             String codigoPostal = actualizarDireccionEnvioDTO.getCodigoPostal().trim();
@@ -318,39 +327,19 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             String piso = actualizarDireccionEnvioDTO.getPiso();
             String puerta = actualizarDireccionEnvioDTO.getPuerta();
 
-            // Agreo la dirección de envío al usuario
-            String direccionEnvio = usuario.agregarDireccionCompleta(direccion, provincia, puerta, codigoPostal, piso,
+            // Agrego la dirección de envío al usuario con el metodo de agrgar direccion
+            // completa que tengo en el modelo
+            String direccionEnvio = usuarioBD.agregarDireccionCompleta(direccion, provincia, puerta,
+                    codigoPostal, piso,
                     numero);
-
             System.out.println("DIRECCION ENVIO " + direccionEnvio);
 
-            // Busco el usuario por email:
-            Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailUsuario);
+            usuarioRepositorio.save(usuarioBD);
 
-            List<String> direccionesUsuario = usuarioOptional.get().getDireccionesEnvio();
-
-            System.out.println("DIRECCIONES ENVIO USUARIO " + direccionesUsuario);
-
-            if (!direccionesUsuario.contains(direccionEnvio)) {
-                usuario.agregarDireccionCompleta(direccionEnvio, provincia, puerta, codigoPostal, piso, numero);
-                direccionesUsuario.add(direccionEnvio);
-                // Guardo el usuario en la base de datos
-                usuarioRepositorio.save(usuario);
-            }
-
-            System.out.println("email usuario " + emailUsuario);
-            if (usuarioOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-            }
-
-            usuario = usuarioOptional.get();
-
-           
             // Actualizo el pedido con la nueva dirección de envío
             pedidoModelo.setDireccionEnvio(direccionEnvio);
             // Guardo el pedido en la base de datos
             pedidoRepositorio.save(pedidoModelo);
-
 
             return ResponseEntity
                     .ok("Dirección de envío actualizada correctamente para el pedido con ID: " + _idPedido);
@@ -360,6 +349,54 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error al añadir la dirección de envío: " + e.getMessage());
         }
+    }
+
+
+    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO REPROGRAMADO_PARA_ENTREGA CUANDO EL REPARTIDOR LLEGA Y NO HAY NADIE EN CASA O NO RESPONDEN AL MÓVIL
+    @Override
+    public ResponseEntity<?> actualizarEstadoReprogramadoParaEntrega(String _id,
+            ActualizarPedidoDTO actualizarPedidoDTO) {
+        // Busco el pedido por el Id
+        Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findBy_id(_id);
+
+        if (pedidoOptional.isEmpty()) {
+            return ResponseEntity.status(404).body("No se encontró el pedido");
+        }
+        try {
+            // Obtengo el pedido de la base de datos
+            PedidosModelo pedido = pedidoOptional.get();
+
+            // Verifico que el estado que ponga en el postman sea
+            // REPROGRAMADO_PARA_ENTREGA o reprogramado_para_entrega, SI PONE
+            // OTRO ESTADO que no este en el enum
+            // lanzare la exception que no un estado valido para esta operacion
+            String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
+
+            if (!EPedido.REPROGRAMADO_PARA_ENTREGA.toString().equalsIgnoreCase(estadoPedido)) {
+                System.out.println("ESTADO: " + estadoPedido);
+                return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
+            }
+
+            if (EPedido.REPROGRAMADO_PARA_ENTREGA.toString().equals(pedido.getEstado().trim())) {
+                return ResponseEntity.status(400)
+                        .body("El pedido ya ha sido marcado como reprogramado para entrega");
+            }
+
+            pedido.setEstado(EPedido.REPROGRAMADO_PARA_ENTREGA.toString());
+            pedidoRepositorio.save(pedido);
+
+            // Obtengo el email del usuario del pedido para enviar el email
+            String email = pedido.getUsuario().getEmail();
+
+            // Envio el email al usuario
+            resend.enviarEmailNadieEnCasa(email);
+
+            return ResponseEntity.ok("Se actualizó correctamente el pedido");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");
+        }
+
     }
 
 }

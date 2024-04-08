@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarDireccionEnvioDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOUsuario.EnviarCorreoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 
@@ -33,4 +34,8 @@ public interface AdminPedidoServicio {
     // METODO PARA ACTUALIZARLE LA DIRECCION DE ENVIO A UN USUARIO CUANDO SU DIRECCION ES ERRONEA   
     ResponseEntity<?> actualizarDireccionEnvioAdmin(String _idPedido,
             ActualizarDireccionEnvioDTO actualizarDireccionEnvioDTO, UsuarioModelo usuario);
+
+    // METDODO PARA ACTUALIZAR EL PEDIDO A REPROGRAMADO_PARA_ENTREGA CUANDO NO HAY NADIE EN CASA O CUANDO NO RESPONDEN LA LLAMADA AL REPARTIDOR
+    ResponseEntity<?> actualizarEstadoReprogramadoParaEntrega(String _id, ActualizarPedidoDTO actualizarPedidoDTO);
+    
 }

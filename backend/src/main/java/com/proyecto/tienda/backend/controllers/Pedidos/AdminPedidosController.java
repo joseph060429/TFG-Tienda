@@ -44,13 +44,6 @@ public class AdminPedidosController {
 
     // CONTROLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO
     @PatchMapping("/actualizarEstadoPedidoEnviado")
-    // public ResponseEntity<?> actualizarEstadoPedidoEnviado(@RequestParam("id")
-    // String pedidoId,
-    // @RequestBody @Valid ActualizarPedidoDTO actualizarPedidoDTO) {
-    // return adminPedidoServicio.actualizarEstadoPedidoEnviado(pedidoId,
-    // actualizarPedidoDTO);
-    // }
-
     public ResponseEntity<?> actualizarEstadoPedidoEnviado(
             @Valid @RequestBody ActualizarPedidoDTO actualizarPedidoDTO) {
 
@@ -124,7 +117,19 @@ public class AdminPedidosController {
             @Valid @RequestBody ActualizarDireccionEnvioDTO actualizarDireccionEnvioDTO, UsuarioModelo usuario) {
         String pedidoId = actualizarDireccionEnvioDTO.getPedidoId().trim();
         return adminPedidoServicio.actualizarDireccionEnvioAdmin(pedidoId, actualizarDireccionEnvioDTO, usuario);
+    }
 
+
+    // CONTRLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO A REPROGRAMADO_PARA_ENTREGA CUANDO EL REPARTIDOR LLEGA Y NO HAY NADIE EN CASA O NO RESPONDEN AL MÓVIL
+    @PatchMapping("/envioEmailReprogramadoEntrega")
+    public ResponseEntity<?> actualizarEstadoReprogramadoParaEntrega(
+            @Valid @RequestBody ActualizarPedidoDTO actualizarPedidoDTO) {
+
+        // Extraigo el ID del pedido y el estado del DTO
+        String pedidoId = actualizarPedidoDTO.getPedidoId().trim();
+
+        // Llamo al servicio para actualizar el estado del pedido
+        return adminPedidoServicio.actualizarEstadoReprogramadoParaEntrega(pedidoId, actualizarPedidoDTO);
     }
 
 }

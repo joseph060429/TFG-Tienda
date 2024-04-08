@@ -2,12 +2,9 @@ package com.proyecto.tienda.backend.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import java.io.*;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.RecuperarContraseniaDTO;
-import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
@@ -230,6 +227,43 @@ public class ResendUtil {
             Tag tag = Tag.builder()
                     .name("category")
                     .value("envio_pedido")
+                    .build();
+
+            SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                    .from("administracion@jastoredcomponents.es")
+                    .to(destinatarioEmail)
+                    .html(bodyText)
+                    .subject(messageSubject)
+                    .headers(Map.of(
+                            "X-Entity-Ref-ID", "123456789"))
+                    .tags(tag)
+                    .build();
+
+            // Enviar el correo electrónico
+            resend.emails().send(sendEmailRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+     // METODO DE ENVÍO DE EMAIL INFORMANDO QUE NO HUBO NADIE EN CASA O QUE NO RESPONDIO A LA LLAMADA DEL REPARTIDOR
+     public void enviarEmailNadieEnCasa(String destinatarioEmail) {
+
+        // Configurar el envío del correo con Resend
+        Resend resend = new Resend(envioEmailToken);
+
+        try (
+                InputStream htmlStream = getClass().getClassLoader()
+                        .getResourceAsStream("util/CuerpoGmailNoHuboNadieEnCasa.html")) {
+
+            String messageSubject = "Importante! Problema con la Entrega de tu Pedido";
+            String bodyText = cargarContenidoHtml(htmlStream, "", "", "");
+
+            Tag tag = Tag.builder()
+                    .name("category")
+                    .value("retraso_pedido")
                     .build();
 
             SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
