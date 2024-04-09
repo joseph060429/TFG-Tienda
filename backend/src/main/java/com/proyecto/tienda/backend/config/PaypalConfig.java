@@ -1,20 +1,28 @@
 package com.proyecto.tienda.backend.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.paypal.base.rest.APIContext;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class PaypalConfig {
 
-    
-    private String cliente_Id;
+    @Value("${paypal.client-id}")
+    private String clientId;
 
-    private String secretoCliente;
+    @Value("${paypal.client-secret}")
+    private String clientSecret;
 
-    private String modo;
+    @Value("${paypal.mode}")
+    private String mode;
 
 
+    // Configuracion del APIContext para el uso de PayPal
+    @Bean
+    public APIContext apiContext() {
+        APIContext apiContext = new APIContext(clientId, clientSecret, mode);
+        return apiContext;
+    }
 
-
-
-    
 }

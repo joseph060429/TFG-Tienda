@@ -23,12 +23,16 @@ import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
+import com.proyecto.tienda.backend.service.Paypal.PayPalServicio;
 
 @Service
 public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
+
+    @Autowired
+    private PayPalServicio paypalServicio;
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
@@ -58,6 +62,13 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya a casa y si la persona no esta, tenga un sitio donde dejarlo
             Long numTele = crearPedidoDTO.getNumTelefono();
             pedido.setNumTelefono(numTele);
+
+            
+            // ResponseEntity<String> respuestaPago = paypalServicio.hacerPago(pedido.get_id(), token, jwtUtils);
+            // if (respuestaPago.getBody() != "approved") {
+            //     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            //             .body("Error al realizar el pago ");
+            // }
             
 
             String direccionEnvio = anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
@@ -67,6 +78,13 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             ResponseEntity<?> resultadoPagoValidacion = validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
 
             if (resultadoPagoValidacion != null) {
+
+                // ResponseEntity<String> respuestaPago = paypalServicio.hacerPago(pedido.get_id(), token, jwtUtils);
+                // if (respuestaPago.getBody() != "approved") {
+                //     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                //             .body("Error al realizar el pago ");
+                // }
+
                 return resultadoPagoValidacion;
             }
 
@@ -143,8 +161,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     .body("Error al crear el pedido: El tipo de pago no puede estar en blanco");
         } else {
             try {
-                EPedidoPago enumValue = EPedidoPago.valueOf(tipoPago.toUpperCase());
-                pedido.setTipoPago(enumValue.name());
+                EPedidoPago enumValue = EPedidoPago.valueOf(tipoPago.toUpperCase().trim());
+                pedido.setTipoPago(enumValue.name().trim());
                 return null; // Tipo de pago válido
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
