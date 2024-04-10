@@ -24,6 +24,7 @@ import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.Paypal.PayPalServicio;
+import com.proyecto.tienda.backend.util.ResendUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -41,6 +42,9 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
     @Autowired
     private ProductoRepositorio productoRepositorio;
+
+    @Autowired
+    private ResendUtil resend;
 
     // IMPLEMENTACION DEL METODO PARA CREAR EL PEDIDO
     @Transactional
@@ -61,7 +65,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
             PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
 
-            // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya a casa y si la persona no esta, tenga un sitio donde dejarlo
+            // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya
+            // a casa y si la persona no esta, tenga un sitio donde dejarlo
             Long numTele = crearPedidoDTO.getNumTelefono();
             pedido.setNumTelefono(numTele);
 
@@ -75,7 +80,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             if (resultadoPagoValidacion != null) {
                 return resultadoPagoValidacion;
             }
-            
+
             // Genero una nueva lista con los productos pedidos
             List<ProductoPedidoDTO> listaNueva = generarListaProductosPedido(productosModelo);
             pedido.setProductos(listaNueva);
@@ -87,7 +92,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             // Establezco la direccion del pedido
             pedido.setDireccionEnvio(direccionEnvio);
 
-            // 
+            //
             ses.setAttribute("pedido", pedido);
 
             return paypalServicio.hacerPago(pedido, ses);
@@ -246,10 +251,12 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             // Verifico que todos los productos esten en stock
             if (todosEnStock == 1) {
                 System.out.println("TODOS EN STOCK " + todosEnStock);
-                // Significa que todos los productos que se pidieron estan en stock, manejo la resta cuando el pago es exitoso.
+                // Significa que todos los productos que se pidieron estan en stock, manejo la
+                // resta cuando el pago es exitoso.
                 for (ProductoPedidoDTO productoPedido : listaPedidoUsuario) {
                     ProductoModelo encontrado = productoRepositorio.findBy_id(productoPedido.get_idProducto());
-                    // restarCantidadProducto(encontrado.get_id(), productoPedido.getCantidadPedida());
+                    // restarCantidadProducto(encontrado.get_id(),
+                    // productoPedido.getCantidadPedida());
                 }
             } else {
                 throw new RuntimeException("Todos los productos no tienen stock");
@@ -333,10 +340,10 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
             if (!usuarioModelo.isPresent()) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error al eliminar el pedido: Usuario no encontrado");
+                        .body("Error al cancelar el pedido: Usuario no encontrado");
             } else {
                 UsuarioModelo usuario = usuarioModelo.get();
-                // BuscO el pedido por su número
+                // Busco el pedido por su número
                 Optional<PedidosModelo> numPedido = pedidoRepositorio.findByNumPedido(numeroPedido);
 
                 // Verifico que el numero de pedido exista
@@ -346,7 +353,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     if (pedido.getUsuario().equals(usuario)) {
                         // Verifico si el pedido está en estado "PENDIENTE"
                         if (pedido.getEstado().equals(EPedido.PENDIENTE.toString())) {
-                            // Obtener la lista de productos pedidos del pedido
+                            // Obtengo la lista de productos pedidos del pedido
                             List<ProductoPedidoDTO> productosPedidos = pedido.getProductos();
 
                             // Itero sobre cada producto pedido
@@ -377,26 +384,37 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                                             .body("Producto no encontrado en la base de datos con ID: " + productoId);
                                 }
                             }
-                            // Elimino el pedido
-                            pedidoRepositorio.delete(pedido);
+                            // Cambio el estado del pedido y le enviare un correo al usuario diciendole que
+                            // su pedido se ha cancelado exitosamente
+                            pedido.setEstado(EPedido.CANCELADO.toString());
 
-                            return ResponseEntity.ok("Pedido eliminado exitosamente");
+                            // Obtengo el email del usuario del pedido para enviar el email
+                            String email = pedido.getUsuario().getEmail();
+
+                            // Envio el email al usuario
+                            resend.enviarEmailPedidoCanceladoUsuario(email);
+
+                            // Guardo el pedido con el nuevo estado
+                            pedidoRepositorio.save(pedido);
+
+                            return ResponseEntity.ok("Pedido cancelado exitosamente");
                         } else {
+
                             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                    .body("Error al eliminar el pedido: El pedido ya ha sido ENVIADO");
+                                    .body("Pedido no cancelable: ya ha sido cancelado o tiene otro estado.");
                         }
                     } else {
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                .body("Error al eliminar el pedido: Solo puedes eliminar tus pedidos");
+                                .body("Error al cancelar el pedido: Solo puedes cancelar tus pedidos");
                     }
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .body("Error al eliminar el pedido: Pedido no encontrado");
+                            .body("Error al cancelar el pedido: Pedido no encontrado");
                 }
             }
         } catch (RuntimeException e) {
             e.getMessage();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar el pedido: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al cancelar el pedido: " + e.getMessage());
         }
     }
 
@@ -438,7 +456,6 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         return pedidoDTO;
     }
 
-
     // METODO PARA MAPPEAR LOS PRODUCTOS A UN DTO
     private List<ProductoPedidoDTO> mapProductosToDTO(List<ProductoPedidoDTO> productos) {
         return productos.stream()
@@ -454,5 +471,4 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                 })
                 .collect(Collectors.toList());
     }
-
 }

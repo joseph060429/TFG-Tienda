@@ -68,16 +68,4 @@ public class ProductoModelo {
     public EProducto getCategoria() {
         return EProducto.valueOf(this.categoriaProducto);
     }
-
-   
-
 }
-
-
-// StringBuilder mensajeExcepcion = new StringBuilder("Ha pedido más productos del stock disponible en algunos de los productos: ");
-//         for (String nombreProducto : productosNoDisponibles) {
-//             mensajeExcepcion.append(nombreProducto).append(", ");
-//         }
-//         // Eliminar la coma y el espacio extra al final
-//         mensajeExcepcion.delete(mensajeExcepcion.length() - 2, mensajeExcepcion.length());
-//         throw new RuntimeException(mensajeExcepcion.toString());

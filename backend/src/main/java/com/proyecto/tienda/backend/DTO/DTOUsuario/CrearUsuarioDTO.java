@@ -60,49 +60,4 @@ public class CrearUsuarioDTO {
         this.fechaCreacion = fechaActual.format(formatearFecha);
     }
 
-    // // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO
-    // public void agregarDireccionCompleta(
-    //         String codigoPostal,
-    //         String direccion,
-    //         String provincia,
-    //         String numero,
-    //         String portal,
-    //         String piso,
-    //         String escalera) {
-    //     if (codigoPostal == null || codigoPostal.isEmpty()
-    //             || direccion == null ||
-    //             direccion.isEmpty() || provincia == null
-    //             || provincia.isEmpty() || numero == null || numero.isEmpty()) {
-    //         throw new IllegalArgumentException(
-    //                 "El código postal, la dirección, la provincia y el número son obligatorios.");
-    //     }
-
-    //     StringBuilder direccionCompleta = new StringBuilder();
-    //     direccionCompleta.append("Código Postal: ").append(codigoPostal).append(", ");
-    //     direccionCompleta.append("Dirección: ").append(direccion).append(", ");
-    //     direccionCompleta.append("Provincia: ").append(provincia).append(", ");
-    //     direccionCompleta.append("Número: ").append(numero).append(", ");
-
-    //     if (portal != null && !portal.isEmpty()) {
-    //         direccionCompleta.append("Portal: ").append(portal).append(", ");
-    //     }
-    //     if (piso != null && !piso.isEmpty()) {
-    //         direccionCompleta.append("Piso: ").append(piso).append(", ");
-    //     }
-    //     if (escalera != null && !escalera.isEmpty()) {
-    //         direccionCompleta.append("Escalera: ").append(escalera).append(", ");
-    //     }
-
-    //     // Elimino la coma al final
-    //     if (direccionCompleta.length() > 0) {
-    //         direccionCompleta.delete(direccionCompleta.length() - 2, direccionCompleta.length());
-    //     }
-
-    //     // Agrego la nueva direccion a la lista
-    //     if (direccionesEnvio == null) {
-    //         direccionesEnvio = new ArrayList<>();
-    //     }
-    //     direccionesEnvio.add(direccionCompleta.toString());
-    // }
-
 }

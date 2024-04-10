@@ -283,6 +283,43 @@ public class ResendUtil {
             e.printStackTrace();
         }
     }
+
+
+     // METODO DE ENVÍO DE EMAIL INFORMANDO QUE NO HUBO NADIE EN CASA O QUE NO RESPONDIO A LA LLAMADA DEL REPARTIDOR
+     public void enviarEmailPedidoCanceladoUsuario(String destinatarioEmail) {
+
+        // Configurar el envío del correo con Resend
+        Resend resend = new Resend(envioEmailToken);
+
+        try (
+                InputStream htmlStream = getClass().getClassLoader()
+                        .getResourceAsStream("util/CuerpoGmailPedidoCanceladoUsuario.html")) {
+
+            String messageSubject = "¡Importante! Confirmación de Cancelación de tu Pedido";
+            String bodyText = cargarContenidoHtml(htmlStream, "", "", "");
+
+            Tag tag = Tag.builder()
+                    .name("category")
+                    .value("retraso_pedido")
+                    .build();
+
+            SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                    .from("administracion@jastoredcomponents.es")
+                    .to(destinatarioEmail)
+                    .html(bodyText)
+                    .subject(messageSubject)
+                    .headers(Map.of(
+                            "X-Entity-Ref-ID", "123456789"))
+                    .tags(tag)
+                    .build();
+
+            // Enviar el correo electrónico
+            resend.emails().send(sendEmailRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
 
 }
