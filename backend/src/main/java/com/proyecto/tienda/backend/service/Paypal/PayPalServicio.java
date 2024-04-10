@@ -3,10 +3,8 @@ package com.proyecto.tienda.backend.service.Paypal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,26 +19,18 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
-import com.proyecto.tienda.backend.models.UsuarioModelo;
-import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
-import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
-import com.proyecto.tienda.backend.security.jwt.JwtUtils;
-
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PayPalServicio {
 
-    @Autowired
-    private PedidoRepositorio pedidoRepositorio;
-
-    @Autowired
-    private UsuarioRepositorio usuarioRepositorio;
-
+    // Urls de redireccionamiento para PayPal
     @Value("${paypal.cancelUrl}")
     private String cancelUrl;
 
+    // Urls de redireccionamiento para PayPal
     @Value("${paypal.successUrl}")
     private String successUrl;
 
@@ -107,68 +97,49 @@ public class PayPalServicio {
     }
 
     // METODO PARA HACER EL PAGO
-    public ResponseEntity<String> hacerPago(String id, String token, JwtUtils jwtUtils) {
+    public ResponseEntity<String> hacerPago(PedidosModelo pedido, HttpSession ses) {
         try {
 
-            String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
-            Optional<UsuarioModelo> usuarioModelo = buscarUsuarioPorEmail(emailFromToken);
+            // Traigo todos los productos que ha pedido ese usuario
+            List<ProductoPedidoDTO> productos = pedido.getProductos();
 
-            System.out.println("Email DEL TOKEN: " + emailFromToken);
+            // Calculo el precio total sumando todos los productos de ese pedido
+            double total = 0.0;
+            for (ProductoPedidoDTO producto : productos) {
+                total += producto.getPrecioProducto() * producto.getCantidadPedida();
+            }
 
-            if (!usuarioModelo.isPresent()) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error usuario no encontrado");
-            } else {
+            // Total es el precio total del pedido
+            System.out.println("Precio total del pedido: " + total);
 
-                // Busco el producto por id
-                Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findById(id);
+            // Uso el total para el pago
+            Payment pago = createPayment(total, "EUR", "paypal", "sale", "Pedido Pagado",
+                    cancelUrl, successUrl);
 
-                if (pedidoOptional.isPresent()) {
-                    PedidosModelo pedido = pedidoOptional.get();
-                    if (!pedido.getUsuario().getEmail().equals(emailFromToken)) {
-                        return ResponseEntity.status(404).body("No eres el usuario del pedido");
-                    }
+            // Recorro las URLs de redireccionamiento
+            for (Links links : pago.getLinks()) {
+                // Verifico si es la URL de redireccionamiento para PayPal
+                if (links.getRel().equals("approval_url")) {
+                    // Obtengo la URL de redireccionamiento
+                    String href = links.getHref();
+                    System.out.println("Location: " + links.getHref());
+                    // Creo un encabezado http para la redireccion
+                    HttpHeaders headers = new HttpHeaders();
 
-                    // Traigo todos los productos que ha pedido ese usuario
-                    List<ProductoPedidoDTO> productos = pedido.getProductos();
-
-                    // Calculo el precio total sumando todos los productos de ese pedido
-                    double total = 0.0;
-                    for (ProductoPedidoDTO producto : productos) {
-                        total += producto.getPrecioProducto() * producto.getCantidadPedida();
-                    }
-
-                    // Total es el precio total del pedido
-                    System.out.println("Precio total del pedido: " + total);
-
-                    // Uso el total para el pago
-                    Payment payment = createPayment(total, "EUR", "paypal", "sale", "Pedido Pagado",
-                            cancelUrl, successUrl);
-
-                    for (Links links : payment.getLinks()) {
-                        if (links.getRel().equals("approval_url")) {
-                            String href = links.getHref();
-                            System.out.println("Location: " + links.getHref());
-                            return ResponseEntity.ok().body(href);
-                        }
-                    }
-                } else {
-                    return ResponseEntity.status(404).body("El pedido con el ID especificado no fue encontrado.");
+                    // Almaceno el pedido en una session http
+                    ses.setAttribute("pedido", pedido);
+                    // Agrego la URL de aprobacion al encabezado de redireccion
+                    headers.add("Location", href);
+                    // Creo una respuesta HTTP con estado "FOUND" para redireccionar al cliente
+                    ResponseEntity<String> response = new ResponseEntity<String>(headers, HttpStatus.FOUND);
+                    // Devuelvo la respuesta de direccion
+                    return response;
                 }
             }
+
         } catch (PayPalRESTException e) {
             System.out.println("Error ocurrido:: " + e);
         }
         return ResponseEntity.status(500).body("Algo ha fallado");
     }
-
-    private String obtenerEmailDelToken(String token, JwtUtils jwtUtils) {
-        String jwtToken = token.replace("Bearer ", "");
-        return jwtUtils.getEmailFromToken(jwtToken);
-    }
-
-    private Optional<UsuarioModelo> buscarUsuarioPorEmail(String emailFromToken) {
-        return usuarioRepositorio.findByEmail(emailFromToken);
-    }
-
 }

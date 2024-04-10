@@ -8,11 +8,13 @@ import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
+import jakarta.servlet.http.HttpSession;
+
 public interface UsuarioPedidoServicio {
 
     // METODO PARA CREAR UN PRODUCTO
     ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
-            List<ProductoModelo> productosModelo);
+            List<ProductoModelo> productosModelo, HttpSession ses);
 
     ResponseEntity<?> eliminarPedido(Long numeroPedido, String token, JwtUtils jwtUtils);
 

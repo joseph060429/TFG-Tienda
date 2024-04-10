@@ -175,7 +175,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // Traigo el pedido de la base de datos
             PedidosModelo pedido = pedidoOptional.get();
 
-            //
+            // Verifico que el estado que ponga en el postman sea ENTREGADO O entregado,
             String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
             System.out.println("ESTADO PEDIDO: " + estadoPedido);
             if (!EPedido.ENTREGADO.toString().equalsIgnoreCase(estadoPedido)) {

@@ -25,6 +25,8 @@ import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.Paypal.PayPalServicio;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
@@ -44,7 +46,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     @Transactional
     @Override
     public ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
-            List<ProductoModelo> productosModelo) {
+            List<ProductoModelo> productosModelo, HttpSession ses) {
 
         try {
             String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
@@ -63,14 +65,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             Long numTele = crearPedidoDTO.getNumTelefono();
             pedido.setNumTelefono(numTele);
 
-            
-            // ResponseEntity<String> respuestaPago = paypalServicio.hacerPago(pedido.get_id(), token, jwtUtils);
-            // if (respuestaPago.getBody() != "approved") {
-            //     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            //             .body("Error al realizar el pago ");
-            // }
-            
-
+            // Añado la direccion de envio
             String direccionEnvio = anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
                     crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(), crearPedidoDTO.getNumero(),
                     crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
@@ -78,16 +73,10 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             ResponseEntity<?> resultadoPagoValidacion = validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
 
             if (resultadoPagoValidacion != null) {
-
-                // ResponseEntity<String> respuestaPago = paypalServicio.hacerPago(pedido.get_id(), token, jwtUtils);
-                // if (respuestaPago.getBody() != "approved") {
-                //     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                //             .body("Error al realizar el pago ");
-                // }
-
                 return resultadoPagoValidacion;
             }
-
+            
+            // Genero una nueva lista con los productos pedidos
             List<ProductoPedidoDTO> listaNueva = generarListaProductosPedido(productosModelo);
             pedido.setProductos(listaNueva);
 
@@ -95,11 +84,14 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             crearPedidoDTO.setFechaPedido();
             pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
 
+            // Establezco la direccion del pedido
             pedido.setDireccionEnvio(direccionEnvio);
 
-            guardarPedido(pedido);
+            // 
+            ses.setAttribute("pedido", pedido);
 
-            return ResponseEntity.ok("Pedido creado exitosamente");
+            return paypalServicio.hacerPago(pedido, ses);
+
         } catch (RuntimeException e) {
             e.getMessage();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el pedido: " + e.getMessage());
@@ -110,11 +102,11 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     public String anadirDireccionEnvio(String codigoPostal, String direccion, String provincia,
             String numero, String piso, String puerta, UsuarioModelo usuario) {
         try {
-            // Agregar la dirección de envío al usuario
+            // Agrego la dirección de envío al usuario
             String direccionEnvio = usuario.agregarDireccionCompleta(direccion, provincia, puerta, codigoPostal, piso,
                     numero);
 
-            // Guardar el usuario con la nueva dirección de envío
+            // Guardo el usuario con la nueva dirección de envío
             usuarioRepositorio.save(usuario);
 
             return direccionEnvio;
@@ -147,11 +139,6 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         pedido.setEstado(EPedido.PENDIENTE.toString());
         pedido.setTrackingNumber("");
         return pedido;
-    }
-
-    // IMPLEMENTACION DEL METODO PARA GUARDAR EL PEDIDO
-    private void guardarPedido(PedidosModelo pedido) {
-        pedidoRepositorio.save(pedido);
     }
 
     // IMPLEMENTACION DEL METODO PARA VALIDAR EL TIPO DE PAGO Y SETEARLO
@@ -259,11 +246,10 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             // Verifico que todos los productos esten en stock
             if (todosEnStock == 1) {
                 System.out.println("TODOS EN STOCK " + todosEnStock);
-                // Significa que es posible restar a todos los productos pedidos. quiere decir,
-                // hay stock para todo lo que se pide.
+                // Significa que todos los productos que se pidieron estan en stock, manejo la resta cuando el pago es exitoso.
                 for (ProductoPedidoDTO productoPedido : listaPedidoUsuario) {
                     ProductoModelo encontrado = productoRepositorio.findBy_id(productoPedido.get_idProducto());
-                    restarCantidadProducto(encontrado.get_id(), productoPedido.getCantidadPedida());
+                    // restarCantidadProducto(encontrado.get_id(), productoPedido.getCantidadPedida());
                 }
             } else {
                 throw new RuntimeException("Todos los productos no tienen stock");
@@ -294,7 +280,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     }
 
     // METODO PARA RESTAR LA CANTIDAD DE PRODUCTOS
-    private int restarCantidadProducto(String productoId, int cantidadRestar) {
+    public int restarCantidadProducto(String productoId, int cantidadRestar) {
 
         try {
             // Buscar el producto por su ID

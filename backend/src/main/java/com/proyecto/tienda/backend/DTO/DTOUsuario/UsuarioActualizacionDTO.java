@@ -29,7 +29,7 @@ public class UsuarioActualizacionDTO {
     private String password;
 
     private String fechaModificacion;
-    private String direccionEnvio;
+    // private String direccionEnvio;
 
     public void setFechaModificacion() {
         LocalDateTime fechaActual = LocalDateTime.now();

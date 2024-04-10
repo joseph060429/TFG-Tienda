@@ -19,6 +19,8 @@ import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.PedidoServicio.UsuarioPedidoServicio;
+
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -42,8 +44,8 @@ public class UsuarioPedidosController {
     // CONTROLADOR PARA CREAR UN PEDIDO
     @PostMapping("/crearPedido")
     public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
-            @RequestHeader("Authorization") String token) {
-        return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils, crearPedidoDTO.getProductos());
+            @RequestHeader("Authorization") String token, HttpSession ses) {
+        return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils, crearPedidoDTO.getProductos(), ses);
     }
 
     // CONTROLADOR PARA ELIMINAR UN PEDIDO
