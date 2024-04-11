@@ -48,6 +48,8 @@ public class UsuarioModelo {
 
     private List<String> direccionesEnvio;
 
+    private List<String> direcionesFacturacion;
+
     @Builder.Default // Lo puse porque ya tenia los otros campos creados
     private String recuperarContrasenia = "";
 
@@ -59,7 +61,8 @@ public class UsuarioModelo {
     // gestionará en la lógica de la aplicación y no necesariamente necesita
     // almacenarse permanentemente.
 
-    // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO, SI SE REPITEN NO SE AGREGAN AL ARRAY
+    // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO, SI SE REPITEN NO SE
+    // AGREGAN AL ARRAY
     public String agregarDireccionCompleta(String direccion, String provincia, String puerta,
             String codigoPostal, String piso, String numero) {
 
@@ -99,6 +102,49 @@ public class UsuarioModelo {
             direccionesEnvio = new ArrayList<>();
         }
         direccionesEnvio.add(direccionCompleta.toString());
+        return direccionCompleta.toString();
+    }
+
+    // METODO PARA AGREGAR LAS DIRECCIONES DE FACTURACION:
+    public String agregarDireccionFacturacion(String direccion, String provincia, String puerta,
+            String codigoPostal, String piso, String numero) {
+
+        if (codigoPostal == null || codigoPostal.isEmpty()
+                || direccion == null || direccion.isEmpty()
+                || provincia == null || provincia.isEmpty()
+                || numero == null || numero.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "El código postal, la dirección, la provincia y el número son obligatorios.");
+        }
+
+        StringBuilder direccionCompleta = new StringBuilder();
+        direccionCompleta.append("Código Postal: ").append(codigoPostal.trim()).append(", ");
+        direccionCompleta.append("Dirección: ").append(direccion.trim()).append(", ");
+        direccionCompleta.append("Provincia: ").append(provincia.trim()).append(", ");
+        direccionCompleta.append("Número: ").append(numero.trim()).append(", ");
+
+        if (puerta != null && !puerta.isEmpty()) {
+            direccionCompleta.append("Puerta: ").append(puerta.trim()).append(", ");
+        }
+        if (piso != null && !piso.isEmpty()) {
+            direccionCompleta.append("Piso: ").append(piso.trim()).append(", ");
+        }
+
+        // Eliminar la coma al final
+        if (direccionCompleta.length() > 0) {
+            direccionCompleta.delete(direccionCompleta.length() - 2, direccionCompleta.length());
+        }
+
+        // Si existe no lo añado al array
+        if (direcionesFacturacion != null && direcionesFacturacion.contains(direccionCompleta.toString())) {
+            return direccionCompleta.toString();
+        }
+
+        // Agregar la nueva dirección a la lista
+        if (direcionesFacturacion == null) {
+            direcionesFacturacion = new ArrayList<>();
+        }
+        direcionesFacturacion.add(direccionCompleta.toString());
         return direccionCompleta.toString();
     }
 

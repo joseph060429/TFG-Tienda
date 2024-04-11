@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.tienda.backend.DTO.DTOPedido.CrearPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.EmpresaAutonomoDireccionFacturacionDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.ParticularDireccionFacturacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
@@ -43,9 +45,19 @@ public class UsuarioPedidosController {
 
     // CONTROLADOR PARA CREAR UN PEDIDO
     @PostMapping("/crearPedido")
+    // public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO
+    // crearPedidoDTO,
+    // @RequestHeader("Authorization") String token, HttpSession ses) {
+    // return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
+    // crearPedidoDTO.getProductos(), ses);
+    // }
+
     public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
             @RequestHeader("Authorization") String token, HttpSession ses) {
-        return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils, crearPedidoDTO.getProductos(), ses);
+        System.out.println("PARTICULAR CONTROLLER " + crearPedidoDTO);
+        System.out.println("crearPedidoDTO " + crearPedidoDTO);
+        return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
+                crearPedidoDTO.getProductos(), ses);
     }
 
     // CONTROLADOR PARA ELIMINAR UN PEDIDO

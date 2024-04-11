@@ -57,7 +57,10 @@ public class PedidosModelo {
 
     private String estado;
 
-    private String direccionEnvio;
+    private String direccionCompletaEnvio;
+
+    // Lo he puesto ahora
+    public String direccionCompletaFacturacion;
 
     private Long numTelefono;
 

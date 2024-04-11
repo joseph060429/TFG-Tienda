@@ -1,6 +1,7 @@
 package com.proyecto.tienda.backend.service.PedidoServicio;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.CrearPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.EmpresaAutonomoDireccionFacturacionDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.ParticularDireccionFacturacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
+import com.proyecto.tienda.backend.UtilEnum.EFactura;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.UtilEnum.EPedidoPago;
 import com.proyecto.tienda.backend.models.PedidosModelo;
@@ -47,6 +51,91 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     private ResendUtil resend;
 
     // IMPLEMENTACION DEL METODO PARA CREAR EL PEDIDO
+    // @Transactional
+    // @Override
+    // public ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String
+    // token, JwtUtils jwtUtils,
+    // List<ProductoModelo> productosModelo, HttpSession ses) {
+
+    // try {
+    // String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
+    // Optional<UsuarioModelo> usuarioModelo =
+    // buscarUsuarioPorEmail(emailFromToken);
+
+    // if (!usuarioModelo.isPresent()) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body("Error al crear el pedido: Usuario no encontrado");
+    // }
+
+    // UsuarioModelo usuario = usuarioModelo.get();
+
+    // System.out.println("NOMBRE USUARIO " + usuario.getNombre());
+    // System.out.println("APELLIDO DEL USUARIO " + usuario.getApellido());
+
+    // PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
+
+    // System.out.println("ID PEDIDO "+ pedido.get_id());
+
+    // // Establezco el numero de telefono, lo hice para evitar que el repartidor
+    // vaya
+    // // a casa y si la persona no esta, tenga un sitio donde dejarlo
+    // Long numTele = crearPedidoDTO.getNumTelefono();
+    // pedido.setNumTelefono(numTele);
+
+    // // Añado la direccion de envio
+    // String direccionEnvio =
+    // anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
+    // crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(),
+    // crearPedidoDTO.getNumero(),
+    // crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
+
+    // ResponseEntity<?> resultadoPagoValidacion =
+    // validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
+
+    // if (resultadoPagoValidacion != null) {
+    // return resultadoPagoValidacion;
+    // }
+
+    // // Genero una nueva lista con los productos pedidos
+    // List<ProductoPedidoDTO> listaNueva =
+    // generarListaProductosPedido(productosModelo);
+    // pedido.setProductos(listaNueva);
+
+    // System.out.println("NOMBRE PRODUCTO " + listaNueva.get(0).getNombre());
+    // System.out.println("MARCA PRODUCTO " + listaNueva.get(0).getMarca());
+    // System.out.println("PRECIO PRODUCTO " +
+    // listaNueva.get(0).getPrecioProducto());
+    // System.out.println("CANTIDAD PRODUCTO " +
+    // listaNueva.get(0).getCantidadPedida());
+    // // Calculo el precio total sumando todos los productos de ese pedido
+    // double total = 0.0;
+    // for (ProductoPedidoDTO productoPedido : listaNueva) {
+    // total += productoPedido.getPrecioProducto() *
+    // productoPedido.getCantidadPedida();
+    // }
+    // System.out.println("TOTAL " + total);
+
+    // // Establecezco la fecha del pedido
+    // crearPedidoDTO.setFechaPedido();
+    // pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
+
+    // // Establezco la direccion del pedido
+    // pedido.setDireccionEnvio(direccionEnvio);
+
+    // System.out.println("DIRECCION DE ENVIO "+ direccionEnvio);
+
+    // //
+    // ses.setAttribute("pedido", pedido);
+
+    // return paypalServicio.hacerPago(pedido, ses);
+
+    // } catch (RuntimeException e) {
+    // e.getMessage();
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el
+    // pedido: " + e.getMessage());
+    // }
+    // }
+
     @Transactional
     @Override
     public ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
@@ -63,7 +152,12 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
             UsuarioModelo usuario = usuarioModelo.get();
 
+            // System.out.println("NOMBRE USUARIO " + usuario.getNombre());
+            // System.out.println("APELLIDO DEL USUARIO " + usuario.getApellido());
+
             PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
+
+            // System.out.println("ID PEDIDO " + pedido.get_id());
 
             // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya
             // a casa y si la persona no esta, tenga un sitio donde dejarlo
@@ -74,6 +168,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             String direccionEnvio = anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
                     crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(), crearPedidoDTO.getNumero(),
                     crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
+            pedido.setDireccionCompletaEnvio(direccionEnvio);
 
             ResponseEntity<?> resultadoPagoValidacion = validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
 
@@ -85,12 +180,71 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             List<ProductoPedidoDTO> listaNueva = generarListaProductosPedido(productosModelo);
             pedido.setProductos(listaNueva);
 
+            // System.out.println("NOMBRE PRODUCTO " + listaNueva.get(0).getNombre());
+            // System.out.println("MARCA PRODUCTO " + listaNueva.get(0).getMarca());
+            // System.out.println("PRECIO PRODUCTO " +
+            // listaNueva.get(0).getPrecioProducto());
+            // System.out.println("CANTIDAD PRODUCTO " +
+            // listaNueva.get(0).getCantidadPedida());
+            // Calculo el precio total sumando todos los productos de ese pedido
+            double total = 0.0;
+            for (ProductoPedidoDTO productoPedido : listaNueva) {
+                total += productoPedido.getPrecioProducto() * productoPedido.getCantidadPedida();
+            }
+            // System.out.println("TOTAL " + total);
+
             // Establecezco la fecha del pedido
             crearPedidoDTO.setFechaPedido();
             pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
 
-            // Establezco la direccion del pedido
-            pedido.setDireccionEnvio(direccionEnvio);
+            // Convertir el tipo de factura del DTO al enum EFactura
+            try {
+                ParticularDireccionFacturacionDTO particular = crearPedidoDTO.getParticularDireccionFacturacionDTO();
+                EFactura tipoFacturacion = EFactura.valueOf(crearPedidoDTO.getTipoFacturacion().trim().toUpperCase());
+                System.out.println("FACTURACION " + tipoFacturacion);
+
+                // Validar el tipo de factura seleccionado
+                if (tipoFacturacion == null) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("Error al crear el pedido: Tipo de factura no válido");
+                }
+
+                // Establecer la dirección de facturación según el tipo de factura seleccionado
+                if (tipoFacturacion == EFactura.PARTICULAR) {
+                    // Crear instancia del DTO para la dirección de facturación de particulares
+                    ParticularDireccionFacturacionDTO particularDTO = new ParticularDireccionFacturacionDTO();
+                    System.out.println("particular dto " + particularDTO);
+                    System.out.println("PARTICULAR " + particular);
+
+                    // Valores del dto particular
+                    particularDTO.setNombreFacturacion((particular.getNombreFacturacion()));
+                    particularDTO.setApellidoFacturacion(particular.getApellidoFacturacion());
+                    particularDTO.setNumTelefonoFacturacion(particular.getNumTelefonoFacturacion());
+                    particularDTO.setDireccionDeFacturacion(particular.getDireccionDeFacturacion());
+                    particularDTO.setCodigoPostalDeFacturacion(particular.getCodigoPostalDeFacturacion());
+                    particularDTO.setProvinciaDeFacturacion(particular.getProvinciaDeFacturacion());
+                    particularDTO.setNumeroDeFacturacion(particular.getNumeroDeFacturacion());
+                    particularDTO.setPisoDeFacturacion(particular.getPisoDeFacturacion());
+                    particularDTO.setPuertaDeFacturacion(particular.getPuertaDeFacturacion());
+
+                    String direccionFacturacio = construirDireccionFacturacion(particularDTO);
+                    pedido.setDireccionCompletaFacturacion(direccionFacturacio);
+
+                    System.out.println("PARTICULAR DTO " + particularDTO);
+
+                    System.out.println("DIRECCION COMPLETA DE FACTURACION " + direccionFacturacio);
+
+                } else if (tipoFacturacion == EFactura.EMPRESA_AUTONOMO) {
+                    // Lógica para la dirección de facturación de empresas o autónomos
+                }
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Error al crear el pedido: Tipo de factura no válido. Los valores permitidos son: "
+                                + Arrays.toString(EFactura.values()));
+            }
+
+
+        
 
             //
             ses.setAttribute("pedido", pedido);
@@ -101,6 +255,36 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             e.getMessage();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el pedido: " + e.getMessage());
         }
+    }
+
+    // METODO PARA CONTRUIR LA DIRECCION DE FACTURACION PARTICULAR
+    private String construirDireccionFacturacion(ParticularDireccionFacturacionDTO particularDTO) {
+
+        // Construir la dirección de facturación utilizando los datos recibidos
+
+        // direccionCompleta.append("Código Postal:
+        // ").append(codigoPostal.trim()).append(", ");
+        StringBuilder direccionFacturacionBuilder = new StringBuilder();
+        direccionFacturacionBuilder.append("Nombre/s: ").append(particularDTO.getNombreFacturacion()).append(" ");
+        direccionFacturacionBuilder.append("Apellidos: ").append(particularDTO.getApellidoFacturacion()).append(", ");
+        direccionFacturacionBuilder.append("Direccion: ").append(particularDTO.getDireccionDeFacturacion())
+                .append(", ");
+        direccionFacturacionBuilder.append("Numero de telefono: ").append(particularDTO.getNumTelefonoFacturacion())
+                .append(", ");
+        direccionFacturacionBuilder.append("Codigo Postal: ").append(particularDTO.getCodigoPostalDeFacturacion())
+                .append(", ");
+        direccionFacturacionBuilder.append("Nombre: ").append(particularDTO.getProvinciaDeFacturacion()).append(", ");
+        direccionFacturacionBuilder.append(particularDTO.getNumeroDeFacturacion()).append(", ");
+        if (particularDTO.getPisoDeFacturacion() != null && !particularDTO.getPisoDeFacturacion().isEmpty()) {
+            direccionFacturacionBuilder.append("Piso: ").append(particularDTO.getPisoDeFacturacion()).append(", ");
+        }
+        if (particularDTO.getPuertaDeFacturacion() != null && !particularDTO.getPuertaDeFacturacion().isEmpty()) {
+            direccionFacturacionBuilder.append("Puerta: ").append(particularDTO.getPuertaDeFacturacion());
+        }
+
+        // Devolver la dirección de facturación construida
+        return direccionFacturacionBuilder.toString();
+
     }
 
     // IMPLEMENTACION DEL METODO PARA LA DIRECCION DE ENVIO
@@ -452,7 +636,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         pedidoDTO.setNumPedido(pedido.getNumPedido().intValue());
         pedidoDTO.setTipoPago(pedido.getTipoPago());
         pedidoDTO.setEstado(pedido.getEstado());
-        pedidoDTO.setDireccionEnvio(pedido.getDireccionEnvio());
+        pedidoDTO.setDireccionEnvio(pedido.getDireccionCompletaEnvio());
         return pedidoDTO;
     }
 

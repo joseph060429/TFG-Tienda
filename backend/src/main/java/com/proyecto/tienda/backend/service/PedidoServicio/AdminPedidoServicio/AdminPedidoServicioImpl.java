@@ -120,7 +120,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
                 pedido.setNumPedido(pedido.getNumPedido());
                 pedido.setProductos(pedido.getProductos());
                 pedido.setTipoPago(pedido.getTipoPago());
-                pedido.setDireccionEnvio(pedido.getDireccionEnvio());
+                pedido.setDireccionCompletaEnvio(pedido.getDireccionCompletaEnvio());
 
                 // Creo el DTO de usuarioPedido y establezco en el pedido existente
                 UsuarioModelo usuarioModelo = pedido.getUsuario();
@@ -337,7 +337,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             usuarioRepositorio.save(usuarioBD);
 
             // Actualizo el pedido con la nueva dirección de envío
-            pedidoModelo.setDireccionEnvio(direccionEnvio);
+            pedidoModelo.setDireccionCompletaEnvio(direccionEnvio);
             // Guardo el pedido en la base de datos
             pedidoRepositorio.save(pedidoModelo);
 

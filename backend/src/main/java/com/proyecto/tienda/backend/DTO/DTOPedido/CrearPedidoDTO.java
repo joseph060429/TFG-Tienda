@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
 import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +40,10 @@ public class CrearPedidoDTO {
 
     @Unique
     private Long numPedido;
+
+    @NotBlank(message = "El tipo de facturacion no puede estar en blanco")
+    @NotNull(message = "El tipo de facturacion no puede estar en blanco")
+    private String tipoFacturacion;
 
     @DBRef
     @Field("productos") // Campo como seria almacenado en la base de datos
@@ -74,8 +80,14 @@ public class CrearPedidoDTO {
 
     @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String puerta;
-
+    
     private String direccionEnvio;
+
+    @Valid
+    private ParticularDireccionFacturacionDTO particularDireccionFacturacionDTO;
+
+    @Valid
+    private EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDireccionFacturacionDTO;
 
     @NotNull(message = "El número de teléfono, no puede estar en blanco")
     @Min(value = 100000000, message = "El número de teléfono debe tener al menos 9 dígitos")
