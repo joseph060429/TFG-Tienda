@@ -7,8 +7,11 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.proyecto.tienda.backend.DTO.DTOPedido.EmpresaAutonomoDireccionFacturacionDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.ParticularDireccionFacturacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.UsuarioPedidoDTO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,10 +62,15 @@ public class PedidosModelo {
 
     private String direccionCompletaEnvio;
 
-    // Lo he puesto ahora
     public String direccionCompletaFacturacion;
 
     private Long numTelefono;
+
+    @Valid
+    private ParticularDireccionFacturacionDTO particularDireccionFacturacionDTO;
+
+    @Valid
+    private EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDireccionFacturacionDTO;
 
     // METODO PARA ESTABLECER EL USUARIO A PARTIR DE UN USUARIOPEDIDODTO
     public void setUsuarioFromModelo(UsuarioModelo usuarioModelo) {

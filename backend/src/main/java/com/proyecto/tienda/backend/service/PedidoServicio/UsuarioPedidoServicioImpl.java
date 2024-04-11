@@ -197,9 +197,10 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             crearPedidoDTO.setFechaPedido();
             pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
 
-            // Convertir el tipo de factura del DTO al enum EFactura
             try {
                 ParticularDireccionFacturacionDTO particular = crearPedidoDTO.getParticularDireccionFacturacionDTO();
+                EmpresaAutonomoDireccionFacturacionDTO empresaAutonomo = crearPedidoDTO
+                        .getEmpresaAutonomoDireccionFacturacionDTO();
                 EFactura tipoFacturacion = EFactura.valueOf(crearPedidoDTO.getTipoFacturacion().trim().toUpperCase());
                 System.out.println("FACTURACION " + tipoFacturacion);
 
@@ -209,7 +210,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                             .body("Error al crear el pedido: Tipo de factura no válido");
                 }
 
-                // Establecer la dirección de facturación según el tipo de factura seleccionado
+                // Establezco la dirección de facturación según el tipo de factura seleccionado
                 if (tipoFacturacion == EFactura.PARTICULAR) {
                     // Crear instancia del DTO para la dirección de facturación de particulares
                     ParticularDireccionFacturacionDTO particularDTO = new ParticularDireccionFacturacionDTO();
@@ -227,7 +228,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     particularDTO.setPisoDeFacturacion(particular.getPisoDeFacturacion());
                     particularDTO.setPuertaDeFacturacion(particular.getPuertaDeFacturacion());
 
-                    String direccionFacturacio = construirDireccionFacturacion(particularDTO);
+                    String direccionFacturacio = construirDireccionFacturacionParticular(particularDTO);
                     pedido.setDireccionCompletaFacturacion(direccionFacturacio);
 
                     System.out.println("PARTICULAR DTO " + particularDTO);
@@ -235,7 +236,33 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     System.out.println("DIRECCION COMPLETA DE FACTURACION " + direccionFacturacio);
 
                 } else if (tipoFacturacion == EFactura.EMPRESA_AUTONOMO) {
-                    // Lógica para la dirección de facturación de empresas o autónomos
+                    EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDireccionFacturacionDTO = new EmpresaAutonomoDireccionFacturacionDTO();
+                    System.out.println("EMPRESA AUTONOMO DTO " + empresaAutonomoDireccionFacturacionDTO);
+                    // Valores del dto particular
+                    empresaAutonomoDireccionFacturacionDTO
+                            .setCifONifFacturacion(empresaAutonomo.getCifONifFacturacion());
+                    empresaAutonomoDireccionFacturacionDTO
+                            .setNumTelefonoFacturacion(empresaAutonomo.getNumTelefonoFacturacion());
+                    empresaAutonomoDireccionFacturacionDTO
+                            .setDireccionDeFacturacion(empresaAutonomo.getDireccionDeFacturacion());
+                    empresaAutonomoDireccionFacturacionDTO
+                            .setCodigoPostalDeFacturacion(empresaAutonomo.getCodigoPostalDeFacturacion());
+                    empresaAutonomoDireccionFacturacionDTO
+                            .setProvinciaDeFacturacion(empresaAutonomo.getProvinciaDeFacturacion());
+                    empresaAutonomoDireccionFacturacionDTO
+                            .setNumeroDeFacturacion(empresaAutonomo.getNumeroDeFacturacion());
+                    empresaAutonomoDireccionFacturacionDTO.setPisoDeFacturacion(empresaAutonomo.getPisoDeFacturacion());
+                    empresaAutonomoDireccionFacturacionDTO
+                            .setPuertaDeFacturacion(empresaAutonomo.getPuertaDeFacturacion());
+
+                    String direccionFacturacio = construirDireccionFacturacionAutonomoEmpresa(
+                            empresaAutonomoDireccionFacturacionDTO);
+                    pedido.setDireccionCompletaFacturacion(direccionFacturacio);
+
+                    System.out.println("PARTICULAR DTO " + empresaAutonomoDireccionFacturacionDTO);
+
+                    System.out.println("DIRECCION COMPLETA DE FACTURACION " + direccionFacturacio);
+
                 }
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -243,12 +270,9 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                                 + Arrays.toString(EFactura.values()));
             }
 
-
-        
-
             //
             ses.setAttribute("pedido", pedido);
-
+            // Mando a la pagina del pago del Pay-Pal antes de crear el pedido
             return paypalServicio.hacerPago(pedido, ses);
 
         } catch (RuntimeException e) {
@@ -258,12 +282,9 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     }
 
     // METODO PARA CONTRUIR LA DIRECCION DE FACTURACION PARTICULAR
-    private String construirDireccionFacturacion(ParticularDireccionFacturacionDTO particularDTO) {
+    private String construirDireccionFacturacionParticular(ParticularDireccionFacturacionDTO particularDTO) {
 
-        // Construir la dirección de facturación utilizando los datos recibidos
-
-        // direccionCompleta.append("Código Postal:
-        // ").append(codigoPostal.trim()).append(", ");
+        // Construyo la dirección de facturación del particular utilizando los datos recibidos
         StringBuilder direccionFacturacionBuilder = new StringBuilder();
         direccionFacturacionBuilder.append("Nombre/s: ").append(particularDTO.getNombreFacturacion()).append(" ");
         direccionFacturacionBuilder.append("Apellidos: ").append(particularDTO.getApellidoFacturacion()).append(", ");
@@ -282,7 +303,37 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             direccionFacturacionBuilder.append("Puerta: ").append(particularDTO.getPuertaDeFacturacion());
         }
 
-        // Devolver la dirección de facturación construida
+        // Devuelvo la dirección de facturación construida
+        return direccionFacturacionBuilder.toString();
+
+    }
+
+    // METODO PARA CONTRUIR LA DIRECCION DE FACTURACION AUTONO_EMPRESA
+    private String construirDireccionFacturacionAutonomoEmpresa(
+            EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDTO) {
+
+        // Construyo la dirección de facturación del autonomo_empresa utilizando los datos recibidos
+        StringBuilder direccionFacturacionBuilder = new StringBuilder();
+        direccionFacturacionBuilder.append("Cif/Nif: ").append(empresaAutonomoDTO.getCifONifFacturacion()).append(" ");
+        direccionFacturacionBuilder.append("Numero de telefono: ")
+                .append(empresaAutonomoDTO.getNumTelefonoFacturacion()).append(", ");
+        direccionFacturacionBuilder.append("Numero de telefono: ")
+                .append(empresaAutonomoDTO.getNumTelefonoFacturacion())
+                .append(", ");
+        direccionFacturacionBuilder.append("Codigo Postal: ").append(empresaAutonomoDTO.getCodigoPostalDeFacturacion())
+                .append(", ");
+        direccionFacturacionBuilder.append("Nombre: ").append(empresaAutonomoDTO.getProvinciaDeFacturacion())
+                .append(", ");
+        direccionFacturacionBuilder.append(empresaAutonomoDTO.getNumeroDeFacturacion()).append(", ");
+        if (empresaAutonomoDTO.getPisoDeFacturacion() != null && !empresaAutonomoDTO.getPisoDeFacturacion().isEmpty()) {
+            direccionFacturacionBuilder.append("Piso: ").append(empresaAutonomoDTO.getPisoDeFacturacion()).append(", ");
+        }
+        if (empresaAutonomoDTO.getPuertaDeFacturacion() != null
+                && !empresaAutonomoDTO.getPuertaDeFacturacion().isEmpty()) {
+            direccionFacturacionBuilder.append("Puerta: ").append(empresaAutonomoDTO.getPuertaDeFacturacion());
+        }
+
+        // Devuelvo la dirección de facturación construida
         return direccionFacturacionBuilder.toString();
 
     }
