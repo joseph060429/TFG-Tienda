@@ -50,91 +50,6 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     private ResendUtil resend;
 
     // IMPLEMENTACION DEL METODO PARA CREAR EL PEDIDO
-    // @Transactional
-    // @Override
-    // public ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String
-    // token, JwtUtils jwtUtils,
-    // List<ProductoModelo> productosModelo, HttpSession ses) {
-
-    // try {
-    // String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
-    // Optional<UsuarioModelo> usuarioModelo =
-    // buscarUsuarioPorEmail(emailFromToken);
-
-    // if (!usuarioModelo.isPresent()) {
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    // .body("Error al crear el pedido: Usuario no encontrado");
-    // }
-
-    // UsuarioModelo usuario = usuarioModelo.get();
-
-    // System.out.println("NOMBRE USUARIO " + usuario.getNombre());
-    // System.out.println("APELLIDO DEL USUARIO " + usuario.getApellido());
-
-    // PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
-
-    // System.out.println("ID PEDIDO "+ pedido.get_id());
-
-    // // Establezco el numero de telefono, lo hice para evitar que el repartidor
-    // vaya
-    // // a casa y si la persona no esta, tenga un sitio donde dejarlo
-    // Long numTele = crearPedidoDTO.getNumTelefono();
-    // pedido.setNumTelefono(numTele);
-
-    // // Añado la direccion de envio
-    // String direccionEnvio =
-    // anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
-    // crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(),
-    // crearPedidoDTO.getNumero(),
-    // crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
-
-    // ResponseEntity<?> resultadoPagoValidacion =
-    // validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
-
-    // if (resultadoPagoValidacion != null) {
-    // return resultadoPagoValidacion;
-    // }
-
-    // // Genero una nueva lista con los productos pedidos
-    // List<ProductoPedidoDTO> listaNueva =
-    // generarListaProductosPedido(productosModelo);
-    // pedido.setProductos(listaNueva);
-
-    // System.out.println("NOMBRE PRODUCTO " + listaNueva.get(0).getNombre());
-    // System.out.println("MARCA PRODUCTO " + listaNueva.get(0).getMarca());
-    // System.out.println("PRECIO PRODUCTO " +
-    // listaNueva.get(0).getPrecioProducto());
-    // System.out.println("CANTIDAD PRODUCTO " +
-    // listaNueva.get(0).getCantidadPedida());
-    // // Calculo el precio total sumando todos los productos de ese pedido
-    // double total = 0.0;
-    // for (ProductoPedidoDTO productoPedido : listaNueva) {
-    // total += productoPedido.getPrecioProducto() *
-    // productoPedido.getCantidadPedida();
-    // }
-    // System.out.println("TOTAL " + total);
-
-    // // Establecezco la fecha del pedido
-    // crearPedidoDTO.setFechaPedido();
-    // pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
-
-    // // Establezco la direccion del pedido
-    // pedido.setDireccionEnvio(direccionEnvio);
-
-    // System.out.println("DIRECCION DE ENVIO "+ direccionEnvio);
-
-    // //
-    // ses.setAttribute("pedido", pedido);
-
-    // return paypalServicio.hacerPago(pedido, ses);
-
-    // } catch (RuntimeException e) {
-    // e.getMessage();
-    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el
-    // pedido: " + e.getMessage());
-    // }
-    // }
-
     @Transactional
     @Override
     public ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
@@ -151,12 +66,12 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
             UsuarioModelo usuario = usuarioModelo.get();
 
-            // System.out.println("NOMBRE USUARIO " + usuario.getNombre());
-            // System.out.println("APELLIDO DEL USUARIO " + usuario.getApellido());
+            System.out.println("NOMBRE USUARIO " + usuario.getNombre());
+            System.out.println("APELLIDO DEL USUARIO " + usuario.getApellido());
 
             PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
 
-            // System.out.println("ID PEDIDO " + pedido.get_id());
+            System.out.println("ID PEDIDO " + pedido.get_id());
 
             // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya
             // a casa y si la persona no esta, tenga un sitio donde dejarlo
@@ -179,18 +94,22 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             List<ProductoPedidoDTO> listaNueva = generarListaProductosPedido(productosModelo);
             pedido.setProductos(listaNueva);
 
-            // System.out.println("NOMBRE PRODUCTO " + listaNueva.get(0).getNombre());
-            // System.out.println("MARCA PRODUCTO " + listaNueva.get(0).getMarca());
-            // System.out.println("PRECIO PRODUCTO " +
-            // listaNueva.get(0).getPrecioProducto());
-            // System.out.println("CANTIDAD PRODUCTO " +
-            // listaNueva.get(0).getCantidadPedida());
+            // Para imprimir todos los productos pedidos
+            for (ProductoPedidoDTO producto : listaNueva) {
+                System.out.println("NOMBRE PRODUCTO: " + producto.getNombre());
+                System.out.println("MARCA PRODUCTO: " + producto.getMarca());
+                System.out.println("PRECIO PRODUCTO: " + producto.getPrecioProducto());
+                System.out.println("CANTIDAD PRODUCTO: " + producto.getCantidadPedida());
+                System.out.println("--------------------------------------");
+            }
+
+
             // Calculo el precio total sumando todos los productos de ese pedido
             double total = 0.0;
             for (ProductoPedidoDTO productoPedido : listaNueva) {
                 total += productoPedido.getPrecioProducto() * productoPedido.getCantidadPedida();
             }
-            // System.out.println("TOTAL " + total);
+            System.out.println("TOTAL " + total);
 
             // Establecezco la fecha del pedido
             crearPedidoDTO.setFechaPedido();
@@ -201,6 +120,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             ResponseEntity<?> resultadoDireccionFacturacion = procesarDireccionFacturacion(usuario, crearPedidoDTO,
                     pedido);
             if (resultadoDireccionFacturacion != null) {
+                System.out.println("RESULTADO DIRECCION FACTURACION " + resultadoDireccionFacturacion);
                 return resultadoDireccionFacturacion;
             }
             ses.setAttribute("pedido", pedido);
@@ -222,13 +142,13 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     .getEmpresaAutonomoDireccionFacturacionDTO();
             EFactura tipoFacturacion = EFactura.valueOf(crearPedidoDTO.getTipoFacturacion().trim().toUpperCase());
 
-            // Validar el tipo de factura seleccionado
+            // Valido el tipo de factura seleccionado
             if (tipoFacturacion == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Error al crear el pedido: Tipo de factura no válido");
             }
 
-            // Establecer la dirección de facturación según el tipo de factura seleccionado
+            // Establezco la dirección de facturación según el tipo de factura seleccionado
             if (tipoFacturacion == EFactura.PARTICULAR) {
                 // Crear instancia del DTO para la dirección de facturación de particulares
                 ParticularDireccionFacturacionDTO particularDTO = new ParticularDireccionFacturacionDTO();
@@ -244,7 +164,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                 particularDTO.setPisoDeFacturacion(particular.getPisoDeFacturacion());
                 particularDTO.setPuertaDeFacturacion(particular.getPuertaDeFacturacion());
 
-                // Añadir la dirección de facturación particular al pedido
+                // Añado la dirección de facturación particular al pedido
                 String direccionFacturacionParticular = anadirDireccionDeFacturacionParticular(
                         particularDTO.getNombreFacturacion(),
                         particularDTO.getApellidoFacturacion(),
@@ -261,30 +181,34 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
             } else if (tipoFacturacion == EFactura.EMPRESA_AUTONOMO) {
                 EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDireccionFacturacionDTO = new EmpresaAutonomoDireccionFacturacionDTO();
-    
-            // Valores del dto particular
-            empresaAutonomoDireccionFacturacionDTO.setCifONifFacturacion(empresaAutonomo.getCifONifFacturacion());
-            empresaAutonomoDireccionFacturacionDTO.setNumTelefonoFacturacion(empresaAutonomo.getNumTelefonoFacturacion());
-            empresaAutonomoDireccionFacturacionDTO.setDireccionDeFacturacion(empresaAutonomo.getDireccionDeFacturacion());
-            empresaAutonomoDireccionFacturacionDTO.setCodigoPostalDeFacturacion(empresaAutonomo.getCodigoPostalDeFacturacion());
-            empresaAutonomoDireccionFacturacionDTO.setProvinciaDeFacturacion(empresaAutonomo.getProvinciaDeFacturacion());
-            empresaAutonomoDireccionFacturacionDTO.setNumeroDeFacturacion(empresaAutonomo.getNumeroDeFacturacion());
-            empresaAutonomoDireccionFacturacionDTO.setPisoDeFacturacion(empresaAutonomo.getPisoDeFacturacion());
-            empresaAutonomoDireccionFacturacionDTO.setPuertaDeFacturacion(empresaAutonomo.getPuertaDeFacturacion());
 
-            String direccionFacturacionAutoEmpresa = anadirDireccionDeFacturacionAutoEmpresa(
-                empresaAutonomoDireccionFacturacionDTO.getCifONifFacturacion(),
-                empresaAutonomoDireccionFacturacionDTO.getNumTelefonoFacturacion(),
-                empresaAutonomoDireccionFacturacionDTO.getDireccionDeFacturacion(),
-                empresaAutonomoDireccionFacturacionDTO.getCodigoPostalDeFacturacion(),
-                empresaAutonomoDireccionFacturacionDTO.getProvinciaDeFacturacion(),
-                empresaAutonomoDireccionFacturacionDTO.getNumeroDeFacturacion(),
-                empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion(),
-                empresaAutonomoDireccionFacturacionDTO.getPuertaDeFacturacion(),
+                // Valores del dto empresa/autonomo
+                empresaAutonomoDireccionFacturacionDTO.setCifONifFacturacion(empresaAutonomo.getCifONifFacturacion());
+                empresaAutonomoDireccionFacturacionDTO
+                        .setNumTelefonoFacturacion(empresaAutonomo.getNumTelefonoFacturacion());
+                empresaAutonomoDireccionFacturacionDTO
+                        .setDireccionDeFacturacion(empresaAutonomo.getDireccionDeFacturacion());
+                empresaAutonomoDireccionFacturacionDTO
+                        .setCodigoPostalDeFacturacion(empresaAutonomo.getCodigoPostalDeFacturacion());
+                empresaAutonomoDireccionFacturacionDTO
+                        .setProvinciaDeFacturacion(empresaAutonomo.getProvinciaDeFacturacion());
+                empresaAutonomoDireccionFacturacionDTO.setNumeroDeFacturacion(empresaAutonomo.getNumeroDeFacturacion());
+                empresaAutonomoDireccionFacturacionDTO.setPisoDeFacturacion(empresaAutonomo.getPisoDeFacturacion());
+                empresaAutonomoDireccionFacturacionDTO.setPuertaDeFacturacion(empresaAutonomo.getPuertaDeFacturacion());
+
+                String direccionFacturacionAutoEmpresa = anadirDireccionDeFacturacionAutoEmpresa(
+                        empresaAutonomoDireccionFacturacionDTO.getCifONifFacturacion(),
+                        empresaAutonomoDireccionFacturacionDTO.getNumTelefonoFacturacion(),
+                        empresaAutonomoDireccionFacturacionDTO.getDireccionDeFacturacion(),
+                        empresaAutonomoDireccionFacturacionDTO.getCodigoPostalDeFacturacion(),
+                        empresaAutonomoDireccionFacturacionDTO.getProvinciaDeFacturacion(),
+                        empresaAutonomoDireccionFacturacionDTO.getNumeroDeFacturacion(),
+                        empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion(),
+                        empresaAutonomoDireccionFacturacionDTO.getPuertaDeFacturacion(),
                         usuario);
 
                 pedido.setDireccionCompletaFacturacion(direccionFacturacionAutoEmpresa);
-            
+
             }
 
             // Si todo va bien, devuelve null para indicar que no hay errores en la
@@ -319,8 +243,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         }
     }
 
-    // IMPLEMENTACIO DEL METODO PARA CONTRUIR LA DIRECCION DE FACTURACION
-    // AUTONO_EMPRESA
+    // IMPLEMENTACIO DEL METODO PARA CONTRUIR LA DIRECCION DE FACTURACION AUTONO_EMPRESA
     public String anadirDireccionDeFacturacionAutoEmpresa(String cifONifFacturacion, Long numTelefonoFacturacion,
             String direccionDeFacturacion, String codigoPostalDeFacturacion, String provinciaDeFacturacion,
             String numeroDeFacturacion, String pisoDeFacturacion, String puertaDeFacturacion, UsuarioModelo usuario) {

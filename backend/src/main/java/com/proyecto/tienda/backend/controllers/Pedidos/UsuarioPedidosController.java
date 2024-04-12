@@ -51,8 +51,6 @@ public class UsuarioPedidosController {
     @PostMapping("/crearPedido")
     public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
             @RequestHeader("Authorization") String token, HttpSession ses) {
-        System.out.println("PARTICULAR CONTROLLER " + crearPedidoDTO);
-        System.out.println("crearPedidoDTO " + crearPedidoDTO);
         return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
                 crearPedidoDTO.getProductos(), ses);
     }
