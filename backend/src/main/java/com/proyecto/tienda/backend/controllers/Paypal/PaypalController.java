@@ -35,16 +35,14 @@ public class PaypalController {
     // CONTROLADOR DEL PAYPAL PARA CUANDO SE CREA UN NUEVO PEDIDO
     @GetMapping("/payment/success")
     public ResponseEntity<String> paymentSuccess(@RequestParam("paymentId") String paymentId,
-            @RequestParam("PayerID") String payerId, HttpSession session) {
+            @RequestParam("PayerID") String payerId, HttpSession ses) {
 
         try {
-
+           
             Payment payment = paypalServicio.executePayment(paymentId, payerId);
 
-            System.out.println(session.getAttribute("pedido"));
-
             // Traigo el pedido que se va a pagar
-            PedidosModelo pedido = (PedidosModelo) session.getAttribute("pedido");
+            PedidosModelo pedido = (PedidosModelo) ses.getAttribute("pedido");
 
             // Traigo la lista de los productosPedido para restar los productos antes de
             // guardar el pedido en la base de datos
@@ -65,6 +63,7 @@ public class PaypalController {
                             .body("No se pudo restar la cantidad del producto del stock.");
                 }
             }
+            
 
             // Guardo el pedido en la base de datos
             pedidoRepositorio.save(pedido);
