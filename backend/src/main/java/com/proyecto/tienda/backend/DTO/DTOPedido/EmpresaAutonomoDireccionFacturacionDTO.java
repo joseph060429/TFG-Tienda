@@ -14,7 +14,7 @@ public class EmpresaAutonomoDireccionFacturacionDTO {
 
     @NotNull(message = "El campo 'C.I.F/N.I.F' es obligatorio")
     @NotBlank(message = "El campo 'C.I.F/N.I.F' no puede estar en blanco")
-    @Pattern(regexp = "^\\S{9}$", message = "La cadena debe tener exactamente 9 caracteres y no puede contener espacios en blanco")
+    @Pattern(regexp = "^\\S{9}$", message = "El campo 'C.I.F/N.I.F' debe tener exactamente 9 caracteres y no puede contener espacios en blanco")
     private String cifONifFacturacion;
 
     @NotNull(message = "El número de teléfono, no puede estar en blanco")

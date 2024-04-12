@@ -48,6 +48,8 @@ public class CrearUsuarioDTO {
     // private String direccionEnvio;
     private List<String> direccionesEnvio;
 
+    private List<String> direcionesFacturacion;
+
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL USUARIO
     public void setFechaCreacion() {
         // Obtengo la fecha actual

@@ -99,7 +99,6 @@ public class PayPalServicio {
     // METODO PARA HACER EL PAGO
     public ResponseEntity<String> hacerPago(PedidosModelo pedido, HttpSession ses) {
         try {
-
             // Traigo todos los productos que ha pedido ese usuario
             List<ProductoPedidoDTO> productos = pedido.getProductos();
 
@@ -127,7 +126,7 @@ public class PayPalServicio {
                     HttpHeaders headers = new HttpHeaders();
 
                     // Almaceno el pedido en una session http
-                    ses.setAttribute("pedido", pedido);
+                        ses.setAttribute("pedido", pedido);
                     // Agrego la URL de aprobacion al encabezado de redireccion
                     headers.add("Location", href);
                     // Creo una respuesta HTTP con estado "FOUND" para redireccionar al cliente

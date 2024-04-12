@@ -63,7 +63,7 @@ public class UsuarioModelo {
 
     // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO, SI SE REPITEN NO SE
     // AGREGAN AL ARRAY
-    public String agregarDireccionCompleta(String direccion, String provincia, String puerta,
+    public String agregarDireccionCompletaATablaUsuario(String direccion, String provincia, String puerta,
             String codigoPostal, String piso, String numero) {
 
         if (codigoPostal == null || codigoPostal.isEmpty()
@@ -105,47 +105,123 @@ public class UsuarioModelo {
         return direccionCompleta.toString();
     }
 
-    // METODO PARA AGREGAR LAS DIRECCIONES DE FACTURACION:
-    public String agregarDireccionFacturacion(String direccion, String provincia, String puerta,
-            String codigoPostal, String piso, String numero) {
+    // METODO PARA AGREGAR LAS DIRECCIONES DE FACTURACION PARTICULAR:
+    public String construirDireccionFacturacionParticular(String nombreFacturacion,
+            String apellidoFacturacion, Long numTelefonoFacturacion,
+            String direccionDeFacturacion, String codigoPostalDeFacturacion, String provinciaDeFacturacion,
+            String numeroDeFacturacion, String pisoDeFacturacion, String puertaDeFacturacion) {
 
-        if (codigoPostal == null || codigoPostal.isEmpty()
-                || direccion == null || direccion.isEmpty()
-                || provincia == null || provincia.isEmpty()
-                || numero == null || numero.isEmpty()) {
+        if (nombreFacturacion == null || nombreFacturacion.isEmpty()
+                || apellidoFacturacion == null || apellidoFacturacion.isEmpty()
+                || numTelefonoFacturacion == null
+                || direccionDeFacturacion == null || direccionDeFacturacion.isEmpty()
+                || codigoPostalDeFacturacion == null || codigoPostalDeFacturacion.isEmpty()
+                || provinciaDeFacturacion == null || provinciaDeFacturacion.isEmpty()
+                || numeroDeFacturacion == null || numeroDeFacturacion.isEmpty()) {
             throw new IllegalArgumentException(
-                    "El código postal, la dirección, la provincia y el número son obligatorios.");
+                    "El nombre, el apellido, el número de telefono, la dirección, el código postal, la provincia y el número son obligatorios.");
         }
 
-        StringBuilder direccionCompleta = new StringBuilder();
-        direccionCompleta.append("Código Postal: ").append(codigoPostal.trim()).append(", ");
-        direccionCompleta.append("Dirección: ").append(direccion.trim()).append(", ");
-        direccionCompleta.append("Provincia: ").append(provincia.trim()).append(", ");
-        direccionCompleta.append("Número: ").append(numero.trim()).append(", ");
+        // Convertir el Long a String
+        String numTelefonoStr = String.valueOf(numTelefonoFacturacion);
 
-        if (puerta != null && !puerta.isEmpty()) {
-            direccionCompleta.append("Puerta: ").append(puerta.trim()).append(", ");
+        // Validar la longitud del número de teléfono
+        if (numTelefonoStr.length() != 9) {
+            throw new IllegalArgumentException("El número de teléfono debe tener 9 dígitos.");
         }
-        if (piso != null && !piso.isEmpty()) {
-            direccionCompleta.append("Piso: ").append(piso.trim()).append(", ");
+
+        StringBuilder direccionCompletaFacturacion = new StringBuilder();
+        direccionCompletaFacturacion.append("Facturacion Particular: ");
+        direccionCompletaFacturacion.append("Nombre: ").append(nombreFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Apellido: ").append(apellidoFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
+        direccionCompletaFacturacion.append("Direccion: ").append(direccionDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Codigo Postal: ").append(codigoPostalDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Provincia: ").append(provinciaDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Número: ").append(numeroDeFacturacion.trim()).append(", ");
+
+        if (puertaDeFacturacion != null && !puertaDeFacturacion.isEmpty()) {
+            direccionCompletaFacturacion.append("Puerta: ").append(puertaDeFacturacion.trim()).append(", ");
+        }
+        if (pisoDeFacturacion != null && !pisoDeFacturacion.isEmpty()) {
+            direccionCompletaFacturacion.append("Piso: ").append(pisoDeFacturacion.trim()).append(", ");
         }
 
         // Eliminar la coma al final
-        if (direccionCompleta.length() > 0) {
-            direccionCompleta.delete(direccionCompleta.length() - 2, direccionCompleta.length());
+        if (direccionCompletaFacturacion.length() > 0) {
+            direccionCompletaFacturacion.delete(direccionCompletaFacturacion.length() - 2,
+                    direccionCompletaFacturacion.length());
         }
 
         // Si existe no lo añado al array
-        if (direcionesFacturacion != null && direcionesFacturacion.contains(direccionCompleta.toString())) {
-            return direccionCompleta.toString();
+        if (direcionesFacturacion != null && direcionesFacturacion.contains(direccionCompletaFacturacion.toString())) {
+            return direccionCompletaFacturacion.toString();
         }
 
         // Agregar la nueva dirección a la lista
         if (direcionesFacturacion == null) {
             direcionesFacturacion = new ArrayList<>();
         }
-        direcionesFacturacion.add(direccionCompleta.toString());
-        return direccionCompleta.toString();
+        direcionesFacturacion.add(direccionCompletaFacturacion.toString());
+        return direccionCompletaFacturacion.toString();
+    }
+
+    // METODO PARA OBTENER LA DIRECCION DE FACTURACION AUTONOMO_EMPRESA
+    public String construirDireccionFacturacionAutoEmpresa(String cifONifFacturacion, Long numTelefonoFacturacion,
+            String direccionDeFacturacion, String codigoPostalDeFacturacion, String provinciaDeFacturacion,
+            String numeroDeFacturacion, String pisoDeFacturacion, String puertaDeFacturacion) {
+
+        if (cifONifFacturacion == null || cifONifFacturacion.isEmpty()
+                || numTelefonoFacturacion == null
+                || direccionDeFacturacion == null || direccionDeFacturacion.isEmpty()
+                || codigoPostalDeFacturacion == null || codigoPostalDeFacturacion.isEmpty()
+                || provinciaDeFacturacion == null || provinciaDeFacturacion.isEmpty()
+                || numeroDeFacturacion == null || numeroDeFacturacion.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "El Cif/Nif, el número de telefono, la dirección, el código postal, la provincia y el número son obligatorios.");
+        }
+
+        // Convertir el Long a String
+        String numTelefonoStr = String.valueOf(numTelefonoFacturacion);
+
+        // Validar la longitud del número de teléfono
+        if (numTelefonoStr.length() != 9) {
+            throw new IllegalArgumentException("El número de teléfono debe tener 9 dígitos.");
+        }
+
+        StringBuilder direccionCompletaFacturacion = new StringBuilder();
+        direccionCompletaFacturacion.append("Facturacion Empresa/Autonomo: ");
+        direccionCompletaFacturacion.append("Cif/Nif: ").append(cifONifFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
+        direccionCompletaFacturacion.append("Direccion: ").append(direccionDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Codigo Postal: ").append(codigoPostalDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Provincia: ").append(provinciaDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Número: ").append(numeroDeFacturacion.trim()).append(", ");
+
+        if (puertaDeFacturacion != null && !puertaDeFacturacion.isEmpty()) {
+            direccionCompletaFacturacion.append("Puerta: ").append(puertaDeFacturacion.trim()).append(", ");
+        }
+        if (pisoDeFacturacion != null && !pisoDeFacturacion.isEmpty()) {
+            direccionCompletaFacturacion.append("Piso: ").append(pisoDeFacturacion.trim()).append(", ");
+        }
+
+        // Eliminar la coma al final
+        if (direccionCompletaFacturacion.length() > 0) {
+            direccionCompletaFacturacion.delete(direccionCompletaFacturacion.length() - 2,
+                    direccionCompletaFacturacion.length());
+        }
+
+        // Si existe no lo añado al array
+        if (direcionesFacturacion != null && direcionesFacturacion.contains(direccionCompletaFacturacion.toString())) {
+            return direccionCompletaFacturacion.toString();
+        }
+
+        // Agregar la nueva dirección a la lista
+        if (direcionesFacturacion == null) {
+            direcionesFacturacion = new ArrayList<>();
+        }
+        direcionesFacturacion.add(direccionCompletaFacturacion.toString());
+        return direccionCompletaFacturacion.toString();
     }
 
 }

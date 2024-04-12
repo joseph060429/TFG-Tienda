@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.tienda.backend.DTO.DTOPedido.CrearPedidoDTO;
-import com.proyecto.tienda.backend.DTO.DTOPedido.EmpresaAutonomoDireccionFacturacionDTO;
-import com.proyecto.tienda.backend.DTO.DTOPedido.ParticularDireccionFacturacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
@@ -44,14 +42,13 @@ public class UsuarioPedidosController {
     private JwtUtils jwtUtils;
 
     // CONTROLADOR PARA CREAR UN PEDIDO
-    @PostMapping("/crearPedido")
-    // public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO
-    // crearPedidoDTO,
-    // @RequestHeader("Authorization") String token, HttpSession ses) {
-    // return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
-    // crearPedidoDTO.getProductos(), ses);
-    // }
 
+    /*
+     * Cuando en postman tenga la peticion lista, en Code asegurarme de estar
+     * copiando HTTP, y no otra cosa
+     */
+
+    @PostMapping("/crearPedido")
     public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
             @RequestHeader("Authorization") String token, HttpSession ses) {
         System.out.println("PARTICULAR CONTROLLER " + crearPedidoDTO);

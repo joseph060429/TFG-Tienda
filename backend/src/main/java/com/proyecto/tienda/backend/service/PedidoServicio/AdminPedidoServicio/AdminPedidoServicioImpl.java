@@ -329,7 +329,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
 
             // Agrego la dirección de envío al usuario con el metodo de agrgar direccion
             // completa que tengo en el modelo
-            String direccionEnvio = usuarioBD.agregarDireccionCompleta(direccion, provincia, puerta,
+            String direccionEnvio = usuarioBD.agregarDireccionCompletaATablaUsuario(direccion, provincia, puerta,
                     codigoPostal, piso,
                     numero);
             System.out.println("DIRECCION ENVIO " + direccionEnvio);
