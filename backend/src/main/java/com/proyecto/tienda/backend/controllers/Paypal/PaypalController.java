@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
+import com.proyecto.tienda.backend.DTO.DTOPedido.FacturaDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
@@ -63,8 +64,8 @@ public class PaypalController {
                             .body("No se pudo restar la cantidad del producto del stock.");
                 }
             }
-            
 
+            
             // Guardo el pedido en la base de datos
             pedidoRepositorio.save(pedido);
 

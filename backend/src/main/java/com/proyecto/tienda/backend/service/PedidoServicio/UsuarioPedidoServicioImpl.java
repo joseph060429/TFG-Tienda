@@ -8,12 +8,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.CrearPedidoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.EmpresaAutonomoDireccionFacturacionDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.FacturaDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ParticularDireccionFacturacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
@@ -33,6 +35,12 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
+
+    @Value("${ruta.archivo.pdf}")
+    private String rutaArchivoPdf;
+
+    // @Value("${ruta.logo}")
+    // private String rutaLogo;
 
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
@@ -66,12 +74,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
             UsuarioModelo usuario = usuarioModelo.get();
 
-            System.out.println("NOMBRE USUARIO " + usuario.getNombre());
-            System.out.println("APELLIDO DEL USUARIO " + usuario.getApellido());
-
             PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
-
-            System.out.println("ID PEDIDO " + pedido.get_id());
 
             // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya
             // a casa y si la persona no esta, tenga un sitio donde dejarlo
@@ -94,22 +97,11 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             List<ProductoPedidoDTO> listaNueva = generarListaProductosPedido(productosModelo);
             pedido.setProductos(listaNueva);
 
-            // Para imprimir todos los productos pedidos
-            for (ProductoPedidoDTO producto : listaNueva) {
-                System.out.println("NOMBRE PRODUCTO: " + producto.getNombre());
-                System.out.println("MARCA PRODUCTO: " + producto.getMarca());
-                System.out.println("PRECIO PRODUCTO: " + producto.getPrecioProducto());
-                System.out.println("CANTIDAD PRODUCTO: " + producto.getCantidadPedida());
-                System.out.println("--------------------------------------");
-            }
-
-
             // Calculo el precio total sumando todos los productos de ese pedido
             double total = 0.0;
             for (ProductoPedidoDTO productoPedido : listaNueva) {
                 total += productoPedido.getPrecioProducto() * productoPedido.getCantidadPedida();
             }
-            System.out.println("TOTAL " + total);
 
             // Establecezco la fecha del pedido
             crearPedidoDTO.setFechaPedido();
@@ -120,9 +112,13 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             ResponseEntity<?> resultadoDireccionFacturacion = procesarDireccionFacturacion(usuario, crearPedidoDTO,
                     pedido);
             if (resultadoDireccionFacturacion != null) {
-                System.out.println("RESULTADO DIRECCION FACTURACION " + resultadoDireccionFacturacion);
                 return resultadoDireccionFacturacion;
             }
+
+            // Generar factura PDF
+            FacturaDTO facturaDTO = new FacturaDTO(usuario, pedido, listaNueva, total);
+            facturaDTO.generarFacturaPDF(facturaDTO, rutaArchivoPdf);
+
             ses.setAttribute("pedido", pedido);
 
             // Mando a la pagina del pago del Pay-Pal antes de crear el pedido
@@ -150,7 +146,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
             // Establezco la dirección de facturación según el tipo de factura seleccionado
             if (tipoFacturacion == EFactura.PARTICULAR) {
-                // Crear instancia del DTO para la dirección de facturación de particulares
+                // Creo una instancia del DTO para la dirección de facturación de particulares
                 ParticularDireccionFacturacionDTO particularDTO = new ParticularDireccionFacturacionDTO();
 
                 // Asignar los valores del DTO particular
@@ -243,7 +239,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         }
     }
 
-    // IMPLEMENTACIO DEL METODO PARA CONTRUIR LA DIRECCION DE FACTURACION AUTONO_EMPRESA
+    // IMPLEMENTACIO DEL METODO PARA CONTRUIR LA DIRECCION DE FACTURACION
+    // AUTONO_EMPRESA
     public String anadirDireccionDeFacturacionAutoEmpresa(String cifONifFacturacion, Long numTelefonoFacturacion,
             String direccionDeFacturacion, String codigoPostalDeFacturacion, String provinciaDeFacturacion,
             String numeroDeFacturacion, String pisoDeFacturacion, String puertaDeFacturacion, UsuarioModelo usuario) {
@@ -268,7 +265,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             String numero, String piso, String puerta, UsuarioModelo usuario) {
         try {
             // Agrego la dirección de envío al usuario
-            String direccionEnvio = usuario.agregarDireccionCompletaATablaUsuario(direccion, provincia, puerta,
+            String direccionEnvio = usuario.construirDireccionCompleta(direccion, provincia, puerta,
                     codigoPostal, piso,
                     numero);
 
