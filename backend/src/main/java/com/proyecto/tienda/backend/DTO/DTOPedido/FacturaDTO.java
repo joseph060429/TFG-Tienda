@@ -20,18 +20,16 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import java.io.IOException;
 import java.util.List;
+import java.io.ByteArrayOutputStream;
 
 import org.springframework.beans.factory.annotation.Value;
 
 import java.awt.Color;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class FacturaDTO {
 
-    @Value("${ruta.logo}")
-    private String rutaLogo;
+   
 
     private UsuarioModelo usuarioModelo;
     private PedidosModelo pedidosModelo;
@@ -46,13 +44,24 @@ public class FacturaDTO {
         this.total = total;
     }
 
+
+    @Value("${ruta.logo}")
+    private String rutaLogo;
+
     // Libreria Itext
     public void generarFacturaPDF(FacturaDTO facturaDTO, String rutaArchivo) {
 
         try {
+
             Document document = new Document(PageSize.A4);
             PdfWriter.getInstance(document, new FileOutputStream(rutaArchivo));
             document.open();
+
+            // Crear un flujo de bytes para almacenar el PDF en memoria
+            // ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
+            // Document document = new Document(PageSize.A4);
+            // PdfWriter.getInstance(document, pdfStream);
+            // document.open();
 
             // Configuración de estilos
             Font fuenteTitulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, Color.red);
@@ -61,6 +70,8 @@ public class FacturaDTO {
             Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
 
             // Agregar el logo de la empresa
+            // Image imagenLogo = Image.getInstance(rutaLogo);
+            // String rutaLogo = "backend/src/main/resources/util/Logo-Letra.png";
             Image imagenLogo = Image.getInstance(rutaLogo);
             imagenLogo.setAlignment(Element.ALIGN_CENTER);
             imagenLogo.scaleToFit(200, 200); // Aquí puedes ajustar el ancho y alto deseado
