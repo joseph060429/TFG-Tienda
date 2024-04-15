@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notificación de Retraso en el Pedido</title>
+    <title>Notificación de Registro de Pedido</title>
     <style>
-        body {
+       body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
@@ -28,18 +28,18 @@
 
         p {
             margin: 0 0 15px;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 1.5;
             color: #555555;
         }
 
-        .warning-box {
-            background-color: #ffc107;
-            color: #333333;
+        .info-box {
+            background-color: #4CAF50;
+            color: #ffffff;
             padding: 15px;
             border-radius: 8px;
             margin: 0 auto 20px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
         }
 
@@ -47,18 +47,20 @@
             margin-top: 20px;
             border-top: 2px solid #dddddd;
             padding-top: 10px;
-            font-size: 12px;
+            font-size: 14px;
             color: #777777;
         }
 
         .signature {
             margin-top: 20px;
-            font-size: 14px;
+            font-size: 16px;
             color: #444444;
         }
+
+        /* Estilo para la imagen */
         .logo {
             display: block;
-            margin: 0 auto 30px;;
+            margin: 0 auto 30px; /* Aumentado el espacio entre la imagen y el texto */
             max-width: 80%;
             height: auto;
             border-radius: 8px;
@@ -69,12 +71,15 @@
 
 <body>
     <div class="container">
-        <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d" alt="Logo de la empresa" class="logo">
+        <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d"
+            alt="Logo de la empresa" class="logo">
         <p>Estimado/a usuario,</p>
-        <p>Queremos informarte que tu pedido experimentará un ligero retraso y se entregará en unos días adicionales a la fecha originalmente prevista. Nos disculpamos por cualquier inconveniente que esto pueda causar.</p>
-        <div class="warning-box">¡Atención! Estamos trabajando diligentemente para resolver la situación y enviaremos tu pedido lo más pronto posible.</div>
-        <p>Te agradecemos tu comprensión y paciencia en este asunto.</p>
-        <p class="note">Nota: Esta es una notificación automática, por favor, no respondas a este correo electrónico.</p>
+        <p>¡Gracias por tu compra! Tu pedido ha sido registrado y estamos procesando tu solicitud. A continuación,
+            encontrarás adjunta la factura correspondiente a tu última compra en nuestra tienda.</p>
+        <div class="info-box">¡Atención! Asegúrate de revisar la factura para verificar los detalles de tu compra.</div>
+        <p>Si tienes alguna pregunta o inquietud, no dudes en contactarnos. Estamos aquí para ayudarte.</p>
+        <p class="note">Nota: Esta es una notificación automática, por favor, no respondas a este correo electrónico.
+        </p>
         <p class="signature">Atentamente,<br />Tu Equipo de Soporte</p>
     </div>
 </body>

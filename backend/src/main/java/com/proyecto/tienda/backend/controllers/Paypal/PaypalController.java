@@ -15,6 +15,8 @@ import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.service.Paypal.PayPalServicio;
 import com.proyecto.tienda.backend.service.PedidoServicio.UsuarioPedidoServicioImpl;
+import com.proyecto.tienda.backend.util.ResendUtil;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +35,18 @@ public class PaypalController {
     @Autowired
     private UsuarioPedidoServicioImpl usuarioPedidoServicioImpl;
 
+    @Autowired
+    private ResendUtil resend;
+
     // CONTROLADOR DEL PAYPAL PARA CUANDO SE CREA UN NUEVO PEDIDO
     @GetMapping("/payment/success")
     public ResponseEntity<String> paymentSuccess(@RequestParam("paymentId") String paymentId,
             @RequestParam("PayerID") String payerId, HttpSession ses) {
 
         try {
-           
+
+            FacturaDTO facturaDTO = (FacturaDTO) ses.getAttribute("factura");
+
             Payment payment = paypalServicio.executePayment(paymentId, payerId);
 
             // Traigo el pedido que se va a pagar
@@ -65,7 +72,9 @@ public class PaypalController {
                 }
             }
 
-            
+            // Envio un email al usuario con su factura cuando la compra ha sido exitosa
+            resend.enviarEmailFacturaPdf(pedido.getUsuario().getEmail(), facturaDTO);
+
             // Guardo el pedido en la base de datos
             pedidoRepositorio.save(pedido);
 

@@ -11,7 +11,6 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f44336;
             color: #ffffff;
             display: flex;
             align-items: center;
@@ -65,11 +64,20 @@
         a:hover {
             text-decoration: underline;
         }
+        .logo {
+            display: block;
+            margin: 0 auto 30px;;
+            max-width: 80%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d" alt="Logo de la empresa" class="logo">
         <p>Estimado/a Usuario,</p>
         <p>Lamentamos informarte que tu pedido con el ID {{_idPedido}} no pudo ser entregado debido a una dirección no válida o incompleta. Para garantizar la entrega exitosa de tu pedido, necesitamos que nos proporciones una dirección de envío precisa y válida.</p>
         <div class="error-box">¡Atención! Tu pedido no ha sido entregado debido a una dirección no válida.</div>

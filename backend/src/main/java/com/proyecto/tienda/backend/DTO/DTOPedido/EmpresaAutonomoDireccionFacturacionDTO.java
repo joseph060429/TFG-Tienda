@@ -24,7 +24,7 @@ public class EmpresaAutonomoDireccionFacturacionDTO {
 
     @NotNull(message = "La direccion no puede estar en blanco")
     @NotBlank(message = "La direccion no puede estar en blanco")
-    @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-Z]+(\\s[a-zA-Z]+)*){2,100}(?!\\s)$", message = "La dirección debe tener entre 2 y 100 caracteres y no puede empezar ni terminar con espacios en blanco")
+    @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-Z]+(\\s[a-zA-Z]+)*){2,100}(?!\\s)$", message = "La dirección debe tener entre 2 y 100 caracteres y no puede empezar,terminar o contener mas de un espacio en blanco")
     private String direccionDeFacturacion;
 
     @NotNull(message = "El codigo postal no puede estar en blanco")

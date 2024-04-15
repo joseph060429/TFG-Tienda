@@ -61,6 +61,29 @@ public class UsuarioModelo {
     // gestionará en la lógica de la aplicación y no necesariamente necesita
     // almacenarse permanentemente.
 
+    // METODO PARA GUARDAR BIEN LOS CAMPOS DE LAS DIRECCIONES DE ENVIO
+    public String convertirEstiloTitulo(String campo) {
+        StringBuilder resultado = new StringBuilder();
+        // boolean capitalizarSiguiente = true;
+
+        String[] palabras = campo.split(" ");
+
+        for (int i = 0; i < palabras.length; i++) {
+            String p = palabras[i];
+            Character c = p.charAt(0);
+            palabras[i] = p.replaceFirst(String.valueOf(c), String.valueOf(Character.toUpperCase(c)));
+            if (i == palabras.length) {
+                resultado.append(palabras[i]);
+            } else {
+                resultado.append(palabras[i] + " ");
+            }
+
+        }
+
+        System.out.println(resultado + " ESTILO TITULO");
+        return resultado.toString();
+    }
+
     // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO, SI SE REPITEN NO SE
     // AGREGAN AL ARRAY
     public String construirDireccionCompleta(String direccion, String provincia, String puerta,
@@ -101,7 +124,7 @@ public class UsuarioModelo {
         if (direccionesEnvio == null) {
             direccionesEnvio = new ArrayList<>();
         }
-        direccionesEnvio.add(direccionCompleta.toString());
+        direccionesEnvio.add(convertirEstiloTitulo(direccionCompleta.toString()));
         return direccionCompleta.toString();
     }
 
@@ -162,7 +185,8 @@ public class UsuarioModelo {
         if (direcionesFacturacion == null) {
             direcionesFacturacion = new ArrayList<>();
         }
-        direcionesFacturacion.add(direccionCompletaFacturacion.toString());
+
+        direcionesFacturacion.add(convertirEstiloTitulo(direccionCompletaFacturacion.toString()));
         return direccionCompletaFacturacion.toString();
     }
 
@@ -220,7 +244,7 @@ public class UsuarioModelo {
         if (direcionesFacturacion == null) {
             direcionesFacturacion = new ArrayList<>();
         }
-        direcionesFacturacion.add(direccionCompletaFacturacion.toString());
+        direcionesFacturacion.add(convertirEstiloTitulo(direccionCompletaFacturacion.toString()));
         return direccionCompletaFacturacion.toString();
     }
 

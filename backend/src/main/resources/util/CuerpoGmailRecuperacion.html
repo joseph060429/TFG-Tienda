@@ -40,7 +40,7 @@
             font-size: 18px;
             font-weight: bold;
             border-radius: 5px;
-            margin-top: 20px;
+            margin: 0 auto 20px;
         }
 
         .warning {
@@ -58,11 +58,23 @@
             font-size: 14px;
             color: #777777;
         }
+
+        
+        .logo {
+            display: block;
+            margin: 0 auto 30px;
+            max-width: 80%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d"
+            alt="Logo de la empresa" class="logo">
         <p>Estimado/a usuario,</p>
         <p>Recientemente has solicitado un cambio de contraseña. Para restablecer tu contraseña, utiliza el siguiente código de recuperación:</p>
         <div class="code-box">{{codigoRecuperacion}}</div>

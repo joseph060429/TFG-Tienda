@@ -36,11 +36,8 @@ import jakarta.servlet.http.HttpSession;
 @Service
 public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
 
-    @Value("${ruta.archivo.pdf}")
-    private String rutaArchivoPdf;
-
-    // @Value("${ruta.logo}")
-    // private String rutaLogo;
+    @Value("${ruta.logo}")
+    private String rutaLogo;
 
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
@@ -85,7 +82,11 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             String direccionEnvio = anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
                     crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(), crearPedidoDTO.getNumero(),
                     crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
-            pedido.setDireccionCompletaEnvio(direccionEnvio);
+
+                String nueva = convertirEstiloTitulo(direccionEnvio);
+                System.out.println(nueva + "sdkjhbfjasfhadsdksg");
+            pedido.setDireccionCompletaEnvio(nueva);
+            System.out.println(pedido.getDireccionCompletaEnvio() + " ohola hoal ohla");
 
             ResponseEntity<?> resultadoPagoValidacion = validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
 
@@ -115,11 +116,11 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                 return resultadoDireccionFacturacion;
             }
 
-            // Generar factura PDF
+            // Genero la factura PDF
             FacturaDTO facturaDTO = new FacturaDTO(usuario, pedido, listaNueva, total);
-            facturaDTO.generarFacturaPDF(facturaDTO, rutaArchivoPdf);
 
             ses.setAttribute("pedido", pedido);
+            ses.setAttribute("factura", facturaDTO);
 
             // Mando a la pagina del pago del Pay-Pal antes de crear el pedido
             return paypalServicio.hacerPago(pedido, ses);
@@ -128,6 +129,29 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             e.getMessage();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el pedido: " + e.getMessage());
         }
+    }
+
+    // Prueba
+    public String convertirEstiloTitulo(String campo) {
+        StringBuilder resultado = new StringBuilder();
+        // boolean capitalizarSiguiente = true;
+
+        String[] palabras = campo.split(" ");
+
+        for (int i = 0; i < palabras.length; i++) {
+            String p = palabras[i];
+            Character c = p.charAt(0);
+            palabras[i] = p.replaceFirst(String.valueOf(c), String.valueOf(Character.toUpperCase(c)));
+            if(i == palabras.length){
+                resultado.append(palabras[i]);
+            } else {
+                resultado.append(palabras[i] + " ");
+            }
+            
+        }
+        
+        System.out.println(resultado + " ESTILO TITULO");
+        return resultado.toString();
     }
 
     private ResponseEntity<?> procesarDireccionFacturacion(UsuarioModelo usuario, CrearPedidoDTO crearPedidoDTO,

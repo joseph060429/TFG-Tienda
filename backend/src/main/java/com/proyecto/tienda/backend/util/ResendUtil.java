@@ -3,29 +3,14 @@ package com.proyecto.tienda.backend.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.awt.Color;
-import java.awt.Font;
 import java.io.*;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.Element;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Image;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
 import com.proyecto.tienda.backend.DTO.DTOPedido.FacturaDTO;
-import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.RecuperarContraseniaDTO;
-import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.resend.Resend;
+import com.resend.services.emails.model.Attachment;
 import com.resend.services.emails.model.SendEmailRequest;
 import com.resend.services.emails.model.Tag;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +27,9 @@ public class ResendUtil {
 
         @Value("${envio.email.token}")
         private String envioEmailToken;
+
+        @Value("${ruta.logo}")
+        private String rutaLogo;
 
         // METODO DE ENVÍO DE EMAIL DE RECUPERACIÓN
         public void enviarEmailDeRecuperacion(String destinatarioEmail) {
@@ -226,57 +214,56 @@ public class ResendUtil {
                 }
         }
 
-        // PROBANDO
+        // METODO PARA ENVIAR LA FACTURA CUANDO EL PEDIDO YA HA SIDO PAGADO
+        public void enviarEmailFacturaPdf(String destinatarioEmail, FacturaDTO facturaDTO) {
+                try {
+                        // Genero el pdf de mi factura y aqui capturo la ruta donde esta mi logo
+                        byte[] pdfBytes = facturaDTO.generarFacturaPDF(facturaDTO, rutaLogo);
 
-        // public void enviarEmailEnvioDelPedido(String destinatarioEmail, String
-        // trackingNumber, FacturaDTO facturaDTO) {
+                        // Configuro el envío del correo electrónico
+                        Resend resend = new Resend(envioEmailToken);
 
-        // try {
-        // // Crear un flujo de bytes para almacenar el PDF en memoria
-        // ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
+                        try (InputStream htmlStream = getClass().getClassLoader()
+                                        .getResourceAsStream("util/CuerpoEmailFactura.html")) {
+                                String messageSubject = "¡Tu Pedido ha sido registrado exitosamente!";
+                                String bodyText = cargarContenidoHtml(htmlStream, "", "", "");
 
-        // // Generar la factura en PDF en memoria
-        // generarFacturaPDF(facturaDTO, pdfStream);
+                                Tag tag = Tag.builder()
+                                                .name("category")
+                                                .value("envio_factura")
+                                                .build();
 
-        // // Configurar el envío del correo con Resend
-        // Resend resend = new Resend(envioEmailToken);
+                                // Convierto el array de bytes a una cadena codificada en Base64 porque el
+                                // Attachment de resend solo acepta String
+                                String contentBase64 = Base64.getEncoder().encodeToString(pdfBytes);
 
-        // try (
-        // InputStream htmlStream = getClass().getClassLoader()
-        // .getResourceAsStream("util/CuerpoGmailEnvioPedido.html")) {
+                                // Construir el objeto Attachment
+                                Attachment att = Attachment.builder()
+                                                .fileName("factura.pdf")
+                                                .content(contentBase64)
+                                                .build();
 
-        // String messageSubject = "¡Tu Pedido ha sido Enviado!";
-        // String bodyText = cargarContenidoHtml(htmlStream, "", trackingNumber, "");
+                                // Construyo el objeto SendEmailRequest utilizando el objeto Attachment
+                                SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                                                .from("administracion@jastoredcomponents.es")
+                                                .to(destinatarioEmail)
+                                                .html(bodyText)
+                                                .subject(messageSubject)
+                                                .headers(Map.of("X-Entity-Ref-ID", "123456789"))
+                                                .tags(tag)
+                                                .attachments(att) // Adjuntar el PDF utilizando el objeto Attachment
+                                                .build();
 
-        // Tag tag = Tag.builder()
-        // .name("category")
-        // .value("envio_pedido")
-        // .build();
-
-        // // Adjuntar el PDF al correo electrónico
-        // SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
-        // .from("administracion@jastoredcomponents.es")
-        // .to(destinatarioEmail)
-        // .html(bodyText)
-        // .subject(messageSubject)
-        // .headers(Map.of(
-        // "X-Entity-Ref-ID", "123456789"))
-        // .tags(tag)
-        // .attachments(Map.of("factura.pdf", pdfStream.toByteArray()))
-        // .build();
-
-        // // Enviar el correo electrónico
-        // resend.emails().send(sendEmailRequest);
-
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // System.out.println("Error al generar la factura: " + e.getMessage());
-        // }
-        // }
+                                // Envio el correo electrónico
+                                resend.emails().send(sendEmailRequest);
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error al generar la factura: " + e.getMessage());
+                }
+        }
 
         // METODO DE ENVÍO DE EMAIL INFORMANDO AL USUARIO QUE LA DIRECCION ES ERRONEA
         public void enviarEmailDireccionErronea(String destinatarioEmail, String id_pedido) {
