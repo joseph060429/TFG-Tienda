@@ -37,9 +37,9 @@ public class AuthServicioImpl implements AuthServicio {
     @Override
     public ResponseEntity<?> crearNuevoUsuario(CrearUsuarioDTO crearUsuarioDTO) {
         String email = crearUsuarioDTO.getEmail().trim();
-        String nombre = crearUsuarioDTO.getNombre().trim();
-        String apellido = crearUsuarioDTO.getApellido().trim();
-        String password = crearUsuarioDTO.getPassword().trim();
+        String nombre = crearUsuarioDTO.getNombre().trim().toUpperCase();
+        String apellido = crearUsuarioDTO.getApellido().trim().toUpperCase();
+        String password = crearUsuarioDTO.getPassword();
 
         if (usuarioRepositorio.existsByEmail(crearUsuarioDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Prueba con otro email");
@@ -66,10 +66,10 @@ public class AuthServicioImpl implements AuthServicio {
     // IMPLEMENTACION DEL METODO PARA CONSTRUIR UN NUEVO USUARIO
     private UsuarioModelo construirUsuario(CrearUsuarioDTO crearUsuarioDTO, Set<RolesModelo> roles) {
         UsuarioModelo usuario = UsuarioModelo.builder()
-                .nombre(normalizarTextos(crearUsuarioDTO.getNombre().trim()))
-                .apellido(normalizarTextos(crearUsuarioDTO.getApellido().trim()))
+                .nombre(normalizarTextos(crearUsuarioDTO.getNombre().trim().toUpperCase()))
+                .apellido(normalizarTextos(crearUsuarioDTO.getApellido().trim().toUpperCase()))
                 .email(crearUsuarioDTO.getEmail().trim())
-                .password(passwordEncoder.encode(crearUsuarioDTO.getPassword()).trim())
+                .password(passwordEncoder.encode(crearUsuarioDTO.getPassword()))
                 .direccionesEnvio(Collections.emptyList()) // Inicio las direcciones en una lista vacia
                 .fechaModificacion("".trim())
                 .roles(roles)

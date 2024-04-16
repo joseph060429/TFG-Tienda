@@ -83,10 +83,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(), crearPedidoDTO.getNumero(),
                     crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
 
-                String nueva = convertirEstiloTitulo(direccionEnvio);
-                System.out.println(nueva + "sdkjhbfjasfhadsdksg");
+            String nueva = convertirEstiloTitulo(direccionEnvio);
             pedido.setDireccionCompletaEnvio(nueva);
-            System.out.println(pedido.getDireccionCompletaEnvio() + " ohola hoal ohla");
 
             ResponseEntity<?> resultadoPagoValidacion = validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
 
@@ -131,26 +129,25 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         }
     }
 
-    // Prueba
+    // METODO PARA CONVERTIR ESTILO DE TITULO A MAYUSCULAS
     public String convertirEstiloTitulo(String campo) {
-        StringBuilder resultado = new StringBuilder();
-        // boolean capitalizarSiguiente = true;
+        if (campo == null || campo.isEmpty()) {
+            return "";
+        }
 
+        StringBuilder resultado = new StringBuilder();
         String[] palabras = campo.split(" ");
 
         for (int i = 0; i < palabras.length; i++) {
-            String p = palabras[i];
-            Character c = p.charAt(0);
-            palabras[i] = p.replaceFirst(String.valueOf(c), String.valueOf(Character.toUpperCase(c)));
-            if(i == palabras.length){
-                resultado.append(palabras[i]);
-            } else {
-                resultado.append(palabras[i] + " ");
+            String p = palabras[i].toUpperCase(); // Convertir a mayúsculas
+            resultado.append(p);
+
+            // Agregar un espacio si no es la última palabra
+            if (i < palabras.length - 1) {
+                resultado.append(" ");
             }
-            
         }
-        
-        System.out.println(resultado + " ESTILO TITULO");
+
         return resultado.toString();
     }
 
@@ -197,7 +194,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                         particularDTO.getPuertaDeFacturacion(),
                         usuario);
 
-                pedido.setDireccionCompletaFacturacion(direccionFacturacionParticular);
+                pedido.setDireccionCompletaFacturacion(convertirEstiloTitulo(direccionFacturacionParticular));
 
             } else if (tipoFacturacion == EFactura.EMPRESA_AUTONOMO) {
                 EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDireccionFacturacionDTO = new EmpresaAutonomoDireccionFacturacionDTO();
@@ -227,7 +224,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                         empresaAutonomoDireccionFacturacionDTO.getPuertaDeFacturacion(),
                         usuario);
 
-                pedido.setDireccionCompletaFacturacion(direccionFacturacionAutoEmpresa);
+                pedido.setDireccionCompletaFacturacion(convertirEstiloTitulo(direccionFacturacionAutoEmpresa));
 
             }
 

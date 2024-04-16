@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.data.mongodb.core.index.Indexed;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +27,7 @@ public class UsuarioActualizacionDTO {
     @Indexed(unique = true)
     private String email;
 
-    @Pattern(regexp = "^(?!\\s)(?=\\S)(.{8,})(?!\\s)$", message = "La contraseña debe tener al menos 8 caracteres y no puede empezar ni terminar con espacios en blanco")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
 
     private String fechaModificacion;

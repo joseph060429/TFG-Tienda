@@ -62,27 +62,50 @@ public class UsuarioModelo {
     // almacenarse permanentemente.
 
     // METODO PARA GUARDAR BIEN LOS CAMPOS DE LAS DIRECCIONES DE ENVIO
+    // public String convertirEstiloTitulo(String campo) {
+    // StringBuilder resultado = new StringBuilder();
+    // // boolean capitalizarSiguiente = true;
+
+    // String[] palabras = campo.split(" ");
+
+    // for (int i = 0; i < palabras.length; i++) {
+    // String p = palabras[i];
+    // Character c = p.charAt(0);
+    // palabras[i] = p.replaceFirst(String.valueOf(c),
+    // String.valueOf(Character.toUpperCase(c)));
+    // if (i == palabras.length) {
+    // resultado.append(palabras[i]);
+    // } else {
+    // resultado.append(palabras[i] + " ");
+    // }
+
+    // }
+
+    // System.out.println(resultado + " ESTILO TITULO");
+    // return resultado.toString();
+    // }
+
     public String convertirEstiloTitulo(String campo) {
-        StringBuilder resultado = new StringBuilder();
-        // boolean capitalizarSiguiente = true;
-
-        String[] palabras = campo.split(" ");
-
-        for (int i = 0; i < palabras.length; i++) {
-            String p = palabras[i];
-            Character c = p.charAt(0);
-            palabras[i] = p.replaceFirst(String.valueOf(c), String.valueOf(Character.toUpperCase(c)));
-            if (i == palabras.length) {
-                resultado.append(palabras[i]);
-            } else {
-                resultado.append(palabras[i] + " ");
-            }
-
+        if (campo == null || campo.isEmpty()) {
+            return "";
         }
-
-        System.out.println(resultado + " ESTILO TITULO");
+    
+        StringBuilder resultado = new StringBuilder();
+        String[] palabras = campo.split(" ");
+    
+        for (int i = 0; i < palabras.length; i++) {
+            String p = palabras[i].toUpperCase(); // Convertir a mayúsculas
+            resultado.append(p);
+    
+            // Agregar un espacio si no es la última palabra
+            if (i < palabras.length - 1) {
+                resultado.append(" ");
+            }
+        }
+    
         return resultado.toString();
     }
+    
 
     // METODO PARA AÑADIR LAS DIRECCIONES DE ENVIO AL USUARIO, SI SE REPITEN NO SE
     // AGREGAN AL ARRAY
@@ -116,7 +139,8 @@ public class UsuarioModelo {
         }
 
         // Si existe no lo añado al array
-        if (direccionesEnvio != null && direccionesEnvio.contains(direccionCompleta.toString())) {
+        if (direccionesEnvio != null
+                && direccionesEnvio.contains(convertirEstiloTitulo(direccionCompleta.toString()))) {
             return direccionCompleta.toString();
         }
 
@@ -177,7 +201,8 @@ public class UsuarioModelo {
         }
 
         // Si existe no lo añado al array
-        if (direcionesFacturacion != null && direcionesFacturacion.contains(direccionCompletaFacturacion.toString())) {
+        if (direcionesFacturacion != null
+                && direcionesFacturacion.contains(convertirEstiloTitulo(direccionCompletaFacturacion.toString()))) {
             return direccionCompletaFacturacion.toString();
         }
 
@@ -236,7 +261,7 @@ public class UsuarioModelo {
         }
 
         // Si existe no lo añado al array
-        if (direcionesFacturacion != null && direcionesFacturacion.contains(direccionCompletaFacturacion.toString())) {
+        if (direcionesFacturacion != null && direcionesFacturacion.contains(convertirEstiloTitulo(direccionCompletaFacturacion.toString()))) {
             return direccionCompletaFacturacion.toString();
         }
 

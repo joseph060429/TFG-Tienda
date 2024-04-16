@@ -40,3 +40,22 @@ public interface AdminProductoServicio {
         Page<ProductoModelo> listarProductosAdmin(int page, int size);
 
 }
+
+
+// public String convertirEstiloTitulo(String campo) {
+//         StringBuilder resultado = new StringBuilder();
+//         String[] palabras = campo.split(" ");
+
+//         for (int i = 0; i < palabras.length; i++) {
+//             String p = palabras[i];
+//             Character c = p.charAt(0);
+//             palabras[i] = p.replaceFirst(String.valueOf(c),
+//                     String.valueOf(Character.toUpperCase(c)));
+//             if (i == palabras.length) {
+//                 resultado.append(palabras[i]);
+//             } else {
+//                 resultado.append(palabras[i] + " ");
+//             }
+//         }
+//         return resultado.toString();
+//     }

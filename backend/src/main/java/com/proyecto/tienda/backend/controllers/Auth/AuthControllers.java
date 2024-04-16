@@ -52,7 +52,7 @@ public class AuthControllers {
     //CONTROLADOR PARA ENVIAR CORREO CON CODIGO DE RECUPERACION
     @PostMapping("/envioCodigoRecuperacion")
     public String enviarCorreo(@RequestBody EnviarCorreoDTO correoDTO) {
-        resend.enviarEmailDeRecuperacion(correoDTO.getEmail());
+        resend.enviarEmailDeRecuperacion(correoDTO.getEmail().trim());
         return "Correo de recuperación enviado con éxito.";
     }
 

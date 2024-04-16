@@ -58,12 +58,12 @@ public class UsuarioServicioImpl implements UsuarioServicio {
             // Validar y actualizar los campos que sean diferentes de null
             if (actualizarUsuarioDTO.getNombre() != null && !actualizarUsuarioDTO.getNombre().isEmpty()) {
                 // usuario.setNombre(actualizarUsuarioDTO.getNombre().trim());
-                usuario.setNombre(normalizeText(actualizarUsuarioDTO.getNombre().trim()));
+                usuario.setNombre(normalizeText(actualizarUsuarioDTO.getNombre().trim().toUpperCase()));
             }
 
             if (actualizarUsuarioDTO.getApellido() != null && !actualizarUsuarioDTO.getApellido().isEmpty()) {
                 // usuario.setApellido(actualizarUsuarioDTO.getApellido().trim());
-                usuario.setApellido(normalizeText(actualizarUsuarioDTO.getApellido().trim()));
+                usuario.setApellido(normalizeText(actualizarUsuarioDTO.getApellido().trim().toUpperCase()));
             }
 
             if (actualizarUsuarioDTO.getEmail() != null && !actualizarUsuarioDTO.getEmail().isEmpty()) {
@@ -77,7 +77,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
             }
 
             if (actualizarUsuarioDTO.getPassword() != null && !actualizarUsuarioDTO.getPassword().isEmpty()) {
-                usuario.setPassword(passwordEncoder.encode(actualizarUsuarioDTO.getPassword().trim()));
+                usuario.setPassword(passwordEncoder.encode(actualizarUsuarioDTO.getPassword()));
             }
 
             // Actualizar la fecha de modificación

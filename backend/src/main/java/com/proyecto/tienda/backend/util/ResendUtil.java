@@ -45,7 +45,7 @@ public class ResendUtil {
                         String bodyText = cargarContenidoHtml(htmlStream, codigoRecuperacion, "", "");
 
                         // Busco el usuario por el email
-                        Optional<UsuarioModelo> usuarioModelo = usuarioRepositorio.findByEmail(destinatarioEmail);
+                        Optional<UsuarioModelo> usuarioModelo = usuarioRepositorio.findByEmail(destinatarioEmail.trim());
 
                         // Si el usuario existe
                         if (usuarioModelo.isPresent()) {
@@ -53,20 +53,13 @@ public class ResendUtil {
                                 // Establezco el nuevo codigo de recuperación en mi base de datos
                                 usuario.setRecuperarContrasenia(codigoRecuperacion);
 
-                                // Establezco la fecha de expiracion que puse que tenia 3 minutos
+                                // Establezco la fecha de expiracion que puse que tenia 10 minutos
                                 RecuperarContraseniaDTO recuperarContraseniaDTO = new RecuperarContraseniaDTO();
                                 recuperarContraseniaDTO.setFechaExpiracion();
                                 usuario.setExpiracionRecuperarContrasenia(
                                                 recuperarContraseniaDTO.getExpiracionRecuperarContrasenia());
                                 usuarioRepositorio.save(usuario);
                         }
-
-                        // Cuando quiera enviar un archivo adjunto
-                        // Attachment att = Attachment.builder()
-                        // .fileName("CuerpoGmailRecuperacion.html")
-                        // .content(bodyText)
-                        // .build();
-
                         Tag tag = Tag.builder()
                                         .name("category")
                                         .value("confirm_email")
@@ -76,7 +69,6 @@ public class ResendUtil {
                                         .from("administracion@jastoredcomponents.es")
                                         .to(destinatarioEmail)
                                         .html(bodyText)
-                                        // .attachments(List.of(att))
                                         .text(bodyText)
                                         .subject(messageSubject)
                                         .headers(Map.of(

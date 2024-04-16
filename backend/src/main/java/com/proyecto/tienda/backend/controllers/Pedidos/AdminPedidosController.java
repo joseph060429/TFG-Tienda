@@ -58,7 +58,7 @@ public class AdminPedidosController {
     // CONTROLADOR PARA NVIAR UN EMAIL CUANDO HAY UN RETRASO
     @PostMapping("/envioEmailRetraso")
     public String enviarCorreoRetraso(@RequestBody @Valid EnviarCorreoDTO correoDTO) {
-        resend.enviarEmailDeRetrasoDelPedido(correoDTO.getEmail());
+        resend.enviarEmailDeRetrasoDelPedido(correoDTO.getEmail().trim());
         System.out.println("EMAIL ENVIADO A: " + correoDTO.getEmail());
         return "Correo de retraso enviado con éxito.";
     }
