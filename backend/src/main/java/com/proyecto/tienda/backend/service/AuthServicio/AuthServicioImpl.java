@@ -180,7 +180,8 @@ public class AuthServicioImpl implements AuthServicio {
         }
     }
 
-    // IMPLEMENTACION DEL METODO PARA NORMALIZAR TEXTOS Y GUARDAR A LOS USUARIOS SIN TILDES
+    // IMPLEMENTACION DEL METODO PARA NORMALIZAR TEXTOS Y GUARDAR A LOS USUARIOS SIN
+    // TILDES
     private String normalizarTextos(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
