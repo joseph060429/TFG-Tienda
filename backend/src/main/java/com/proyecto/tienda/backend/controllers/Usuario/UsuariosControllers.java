@@ -36,17 +36,4 @@ public class UsuariosControllers {
         return usuarioServicio.actualizarUsuario(actualizarUsuarioDTO, token, jwtUtils);
     }
 
-    // Metodo para enviar contraseña de recuperación
-    // @PostMapping("/enviar-correo")
-    // public String enviarCorreoRecuperacion(@RequestBody CrearUsuarioDTO
-    // crearUsuarioDTO) {
-    // try {
-    // // Accede a crearUsuarioDTO.getEmail() para obtener el correo del usuario
-    // usuarioServicio.recuperarContraseña(crearUsuarioDTO.getEmail());
-    // return "Correo de recuperación enviado con éxito.";
-    // } catch (Exception e) {
-    // return "Error al enviar el correo de recuperación: " + e.getMessage();
-    // }
-    // }
-
 }
