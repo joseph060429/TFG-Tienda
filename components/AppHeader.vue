@@ -1,0 +1,81 @@
+<template>
+    <div class="q-pa-md">
+        <q-layout view="lHh lpr lFf" container style="height: 10vh; width: 100%">
+            <q-header class="header" style="background-color: #3498db; height: 10vh; width: 100%">
+                <q-toolbar class="text-primary">
+                    <div class="logo-container">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d"
+                            alt="Logo" class="logo">
+                    </div>
+                    <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
+                    <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
+                    <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
+                    <q-btn color="dark" dense flat @click="registro" class="custom-btn">
+                        <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
+                        Registro
+                    </q-btn>
+                    <q-btn color="dark" dense flat @click="login" class="custom-btn">
+                        <q-icon name="mdi-login"></q-icon> <!-- Icono para el botón de login -->
+                        Login
+                    </q-btn>
+                </q-toolbar>
+            </q-header>
+        </q-layout>
+    </div>
+</template>
+
+
+
+<script setup>
+
+const router = useRouter()
+const login = () => {
+    router.push({ path: '/auth/login'})
+};
+
+const registro = () => {
+    router.push({ path: '/auth/registro'})
+};
+</script>
+
+<style scoped>
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container {
+    margin-left: 20px;
+}
+
+.logo {
+    max-height: 80%;
+    max-width: 200px;
+}
+
+.header-text {
+    color: white;
+    font-size: 18px;
+    margin-right: 20px;
+}
+
+.custom-btn {
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.custom-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-text {
+  color: white;
+  font-size: 20px; /* Tamaño de fuente más grande */
+  font-weight: bold; /* Texto en negrita */
+  font-family: 'Arial', sans-serif; /* Tipo de fuente personalizado */
+  text-transform: uppercase; /* Convertir el texto a mayúsculas */
+  letter-spacing: 2px; /* Espaciado entre letras */
+  margin-right: 20px;
+}
+
+</style>

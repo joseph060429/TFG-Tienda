@@ -1,6 +1,7 @@
 <template>
     <div>
-
+        <h1> Soy el login </h1>
+        
     </div>
 </template>
 
@@ -8,6 +9,4 @@
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
