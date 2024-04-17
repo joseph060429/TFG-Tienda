@@ -10,6 +10,9 @@ export default defineNuxtConfig({
       config: {
         dark: false, // Forzar el modo claro
       },
+      plugins: [
+        'Notify'
+      ],
     }
   },
 })

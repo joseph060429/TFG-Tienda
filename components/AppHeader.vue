@@ -1,62 +1,76 @@
 <template>
-    <div class="q-pa-md">
-        <q-layout view="lHh lpr lFf" container style="height: 10vh; width: 100%">
-            <q-header class="header" style="background-color: #3498db; height: 10vh; width: 100%">
-                <q-toolbar class="text-primary">
-                    <div class="logo-container">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d"
-                            alt="Logo" class="logo">
-                    </div>
-                    <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-                    <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
-                    <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-                    <q-btn color="dark" dense flat @click="registro" class="custom-btn">
-                        <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
-                        Registro
-                    </q-btn>
-                    <q-btn color="dark" dense flat @click="login" class="custom-btn">
-                        <q-icon name="mdi-login"></q-icon> <!-- Icono para el botón de login -->
-                        Login
-                    </q-btn>
-                </q-toolbar>
-            </q-header>
-        </q-layout>
-    </div>
+  <div class="q-pa-md">
+    <q-layout view="lHh lpr lFf" container style="height: 10vh; width: 100%">
+      <q-header class="header" style="background-color:  #E74C3C; height: 10vh; width: 100%">
+        <q-toolbar class="text-primary">
+          <div class="logo-container">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d"
+              alt="Logo" class="logo">
+          </div>
+          <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
+          <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
+          <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
+          <q-btn v-if="isRegistro" color="dark" dense flat @click="registro" class="custom-btn">
+            <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
+            Registro
+          </q-btn>
+          <q-btn v-if="isLogin" color="dark" dense flat @click="login" class="custom-btn">
+            <q-icon name="mdi-login"></q-icon> <!-- Icono para el botón de login -->
+            Login
+          </q-btn>
+        </q-toolbar>
+      </q-header>
+    </q-layout>
+  </div>
 </template>
-
-
 
 <script setup>
 
+// Importaciones
+import { useRouter } from 'vue-router'
+
+
+// Variables
 const router = useRouter()
+let isLogin = true
+let isRegistro = true
+
 const login = () => {
-    router.push({ path: '/auth/login'})
+  router.push({ path: '/auth/login' })
+  isLogin = true
+  isRegistro = false
 };
 
 const registro = () => {
-    router.push({ path: '/auth/registro'})
+  router.push({ path: '/auth/registro' })
+  isRegistro = true
+  isLogin = false
 };
+
+
 </script>
+
 
 <style scoped>
 .header {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .logo-container {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .logo {
-    max-height: 80%;
-    max-width: 200px;
+  max-height: 80%;
+  max-width: 200px;
 }
 
 .header-text {
-    color: white;
-    font-size: 18px;
-    margin-right: 20px;
+  color: white;
+  font-size: 18px;
+  margin-right: 20px;
 }
 
 .custom-btn {
@@ -70,12 +84,43 @@ const registro = () => {
 
 .header-text {
   color: white;
-  font-size: 20px; /* Tamaño de fuente más grande */
-  font-weight: bold; /* Texto en negrita */
-  font-family: 'Arial', sans-serif; /* Tipo de fuente personalizado */
-  text-transform: uppercase; /* Convertir el texto a mayúsculas */
-  letter-spacing: 2px; /* Espaciado entre letras */
+  font-size: 20px;
+  /* Tamaño de fuente más grande */
+  font-weight: bold;
+  /* Texto en negrita */
+  font-family: 'Arial', sans-serif;
+  /* Tipo de fuente personalizado */
+  text-transform: uppercase;
+  /* Convertir el texto a mayúsculas */
+  letter-spacing: 2px;
+  /* Espaciado entre letras */
   margin-right: 20px;
 }
 
+.text-h6 {
+  font-size: 1.25rem;
+  /* Tamaño de fuente más grande para dispositivos grandes */
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Estilos adicionales para dispositivos pequeños */
+@media (max-width: 600px) {
+  .logo-container {
+    margin-left: 10px;
+  }
+
+  .header-text {
+    display: none;
+    /* Ocultar el texto en dispositivos pequeños */
+  }
+
+  .custom-btn {
+    font-size: 0.75rem;
+    /* Tamaño de fuente más pequeño para botones en dispositivos pequeños */
+  }
+}
 </style>
