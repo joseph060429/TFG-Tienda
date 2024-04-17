@@ -117,6 +117,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             // Genero la factura PDF
             FacturaDTO facturaDTO = new FacturaDTO(usuario, pedido, listaNueva, total);
 
+            // Mando la factura en una sesion junto al pedido
             ses.setAttribute("pedido", pedido);
             ses.setAttribute("factura", facturaDTO);
 
@@ -151,6 +152,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         return resultado.toString();
     }
 
+    // METODO PARA PROCESAR LA DIRECCION DE FACTURACION
     private ResponseEntity<?> procesarDireccionFacturacion(UsuarioModelo usuario, CrearPedidoDTO crearPedidoDTO,
             PedidosModelo pedido) {
         try {
