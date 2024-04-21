@@ -28,8 +28,6 @@ public class CrearProductoDTO {
 
     @NotBlank(message = "La descripcion del producto no puede estar en blanco")
     @Pattern(regexp = "^\\S.{0,}$", message = "La descripción del producto debe tener como mínimo 2 caracteres y no puede empezar con espacio en blanco")
-    private String descripcion;
-
     private String descripcionProducto;
 
     @NotNull(message = "El precio del producto no puede estar en blanco")

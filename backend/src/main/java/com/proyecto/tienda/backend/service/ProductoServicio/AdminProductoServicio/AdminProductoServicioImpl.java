@@ -45,7 +45,7 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
             nuevoProducto.setCategoriaProducto(categoriaProductoEnum);
 
             // Construyo los demas campos
-            nuevoProducto.setNombreProducto(normalizeText(crearProductoDTO.getNombreProducto().trim()));
+            nuevoProducto.setNombreProducto(normalizeText(crearProductoDTO.getNombreProducto().trim().toUpperCase()));
             nuevoProducto.setDescripcionProducto(normalizeText(crearProductoDTO.getDescripcionProducto().trim()));
             nuevoProducto.setPrecioProducto(crearProductoDTO.getPrecioProducto());
             nuevoProducto.setDisponibilidadProducto(crearProductoDTO.getCantidadProducto() > 0);
@@ -213,7 +213,7 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                 // Actualizo el nombre del producto
                 if (actualizarProductoDTO.getNombreProducto() != null
                         && !actualizarProductoDTO.getNombreProducto().isEmpty()) {
-                    producto.setNombreProducto(normalizeText(actualizarProductoDTO.getNombreProducto().trim()));
+                    producto.setNombreProducto(normalizeText(actualizarProductoDTO.getNombreProducto().trim().toUpperCase()));
                 }
 
                 // Actualizo la descripcion del producto

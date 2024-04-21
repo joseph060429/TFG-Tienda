@@ -45,7 +45,8 @@ public class ResendUtil {
                         String bodyText = cargarContenidoHtml(htmlStream, codigoRecuperacion, "", "");
 
                         // Busco el usuario por el email
-                        Optional<UsuarioModelo> usuarioModelo = usuarioRepositorio.findByEmail(destinatarioEmail.trim());
+                        Optional<UsuarioModelo> usuarioModelo = usuarioRepositorio
+                                        .findByEmail(destinatarioEmail.trim());
 
                         // Si el usuario existe
                         if (usuarioModelo.isPresent()) {
@@ -86,26 +87,33 @@ public class ResendUtil {
 
         // GENERO MI CÓDIGO DE RECUPERACIÓN ALEATORIO CON NÚMEROS Y LETRAS
         private String generarCodigoRecuperacion(int longitud) {
-
+                // Inicializo un StringBuilder para almacenar el código generado
                 StringBuilder codigoRecuperacion = new StringBuilder();
+
+                // Creo una instancia de Random para generar números aleatorios
                 Random random = new Random();
 
+                // Itero sobre la longitud especificada para generar cada caracter del código
                 for (int i = 0; i < longitud; i++) {
-                        // Generar un número aleatorio entre 0 y 35
+                        // // Genero un número aleatorio entre 0 y 35
                         int caracterAleatorio = random.nextInt(36);
 
-                        // Convertir el número a un carácter
+                        // Convierto el número aleatorio a un carácter
                         char caracter;
+
+                        // Si el número aleatorio es menor que 10, el carácter será un dígito
                         if (caracterAleatorio < 10) {
                                 caracter = (char) ('0' + caracterAleatorio);
                         } else {
+                                // Si el número aleatorio es mayor o igual a 10, el carácter será una letra
+                                // mayúscula
                                 caracter = (char) ('A' + (caracterAleatorio - 10));
                         }
 
-                        // Agregar el carácter al código de recuperación
+                        // Agrego el carácter al código de recuperación
                         codigoRecuperacion.append(caracter);
                 }
-
+                // Devuelvo el código de recuperación como una cadena de texto en mayúsculas
                 return codigoRecuperacion.toString();
         }
 
