@@ -1,5 +1,6 @@
 package com.proyecto.tienda.backend.security;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.proyecto.tienda.backend.security.filter.JwtAuthenticationFilter;
 import com.proyecto.tienda.backend.security.filter.JwtAuthorizationFilter;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
+
+// Cors
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 // Habilito las anotacionaciones de Spring Security
@@ -84,6 +90,40 @@ public class SecurityConfig {
 
     }
 
+    // CORS
+    // Variable para almacenar la URL del frontend obtenida del archivo
+    // application.properties
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
+    // Defino un bean que configura el filtro CORS
+    @Bean
+    public CorsFilter corsFilter() {
+        // Creo una fuente de configuración CORS basada en URL
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        // Creo una configuración CORS
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Permito el uso de credenciales en las solicitudes CORS
+        config.setAllowCredentials(true);
+
+        // Configuro los orígenes permitidos para las solicitudes CORS
+        config.setAllowedOrigins(Arrays.asList(frontendUrl));
+
+        // Permito cualquier encabezado en las solicitudes CORS
+        config.addAllowedHeader("*");
+
+        // Permito cualquier método en las solicitudes CORS
+        config.addAllowedMethod("*");
+
+        // Registro la configuración CORS para todas las URL
+        source.registerCorsConfiguration("/**", config);
+
+        // Devuelvo un nuevo filtro CORS configurado con la fuente de configuración
+        return new CorsFilter(source);
+    }
+
     // CONTRASEÑA ENCRIPTADA
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -110,7 +150,7 @@ public class SecurityConfig {
         mailSender.setPort(993); // Configuro el puerto
         mailSender.setUsername(emailIonos); // Dirección de correo de Ionos
         mailSender.setPassword(contraseniaIonos); // Contraseña de correo de Ionos
-        
+
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
