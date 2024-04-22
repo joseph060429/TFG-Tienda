@@ -1,21 +1,74 @@
 <template>
     <div class="q-pa-md">
-        <q-layout class="layout" view="lHh lpr lFf" container style="height: 10vh; width: 100%;" >
+        <q-layout class="layout" view="lHh lpr lFf">
+            <q-footer class="footer">
+                <div class="footer-content q-gutter-md">
+                    <q-toolbar dense class="q-pa-md" style="justify-content: space-between;">
+                        <div style="display: flex; align-items: center;">
+                            <span class="text-white">Síguenos en:</span>
+                            <div class="social-links" style="margin-left: 13px;">
+                                <a href="#" class="social-link"><q-icon name="mdi-facebook" class="social-icon" /></a>
+                                <a href="#" class="social-link"><q-icon name="mdi-instagram" class="social-icon" /></a>
+                            </div>
+                        </div>
 
-            <q-footer class="footer" style="background-color:  #E74C3C; bottom: 0; height: 10vh; width: 100%">
-                <q-toolbar>
-                    <q-toolbar-title>Footer</q-toolbar-title>
-                </q-toolbar>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FSoloLogo.png?alt=media&token=014b4175-3072-4a02-9d78-9ad45e7223a7"
+                            alt="Logo" class="logo" />
+                    </q-toolbar>
+                </div>
+
+
+
             </q-footer>
-
-
         </q-layout>
     </div>
 </template>
+
+
+
 <script setup>
 </script>
-<style lang="css" scoped>
-/* .layout > .absolute-full{
-    position: fixed !important;
-} */
+
+<style scoped>
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 20px); /* Reduce el ancho en 20px para dejar espacio a ambos lados */
+    margin: 0 10px; /* Agrega un margen de 10px a ambos lados */
+    background-color: #666666;
+    
+}
+
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text-white {
+    color: white;
+}
+
+.logo {
+    height: 7vh;
+}
+
+.social-links {
+    display: flex;
+    align-items: center;
+}
+
+.social-icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.facebook {
+    color: #3b5998;
+}
+
+.instagram {
+    background-color: #e4405f;
+}
 </style>

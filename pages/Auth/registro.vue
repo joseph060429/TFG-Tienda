@@ -1,18 +1,24 @@
 <template>
+  <!-- Boton de volver atras -->
+  <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+
   <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
+
     <div class="d-flex justify-center align-center" style="max-width: 40%; margin: auto;">
       <h1 class="text-h4 q-mb-md text-center"
         style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
         Regístrate
       </h1>
 
-      <q-form @submit.prevent="Enviar" @reset="Borrar" class="q-gutter-md">
+      <q-form @submit.prevent="enviar" @reset="borrar" class="q-gutter-md">
 
         <!-- Campo nombre -->
         <q-input filled v-model="nombre" label="Nombre *" hint="Nombre" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
-          val => /^.{2,70}$/.test(val) || 'El nombre debe tener entre 2 y 70 caracteres',
-          val => /^\S.*\S$/.test(val) || 'El nombre no puede empezar ni terminar con espacios en blanco',
+          val => /^.{2,70}$/.test(val) || 'El nombre/s debe tener entre 2 y 70 caracteres',
+          val => /^\S.*\S$/.test(val) || 'El nombre/s no puede empezar ni terminar con espacios en blanco',
+          val => !/\d/.test(val) || 'El nombre/s no puede contener números',
+          val => /^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(val) || 'El nombre/s solo puede contener letras y espacios, incluyendo la tilde'
         ]">
           <template v-slot:prepend>
             <q-icon name="mdi-account" />
@@ -20,10 +26,12 @@
         </q-input>
 
         <!-- Campo apellido -->
-        <q-input filled v-model="apellidos" label="Apellidos *" hint="Apellidos" lazy-rules :rules="[
+        <q-input filled v-model="apellido" label="Apellidos *" hint="Apellidos" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^.{2,70}$/.test(val) || 'Los apellidos debe tener entre 2 y 70 caracteres',
           val => /^\S.*\S$/.test(val) || 'Los apellidos no pueden empezar ni terminar con espacios en blanco',
+          val => !/\d/.test(val) || 'Los apellidos no puede contener números',
+          val => /^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(val) || 'Los apellidos solo puede contener letras y espacios, incluyendo la tilde'
         ]">
           <template v-slot:prepend>
             <q-icon name="mdi-account" />
@@ -42,12 +50,18 @@
         </q-input>
 
         <!-- Campo password -->
-        <q-input filled v-model="password" type="password" label="Contraseña *" lazy-rules :rules="[
-          val => val && val.length > 0 || 'Por favor, introduce algo',
-          val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres'
-        ]">
+        <q-input filled v-model="password" :type="mostrarContrasenia ? 'text' : 'password'" label="Contraseña *"
+          lazy-rules :rules="[
+            val => val && val.length > 0 || 'Por favor, introduce algo',
+            val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres'
+          ]">
           <template v-slot:prepend>
             <q-icon name="mdi-lock" />
+          </template>
+          <!-- Icono de ojito -->
+          <template v-slot:append>
+            <q-icon :name="mostrarContrasenia ? 'mdi-eye' : 'mdi-eye-off'" @click="cambiarMostrarPassword"
+              class="cursor-pointer" />
           </template>
         </q-input>
 
@@ -55,77 +69,139 @@
 
         <!-- Botones de enviar y reiniciar -->
         <div class="q-mt-lg d-flex justify-around">
-
           <!-- Boton de enviar -->
-          <q-btn label="Enviar" type="submit" class="full-width custom-button">
-            <q-icon name="mdi-send" class="q-ml-md"></q-icon> <!-- Icono para el botón -->
+          <q-btn label="Crear cuenta" type="submit" class="full-width custom-button col-xs-12 col-sm-6">
+            <q-icon name="mdi-account-plus" class="q-ml-md inline"></q-icon> <!-- Icono para el botón -->
           </q-btn>
 
           <!-- Boton de reiniciar -->
-          <q-btn label="Reiniciar" type="reset" flat class="full-width q-ml-sm custom-button-reiniciar">
-            <q-icon name="mdi-refresh" class="q-ml-md"></q-icon> <!-- Icono para el botón -->
+          <q-btn label="Reiniciar" type="reset" flat
+            class="full-width q-ml-sm custom-button-reiniciar col-xs-12 col-sm-6">
+            <q-icon name="mdi-refresh" class="q-ml-md inline"></q-icon> <!-- Icono para el botón -->
           </q-btn>
-
         </div>
+
       </q-form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onBeforeMount } from "vue";
-import { useNuxtApp } from '#app'
 
+// IMPORTACIONES
+import { useRouter } from 'vue-router'
+
+// RUTAS
+const router = useRouter()
+
+//USAR QUASAR
 const quasar = useQuasar()
-onBeforeMount(() => {
-  console.log('Esto es quasar ==> ', quasar);
-})
 
+// AXIOS
+const axios = useNuxtApp().$axios
+
+
+
+// DECLARACION DE VARIABLES
 const nombre = ref('');
-const apellidos = ref('');
+const apellido = ref('');
 const email = ref('');
 const password = ref('');
+const mostrarContrasenia = ref(false);
 const accept = ref(false);
 
 
-const Enviar = () => {
+// FUNCIONES
+
+// FUNCION PARA ENVIAR EL FORMULARIO
+const enviar = async () => {
   if (accept.value === false) {
-    console.log('Hola');
-    // nuxtApp.$q.notify({
-    //   color: 'green',
-    //   textColor: 'white',
-    //   icon: 'info',
-    //   message: 'Hello from Quasar!'
-    // })
-    alert('Debes aceptar los términos y condiciones para enviar el formulario.')
+    mostrarAlertaError('Debes aceptar los términos y condiciones para registrarte en la aplicación');
+  } else {
 
-    return;
+    // Creo el usuario
+    try {
+      const response = await axios.post('/crearUsuario', {
+        nombre: nombre.value,
+        apellido: apellido.value,
+        email: email.value,
+        password: password.value
+      });
+      // Verifico el estado de la respuesta y muestro el mensaje correspondiente
+      if (response.data === "Prueba con otro email") {
+        console.log('Email ya está en uso:', response.data);
+        mostrarAlertaError('Prueba con otro correo electrónico');
+        // Si todo va bien creo el usuario y redirecciono al login
+      } else {
+        console.log('Usuario creado correctamente:', response.data);
+        mostrarAlertaExito('Usuario creado correctamente, por favor inicia sesión');
+        borrar();
+        router.push({ path: '/auth/login' });
+      }
+    } catch (error) {
+      // Error de red o algo parecido
+      console.error('Error al crear el usuario:', error);
+      mostrarAlertaError('Error al crear el usuario intentelo más tarde');
+    }
   }
-  console.log("ENVIADO CORRECTAMENTE");
 };
 
-const mostrarAlerta = (message) => {
-  Alert.create({
-    html: message,
-    color: 'negative',
-    position: 'top'
+// ALERTAS DE ERROR
+const mostrarAlertaError = (msg) => {
+  // Utilizo Quasar para mostrar una notificación con el mensaje especificado
+  quasar.notify({
+    message: msg,
+    color: 'red-8',
+    textColor: 'white',
+    icon: 'mdi-alert',
+    position: 'top',
+    actions: [{ icon: 'mdi-close', color: 'white' }]
   });
-
 };
 
-const Borrar = () => {
+// ALERTA EXITO
+const mostrarAlertaExito = (msg) => {
+  // Utilizo Quasar para mostrar una notificación con el mensaje especificado
+  quasar.notify({
+    message: msg,
+    color: 'green-7',
+    textColor: 'white',
+    icon: 'mdi-check-circle',
+    position: 'top',
+    actions: [{ icon: 'mdi-close', color: 'white' }]
+  });
+};
+
+// CUANDO SE BORRA EL FORMULARIO, ELIMINO LOS VALORES DEL EMAIL Y LA CONTRASEÑA.
+const borrar = () => {
   nombre.value = '';
-  apellidos.value = '';
+  apellido.value = '';
   email.value = '';
   password.value = '';
   accept.value = false;
 };
+
+// CUANDO SE HACE CLIC EN EL BOTÓN DE REGRESAR, REDIRIJO AL USUARIO A LA PÁGINA DE INICIO.
+const regresar = () => {
+  router.push({ path: '/' })
+};
+
+// CUANDO SE HACE CLIC EN EL BOTÓN PARA MOSTRAR U OCULTAR LA CONTRASEÑA(OJITO), CAMBIO EL ESTADO PARA MOSTRARLA U OCULTARLA.
+const cambiarMostrarPassword = () => {
+  mostrarContrasenia.value = !mostrarContrasenia.value;
+
+};
+
+
+
 </script>
 
+
+<!--  ESTILOS -->
 <style scoped>
 .full-width {
+  /* Ajusto el ancho según tus preferencias */
   width: calc(50% - 10px);
-  /* Ajusta el ancho según tus preferencias */
 }
 
 .custom-h1 {
@@ -136,25 +212,29 @@ const Borrar = () => {
 }
 
 .custom-button {
+  /* Cambio el color del texto a blanco */
   background-color: #BFC9CA;
-
-  /* Cambia el color del texto a blanco */
+  /* Transición suave al color de fondo */
   transition: background-color 0.3s ease;
-  /* Agrega una transición suave al color de fondo */
 }
 
 .custom-button:hover {
+  /* Cambio el color de fondo al pasar el mouse sobre el botón */
   background-color: #95A5A6;
-  /* Cambia el color de fondo al pasar el mouse sobre el botón */
 }
 
 .custom-button-reiniciar {
+  /* Transición suave al color de fondo */
   transition: background-color 0.3s ease;
-  /* Agrega una transición suave al color de fondo */
 }
 
 .custom-button-reiniciar:hover {
+  /* Cambio el color de fondo al pasar el mouse sobre el botón */
   background-color: #95A5A6;
-  /* Cambia el color de fondo al pasar el mouse sobre el botón */
+}
+
+.custom-regresar-button {
+  /*Este es el margen izquierdo  */
+  margin-left: 1%;
 }
 </style>
