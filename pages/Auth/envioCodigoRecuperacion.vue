@@ -9,7 +9,7 @@
             <q-form @submit.prevent="envioCodigoRecuperacion" @reset="borrar" class="q-gutter-md">
 
                 <!-- Campo email -->
-                <q-input filled v-model="email" label="Email *" hint="Tu correo electrónico" lazy-rules :rules="[
+                <q-input filled v-model="emailUsuario.email" label="Email *" hint="Tu correo electrónico" lazy-rules :rules="[
                     val => val && val.length > 0 || 'Por favor, introduce algo',
                     val => /^\S.*\S$/.test(val) || 'El email no puede empezar ni terminar con espacios en blanco',
                     val => /^\S+@\S+\.\S+$/.test(val) || 'El formato del correo electrónico no es válido',
@@ -42,6 +42,11 @@
 
 // IMPORTACIONES
 import { useRouter } from 'vue-router'
+import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
+import { reactive } from "vue";
+import { useAuth } from '~/composables/useAuth.js';
+
+const { enviarCodigoRecuperacion } = useAuth();
 
 
 // RUTAS
@@ -50,65 +55,33 @@ const router = useRouter()
 //USAR QUASAR
 const quasar = useQuasar()
 
-// AXIOS
-const axios = useNuxtApp().$axios
-
-
 // DECLARACION DE VARIABLES
-const email = ref('');
+const emailUsuario = reactive({
+    email: '',
+})
 
 // FUNCIONES
-
 // CUANDO SE ENVÍA EL FORMULARIO, BORRO EL VALOR DEL EMAIL Y MUESTRO UN MENSAJE AVISANDO AL USUARIO 
 // QUE SE HA ENVIADO UN CORREO ELECTRONICO.
 const envioCodigoRecuperacion = async () => {
     // Login el usuario
     try {
-        const response = await axios.post('/envioCodigoRecuperacion', {
-            email: email.value
-        });
+        const response = await enviarCodigoRecuperacion(emailUsuario);
         console.log("Response:", response.data);
         // Muestro un mensaje de exito
-        mostrarAlertaExito('Hemos enviado un código de verificación si estás registrado en nuestra aplicación');
+        mostrarAlertaExito('Hemos enviado un código de verificación si estás registrado en nuestra aplicación', quasar);
         // Redirijo al formulario de verificación del código
         router.push({ path: '/auth/verificarCodigo' })
         borrar();
     } catch (error) {
         console.error('Error al enviar el email de recuperación', error);
-        mostrarAlertaError('Erroral enviar el email de recuperación intentelo más tarde');
+        mostrarAlertaError('Error al enviar el email de recuperación intentelo más tarde', quasar);
     }
 
 };
-
-// ALERTAS DE ERROR
-const mostrarAlertaError = (msg) => {
-    // Utilizo Quasar para mostrar una notificación con el mensaje especificado
-    quasar.notify({
-        message: msg,
-        color: 'red-8',
-        textColor: 'white',
-        icon: 'mdi-alert',
-        position: 'top',
-        actions: [{ icon: 'mdi-close', color: 'white' }]
-    });
-};
-
-// ALERTA EXITO
-const mostrarAlertaExito = (msg) => {
-    // Utilizo Quasar para mostrar una notificación con el mensaje especificado
-    quasar.notify({
-        message: msg,
-        color: 'green-7',
-        textColor: 'white',
-        icon: 'mdi-check-circle',
-        position: 'top',
-        actions: [{ icon: 'mdi-close', color: 'white' }]
-    });
-};
-
 // CUANDO SE BORRA EL FORMULARIO, ELIMINO LOS VALORES DEL EMAIL Y LA CONTRASEÑA.
 const borrar = () => {
-    email.value = '';
+    emailUsuario.email = '';
 };
 
 // CUANDO SE HACE CLIC EN EL BOTÓN DE REGRESAR, REDIRIJO AL USUARIO A LA PÁGINA DE INICIO.
@@ -124,39 +97,5 @@ const regresar = () => {
 .full-width {
     /* Ajusto el ancho */
     width: calc(50% - 10px);
-}
-
-.enviar-h1 {
-    color: #333333;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.enviar-button {
-    /* Cambio el color del texto a blanco */
-    background-color: #BFC9CA;
-    /* Transición suave al color de fondo */
-    transition: background-color 0.3s ease;
-}
-
-.enviar-button:hover {
-    /* Cambio el color de fondo al pasar el mouse sobre el botón */
-    background-color: #95A5A6;
-}
-
-.custom-button-reiniciar {
-    /* Transición suave al color de fondo */
-    transition: background-color 0.3s ease;
-}
-
-.custom-button-reiniciar:hover {
-    /* Cambio el color de fondo al pasar el mouse sobre el botón */
-    background-color: #95A5A6;
-}
-
-.custom-regresar-button {
-    /* Ajusto el margen izquierdo para desplazar el botón hacia la derecha */
-    margin-left: 1%;
 }
 </style>

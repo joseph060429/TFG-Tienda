@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-layout view="lHh lpr lFf" container style="height: 10vh; width: 100%">
-      <q-header class="header" style="background-color:  #666666; height: 10vh; width: 100%">
+      <q-header class="header" style="background-color: #666666; height: 10vh; width: 100%">
         <q-toolbar class="text-primary">
           <div class="logo-container">
             <img
@@ -11,7 +11,7 @@
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
           <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-        <q-btn color="dark" dense flat @click="registro" class="custom-btn">
+          <q-btn color="dark" dense flat @click="registro" class="custom-btn">
             <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
             Registro
           </q-btn>
@@ -25,35 +25,33 @@
   </div>
 </template>
 
+
 <script setup>
-import { onBeforeMount } from 'vue';
 // Importaciones
 import { useRouter } from 'vue-router'
 
 
 // Rutas
 const router = useRouter()
-const route = useRoute()
 
-   const path = computed(() => route.path)
 
-onBeforeMount(() => {
-  console.log('Esto es path ==> ', path.value);
-})
+// const path = computed(() => route.path)
+
+// onBeforeMount(() => {
+//   console.log('Esto es path ==> ', path.value);
+// })
 // Variables
 let isLogin = true
 let isRegistro = true
 
 const login = () => {
   router.push({ path: '/auth/login' })
-  isLogin = true
-  isRegistro = false
+  
 };
 
 const registro = () => {
   router.push({ path: '/auth/registro' })
-  isRegistro = true
-  isLogin = false
+ 
 };
 
 

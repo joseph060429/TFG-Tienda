@@ -10,10 +10,10 @@
         Regístrate
       </h1>
 
-      <q-form @submit.prevent="enviar" @reset="borrar" class="q-gutter-md">
+      <q-form @submit.prevent="registroUsuario" @reset="borrar" class="q-gutter-md">
 
         <!-- Campo nombre -->
-        <q-input filled v-model="nombre" label="Nombre *" hint="Nombre" lazy-rules :rules="[
+        <q-input filled v-model="datosRegistro.nombre" label="Nombre *" hint="Nombre" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^.{2,70}$/.test(val) || 'El nombre/s debe tener entre 2 y 70 caracteres',
           val => /^\S.*\S$/.test(val) || 'El nombre/s no puede empezar ni terminar con espacios en blanco',
@@ -26,7 +26,7 @@
         </q-input>
 
         <!-- Campo apellido -->
-        <q-input filled v-model="apellido" label="Apellidos *" hint="Apellidos" lazy-rules :rules="[
+        <q-input filled v-model="datosRegistro.apellido" label="Apellidos *" hint="Apellidos" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^.{2,70}$/.test(val) || 'Los apellidos debe tener entre 2 y 70 caracteres',
           val => /^\S.*\S$/.test(val) || 'Los apellidos no pueden empezar ni terminar con espacios en blanco',
@@ -39,7 +39,7 @@
         </q-input>
 
         <!-- Campo email -->
-        <q-input filled v-model="email" label="Email *" hint="Tu correo electrónico" lazy-rules :rules="[
+        <q-input filled v-model="datosRegistro.email" label="Email *" hint="Tu correo electrónico" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^\S.*\S$/.test(val) || 'El email no puede empezar ni terminar con espacios en blanco',
           val => /^\S+@\S+\.\S+$/.test(val) || 'El formato del correo electrónico no es válido',
@@ -50,7 +50,7 @@
         </q-input>
 
         <!-- Campo password -->
-        <q-input filled v-model="password" :type="mostrarContrasenia ? 'text' : 'password'" label="Contraseña *"
+        <q-input filled v-model="datosRegistro.password" :type="mostrarContrasenia ? 'text' : 'password'" label="Contraseña *"
           lazy-rules :rules="[
             val => val && val.length > 0 || 'Por favor, introduce algo',
             val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres'
@@ -70,7 +70,7 @@
         <!-- Botones de enviar y reiniciar -->
         <div class="q-mt-lg d-flex justify-around">
           <!-- Boton de enviar -->
-          <q-btn label="Crear cuenta" type="submit" class="full-width custom-button col-xs-12 col-sm-6">
+          <q-btn label="Crear cuenta" type="submit" class="full-width enviar-button col-xs-12 col-sm-6">
             <q-icon name="mdi-account-plus" class="q-ml-md inline"></q-icon> <!-- Icono para el botón -->
           </q-btn>
 
@@ -90,6 +90,11 @@
 
 // IMPORTACIONES
 import { useRouter } from 'vue-router'
+import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
+import { reactive } from "vue";
+import { useAuth } from '~/composables/useAuth.js';
+
+const { registro } = useAuth();
 
 // RUTAS
 const router = useRouter()
@@ -97,16 +102,13 @@ const router = useRouter()
 //USAR QUASAR
 const quasar = useQuasar()
 
-// AXIOS
-const axios = useNuxtApp().$axios
-
-
-
 // DECLARACION DE VARIABLES
-const nombre = ref('');
-const apellido = ref('');
-const email = ref('');
-const password = ref('');
+const datosRegistro = reactive({
+  nombre: '',
+  apellido: '',
+  email: '',
+  password: ''
+})
 const mostrarContrasenia = ref(false);
 const accept = ref(false);
 
@@ -114,70 +116,39 @@ const accept = ref(false);
 // FUNCIONES
 
 // FUNCION PARA ENVIAR EL FORMULARIO
-const enviar = async () => {
+const registroUsuario = async () => {
   if (accept.value === false) {
-    mostrarAlertaError('Debes aceptar los términos y condiciones para registrarte en la aplicación');
+    mostrarAlertaError('Debes aceptar los términos y condiciones para registrarte en la aplicación', quasar);
   } else {
-
     // Creo el usuario
     try {
-      const response = await axios.post('/crearUsuario', {
-        nombre: nombre.value,
-        apellido: apellido.value,
-        email: email.value,
-        password: password.value
-      });
+      const response = await registro(datosRegistro);
+      console.log("Response", response);
       // Verifico el estado de la respuesta y muestro el mensaje correspondiente
       if (response.data === "Prueba con otro email") {
         console.log('Email ya está en uso:', response.data);
-        mostrarAlertaError('Prueba con otro correo electrónico');
-        // Si todo va bien creo el usuario y redirecciono al login
+        mostrarAlertaError('Prueba con otro correo electrónico', quasar);
       } else {
+        // Si todo va bien creo el usuario y redirecciono al login
         console.log('Usuario creado correctamente:', response.data);
-        mostrarAlertaExito('Usuario creado correctamente, por favor inicia sesión');
+        mostrarAlertaExito('Usuario creado correctamente, por favor inicia sesión', quasar);
         borrar();
         router.push({ path: '/auth/login' });
       }
     } catch (error) {
       // Error de red o algo parecido
       console.error('Error al crear el usuario:', error);
-      mostrarAlertaError('Error al crear el usuario intentelo más tarde');
+      mostrarAlertaError('Error al crear el usuario intentelo más tarde', quasar);
     }
   }
 };
 
-// ALERTAS DE ERROR
-const mostrarAlertaError = (msg) => {
-  // Utilizo Quasar para mostrar una notificación con el mensaje especificado
-  quasar.notify({
-    message: msg,
-    color: 'red-8',
-    textColor: 'white',
-    icon: 'mdi-alert',
-    position: 'top',
-    actions: [{ icon: 'mdi-close', color: 'white' }]
-  });
-};
-
-// ALERTA EXITO
-const mostrarAlertaExito = (msg) => {
-  // Utilizo Quasar para mostrar una notificación con el mensaje especificado
-  quasar.notify({
-    message: msg,
-    color: 'green-7',
-    textColor: 'white',
-    icon: 'mdi-check-circle',
-    position: 'top',
-    actions: [{ icon: 'mdi-close', color: 'white' }]
-  });
-};
-
 // CUANDO SE BORRA EL FORMULARIO, ELIMINO LOS VALORES DEL EMAIL Y LA CONTRASEÑA.
 const borrar = () => {
-  nombre.value = '';
-  apellido.value = '';
-  email.value = '';
-  password.value = '';
+  datosRegistro.nombre = ''
+  datosRegistro.apellido = ''
+  datosRegistro.email = ''
+  datosRegistro.password = ''
   accept.value = false;
 };
 
@@ -202,39 +173,5 @@ const cambiarMostrarPassword = () => {
 .full-width {
   /* Ajusto el ancho según tus preferencias */
   width: calc(50% - 10px);
-}
-
-.custom-h1 {
-  color: #333333;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.custom-button {
-  /* Cambio el color del texto a blanco */
-  background-color: #BFC9CA;
-  /* Transición suave al color de fondo */
-  transition: background-color 0.3s ease;
-}
-
-.custom-button:hover {
-  /* Cambio el color de fondo al pasar el mouse sobre el botón */
-  background-color: #95A5A6;
-}
-
-.custom-button-reiniciar {
-  /* Transición suave al color de fondo */
-  transition: background-color 0.3s ease;
-}
-
-.custom-button-reiniciar:hover {
-  /* Cambio el color de fondo al pasar el mouse sobre el botón */
-  background-color: #95A5A6;
-}
-
-.custom-regresar-button {
-  /*Este es el margen izquierdo  */
-  margin-left: 1%;
 }
 </style>

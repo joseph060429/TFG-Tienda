@@ -1,8 +1,7 @@
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["nuxt-quasar-ui"],
+  modules: ["nuxt-quasar-ui", "@pinia/nuxt"],
   runtimeConfig: {
     public: {
       urlApi: process.env.URL_API
@@ -25,4 +24,7 @@ export default defineNuxtConfig({
     '~/plugins/axios.js', // Ruta del archivo del plugin de Axios
     
   ],
+  css:[
+    '~/assets/main.scss'
+  ]
 });

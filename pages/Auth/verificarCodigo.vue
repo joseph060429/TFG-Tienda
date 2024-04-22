@@ -1,5 +1,5 @@
 <template>
-<q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+    <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
         <div class="verification-container">
             <h1 class="text-h4 q-mb-md text-center"
@@ -25,6 +25,11 @@
 <script setup>
 // IMPORTACIONES
 import { useRouter } from 'vue-router'
+import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
+import { reactive } from "vue";
+import { useAuth } from '~/composables/useAuth.js';
+
+const { verificaCodigo } = useAuth();
 
 
 // RUTAS
@@ -46,52 +51,34 @@ const convertToUppercase = (index, event) => {
     codeInputs.value[index] = newValue;
 };
 
-
 //  FUNCION PARA VERIFICAR EL CODIGO
 const verificarCodigo = async () => {
     try {
         const code = codeInputs.value.join('');
-        
-        // Almaceno el codigo de recuperacion en el local Storage para que el usuario no escriba otra vez el codigo
+
+        // Almaceno el código de recuperación en el localStorage para que el usuario no tenga que escribirlo nuevamente
         localStorage.setItem('codigoRecuperacion', code);
 
-        const response = await axios.post('/verificarCodigo', { codigoRecuperacion: code });
+        const response = await verificaCodigo(code);
         console.log("Response:", response.data);
-        // Muestro una alerta si el código es válido
-        mostrarAlertaExito('Código válido, puede proceder con la recuperación de contraseña'); 
-        // Redirecciono a la página de cambiar contrasenia
-        router.push({ path: '/auth/cambiarContrasenia' }); // Redirige a otra página si es necesario
+
+        // Verificar si la respuesta es válida
+        if (response.data === 'Código válido. Puede proceder con la recuperación de contraseña.') {
+            // Mostrar una alerta si el código es válido
+            mostrarAlertaExito('Código válido, puede proceder con la recuperación de contraseña', quasar);
+            // Redireccionar a la página de cambiar contraseña
+            router.push({ path: '/auth/cambiarContrasenia' });
+        } else {
+            // Mostrar una alerta si la respuesta no es válida
+            throw new Error('La respuesta del servidor no es válida');
+        }
     } catch (error) {
-        console.error('Codigo', error);
-        mostrarAlertaError('Código incorrecto o la fecha de expiración ha pasado. Verifique el código o solicite uno nuevo');
+        console.error('Error:', error);
+        // Mostrar una alerta si ocurre un error
+        mostrarAlertaError('Código incorrecto o la fecha de expiración ha pasado. Verifique el código o solicite uno nuevo', quasar);
     }
+
 };
-
-// ALERTAS DE ERROR
-// const mostrarAlertaError = (msg) => {
-//     // Utilizo Quasar para mostrar una notificación con el mensaje especificado
-//     quasar.notify({
-//         message: msg,
-//         color: 'red-8',
-//         textColor: 'white',
-//         icon: 'mdi-alert',
-//         position: 'top',
-//         actions: [{ icon: 'mdi-close', color: 'white' }]
-//     });
-// };
-
-// // ALERTA EXITO
-// const mostrarAlertaExito = (msg) => {
-//     // Utilizo Quasar para mostrar una notificación con el mensaje especificado
-//     quasar.notify({
-//         message: msg,
-//         color: 'green-7',
-//         textColor: 'white',
-//         icon: 'mdi-check-circle',
-//         position: 'top',
-//         actions: [{ icon: 'mdi-close', color: 'white' }]
-//     });
-// };
 
 const regresar = () => {
     router.push({ path: '/auth/envioCodigoRecuperacion' })
@@ -120,26 +107,5 @@ const regresar = () => {
     height: 40px;
     border: 1px solid #ccc;
     text-align: center;
-}
-
-/* Estilos del boton enviar */
-.enviar-h1 {
-    color: #333333;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.enviar-button {
-    /* Cambio el color del texto a blanco */
-    background-color: #BFC9CA;
-    /* Transición suave al color de fondo */
-    transition: background-color 0.3s ease;
-
-}
-
-.enviar-button:hover {
-    /* Cambio el color de fondo al pasar el mouse sobre el botón */
-    background-color: #95A5A6;
 }
 </style>

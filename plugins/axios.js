@@ -3,8 +3,6 @@ import axios from "axios";
 export default defineNuxtPlugin(async () => {
 
   const { urlApi } = useRuntimeConfig().public;
-
-  console.log('URL API ', urlApi);
   const axiosInstance = axios.create({
     baseURL: urlApi,
     headers: {

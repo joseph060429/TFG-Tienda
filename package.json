@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "@quasar/extras": "^1.16.11",
     "axios": "^1.6.8",
     "nuxt": "^3.11.2",

@@ -1,0 +1,33 @@
+.enviar-h1 {
+    color: #333333;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .enviar-button {
+    /* Cambio el color del texto a blanco */
+    background-color: #BFC9CA;
+    /* Transición suave al color de fondo */
+    transition: background-color 0.3s ease;
+  }
+  
+  .enviar-button:hover {
+    /* Cambio el color de fondo al pasar el mouse sobre el botón */
+    background-color: #95A5A6;
+  }
+  
+  .custom-button-reiniciar {
+    /* Transición suave al color de fondo */
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-button-reiniciar:hover {
+    /* Cambio el color de fondo al pasar el mouse sobre el botón */
+    background-color: #95A5A6;
+  }
+  
+  .custom-regresar-button {
+    /*Este es el margen izquierdo  */
+    margin-left: 1%;
+  }
