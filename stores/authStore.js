@@ -1,15 +1,20 @@
 import { defineStore } from "pinia";
 import { useAxiosInstance } from "~/utils/axios";
 
+// Defino un endopoint que es el mismo para todos los metodos
 const endpoint = "/auth";
 
+
+// DEFINO Y EXPORTO LA STORE 'useAuthStore'
 export const useAuthStore = defineStore({
+    // Identificador unico para el store
     id: "auth",
     state: () => ({
+        // Defino el estado inicial de la store
         auth: {
-            token: "",
+            token: "", // Token de autorizacion
             user: {
-                username: ''
+                username: '' // Username es el email del usuario
             }
         }
     }),
@@ -17,18 +22,25 @@ export const useAuthStore = defineStore({
     /* Poner useAxiosInstance() con cada peticion al back,
     no se por que no se puede definir axios tal cual arriba del todo
     */
+
+    // Defino las acciones (métodos) que pueden modificar el estado del store
     actions: {
 
         // STORE LOGIN
         async login(datosLogin) {
             try {
+                // Realizo una petición POST al endpoint '/login' con los datos de login
                 const response = await useAxiosInstance().post('/login', {
                     email: datosLogin.email,
                     password: datosLogin.password
                 });
 
+                // Verifico si la respuesta es exitosa (código 200)
                 if (response.status === 200) {
+                    // Actualizo el token de autenticación y el nombre de usuario
                     switch (true) {
+
+                        // Actualizo el token de autenticación y el nombre de usuario
                         case response.data.hasOwnProperty('token'):
                             this.auth.token = response.data.token;
                         case response.data.hasOwnProperty('user'):
@@ -37,12 +49,16 @@ export const useAuthStore = defineStore({
                             break;
                     }
                 }
+                // Devuelvo la respuesta de la petición
                 return response;
             } catch (error) {
+                // Si hay un error devuelvo la respuesta de la petición
                 console.log('Error en LOGIN STORE ==> ', error);
                 return error.response;
             }
         },
+
+        // LAS DEMÁS STORES SON PRACTICAMENTE LO MISMO
 
         // STORE REGISTRO
         async registro(datosRegistro) {

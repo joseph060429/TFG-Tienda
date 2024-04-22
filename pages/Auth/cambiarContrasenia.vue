@@ -80,9 +80,6 @@ const datosCambioPassword = reactive({
     password: '',
     repitaPassword: '',
 })
-
-
-
 const mostrarContrasenia = ref(false);
 
 
@@ -95,8 +92,7 @@ const cambiarContrasenia = async () => {
     // solo durará 10 minutos, preguntar si no pasa nada si se almacena el el localStorage durante el tiempo que dura el código
     const code = localStorage.getItem('codigoRecuperacion');
 
-    console.log(localStorage.getItem('codigoRecuperacion'));
-
+    console.log('Valor almacenado en localStorage:', localStorage.getItem('codigoRecuperacion'));
     // Verifico que las contraseñas sean iguales
     if (datosCambioPassword.password !== datosCambioPassword.repitaPassword) {
         mostrarAlertaError('Las contraseñas no coinciden. Por favor, inténtalo nuevamente.', quasar);
@@ -108,9 +104,12 @@ const cambiarContrasenia = async () => {
         const response = await cambioContrasenia(datosCambioPassword, code);
         console.log("Response:", response.data)
         if(response.status === 200){
+            console.log("eliminacion del localStorage" , localStorage.removeItem('codigoRecuperacion'));
             localStorage.removeItem('codigoRecuperacion');
             mostrarAlertaExito('Contraseña cambiada exitosamente, inicie sesión', quasar)
             router.push({ path: '/auth/login' });
+        }else{
+            mostrarAlertaError('Ya has utilizado el código de recuperación, o ha expirado, vuelve a pedir uno nuevo', quasar)
         }
 
     } catch (error) {
