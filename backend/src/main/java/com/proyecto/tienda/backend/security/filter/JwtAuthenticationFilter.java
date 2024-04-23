@@ -1,7 +1,7 @@
 package com.proyecto.tienda.backend.security.filter;
 
-import java.util.HashMap;
 
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +33,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Autowired
     UsuarioRepositorio usuarioRepositorio;
 
+
     public JwtAuthenticationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
@@ -50,7 +51,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             usuario = new ObjectMapper().readValue(request.getInputStream(), UsuarioModelo.class);
             email = usuario.getEmail().trim();
-            // No le pongo el .trim a la password porque la contraseña tiene que ser exactamente igual
+            // No le pongo el .trim a la password porque la contraseña tiene que ser
+            // exactamente igual
             password = usuario.getPassword();
 
         } catch (StreamReadException e) {
@@ -77,21 +79,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Este user es el de Spring Security para obtener los detalles del usuario
         User user = (User) authResult.getPrincipal();
 
-        // Obtenemos el token
-        String token = jwtUtils.generateJwtToken(user.getUsername());
+        // Obtén el rol del usuario
+        String userRole = user.getAuthorities().iterator().next().getAuthority();
+
+        // Obtenemos el token con el email y el rol del usuario
+        String token = jwtUtils.generateJwtToken(user.getUsername(), userRole);
 
         response.addHeader("Authorization", token);
 
         Map<String, Object> httpResponse = new HashMap<>();
         httpResponse.put("token", token);
-        httpResponse.put("Message", "Autenticacion Correcta");
+        httpResponse.put("Message", "Autenticación Correcta");
         httpResponse.put("user", user);
 
         // Convertir el mapa en el json
-        response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
-
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
         response.getWriter().flush();
 
         super.successfulAuthentication(request, response, chain, authResult);

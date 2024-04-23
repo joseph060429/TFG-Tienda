@@ -22,9 +22,10 @@ public class JwtUtils {
     @Value("${jwt.time.expiration}")
     private String jwtExpirationTime;
 
-    // GENERAR TOKEN DE ACCESO
-    public String generateJwtToken(String email) {
+    // GENERAR TOKEN DE ACCESO INCLUYENDO EL ROL DEL USUARIO EN EL TOKEN
+    public String generateJwtToken(String email, String role) {
         return Jwts.builder()
+                .claim("role", role)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim()))) // Tiempo
@@ -43,6 +44,12 @@ public class JwtUtils {
                 .compact();
 
     }
+
+
+
+
+
+
 
     // VALIDAR TOKEN DE ACCESO, AQUÍ SE LEE EL TOKEN
     public boolean isTokenValid(String token) {
