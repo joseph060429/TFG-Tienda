@@ -37,6 +37,7 @@ export const useAuthStore = defineStore({
 
                 // Verifico si la respuesta es exitosa (código 200)
                 if (response.status === 200) {
+                    localStorage.setItem('token', response.data.token);
                     // Actualizo el token de autenticación y el nombre de usuario
                     switch (true) {
 

@@ -26,5 +26,10 @@ export default defineNuxtConfig({
   ],
   css:[
     '~/assets/main.scss'
-  ]
+  ],
+  // Para que solo funcionen como SPA es decir que no me deje visualizar nada de la pagina en la que esta sin estar autenticado
+  routeRules: {
+    '/usuario/**' : { ssr: false },
+    '/admin/**' : { ssr: false },
+  }
 });

@@ -96,6 +96,11 @@ import { useAuth } from '~/composables/useAuth.js';
 
 const { registro } = useAuth();
 
+definePageMeta ({
+  role: ['PUBLIC']
+})
+
+
 // RUTAS
 const router = useRouter()
 

@@ -19,6 +19,10 @@
             <q-icon name="mdi-login"></q-icon> <!-- Icono para el botón de login -->
             Login
           </q-btn>
+          <q-btn color="dark" dense flat @click="cerrarSesion" class="custom-btn">
+            <q-icon name="mdi-login"></q-icon> 
+            Cerrar sesion
+          </q-btn>
         </q-toolbar>
       </q-header>
     </q-layout>
@@ -34,12 +38,6 @@ import { useRouter } from 'vue-router'
 // Rutas
 const router = useRouter()
 
-
-// const path = computed(() => route.path)
-
-// onBeforeMount(() => {
-//   console.log('Esto es path ==> ', path.value);
-// })
 // Variables
 let isLogin = true
 let isRegistro = true
@@ -53,6 +51,11 @@ const registro = () => {
   router.push({ path: '/auth/registro' })
  
 };
+
+const cerrarSesion = () => {
+  localStorage.removeItem('token')
+  router.push({ path: '/' })
+}
 
 
 </script>

@@ -6,12 +6,13 @@
 
 <script setup>
 // Importo el middleware que he creado
-import authMiddleware from '~/middleware/authMiddleware.js';
+// import authMiddleware from '~/middleware/authMiddleware.global.js';
 
 // Agrego el middleware a la configuración de la página
 definePageMeta({
-    middleware: [authMiddleware]
+    role: ['ROLE_USER']
 });
+
 </script>
 
 <style lang="scss" scoped></style>

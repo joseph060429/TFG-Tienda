@@ -11,7 +11,9 @@
 <script setup>
 // Importaciones
 import { useRouter } from 'vue-router'
-
+definePageMeta ({
+  role: ['PUBLIC']
+})
 
 // Rutas
 const router = useRouter()
