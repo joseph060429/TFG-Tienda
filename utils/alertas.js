@@ -1,8 +1,4 @@
 //USAR QUASAR
-
-
-
-
 export const mostrarAlertaError = (msg, quasar) => {
     // Utilizo Quasar para mostrar una notificación con el mensaje especificado
     quasar.notify({

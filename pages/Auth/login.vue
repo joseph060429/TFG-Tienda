@@ -1,8 +1,8 @@
 <template>
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
   <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
-    <div class="d-flex justify-center align-center" style="max-width: 40%; margin: auto;">
-      <h1 class="text-h4 q-mb-md text-center"
+    <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
+      <h1 class="text-h4 q-mb-md text-center q-mt-lg"
         style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
         Login
       </h1>
@@ -68,6 +68,7 @@ import { useAuth } from '~/composables/useAuth.js';
 
 const { login } = useAuth();
 
+// Acceso de la pagina
 definePageMeta ({
   role: ['PUBLIC']
 })

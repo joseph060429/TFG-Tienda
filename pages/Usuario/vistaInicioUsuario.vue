@@ -1,18 +1,31 @@
 <template>
     <div>
-        <h1> Soy la vista usuario, preguntar si hay una mejor manera de hacer las rutas</h1>
-    </div>
+    <h1>Bienvenido, Usuario</h1>
+    <q-btn @click="editarPerfil" label="Editar Perfil" />
+  </div>
 </template>
 
 <script setup>
-// Importo el middleware que he creado
-// import authMiddleware from '~/middleware/authMiddleware.global.js';
+import { useRouter } from 'vue-router'
+import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
+import { reactive } from "vue";
+import { useAuth } from '~/composables/useAuth.js';
 
-// Agrego el middleware a la configuración de la página
 definePageMeta({
     role: ['ROLE_USER']
 });
 
+const router = useRouter();
+
+const editarPerfil = () => {
+    router.push({ path: '/usuario/editarPerfil' })
+};
+
+
+
+
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

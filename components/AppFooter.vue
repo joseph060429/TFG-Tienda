@@ -44,6 +44,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
 }
 
 .text-white {
@@ -70,5 +71,11 @@
 
 .instagram {
     background-color: #e4405f;
+}
+/* Estilos adicionales para pantallas más pequeñas */
+@media (max-width: 600px) {
+  .social-icon {
+    font-size: 20px; /* Reduce el tamaño de los iconos en pantallas pequeñas */
+  }
 }
 </style>

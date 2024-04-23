@@ -1,19 +1,20 @@
 <template>
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
-        <div class="d-flex justify-center align-center" style="max-width: 40%; margin: auto;">
-            <h1 class="text-h4 q-mb-md text-center"
+        <div class="d-flex justify-center align-center" style="max-width: 70%; margin: auto;">
+            <h1 class="text-h4 q-mb-md text-center q-mt-lg"
                 style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
-                RECUPERAR CONTRASEÑA
+                Recupera tu contraseña
             </h1>
             <q-form @submit.prevent="envioCodigoRecuperacion" @reset="borrar" class="q-gutter-md">
 
                 <!-- Campo email -->
-                <q-input filled v-model="emailUsuario.email" label="Email *" hint="Tu correo electrónico" lazy-rules :rules="[
-                    val => val && val.length > 0 || 'Por favor, introduce algo',
-                    val => /^\S.*\S$/.test(val) || 'El email no puede empezar ni terminar con espacios en blanco',
-                    val => /^\S+@\S+\.\S+$/.test(val) || 'El formato del correo electrónico no es válido',
-                ]">
+                <q-input filled v-model="emailUsuario.email" label="Email *" hint="Tu correo electrónico" lazy-rules
+                    :rules="[
+                        val => val && val.length > 0 || 'Por favor, introduce algo',
+                        val => /^\S.*\S$/.test(val) || 'El email no puede empezar ni terminar con espacios en blanco',
+                        val => /^\S+@\S+\.\S+$/.test(val) || 'El formato del correo electrónico no es válido',
+                    ]">
                     <template v-slot:prepend>
                         <q-icon name="mdi-email" />
                     </template>
@@ -24,7 +25,7 @@
 
                     <!-- Boton de enviar -->
                     <q-btn label="Recuperar contraseña" type="submit" class="full-width enviar-button">
-                        <q-icon name="mdi-login" class="q-ml-md"></q-icon> <!-- Icono para el botón -->
+                        <q-icon name="mdi-lock-reset" class="q-ml-md"></q-icon> <!-- Icono para el botón -->
                     </q-btn>
 
                     <!-- Boton de reiniciar -->
@@ -45,6 +46,11 @@ import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
+
+// Acceso de la pagina
+definePageMeta({
+    role: ['PUBLIC']
+})
 
 const { enviarCodigoRecuperacion } = useAuth();
 

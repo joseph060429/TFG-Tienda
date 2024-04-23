@@ -5,6 +5,9 @@
 </template>
 
 <script setup>
+definePageMeta ({
+  role: ['PUBLIC']
+})
 
 </script>
 

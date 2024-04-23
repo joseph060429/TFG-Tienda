@@ -11,16 +11,16 @@
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
           <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-          <q-btn color="dark" dense flat @click="registro" class="custom-btn">
+          <q-btn v-if="showRegisterAndLogin"  color="dark" dense flat @click="registro" class="custom-btn">
             <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
             Registro
           </q-btn>
-          <q-btn color="dark" dense flat @click="login" class="custom-btn">
+          <q-btn v-if="showRegisterAndLogin" color="dark" dense flat @click="login" class="custom-btn">
             <q-icon name="mdi-login"></q-icon> <!-- Icono para el botón de login -->
             Login
           </q-btn>
-          <q-btn color="dark" dense flat @click="cerrarSesion" class="custom-btn">
-            <q-icon name="mdi-login"></q-icon> 
+          <q-btn v-if="showRegisterAndLogin" color="dark" dense flat @click="cerrarSesion" class="custom-btn">
+            <q-icon name="mdi-logout"></q-icon>
             Cerrar sesion
           </q-btn>
         </q-toolbar>
@@ -34,9 +34,23 @@
 // Importaciones
 import { useRouter } from 'vue-router'
 
-
 // Rutas
 const router = useRouter()
+
+// PRUEBA
+
+// Función para verificar si el usuario está autenticado
+
+// Función para determinar si mostrar los botones de login y registro
+const showRegisterAndLogin = () => {
+  const route = useRoute(); // Obtener la ruta actual
+  console.log('Rol de la ruta actual:', route.meta.role);
+  return route.meta.role === 'PUBLIC'; // Solo muestra los botones si la ruta es pública
+};
+
+
+
+
 
 // Variables
 let isLogin = true
@@ -44,12 +58,12 @@ let isRegistro = true
 
 const login = () => {
   router.push({ path: '/auth/login' })
-  
+
 };
 
 const registro = () => {
   router.push({ path: '/auth/registro' })
- 
+
 };
 
 const cerrarSesion = () => {

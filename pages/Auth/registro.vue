@@ -4,11 +4,13 @@
 
   <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
 
-    <div class="d-flex justify-center align-center" style="max-width: 40%; margin: auto;">
-      <h1 class="text-h4 q-mb-md text-center"
+    <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
+      <h1 class="text-h4 q-mb-md text-center q-mt-lg"
         style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
         Regístrate
       </h1>
+
+
 
       <q-form @submit.prevent="registroUsuario" @reset="borrar" class="q-gutter-md">
 
@@ -50,8 +52,8 @@
         </q-input>
 
         <!-- Campo password -->
-        <q-input filled v-model="datosRegistro.password" :type="mostrarContrasenia ? 'text' : 'password'" label="Contraseña *"
-          lazy-rules :rules="[
+        <q-input filled v-model="datosRegistro.password" :type="mostrarContrasenia ? 'text' : 'password'"
+          label="Contraseña *" lazy-rules :rules="[
             val => val && val.length > 0 || 'Por favor, introduce algo',
             val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres'
           ]">
@@ -96,7 +98,8 @@ import { useAuth } from '~/composables/useAuth.js';
 
 const { registro } = useAuth();
 
-definePageMeta ({
+// Acceso de la pagina
+definePageMeta({
   role: ['PUBLIC']
 })
 

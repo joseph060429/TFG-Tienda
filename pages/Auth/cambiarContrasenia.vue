@@ -1,16 +1,16 @@
 <template>
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
-        <div class="d-flex justify-center align-center" style="max-width: 40%; margin: auto;">
-            <h1 class="text-h4 q-mb-md text-center"
+        <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
+            <h1 class="text-h4 q-mb-md text-center q-mt-lg"
                 style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
-                Recuperar cuenta
+                Recupera tu cuenta
             </h1>
             <q-form @submit.prevent="cambiarContrasenia" @reset="borrar" class="q-gutter-md">
 
                 <!-- Campo password -->
-                <q-input filled v-model="datosCambioPassword.password" :type="mostrarContrasenia ? 'text' : 'password'" label="Contraseña *"
-                    lazy-rules :rules="[
+                <q-input filled v-model="datosCambioPassword.password" :type="mostrarContrasenia ? 'text' : 'password'"
+                    label="Contraseña *" lazy-rules :rules="[
                         val => val && val.length > 0 || 'Por favor, introduce algo',
                         val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres'
                     ]">
@@ -25,8 +25,8 @@
                 </q-input>
 
                 <!-- Campo repitaPassword -->
-                <q-input filled v-model="datosCambioPassword.repitaPassword" :type="mostrarContrasenia ? 'text' : 'password'"
-                    label="Repita la contraseña *" lazy-rules :rules="[
+                <q-input filled v-model="datosCambioPassword.repitaPassword"
+                    :type="mostrarContrasenia ? 'text' : 'password'" label="Repita la contraseña *" lazy-rules :rules="[
                         val => val && val.length > 0 || 'Por favor, introduce algo',
                         val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres'
                     ]">
@@ -45,7 +45,7 @@
 
                     <!-- Boton de enviar -->
                     <q-btn label="Cambiar contraseña" type="submit" class="full-width enviar-button">
-                        <q-icon name="mdi-login" class="q-ml-md"></q-icon> <!-- Icono para el botón -->
+                        <q-icon name="mdi-lock-reset" class="q-ml-md"></q-icon> <!-- Icono para el botón -->
                     </q-btn>
 
                     <!-- Boton de reiniciar -->
@@ -66,7 +66,12 @@ import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
 
-const {cambioContrasenia} = useAuth();
+// Acceso de la pagina
+definePageMeta({
+    role: ['PUBLIC']
+})
+
+const { cambioContrasenia } = useAuth();
 // RUTAS
 const router = useRouter()
 
@@ -103,12 +108,12 @@ const cambiarContrasenia = async () => {
     try {
         const response = await cambioContrasenia(datosCambioPassword, code);
         console.log("Response:", response.data)
-        if(response.status === 200){
-            console.log("eliminacion del localStorage" , localStorage.removeItem('codigoRecuperacion'));
+        if (response.status === 200) {
+            console.log("eliminacion del localStorage", localStorage.removeItem('codigoRecuperacion'));
             localStorage.removeItem('codigoRecuperacion');
             mostrarAlertaExito('Contraseña cambiada exitosamente, inicie sesión', quasar)
             router.push({ path: '/auth/login' });
-        }else{
+        } else {
             mostrarAlertaError('Ya has utilizado el código de recuperación, o ha expirado, vuelve a pedir uno nuevo', quasar)
         }
 
@@ -142,5 +147,4 @@ const cambiarMostrarPassword = () => {
     /* Ajusto el ancho */
     width: calc(50% - 10px);
 }
-
 </style>
