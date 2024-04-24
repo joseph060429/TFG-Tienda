@@ -20,7 +20,16 @@ import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
 import com.proyecto.tienda.backend.models.*;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.AdminServicio.AdminServicio;
+import com.proyecto.tienda.backend.service.UsuarioServicio.UsuarioServicio;
+import org.springframework.web.bind.annotation.*;
+import com.proyecto.tienda.backend.service.UsuarioDetailsServiceImpl;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+
 
 @RestController
 @RequestMapping("/admin")
@@ -32,6 +41,9 @@ public class AdminControllers {
 
     @Autowired
     private JwtUtils jwtUtils;
+       
+    @Autowired
+    private UsuarioDetailsServiceImpl userDetailsService;
 
     // CONTROLADOR PARA LISTAR TODOS LOS USUARIOS (ESTE MÉTODO SOLO SE LO HE IMPLEMENTADO
     // AL ADMIN)
@@ -83,6 +95,38 @@ public class AdminControllers {
 
         String mensaje = adminServicio.actualizarUsuarioSiendoAdmin(usuarioId, actualizarUsuarioDTO, token, jwtUtils);
         return ResponseEntity.ok(mensaje);
+    }
+
+     // CONTROLADOR PARA REFRESCAR EL TOKEN
+     // CONTROLADOR PARA REFRESCAR EL TOKEN
+    @GetMapping("/refreshToken")
+    public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String authorizationHeader = request.getHeader("Authorization");
+    
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7); // Quitamos "Bearer " del encabezado Authorization
+    
+            if (jwtUtils.isTokenValid(token)) {
+                String email = jwtUtils.getEmailFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email); // Obtenemos los detalles del
+                                                                                        // usuario desde Spring Security
+    
+                // Creamos un nuevo token de autenticación
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,
+                        null, userDetails.getAuthorities());
+    
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+    
+                System.out.println("Refresh token: " + token);
+    
+                // Devolvemos una ResponseEntity con el token de actualización
+                return ResponseEntity.ok("Refresh token: " + token);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token de autorización no encontrado");
+        }
     }
 
 }

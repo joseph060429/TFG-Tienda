@@ -22,6 +22,11 @@ public class JwtUtils {
     @Value("${jwt.time.expiration}")
     private String jwtExpirationTime;
 
+    @Value("${jwt.refresh.time.expiration}")
+    private String jwtRefreshTimeExpiration;
+
+
+
     // GENERAR TOKEN DE ACCESO INCLUYENDO EL ROL DEL USUARIO EN EL TOKEN
     public String generateJwtToken(String email, String role) {
         return Jwts.builder()
@@ -29,6 +34,29 @@ public class JwtUtils {
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim()))) // Tiempo
+                                                                                                                // de
+                                                                                                                // expiración
+                                                                                                                // por
+                                                                                                                // eso
+                                                                                                                // se
+                                                                                                                // cierrra
+                                                                                                                // la
+                                                                                                                // sesion
+                                                                                                                // despues
+                                                                                                                // de 30
+                                                                                                                // minutos
+                .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+    }
+
+
+    public String generateJwtTokenRefresh(String email, String role) {
+        return Jwts.builder()
+                .claim("role", role)
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtRefreshTimeExpiration.trim()))) // Tiempo
                                                                                                                 // de
                                                                                                                 // expiración
                                                                                                                 // por

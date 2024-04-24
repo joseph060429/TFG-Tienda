@@ -1,6 +1,5 @@
 package com.proyecto.tienda.backend.security.filter;
 
-
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +13,7 @@ import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.*;
 import org.springframework.security.core.userdetails.User;
+import java.time.format.DateTimeFormatter;
 
 //CLASE PARA CUANDO EL USUARIO INTENTE AUTENTICARSE
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -32,7 +33,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Autowired
     UsuarioRepositorio usuarioRepositorio;
-
 
     public JwtAuthenticationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
@@ -85,12 +85,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Obtenemos el token con el email y el rol del usuario
         String token = jwtUtils.generateJwtToken(user.getUsername(), userRole);
 
+        String refreshToken = jwtUtils.generateJwtTokenRefresh(user.getUsername(), userRole);
+
+        String userEmail = user.getUsername();
+
+        // Obtén la fecha y hora actual
+        LocalDateTime now = LocalDateTime.now();
+
+        // Calcula la fecha de expiración (30 minutos desde ahora)
+        LocalDateTime expirationTime = now.plusMinutes(30);
+
+        // Definir el formato deseado
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+        // Formatea la fecha de expiración como una cadena
+        String expirationTimeString = expirationTime.format(formatter);
+
+
         response.addHeader("Authorization", token);
 
         Map<String, Object> httpResponse = new HashMap<>();
         httpResponse.put("token", token);
         httpResponse.put("Message", "Autenticación Correcta");
-        httpResponse.put("user", user);
+        httpResponse.put("refreshToken", refreshToken);
+        httpResponse.put("roles", userRole);
+        httpResponse.put("email", userEmail);
+        httpResponse.put("tiempoExpiracion", expirationTimeString);
 
         // Convertir el mapa en el json
         response.setStatus(HttpStatus.OK.value());
@@ -98,7 +118,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
         response.getWriter().flush();
 
-        super.successfulAuthentication(request, response, chain, authResult);
+        response.setHeader("refreshToken", refreshToken);
+
+        // super.successfulAuthentication(request, response, chain, authResult);
     }
 
     // CUANDO LAS CREDENCIALES SON INVALIDAS

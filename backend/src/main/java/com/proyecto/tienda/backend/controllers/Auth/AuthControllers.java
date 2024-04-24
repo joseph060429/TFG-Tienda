@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.CrearUsuarioDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.EnviarCorreoDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.RecuperarContraseniaDTO;
+import com.proyecto.tienda.backend.security.jwt.JwtUtils;
+import com.proyecto.tienda.backend.service.UsuarioDetailsServiceImpl;
 import com.proyecto.tienda.backend.service.AuthServicio.AuthServicio;
 import com.proyecto.tienda.backend.util.ResendUtil;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 @RestController
 public class AuthControllers {
 
@@ -22,7 +25,13 @@ public class AuthControllers {
     private AuthServicio authServicio;
 
     @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
     private ResendUtil resend;
+
+    @Autowired
+    private UsuarioDetailsServiceImpl userDetailsService;
 
     @GetMapping("/hello")
     public String hello() {
@@ -49,14 +58,15 @@ public class AuthControllers {
         }
     }
 
-    //CONTROLADOR PARA ENVIAR CORREO CON CODIGO DE RECUPERACION
+    // CONTROLADOR PARA ENVIAR CORREO CON CODIGO DE RECUPERACION
     @PostMapping("/envioCodigoRecuperacion")
     public String enviarCorreo(@RequestBody EnviarCorreoDTO correoDTO) {
         resend.enviarEmailDeRecuperacion(correoDTO.getEmail().trim());
         return "Correo de recuperación enviado con éxito.";
     }
 
-    // CONTROLADOR PARA VERIFICAR SI EL CÓDIGO EXISTE EN LA BASE DE DATOS Y SI NO ESTÁ CADUCADO
+    // CONTROLADOR PARA VERIFICAR SI EL CÓDIGO EXISTE EN LA BASE DE DATOS Y SI NO
+    // ESTÁ CADUCADO
     @PostMapping("/verificarCodigo")
     public ResponseEntity<String> verificarCodigo(@RequestBody Map<String, String> requestBody) {
         // Creo un nuevo objeto RecuperarContraseniaDTO y le asigno el código
@@ -77,9 +87,10 @@ public class AuthControllers {
 
     // CONTROLADOR PARA CAMBIAR LA CONTRASEÑA
     @PostMapping("/cambiarContrasenia")
-    public ResponseEntity<String> cambiarContrasenia(@RequestBody @Valid
-    RecuperarContraseniaDTO recuperarContraseniaDTO) {
-    return authServicio.cambiarContrasenia(recuperarContraseniaDTO);
-    }    
-
+    public ResponseEntity<String> cambiarContrasenia(
+            @RequestBody @Valid RecuperarContraseniaDTO recuperarContraseniaDTO) {
+        return authServicio.cambiarContrasenia(recuperarContraseniaDTO);
+    }
+    
+    
 }

@@ -67,6 +67,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/hello").permitAll();
                     auth.requestMatchers("/login").permitAll();
+                    auth.requestMatchers("/refreshToken").permitAll();
                     auth.requestMatchers("/crearUsuario").permitAll();
                     auth.requestMatchers("/envioCodigoRecuperacion").permitAll();
                     auth.requestMatchers("/verificarCodigo").permitAll();
@@ -76,9 +77,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/buscarPorRangoDePrecio").permitAll();
                     auth.requestMatchers("/payment/*").permitAll();
                     auth.requestMatchers("/usuarios/pedidos/paypal/*").permitAll();
-                    // auth.requestMatchers("/subirImagen").permitAll();
                     auth.requestMatchers("/cambiarContrasenia").permitAll();
-                    // auth.requestMatchers("/crearPedido").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
