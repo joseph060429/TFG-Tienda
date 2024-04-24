@@ -13,10 +13,12 @@ export const useAuthStore = defineStore({
         // Defino el estado inicial de la store
         auth: {
             token: "", // Token de autorizacion
-            user: {
-                username: '' // Username es el email del usuario
-            }
-        }
+            // user: {
+            //     username: '' // Username es el email del usuario
+            // },
+            refreshToken: ''  // Refrescoken del usuario
+        },
+        // loggedIn: false,
     }),
 
     /* Poner useAxiosInstance() con cada peticion al back,
@@ -25,6 +27,21 @@ export const useAuthStore = defineStore({
 
     // Defino las acciones (métodos) que pueden modificar el estado del store
     actions: {
+
+        async checkLogin() {
+            try {
+                if(this.auth.user){
+                    this.loggedIn = true
+                    return true
+                }
+                else{
+                    this.loggedIn = false
+                    return false
+                }
+            } catch (e) {
+                console.log(e  )
+            }
+        },
 
         // STORE LOGIN
         async login(datosLogin) {
@@ -44,8 +61,10 @@ export const useAuthStore = defineStore({
                         // Actualizo el token de autenticación y el nombre de usuario
                         case response.data.hasOwnProperty('token'):
                             this.auth.token = response.data.token;
-                        case response.data.hasOwnProperty('user'):
-                            this.auth.user.username = response.data.user.username;
+                        // case response.data.hasOwnProperty('user'):
+                        //     this.auth.user.username = response.data.user.username;
+                        case response.data.hasOwnProperty('refreshToken'):
+                            this.auth.refreshToken = response.data.refreshToken;
                         default:
                             break;
                     }
@@ -121,9 +140,9 @@ export const useAuthStore = defineStore({
 
 
 
-        
 
-    
+
+
     }
 });
 

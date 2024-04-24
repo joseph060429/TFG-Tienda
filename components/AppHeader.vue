@@ -11,15 +11,15 @@
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
           <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-          <q-btn v-if="showRegisterAndLogin"  color="dark" dense flat @click="registro" class="custom-btn">
+          <q-btn v-if="!isLogged" color="dark" dense flat @click="registro" class="custom-btn">
             <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
             Registro
           </q-btn>
-          <q-btn v-if="showRegisterAndLogin" color="dark" dense flat @click="login" class="custom-btn">
+          <q-btn v-if="!isLogged" color="dark" dense flat @click="login" class="custom-btn">
             <q-icon name="mdi-login"></q-icon> <!-- Icono para el botón de login -->
             Login
           </q-btn>
-          <q-btn v-if="showRegisterAndLogin" color="dark" dense flat @click="cerrarSesion" class="custom-btn">
+          <q-btn v-if="isLogged" color="dark" dense flat @click="cerrarSesion" class="custom-btn">
             <q-icon name="mdi-logout"></q-icon>
             Cerrar sesion
           </q-btn>
@@ -33,28 +33,38 @@
 <script setup>
 // Importaciones
 import { useRouter } from 'vue-router'
+import useAuthStore from '~/stores/authStore.js'
+// import
+// let authStore = useAuthStore()
 
 // Rutas
 const router = useRouter()
 
 // PRUEBA
+// const token = localStorage.getItem('token')
 
 // Función para verificar si el usuario está autenticado
 
 // Función para determinar si mostrar los botones de login y registro
 const showRegisterAndLogin = () => {
   const route = useRoute(); // Obtener la ruta actual
-  console.log('Rol de la ruta actual:', route.meta.role);
+  console.log('Rol de la ruta actl:', route.meta.role);
   return route.meta.role === 'PUBLIC'; // Solo muestra los botones si la ruta es pública
 };
 
+let isLogged = false;
+
+// onMounted(() => {
+//   if (authStore.checkLogin() == true) {
+//     if(token)
+//     isLogged = true
+//   } else {
+//     isLogged = false
+//   }
+// })
 
 
 
-
-// Variables
-let isLogin = true
-let isRegistro = true
 
 const login = () => {
   router.push({ path: '/auth/login' })

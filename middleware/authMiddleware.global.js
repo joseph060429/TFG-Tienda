@@ -1,9 +1,10 @@
 import { useRouter } from "vue-router";
 import { decodificarTokenYSacarelRol } from "~/utils/decodificarToken.js";
+// import jwt from 'jsonwebtoken'
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const router = useRouter();
-
+  // console.log(jwt, 'hibafgdskjfgavdfhdsafks')
   // Pongo process.cliente para que no se ejecute en el servidor y solo en el cliente
   if (process.client) {
     // Obtengo el token del almacenamiento local
