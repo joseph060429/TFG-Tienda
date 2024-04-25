@@ -88,6 +88,8 @@ public class AdminServicioImpl implements AdminServicio {
             usuario.setRoles(roles);
             usuarioRepositorio.save(usuario);
 
+            System.out.println("Se sube el backend");
+
             return ResponseEntity.ok("Rol actualizado correctamente");
         } else {
             return ResponseEntity.badRequest().body("Usuario no encontrado");
