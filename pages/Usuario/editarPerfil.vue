@@ -9,10 +9,10 @@
                 style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
                 Actualiza tu perfil
             </h1>
-            <q-form @submit.prevent="registroUsuario" @reset="borrar" class="q-gutter-md">
+            <q-form @submit.prevent="actualizarDatosUsuario" @reset="borrar" class="q-gutter-md">
 
                 <!-- Campo nombre -->
-                <q-input filled v-model="datosRegistro.nombre" label="Nombre *" hint="Nombre" lazy-rules :rules="[
+                <q-input filled v-model="datosActualizar.nombre" label="Nombre *" hint="Nombre" lazy-rules :rules="[
                     val => val && val.length > 0 || 'Por favor, introduce algo',
                     val => /^.{2,70}$/.test(val) || 'El nombre/s debe tener entre 2 y 70 caracteres',
                     val => /^\S.*\S$/.test(val) || 'El nombre/s no puede empezar ni terminar con espacios en blanco',
@@ -25,7 +25,7 @@
                 </q-input>
 
                 <!-- Campo apellido -->
-                <q-input filled v-model="datosRegistro.apellido" label="Apellidos *" hint="Apellidos" lazy-rules :rules="[
+                <q-input filled v-model="datosActualizar.apellido" label="Apellidos *" hint="Apellidos" lazy-rules :rules="[
                     val => val && val.length > 0 || 'Por favor, introduce algo',
                     val => /^.{2,70}$/.test(val) || 'Los apellidos debe tener entre 2 y 70 caracteres',
                     val => /^\S.*\S$/.test(val) || 'Los apellidos no pueden empezar ni terminar con espacios en blanco',
@@ -38,7 +38,7 @@
                 </q-input>
 
                 <!-- Campo email -->
-                <q-input filled v-model="datosRegistro.email" label="Email *" hint="Tu correo electrónico" lazy-rules
+                <q-input filled v-model="datosActualizar.email" label="Email *" hint="Tu correo electrónico" lazy-rules
                     :rules="[
                         val => val && val.length > 0 || 'Por favor, introduce algo',
                         val => /^\S.*\S$/.test(val) || 'El email no puede empezar ni terminar con espacios en blanco',
@@ -50,7 +50,7 @@
                 </q-input>
 
                 <!-- Campo password -->
-                <q-input filled v-model="datosRegistro.password" :type="mostrarContrasenia ? 'text' : 'password'"
+                <q-input filled v-model="datosActualizar.password" :type="mostrarContrasenia ? 'text' : 'password'"
                     label="Contraseña *" lazy-rules :rules="[
                         val => val && val.length > 0 || 'Por favor, introduce algo',
                         val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres'
@@ -89,9 +89,9 @@
 import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
-import { useAuth } from '~/composables/useAuth.js';
+import { usuarioComposable } from '~/composables/usuarioComposable';
 
-const { registro } = useAuth();
+const { actualizacionUsuario } = usuarioComposable();
 
 definePageMeta({
     role: ['ROLE_USER']
@@ -105,51 +105,50 @@ const router = useRouter()
 const quasar = useQuasar()
 
 // DECLARACION DE VARIABLES
-const datosRegistro = reactive({
+const datosActualizar = reactive({
     nombre: '',
     apellido: '',
     email: '',
     password: ''
 })
 const mostrarContrasenia = ref(false);
-const accept = ref(false);
+
 
 
 // FUNCIONES
 
 // FUNCION PARA ENVIAR EL FORMULARIO
-const registroUsuario = async () => {
+const actualizarDatosUsuario = async () => {
 
     // Creo el usuario
     try {
-        const response = await registro(datosRegistro);
+        const response = await actualizacionUsuario(datosActualizar);
         console.log("Response", response);
         // Verifico el estado de la respuesta y muestro el mensaje correspondiente
-        if (response.data === "Prueba con otro email") {
+        if (response.data === "El email ya esta en uso") {
             console.log('Email ya está en uso:', response.data);
             mostrarAlertaError('Prueba con otro correo electrónico', quasar);
         } else {
-            // Si todo va bien creo el usuario y redirecciono al login
-            console.log('Usuario creado correctamente:', response.data);
-            mostrarAlertaExito('Usuario creado correctamente, por favor inicia sesión', quasar);
+            // Si todo va bien actualizo el usuario y redirecciono al login
+            console.log('Usuario actualizado correctamente:', response.data);
+            mostrarAlertaExito('Usuario actualizado correctamente, vuelve a iniciar sesión para guardar los cambios', quasar);
             borrar();
             router.push({ path: '/auth/login' });
         }
     } catch (error) {
         // Error de red o algo parecido
         console.error('Error al crear el usuario:', error);
-        mostrarAlertaError('Error al crear el usuario intentelo más tarde', quasar);
+        mostrarAlertaError('Error al actualizar el usuario intentelo más tarde', quasar);
     }
 
 };
 
 // CUANDO SE BORRA EL FORMULARIO, ELIMINO LOS VALORES DEL EMAIL Y LA CONTRASEÑA.
 const borrar = () => {
-    datosRegistro.nombre = ''
-    datosRegistro.apellido = ''
-    datosRegistro.email = ''
-    datosRegistro.password = ''
-    accept.value = false;
+    datosActualizar.nombre = ''
+    datosActualizar.apellido = ''
+    datosActualizar.email = ''
+    datosActualizar.password = ''
 };
 
 // CUANDO SE HACE CLIC EN EL BOTÓN DE REGRESAR, REDIRIJO AL USUARIO A LA PÁGINA DE INICIO DE LA VISTA USUARIO.
@@ -160,8 +159,8 @@ const regresar = () => {
 // CUANDO SE HACE CLIC EN EL BOTÓN PARA MOSTRAR U OCULTAR LA CONTRASEÑA(OJITO), CAMBIO EL ESTADO PARA MOSTRARLA U OCULTARLA.
 const cambiarMostrarPassword = () => {
     mostrarContrasenia.value = !mostrarContrasenia.value;
-
 };
+
 
 
 

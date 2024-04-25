@@ -9,7 +9,7 @@
               alt="Logo" class="logo" style="border-radius: 10px; border: 2px solid lightseagreen;  -webkit-user-drag: none;">
           </div>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-          <h1 class="header-text" style="font-size: 36px;">Explora el poder de la tecnología, crea tu futuro.</h1>
+          <h1 class="header-text" style="font-size: 25px;">Explora el poder de la tecnología, crea tu futuro.</h1>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
           <q-btn v-if="!authStore.loggedIn" color="dark" dense flat @click="registro" class="custom-btn">
             <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
@@ -69,6 +69,10 @@ const registro = () => {
 
 const cerrarSesion = () => {
   localStorage.removeItem('token')
+  localStorage.removeItem('roles')
+  localStorage.removeItem('email')
+  localStorage.removeItem('refreshToken')
+  localStorage.removeItem('tiempoExpiracion')
   authStore.loggedIn = false;
   router.push({ path: '/' })
 }
