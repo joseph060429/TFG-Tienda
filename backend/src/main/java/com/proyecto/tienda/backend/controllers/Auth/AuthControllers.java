@@ -4,19 +4,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.CrearUsuarioDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.EnviarCorreoDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.RecuperarContraseniaDTO;
+import com.proyecto.tienda.backend.UtilEnum.ERol;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
+import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.UsuarioDetailsServiceImpl;
 import com.proyecto.tienda.backend.service.AuthServicio.AuthServicio;
 import com.proyecto.tienda.backend.util.ResendUtil;
 import jakarta.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class AuthControllers {
@@ -25,13 +30,10 @@ public class AuthControllers {
     private AuthServicio authServicio;
 
     @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
     private ResendUtil resend;
 
     @Autowired
-    private UsuarioDetailsServiceImpl userDetailsService;
+	private UsuarioRepositorio usuarioRepositorio;
 
     @GetMapping("/hello")
     public String hello() {
@@ -90,6 +92,29 @@ public class AuthControllers {
     public ResponseEntity<String> cambiarContrasenia(
             @RequestBody @Valid RecuperarContraseniaDTO recuperarContraseniaDTO) {
         return authServicio.cambiarContrasenia(recuperarContraseniaDTO);
+    }
+
+
+    @GetMapping("/quienSoy")
+    public ResponseEntity<?> getUserRoles(@RequestParam String email) {
+        
+		Optional<UsuarioModelo> usuario = usuarioRepositorio.findByEmail(email);
+        if (usuario.isPresent()) {
+            UsuarioModelo usuarioModelo = usuario.get();
+            if (usuarioModelo.getRoles() == null) {
+                return ResponseEntity.notFound().build();
+            } else {
+                // Comprruebo si el usuario tiene el rol 'USER'
+                boolean esRolAdmin = usuarioModelo.getRoles().stream()
+                        .anyMatch(rol -> rol.getName().equals(ERol.ADMIN));
+                if (esRolAdmin) {
+                    return ResponseEntity.ok(true);
+                } else {
+                    return ResponseEntity.ok(false);
+                }
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
     
     

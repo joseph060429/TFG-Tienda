@@ -3,6 +3,7 @@ package com.proyecto.tienda.backend.controllers.Admin;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
+import com.proyecto.tienda.backend.UtilEnum.ERol;
 import com.proyecto.tienda.backend.models.*;
+import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.AdminServicio.AdminServicio;
 import com.proyecto.tienda.backend.service.UsuarioServicio.UsuarioServicio;
@@ -44,6 +47,9 @@ public class AdminControllers {
        
     @Autowired
     private UsuarioDetailsServiceImpl userDetailsService;
+
+    // @Autowired
+	// private UsuarioRepositorio usuarioRepositorio;
 
     // CONTROLADOR PARA LISTAR TODOS LOS USUARIOS (ESTE MÉTODO SOLO SE LO HE IMPLEMENTADO
     // AL ADMIN)
@@ -98,13 +104,12 @@ public class AdminControllers {
     }
 
      // CONTROLADOR PARA REFRESCAR EL TOKEN
-     // CONTROLADOR PARA REFRESCAR EL TOKEN
     @GetMapping("/refreshToken")
     public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String authorizationHeader = request.getHeader("Authorization");
     
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7); // Quitamos "Bearer " del encabezado Authorization
+            String token = authorizationHeader.substring(7); // Quito el "Bearer " del encabezado Authorization
     
             if (jwtUtils.isTokenValid(token)) {
                 String email = jwtUtils.getEmailFromToken(token);
@@ -128,5 +133,4 @@ public class AdminControllers {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token de autorización no encontrado");
         }
     }
-
 }

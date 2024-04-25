@@ -30,7 +30,7 @@ public class JwtUtils {
     // GENERAR TOKEN DE ACCESO INCLUYENDO EL ROL DEL USUARIO EN EL TOKEN
     public String generateJwtToken(String email, String role) {
         return Jwts.builder()
-                .claim("role", role)
+                // .claim("role", role)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim()))) // Tiempo
@@ -53,7 +53,7 @@ public class JwtUtils {
 
     public String generateJwtTokenRefresh(String email, String role) {
         return Jwts.builder()
-                .claim("role", role)
+                // .claim("role", role)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtRefreshTimeExpiration.trim()))) // Tiempo
