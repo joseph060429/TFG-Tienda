@@ -37,12 +37,19 @@ export const useAuth = () => {
         return await store.cambioContrasenia(datosCambioPassword, code);
     }
 
+    const checkUserRole = async(roles, email) => {
+        return await store.checkUserRole(roles, email);
+    }
+
+
+
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         login,
         registro,
         enviarCodigoRecuperacion, 
         verificaCodigo,
-        cambioContrasenia
+        cambioContrasenia,
+        checkUserRole
     }
 }

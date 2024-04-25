@@ -69,7 +69,7 @@ import { useAuth } from '~/composables/useAuth.js';
 const { login } = useAuth();
 
 // Acceso de la pagina
-definePageMeta ({
+definePageMeta({
   role: ['PUBLIC']
 })
 
@@ -93,30 +93,41 @@ const loginUser = async () => {
   // Login el usuario
   try {
     const response = await login(datosLogin);
-    console.log("Response:", response.data);
+    console.log("Response:", response.data)
     // Verifico el estado de la respuesta y muestro el mensaje correspondiente
     if (response.status === 200) {
+    // Traigo el rol del usuario que se ha registrado y redirecciono a un sitio o a otro
+      const roles = localStorage.getItem('roles')
+
+      // Verifico si el usuario tiene el rol de administrador
+      // for (const roles of response.data.user.authorities) {
+      if (roles === 'ROLE_ADMIN') {
+        // console.log('¿Es admin?', isAdmin);
+        // isAdmin = true;
+        console.log('roles', roles);
+        router.push({ path: '/admin/vistaInicioAdmin' })
+        // break;
+      } else {
+        router.push({ path: '/usuario/vistaInicioUsuario' });
+      }
+      // }
+
+
+
+
+
+
+
+
+
+
+
       console.log('Sesion iniciada correctamente:', response.status);
       // Muestro la alerta de 
       mostrarAlertaExito('Sesion iniciada correctamente', quasar);
 
       // Borro el formulario
       borrar();
-
-      // Variable para ver si es administrador
-      let isAdmin = false;
-      // Verifico si el usuario tiene el rol de administrador
-      for (const role of response.data.user.authorities) {
-        if (role.authority === 'ROLE_ADMIN') {
-          isAdmin = true;
-          router.push({ path: '/admin/vistaInicioAdmin' })
-          break;
-        } else {
-          router.push({ path: '/usuario/vistaInicioUsuario' });
-        }
-      }
-
-      console.log('¿Es admin?', isAdmin);
     } else {
 
       throw new Error(response.data)

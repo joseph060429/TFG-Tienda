@@ -5,6 +5,7 @@ import { useAxiosInstance } from "~/utils/axios";
 const endpoint = "/auth";
 
 
+
 // DEFINO Y EXPORTO LA STORE 'useAuthStore'
 export const useAuthStore = defineStore({
     // Identificador unico para el store
@@ -16,9 +17,15 @@ export const useAuthStore = defineStore({
             // user: {
             //     username: '' // Username es el email del usuario
             // },
-            refreshToken: ''  // Refrescoken del usuario
+
+            roles: [], // Roles del usuario
+            email: '',
+            tiempoExpiracion: '', // Tiempo de expiración del token
+            refreshToken: '',  // Refrescoken del usuario
+
+
         },
-        // loggedIn: false,
+        loggedIn: false,
     }),
 
     /* Poner useAxiosInstance() con cada peticion al back,
@@ -30,16 +37,16 @@ export const useAuthStore = defineStore({
 
         async checkLogin() {
             try {
-                if(this.auth.user){
+                if (localStorage.getItem('token')) {
                     this.loggedIn = true
                     return true
                 }
-                else{
+                else {
                     this.loggedIn = false
                     return false
                 }
             } catch (e) {
-                console.log(e  )
+                console.log(e)
             }
         },
 
@@ -55,19 +62,24 @@ export const useAuthStore = defineStore({
                 // Verifico si la respuesta es exitosa (código 200)
                 if (response.status === 200) {
                     localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('refreshToken', response.data.refreshToken);
+                    localStorage.setItem('email', response.data.email);
+                    localStorage.setItem('tiempoExpiracion', response.data.tiempoExpiracion);
+                    localStorage.setItem('roles', response.data.roles);
+                    this.loggedIn = true;
                     // Actualizo el token de autenticación y el nombre de usuario
-                    switch (true) {
+                    // switch (true) {
 
-                        // Actualizo el token de autenticación y el nombre de usuario
-                        case response.data.hasOwnProperty('token'):
-                            this.auth.token = response.data.token;
-                        // case response.data.hasOwnProperty('user'):
-                        //     this.auth.user.username = response.data.user.username;
-                        case response.data.hasOwnProperty('refreshToken'):
-                            this.auth.refreshToken = response.data.refreshToken;
-                        default:
-                            break;
-                    }
+                    //     // Actualizo el token de autenticación y el nombre de usuario
+                    //     case response.data.hasOwnProperty('token'):
+                    //         this.auth.token = response.data.token;
+                    //     // case response.data.hasOwnProperty('user'):
+                    //     //     this.auth.user.username = response.data.user.username;
+                    //     case response.data.hasOwnProperty('refreshToken'):
+                    //         this.auth.refreshToken = response.data.refreshToken;
+                    //     default:
+                    //         break;
+                    // }
                 }
                 // Devuelvo la respuesta de la petición
                 return response;
@@ -135,15 +147,34 @@ export const useAuthStore = defineStore({
                 console.log('Error en CAMBIAR CONTRASEÑA STORE ==> ', error);
                 return error.response;
             }
-        }
+        },
 
-
-
-
-
-
-
-    }
+        async checkUserRole() {
+            console.log('hola email', localStorage.getItem('email'))
+            try {
+              // Realizo la solicitud GET al endopoint que he hecho en el backend  para obtener comprobar que el email de usuario tiene ese rol
+              const response = await useAxiosInstance().get('/quienSoy', {
+                params: {
+                  email: localStorage.getItem('email')
+                },
+                headers: {
+                  'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+              });
+              console.log(response, 'dsed hola')
+              // Verifico si ese email, tiene ese rol
+              if (!response.data) {
+                console.log("El usuario no tiene el rol necesario");
+                return false;
+                console.log('lllega?')
+              }
+              return true;
+            } catch (error) {
+              console.error('Error al verificar los roles del usuario:', error);
+              throw error;
+            }
+          }
+        },
 });
 
 export default useAuthStore;

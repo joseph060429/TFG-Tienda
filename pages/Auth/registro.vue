@@ -94,7 +94,7 @@
 import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
-import { useAuth } from '~/composables/useAuth.js';
+import { useAuth} from '~/composables/useAuth.js';
 
 const { registro } = useAuth();
 

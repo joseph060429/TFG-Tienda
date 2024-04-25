@@ -1,25 +1,25 @@
 <template>
   <div class="q-pa-md">
-    <q-layout view="lHh lpr lFf" container style="height: 10vh; width: 100%">
+    <q-layout view="lHh lpr lFf" container style="height:10vh; width: 100%">
       <q-header class="header" style="background-color: #666666; height: 10vh; width: 100%">
         <q-toolbar class="text-primary">
-          <div class="logo-container">
+          <div class="logo-container" style="cursor: pointer;" @click="home">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d"
-              alt="Logo" class="logo">
+              alt="Logo" class="logo" style="border-radius: 10px; border: 2px solid lightseagreen;  -webkit-user-drag: none;">
           </div>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-          <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
+          <h1 class="header-text" style="font-size: 36px;">Explora el poder de la tecnología, crea tu futuro.</h1>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-          <q-btn v-if="!isLogged" color="dark" dense flat @click="registro" class="custom-btn">
+          <q-btn v-if="!authStore.loggedIn" color="dark" dense flat @click="registro" class="custom-btn">
             <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
             Registro
           </q-btn>
-          <q-btn v-if="!isLogged" color="dark" dense flat @click="login" class="custom-btn">
+          <q-btn v-if="!authStore.loggedIn" color="dark" dense flat @click="login" class="custom-btn">
             <q-icon name="mdi-login"></q-icon> <!-- Icono para el botón de login -->
             Login
           </q-btn>
-          <q-btn v-if="isLogged" color="dark" dense flat @click="cerrarSesion" class="custom-btn">
+          <q-btn v-if="authStore.loggedIn" color="dark" dense flat @click="cerrarSesion" class="custom-btn">
             <q-icon name="mdi-logout"></q-icon>
             Cerrar sesion
           </q-btn>
@@ -35,36 +35,28 @@
 import { useRouter } from 'vue-router'
 import useAuthStore from '~/stores/authStore.js'
 // import
-// let authStore = useAuthStore()
+let authStore = useAuthStore()
 
 // Rutas
 const router = useRouter()
 
-// PRUEBA
-// const token = localStorage.getItem('token')
 
-// Función para verificar si el usuario está autenticado
+let isLogged = ref(false);
 
-// Función para determinar si mostrar los botones de login y registro
-const showRegisterAndLogin = () => {
-  const route = useRoute(); // Obtener la ruta actual
-  console.log('Rol de la ruta actl:', route.meta.role);
-  return route.meta.role === 'PUBLIC'; // Solo muestra los botones si la ruta es pública
+onMounted(() => {
+  if (authStore.checkLogin() == true) {
+    if (token)
+      isLogged = true
+  } else {
+    isLogged = false
+  }
+})
+
+
+
+const home = () => {
+  router.push({ path: '/' })
 };
-
-let isLogged = false;
-
-// onMounted(() => {
-//   if (authStore.checkLogin() == true) {
-//     if(token)
-//     isLogged = true
-//   } else {
-//     isLogged = false
-//   }
-// })
-
-
-
 
 const login = () => {
   router.push({ path: '/auth/login' })
@@ -73,11 +65,11 @@ const login = () => {
 
 const registro = () => {
   router.push({ path: '/auth/registro' })
-  console.log("Registro");
 };
 
 const cerrarSesion = () => {
   localStorage.removeItem('token')
+  authStore.loggedIn = false;
   router.push({ path: '/' })
 }
 
@@ -117,7 +109,7 @@ const cerrarSesion = () => {
 
 .header-text {
   color: white;
-  font-size: 20px;
+  font-size: 15px;
   /* Tamaño de fuente más grande */
   font-weight: bold;
   /* Texto en negrita */

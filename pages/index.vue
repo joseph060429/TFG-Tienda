@@ -4,6 +4,40 @@
       <h1>Bienvenido a nuestra tienda de ordenadores y componentes</h1>
       <p>Descubre nuestra amplia selección de productos de alta calidad</p>
       <q-btn label="Explorar" color="primary" @click="listarProductos" class="custom-btn" />
+      s
+      s
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+      s
+      s
+
+      s
+      s
+
+      ss
+      s
+
+      s
+      s
+
+      s
     </div>
   </div>
 </template>

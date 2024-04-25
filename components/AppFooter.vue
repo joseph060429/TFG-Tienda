@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-md">
-        <q-layout class="layout" view="lHh lpr lFf">
-            <q-footer class="footer">
+
+            <q-footer class="footer" style="height: 10vh;">
                 <div class="footer-content q-gutter-md">
                     <q-toolbar dense class="q-pa-md" style="justify-content: space-between;">
                         <div style="display: flex; align-items: center;">
@@ -20,7 +20,7 @@
 
 
             </q-footer>
-        </q-layout>
+
     </div>
 </template>
 
