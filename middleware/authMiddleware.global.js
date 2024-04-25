@@ -19,6 +19,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
       if (!to.meta.role || !to.meta.role.includes("PUBLIC")) {
         console.log("No hay token, redirigiendo al login");
         return navigateTo("/auth/login");
+
+        console.log("SE SUBE EL FONTEND");
       }
     } else {
       console.log("Hay token");
