@@ -73,7 +73,7 @@ const login = () => {
 
 const registro = () => {
   router.push({ path: '/auth/registro' })
-
+  console.log("Registro");
 };
 
 const cerrarSesion = () => {
