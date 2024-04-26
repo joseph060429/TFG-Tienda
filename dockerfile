@@ -7,7 +7,7 @@ RUN yarn install --frozen-lockfile && \
     yarn cache clean
 COPY . .
 EXPOSE 3000
-CMD [ "yarn", "dev", "--host","--dotenv", ".env.development" ]
+CMD [ "yarn", "dev", "--host","--dotenv", ".env.production" ]
 
 # docker build -t osephsm060429/frontend:v1 .
 # docker push maruizlosada/frontend-tfg:v1
