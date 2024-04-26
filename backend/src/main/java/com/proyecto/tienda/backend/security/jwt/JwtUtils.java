@@ -128,7 +128,7 @@ public class JwtUtils {
         }
     }
 
-    // OBTIENE LA FIRMA DEL TOKEN
+    // OBTIENE LA FIRMA DEL TOKEN hola
     // public Key getSignatureKey() {
 
     // byte[] keyBytes = Decoders.BASE64.decode(secretKey);
