@@ -1,8 +1,13 @@
 <template>
     <div>
-    <h1>Bienvenido, Usuario</h1>
-    <q-btn @click="editarPerfil" label="Editar Perfil" />
-  </div>
+        <h1>Bienvenido, Usuario</h1>
+      
+            <q-btn @click="editarPerfil" label="Editar Perfil" />
+            
+            <formulario-editar-perfil v-model="popup"></formulario-editar-perfil>
+            <q-btn @click="eliminarPerfil" label="Darte de baja" />
+    
+    </div>
 </template>
 
 <script setup>
@@ -15,10 +20,15 @@ definePageMeta({
     role: ['ROLE_USER']
 });
 
+const popup = ref(false)
 const router = useRouter();
 
 const editarPerfil = () => {
-    router.push({ path: '/usuario/editarPerfil' })
+    popup.value = true
+};
+
+const eliminarPerfil = () => {
+    router.push({ path: '/usuario/eliminarPerfil' })
 };
 
 
@@ -26,6 +36,4 @@ const editarPerfil = () => {
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

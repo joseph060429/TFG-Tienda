@@ -11,13 +11,14 @@ export const usuarioStore = defineStore({
   state: () => ({
     // Defino el estado inicial de la store
     auth: {
-      token: "", // Token de autorizacion
+      token: "",
+      nombre: "", // Token de autorizacion
       //   roles: [], // Roles del usuario
-      email: "",
-      tiempoExpiracion: "", // Tiempo de expiración del token
-      refreshToken: "", // Refrescoken del usuario
+      apellido: "",
+      email: "", // Tiempo de expiración del token
+      password: "", // Refrescoken del usuario
     },
-    loggedIn: false,
+    loggedIn: true,
   }),
 
   /* Poner useAxiosInstance() con cada peticion al back,
