@@ -66,12 +66,21 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 usuario.setApellido(normalizeText(actualizarUsuarioDTO.getApellido().trim().toUpperCase()));
             }
 
+            // Para que me actualice el email si coincide con el que ya tiene
+
             if (actualizarUsuarioDTO.getEmail() != null && !actualizarUsuarioDTO.getEmail().isEmpty()) {
                 // Validar que el nuevo email no exista
                 Optional<UsuarioModelo> existeEmail = usuarioRepositorio
                         .findByEmail(actualizarUsuarioDTO.getEmail().trim());
                 if (existeEmail.isPresent()) {
-                    return "El email ya esta en uso";
+
+                    if (emailFromToken.equals(actualizarUsuarioDTO.getEmail())) {
+                        System.out.println("email toke: " + emailFromToken);
+                        System.out.println("email nuevo: " + actualizarUsuarioDTO.getEmail());
+                        usuario.setEmail(actualizarUsuarioDTO.getEmail());
+                    } else {
+                        return "El email ya esta en uso";
+                    }
                 }
                 usuario.setEmail(actualizarUsuarioDTO.getEmail());
             }

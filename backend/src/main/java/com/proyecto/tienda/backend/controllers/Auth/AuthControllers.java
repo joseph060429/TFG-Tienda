@@ -14,14 +14,19 @@ import com.proyecto.tienda.backend.util.ResendUtil;
 import jakarta.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 
 @RestController
 public class AuthControllers {
@@ -34,6 +39,12 @@ public class AuthControllers {
 
     @Autowired
 	private UsuarioRepositorio usuarioRepositorio;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private UsuarioDetailsServiceImpl userDetailsService;
 
     @GetMapping("/hello")
     public String hello() {
@@ -115,6 +126,37 @@ public class AuthControllers {
             }
         }
         return ResponseEntity.notFound().build();
+    }
+
+    // CONTROLADOR PARA REFRESCAR EL TOKEN
+    @GetMapping("/refreshToken")
+    public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7); // Quitamos "Bearer " del encabezado Authorization
+
+            if (jwtUtils.isTokenValid(token)) {
+                String email = jwtUtils.getEmailFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email); // Obtenemos los detalles del
+                                                                                        // usuario desde Spring Security
+
+                // Creamos un nuevo token de autenticación
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,
+                        null, userDetails.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+                System.out.println("Refresh token: " + token);
+
+                // Devolvemos una ResponseEntity con el token de actualización
+                return ResponseEntity.ok("Refresh token: " + token);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token de autorización no encontrado");
+        }
     }
     
     
