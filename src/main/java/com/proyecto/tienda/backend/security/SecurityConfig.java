@@ -149,7 +149,6 @@ public class SecurityConfig {
         mailSender.setPort(993); // Configuro el puerto
         mailSender.setUsername(emailIonos); // Dirección de correo de Ionos
         mailSender.setPassword(contraseniaIonos); // Contraseña de correo de Ionos
-
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
@@ -160,3 +159,5 @@ public class SecurityConfig {
     }
 
 }
+
+
