@@ -28,7 +28,7 @@ public class UsuarioEInvitadoProductosController {
             List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.listarProductos(page, size);
             return ResponseEntity.ok(productos);
         } catch (Exception e) {
-            // jaja
+            // jajajaja
             return ResponseEntity.status(500).body(null);
         }
     }
