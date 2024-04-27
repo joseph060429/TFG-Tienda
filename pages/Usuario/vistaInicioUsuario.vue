@@ -2,7 +2,7 @@
     <div>
         <h1>Bienvenido, Usuario</h1>
         <div>
-            <AppHeader></AppHeader>
+            <!-- <AppHeader></AppHeader> -->
 
             <q-btn @click="editarPerfil" label="Editar Perfil" />
 
