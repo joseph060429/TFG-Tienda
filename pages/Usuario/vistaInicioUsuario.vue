@@ -1,12 +1,14 @@
 <template>
     <div>
         <h1>Bienvenido, Usuario</h1>
-      
+        <div>
+            <AppHeader></AppHeader>
+
             <q-btn @click="editarPerfil" label="Editar Perfil" />
-            
-            <formulario-editar-perfil v-model="popup"></formulario-editar-perfil>
-            <q-btn @click="eliminarPerfil" label="Darte de baja" />
-    
+
+        </div>
+
+        <q-btn @click="eliminarPerfil" label="Darte de baja" />
     </div>
 </template>
 
@@ -15,6 +17,8 @@ import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
+
+
 
 definePageMeta({
     role: ['ROLE_USER']

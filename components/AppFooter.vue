@@ -15,7 +15,6 @@
                 </q-toolbar>
             </div>
         </q-footer>
-
     </div>
 </template>
 

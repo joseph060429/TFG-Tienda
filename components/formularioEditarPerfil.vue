@@ -1,6 +1,6 @@
 <template>
     <!-- Boton de volver atras -->
-    <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+    <!-- <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" /> -->
     <q-dialog v-model="popup"> <q-card>
             <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
                 <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
@@ -104,9 +104,9 @@ const popup = ref(props.formu)
 
 let authStore = useAuthStore();
 
-definePageMeta({
-    role: ['ROLE_USER']
-});
+// definePageMeta({
+//     role: ['ROLE_USER']
+// });
 
 
 // RUTAS

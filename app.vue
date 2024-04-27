@@ -3,14 +3,14 @@
     <AppHeader />
     <NuxtPage />
     <q-layout class="layout" view="lHh lpr lFf">
-    <AppFooter />
+      <AppFooter />
     </q-layout>
   </div>
 </template>
 
 <style scoped>
-.container{
+.container {
   max-width: 100vw;
   max-height: 100vh;
-  }
+}
 </style>
