@@ -42,6 +42,8 @@ export const useAuthStore = defineStore({
       }
     },
 
+    // "start": "nuxt start"
+
     // STORE LOGIN
     async login(datosLogin) {
       try {
