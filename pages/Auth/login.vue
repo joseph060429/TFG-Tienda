@@ -4,7 +4,7 @@
     <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
       <h1 class="text-h4 q-mb-md text-center q-mt-lg"
         style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
-        Login prueba
+        Login
       </h1>
       <q-form @submit.prevent="loginUser" @reset="borrar" class="q-gutter-md">
 
