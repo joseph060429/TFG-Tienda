@@ -23,10 +23,12 @@ public class UsuarioEInvitadoProductosController {
     public ResponseEntity<List<Map<String, Object>>> listarProductos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
+
         try {
             List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.listarProductos(page, size);
             return ResponseEntity.ok(productos);
         } catch (Exception e) {
+            // jaja
             return ResponseEntity.status(500).body(null);
         }
     }
