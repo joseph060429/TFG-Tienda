@@ -1,22 +1,19 @@
 <template>
     <div>
-        <h1>Bienvenido, Usuario</h1>
-        <div>
-            <!-- <AppHeader></AppHeader> -->
-
-            <q-btn @click="editarPerfil" label="Editar Perfil" />
-
-        </div>
-
-        <q-btn @click="eliminarPerfil" label="Darte de baja" />
+      <h1>Bienvenido, Usuario</h1>
+      <div>
+        <FormularioEditarPerfil v-if="popup" /> <q-btn @click="editarPerfil" label="Mi Perfil" />
+      </div>
+      <q-btn @click="eliminarPerfil" label="Darte de baja" />
     </div>
-</template>
+  </template>
 
 <script setup>
 import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
+// import {FormularioEditarPerfil} from '#components';
 
 
 
@@ -28,7 +25,10 @@ const popup = ref(false)
 const router = useRouter();
 
 const editarPerfil = () => {
-    popup.value = true
+  // Abrir el formulario solo si no está ya abierto
+  if (!popup.value) {
+    popup.value = true;
+  }
 };
 
 const eliminarPerfil = () => {

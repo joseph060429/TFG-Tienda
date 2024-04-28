@@ -45,7 +45,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
               // Le quito la autenticación a la store para que me salgan los botones de registro y de login
               authStore.loggedIn = false;
               // Redirijo al usuario a la página de inicio de sesión
-              return navigateTo("/auth/login");
+              // return navigateTo("/auth/login");
+              // return navigateTo("/layouts/errores");
               // return navigateTo("/usuario/vistaInicioUsuario");
               // return true;
             }
