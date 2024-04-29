@@ -1,7 +1,8 @@
 <template>
-    <div class="q-pa-md">
-        <q-footer class="footer" style="height: 10vh;">
-            <div class="footer-content q-gutter-md">
+    <div class="container">
+        <q-layout view="lHh lpr lFf" container style="height:10vh; width: 100%">
+            <q-footer class="footer" style="background-color: #666666; height: 10vh; width: 100%">
+                <!-- <div class="footer-content q-gutter-md"> -->
                 <q-toolbar dense class="q-pa-md" style="justify-content: space-between;">
                     <div style="display: flex; align-items: center;">
                         <span class="text-white">Síguenos en:</span>
@@ -13,8 +14,9 @@
                     <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FSoloLogo.png?alt=media&token=014b4175-3072-4a02-9d78-9ad45e7223a7"
                         alt="Logo" class="logo" />
                 </q-toolbar>
-            </div>
-        </q-footer>
+                <!-- </div> -->
+            </q-footer>
+        </q-layout>
     </div>
 </template>
 
@@ -26,13 +28,17 @@
 .footer {
     position: fixed;
     bottom: 0;
-    width: calc(100% - 20px);
-    /* Reduce el ancho en 20px para dejar espacio a ambos lados */
-    margin: 0 10px;
-    /* Agrega un margen de 10px a ambos lados */
-    background-color: #666666;
+    display: flex;
+    align-items: center;
+    padding-bottom: 0;
+    margin: 0;
+    height: 10vh;
+}
 
-
+.container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 

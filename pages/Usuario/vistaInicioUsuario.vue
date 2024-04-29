@@ -1,44 +1,124 @@
 <template>
-    <div>
-      <h1>Bienvenido, Usuario Soy Joseph</h1>
-      <div>
-        <formularioEditarPerfil v-model="motrarFormuEditarPeril" /> <q-btn @click="editarPerfil" label="Mi Perfil" />
+  <div class="container">
+    <!-- Título principal -->
+    <h1 class="title">Bienvenido, Usuario</h1>
+    <!-- Sección del perfil -->
+    <div class="botones">
+      <div class="perfil">
+        <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" />
+        <!-- Botón para editar el perfil -->
+        <q-btn @click="editarPerfil" class="boton-mi-perfil" label="Mi Perfil">
+          <q-icon name="mdi-account" /> <!-- Icono de perfil -->
+        </q-btn>
       </div>
-      <q-btn @click="eliminarPerfil" label="Darte de baja" />
+      <!-- Botón para eliminar el perfil -->
+      <div class="eliminar-perfil">
+        <!-- Botón para editar el perfil -->
+        <q-btn @click="eliminarPerfil" class="boton-borrar" label="Darte de baja">
+          <q-icon name="mdi-delete" /> <!-- Icono de eliminar perfil -->
+        </q-btn>
+      </div>
+      <!-- Botón para ver el historial de los pedidos -->
+      <div class="eliminar-perfil">
+        <!-- Botón para editar el perfil -->
+        <q-btn @click="verPedidos" class="verPedidos" label="Ver mis pedidos">
+          <q-icon name="mdi-cart-outline" /> <!-- Icono de eliminar perfil -->
+        </q-btn>
+      </div>
     </div>
-  </template>
+  </div>
+</template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
-import { reactive } from "vue";
+import { ref } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
-
-// Prueba subida empresa numero 29
-
 
 
 definePageMeta({
-    role: ['ROLE_USER']
+  role: ['ROLE_USER']
 });
 
-const motrarFormuEditarPeril = ref(false)
+const mostrarFormularioEditarPerfil = ref(false);
 const router = useRouter();
 
 const editarPerfil = () => {
-  // Abrir el formulario solo si no está ya abierto
-  if (!motrarFormuEditarPeril.value) {
-    motrarFormuEditarPeril.value = true;
+  // Abro el formulario si no esta abierto
+  if (!mostrarFormularioEditarPerfil.value) {
+    mostrarFormularioEditarPerfil.value = true;
   }
 };
 
 const eliminarPerfil = () => {
-    router.push({ path: '/usuario/eliminarPerfil' })
+  router.push({ path: '/usuario/eliminarPerfil' });
 };
-
-
-
-
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  /* Ancho máximo del contenedor */
+  max-width: 100%;
+  // height: 20vh;
+  /* Centrar horizontalmente */
+  margin: 0 auto;
+  /* Relleno */
+  /* 1% de la altura de la ventana */
+  padding: 2vh;
+  height: 80vh;
+  // background-color: black;
+}
+
+/* Tamaño de fuente del título */
+/* Estilos muy bonitos para el título */
+.title {
+  /* Tamaño de fuente */
+  padding: 0;
+  margin: 0;
+  font-size: 27px;
+  /* Margen inferior */
+  margin-bottom: 20px;
+  /* Color rojo */
+  color: #F44336;
+  /* Negrita */
+  font-weight: bold;
+  /* Sombra de texto */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+
+.boton-borrar {
+  // margin-top: 20px;
+  /* Color naranja */
+  background-color: #F44336;
+  // background-color: #F44336;
+  /* Texto blanco */
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.boton-borrar:hover {
+  background-color: #D32F2F;
+}
+
+.boton-mi-perfil {
+  background-color: #FF5722;
+  color: #fff;
+  transition: background-color 0.3s;
+
+}
+
+.boton-mi-perfi:hover {
+  background-color: #F44336;
+  background-color: #E64A19;
+}
+
+.botones{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%;
+  //border: 1px solid black;
+  
+}
+</style>

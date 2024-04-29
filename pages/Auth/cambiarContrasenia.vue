@@ -1,6 +1,7 @@
 <template>
+    <div class="container">
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-    <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
+    <!-- <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;"> -->
         <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
             <h1 class="text-h4 q-mb-md text-center q-mt-lg"
                 style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
@@ -146,5 +147,14 @@ const cambiarMostrarPassword = () => {
 .full-width {
     /* Ajusto el ancho */
     width: calc(50% - 10px);
+}
+
+.container {
+  /* Ancho máximo del contenedor */
+  max-width: 100%;
+  /* Relleno */
+  padding: 2vh;
+  height: 80vh;
+  /* background-color: black; */
 }
 </style>

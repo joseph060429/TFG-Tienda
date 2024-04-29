@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <AppHeader />
+    <AppHeader class="header"/>
     <NuxtPage />
-    <q-layout class="layout" view="lHh lpr lFf">
-      <AppFooter />
-    </q-layout>
+    <!-- <q-layout class="layout" view="lHh lpr lFf"> -->
+      <AppFooter class="footer"/>
+    <!-- </q-layout> -->
   </div>
 </template>
 

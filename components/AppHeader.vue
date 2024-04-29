@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="container">
     <q-layout view="lHh lpr lFf" container style="height:10vh; width: 100%">
       <q-header class="header" style="background-color: #666666; height: 10vh; width: 100%">
         <q-toolbar class="text-primary">
@@ -9,7 +9,7 @@
               alt="Logo" class="logo" style="border-radius: 10px; border: 2px solid lightseagreen;  -webkit-user-drag: none;">
           </div>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-          <h1 class="header-text" style="font-size: 25px;">Explora el poder de la tecnología, crea tu futuro.</h1>
+          <h1 class="header-text" style="font-size: 2.5em;">Explora el poder de la tecnología, crea tu futuro.</h1>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
           <q-btn v-if="!authStore.loggedIn" color="dark" dense flat @click="registro" class="custom-btn">
             <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
@@ -85,6 +85,9 @@ const cerrarSesion = () => {
 .header {
   display: flex;
   align-items: center;
+  padding-bottom: 0;
+  margin: 0;
+  height: 10vh;
 }
 
 .logo-container {
@@ -93,7 +96,7 @@ const cerrarSesion = () => {
 
 .logo {
   max-height: 80%;
-  max-width: 200px;
+  max-width: 210px;
 }
 
 .header-text {

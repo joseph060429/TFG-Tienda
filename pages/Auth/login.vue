@@ -1,6 +1,7 @@
 <template>
-  <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-  <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
+  <div class="container">
+    <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+    <!-- <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;"> -->
     <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
       <h1 class="text-h4 q-mb-md text-center q-mt-lg"
         style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
@@ -96,7 +97,7 @@ const loginUser = async () => {
     console.log("Response:", response.data)
     // Verifico el estado de la respuesta y muestro el mensaje correspondiente
     if (response.status === 200) {
-    // Traigo el rol del usuario que se ha registrado y redirecciono a un sitio o a otro
+      // Traigo el rol del usuario que se ha registrado y redirecciono a un sitio o a otro
       const roles = localStorage.getItem('roles')
 
       // Verifico si el usuario tiene el rol de administrador
@@ -110,18 +111,7 @@ const loginUser = async () => {
       } else {
         router.push({ path: '/usuario/vistaInicioUsuario' });
       }
-      // }
-
-
-
-
-
-
-
-
-
-
-
+    
       console.log('Sesion iniciada correctamente:', response.status);
       // Muestro la alerta de 
       mostrarAlertaExito('Sesion iniciada correctamente', quasar);
@@ -185,5 +175,14 @@ const olvidarContrasenia = () => {
   /* Cambio el color del texto al pasar el mouse */
   color: #0056b3;
 
+}
+
+.container {
+  /* Ancho máximo del contenedor */
+  max-width: 100%;
+  /* Relleno */
+  padding: 2vh;
+  height: 80vh;
+  /* background-color: black; */
 }
 </style>
