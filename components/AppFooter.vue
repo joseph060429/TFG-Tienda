@@ -2,10 +2,9 @@
     <div class="container">
         <q-layout view="lHh lpr lFf" container style="height:10vh; width: 100%">
             <q-footer class="footer" style="background-color: #666666; height: 10vh; width: 100%">
-                <!-- <div class="footer-content q-gutter-md"> -->
                 <q-toolbar dense class="q-pa-md" style="justify-content: space-between;">
                     <div style="display: flex; align-items: center;">
-                        <span class="text-white">Síguenos en:</span>
+                        <span class="text-footer">Síguenos en:</span>
                         <div class="social-links" style="margin-left: 13px;">
                             <a href="#" class="social-link"><q-icon name="mdi-facebook" class="social-icon" /></a>
                             <a href="#" class="social-link"><q-icon name="mdi-instagram" class="social-icon" /></a>
@@ -14,7 +13,6 @@
                     <img src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FSoloLogo.png?alt=media&token=014b4175-3072-4a02-9d78-9ad45e7223a7"
                         alt="Logo" class="logo" />
                 </q-toolbar>
-                <!-- </div> -->
             </q-footer>
         </q-layout>
     </div>
@@ -24,7 +22,15 @@
 <script setup>
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+
+.container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 .footer {
     position: fixed;
     bottom: 0;
@@ -35,13 +41,6 @@
     height: 10vh;
 }
 
-.container {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-
 .footer-content {
     display: flex;
     justify-content: space-between;
@@ -49,8 +48,9 @@
 
 }
 
-.text-white {
+.text-footer {
     color: white;
+    font-size: 1.3em;
 }
 
 .logo {

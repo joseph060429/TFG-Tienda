@@ -8,7 +8,18 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     // Obtén el token del almacenamiento local
     const token = localStorage.getItem("token");
+    if(token){
+      authStore.auth.token = token
+    }
     const roles = localStorage.getItem("roles");
+    const nombre = localStorage.getItem("nombre");
+    if(nombre){
+      authStore.auth.nombre = nombre
+    }
+    const apellido = localStorage.getItem("apellido");
+    if(apellido){
+      authStore.auth.apellido = apellido
+    }
     const email = localStorage.getItem("email");
     const refreshToken = localStorage.getItem("refreshToken");
     const tiempoExpiracion = localStorage.getItem("tiempoExpiracion");

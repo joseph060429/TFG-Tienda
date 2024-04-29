@@ -19,9 +19,9 @@
         </q-btn>
       </div>
       <!-- Botón para ver el historial de los pedidos -->
-      <div class="eliminar-perfil">
+      <div class="ver-pedidos">
         <!-- Botón para editar el perfil -->
-        <q-btn @click="verPedidos" class="verPedidos" label="Ver mis pedidos">
+        <q-btn @click="verPedidos" class="boton-ver-pedidos" label="Ver mis pedidos">
           <q-icon name="mdi-cart-outline" /> <!-- Icono de eliminar perfil -->
         </q-btn>
       </div>
@@ -69,13 +69,12 @@ const eliminarPerfil = () => {
   // background-color: black;
 }
 
-/* Tamaño de fuente del título */
-/* Estilos muy bonitos para el título */
+/* TITULO */
 .title {
   /* Tamaño de fuente */
   padding: 0;
   margin: 0;
-  font-size: 27px;
+  font-size: 2.5em;
   /* Margen inferior */
   margin-bottom: 20px;
   /* Color rojo */
@@ -86,7 +85,32 @@ const eliminarPerfil = () => {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
+// CONTENEDOR BOTONES
+.botones{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
 
+  
+}
+
+// BOTON DE MI PERFIL
+.boton-mi-perfil {
+  background-color: #FF5722;
+  color: #fff;
+  transition: background-color 0.3s;
+  min-width: 200px;
+  margin-bottom: 2.5%;
+}
+
+.boton-mi-perfi:hover {
+  background-color: #F44336;
+ 
+}
+
+// BOTON DE ELIMINAR PERFIL
 .boton-borrar {
   // margin-top: 20px;
   /* Color naranja */
@@ -95,30 +119,28 @@ const eliminarPerfil = () => {
   /* Texto blanco */
   color: #fff;
   transition: background-color 0.3s;
+  min-width: 200px;
+  margin-bottom: 2.5%;
 }
 
 .boton-borrar:hover {
   background-color: #D32F2F;
 }
-
-.boton-mi-perfil {
-  background-color: #FF5722;
+// BOTON DE VER PEDIDOS
+.boton-ver-pedidos {
+  // margin-top: 20px;
+  /* Color naranja */
+  background-color: #F44336;
+  // background-color: #F44336;
+  /* Texto blanco */
   color: #fff;
   transition: background-color 0.3s;
-
+  min-width: 200px;
+  margin-bottom: 2.5%;
 }
 
-.boton-mi-perfi:hover {
-  background-color: #F44336;
-  background-color: #E64A19;
+.boton-ver-pedidos:hover {
+  background-color: #D32F2F;
 }
 
-.botones{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 30%;
-  //border: 1px solid black;
-  
-}
 </style>

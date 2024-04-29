@@ -118,8 +118,8 @@ const quasar = useQuasar()
 
 // DECLARACION DE VARIABLES
 const datosActualizar = reactive({
-    nombre: '',
-    apellido: '',
+    nombre: authStore.auth.nombre,
+    apellido: authStore.auth.apellido,
     email: '',
     password: ''
 })
@@ -181,7 +181,7 @@ const cambiarMostrarPassword = () => {
 
 
 <!--  ESTILOS -->
-<style scoped>
+<style lang="scss" scoped>
 .full-width {
     /* Ajusto el ancho según tus preferencias */
     width: calc(50% - 10px);

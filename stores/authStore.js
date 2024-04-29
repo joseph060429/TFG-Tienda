@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useAxiosInstance } from "~/utils/axios";
 
 // Defino un endopoint que es el mismo para todos los metodos
-const endpoint = "/auth";
+// const endpoint = "/auth";
 
 // DEFINO Y EXPORTO LA STORE 'useAuthStore'
 export const useAuthStore = defineStore({
@@ -16,6 +16,8 @@ export const useAuthStore = defineStore({
       email: "",
       tiempoExpiracion: "", // Tiempo de expiración del token
       refreshToken: "", // Refrescoken del usuario
+      nombre: "",
+      apellido: "",
     },
     loggedIn: false,
   }),
@@ -60,6 +62,9 @@ export const useAuthStore = defineStore({
           localStorage.setItem("email", response.data.email);
           localStorage.setItem("tiempoExpiracion", response.data.tiempoExpiracion);
           localStorage.setItem("roles", response.data.roles);
+          localStorage.setItem("nombre", response.data.nombre);
+          localStorage.setItem("apellido", response.data.apellido);
+
           this.loggedIn = true;
           switch (true) {
             // Actualizo el token de autenticación y el nombre de usuario en pinia
@@ -73,6 +78,10 @@ export const useAuthStore = defineStore({
               this.auth.tiempoExpiracion = response.data.tiempoExpiracion;
             case response.data.hasOwnProperty("roles"):
               this.auth.roles = response.data.roles;
+            case response.data.hasOwnProperty("nombre"):
+              this.auth.nombre = response.data.nombre;
+            case response.data.hasOwnProperty("apellido"):
+              this.auth.apellido = response.data.apellido;
 
             default:
               break;
