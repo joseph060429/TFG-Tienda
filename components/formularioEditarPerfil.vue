@@ -100,6 +100,7 @@ const props = defineProps({
     formularioEditarPerfil: Boolean
 })
 const mostrarFormuEditarPerfil = ref(props.formularioEditarPerfil)
+// Prueba de que se sube desde la empresa
 
 
 let authStore = useAuthStore();
