@@ -45,5 +45,4 @@ public class ActualizarDireccionEnvioDTO {
 
     private String direccionEnvio;
 
-    // Prueba subida backend
 }
