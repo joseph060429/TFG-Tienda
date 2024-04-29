@@ -91,18 +91,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = jwtUtils.generateJwtTokenRefresh(user.getUsername(), userRole);
 
         String userEmail = user.getUsername();
-
+        
+        // Busco al usuario por el email de autorizacion
         Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(userEmail);
 
-        // Verificar si se encontró el usuario y obtener su nombre
-        // if (usuarioOptional.isPresent()) {
-        // UsuarioModelo usuarioModelo = usuarioOptional.get();
-        // String nombreUsuario = usuarioModelo.getNombre();
-        // String apellidoUsuario = usuarioModelo.getApellido();
-        // }
-
         UsuarioModelo usuarioModelo = usuarioOptional.get();
+
+        // Traigo el nombre del usuario
         String nombreUsuario = usuarioModelo.getNombre();
+
+        // Traigo el apellido del usuario
         String apellidoUsuario = usuarioModelo.getApellido();
 
         // Obtén la fecha y hora actual

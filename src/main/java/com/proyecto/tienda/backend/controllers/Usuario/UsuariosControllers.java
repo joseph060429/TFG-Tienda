@@ -1,7 +1,5 @@
 package com.proyecto.tienda.backend.controllers.Usuario;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,6 @@ public class UsuariosControllers {
 
     @Autowired
     private UsuarioServicio usuarioServicio;
-
 
     // CONTROLADOR PARA BORRAR UN USUARIO SIENDO USUARIO
     @DeleteMapping("/borrarUsuario")
