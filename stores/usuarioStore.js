@@ -16,7 +16,6 @@ export const usuarioStore = defineStore({
       //   roles: [], // Roles del usuario
       apellido: "",
       email: "", // Tiempo de expiración del token
-      password: "", // Refrescoken del usuario
     },
     loggedIn: true,
   }),
@@ -29,29 +28,52 @@ export const usuarioStore = defineStore({
   actions: {
     // STORE ACTUALIZAR USUARIO
     async actualizacionUsuario(datosActualizar) {
-        try {
-          const token = localStorage.getItem("token");
-          console.log("token", token);
-      
-          const response = await useAxiosInstance().patch("/usuarios/actualizarUsuario",{
-              nombre: datosActualizar.nombre,
-              apellido: datosActualizar.apellido,
-              email: datosActualizar.email,
-              password: datosActualizar.password,
+      try {
+        const token = localStorage.getItem("token");
+        console.log("token", token);
+
+        const response = await useAxiosInstance().patch(
+          "/usuarios/actualizarUsuario",
+          {
+            nombre: datosActualizar.nombre,
+            apellido: datosActualizar.apellido,
+            email: datosActualizar.email,
+            password: datosActualizar.password,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          return response;
-        } catch (error) {
-          console.log("Error en ACTUALIZAR USUARIO STORE ==> ", error);
-          return error.response;
-        }
-      },
-    }      
+          }
+        );
+        return response;
+      } catch (error) {
+        console.log("Error en ACTUALIZAR USUARIO STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+    //STORE DARSE DE BAJA(ELIMINAR CUENTA)
+    async borrarUsuario() {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("token", token);
+
+        const response = await useAxiosInstance().delete(
+          "/usuarios/borrarUsuario",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response;
+      } catch (error) {
+        console.log("Error en BORRAR USUARIO STORE ==> ", error);
+        return error.response;
+      }
+    },
+  },
 });
 
 export default usuarioStore;

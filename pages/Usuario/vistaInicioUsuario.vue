@@ -13,6 +13,7 @@
       </div>
       <!-- Botón para eliminar el perfil -->
       <div class="eliminar-perfil">
+        <darse-de-baja v-model="mostrarDarseDeBaja" />
         <!-- Botón para editar el perfil -->
         <q-btn @click="eliminarPerfil" class="boton-borrar" label="Darte de baja">
           <q-icon name="mdi-delete" /> <!-- Icono de eliminar perfil -->
@@ -20,7 +21,7 @@
       </div>
       <!-- Botón para ver el historial de los pedidos -->
       <div class="ver-pedidos">
-        <!-- Botón para editar el perfil -->
+        <!-- Botón para ver pedidos -->
         <q-btn @click="verPedidos" class="boton-ver-pedidos" label="Ver mis pedidos">
           <q-icon name="mdi-cart-outline" /> <!-- Icono de eliminar perfil -->
         </q-btn>
@@ -41,6 +42,7 @@ definePageMeta({
 });
 
 const mostrarFormularioEditarPerfil = ref(false);
+const mostrarDarseDeBaja = ref(false);
 const router = useRouter();
 
 const editarPerfil = () => {
@@ -51,7 +53,10 @@ const editarPerfil = () => {
 };
 
 const eliminarPerfil = () => {
-  router.push({ path: '/usuario/eliminarPerfil' });
+  // Abro el formulario si no esta abierto
+  if (!mostrarDarseDeBaja.value) {
+    mostrarDarseDeBaja.value = true;
+  }
 };
 </script>
 
@@ -86,14 +91,14 @@ const eliminarPerfil = () => {
 }
 
 // CONTENEDOR BOTONES
-.botones{
+.botones {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   width: 50%;
 
-  
+
 }
 
 // BOTON DE MI PERFIL
@@ -107,7 +112,7 @@ const eliminarPerfil = () => {
 
 .boton-mi-perfi:hover {
   background-color: #F44336;
- 
+
 }
 
 // BOTON DE ELIMINAR PERFIL
@@ -126,6 +131,7 @@ const eliminarPerfil = () => {
 .boton-borrar:hover {
   background-color: #D32F2F;
 }
+
 // BOTON DE VER PEDIDOS
 .boton-ver-pedidos {
   // margin-top: 20px;
@@ -142,5 +148,4 @@ const eliminarPerfil = () => {
 .boton-ver-pedidos:hover {
   background-color: #D32F2F;
 }
-
 </style>

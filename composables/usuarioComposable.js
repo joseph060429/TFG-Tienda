@@ -16,11 +16,14 @@ export const usuarioComposable = () => {
         return await store.actualizacionUsuario(datosActualizar)
     }
 
-    
+    const borrarUsuario = async() => {
+        return await store.borrarUsuario()
+    }
 
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
-        actualizacionUsuario
+        actualizacionUsuario,
+        borrarUsuario
     }
 }

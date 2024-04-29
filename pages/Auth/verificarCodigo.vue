@@ -61,6 +61,7 @@ const verificarCodigo = async () => {
 
         if (response.data === 'Código válido. Puede proceder con la recuperación de contraseña.') {
             mostrarAlertaExito('Código válido, puede proceder con la recuperación de contraseña', quasar);
+            localStorage.removeItem('codigoRecuperacion');
             router.push({ path: '/auth/cambiarContrasenia' });
         } else {
             throw new Error('La respuesta del servidor no es válida');
@@ -68,6 +69,7 @@ const verificarCodigo = async () => {
     } catch (error) {
         console.error('Error:', error);
         mostrarAlertaError('Código incorrecto o la fecha de expiración ha pasado. Verifique el código o solicite uno nuevo', quasar);
+        localStorage.removeItem('codigoRecuperacion');
     }
 };
 

@@ -79,8 +79,6 @@ const router = useRouter()
 //USAR QUASAR
 const quasar = useQuasar()
 
-
-
 // DECLARACION DE VARIABLES
 const datosCambioPassword = reactive({
     password: '',
@@ -121,7 +119,7 @@ const cambiarContrasenia = async () => {
     } catch (error) {
         // En el catch capturo las excepciones de que ha pasado mucho tiempo entre uno y otro
         console.error('La fecha de expiración del código ha pasado, vuelva a solicitar uno nuevo', error);
-        mostrarAlertaError('La fecha de expiración del código ha pasado, vuelva a solicitar uno nuevo', quasar);
+        mostrarAlertaError('La fecha de expiración del código ha pasado, vuelva a solicitar uno nuevo', quasar)
     }
 };
 

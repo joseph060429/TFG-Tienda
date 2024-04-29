@@ -9,7 +9,7 @@
               alt="Logo" class="logo" style="border-radius: 10px; border: 2px solid lightseagreen;  -webkit-user-drag: none;">
           </div>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
-          <h1 class="header-text" style="font-size: 2.5em;">Explora el poder de la tecnología, crea tu futuro.</h1>
+          <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
           <q-btn v-if="!authStore.loggedIn" color="dark" dense flat @click="registro" class="custom-btn">
             <q-icon name="mdi-account-plus"></q-icon> <!-- Icono para el botón de registro -->
@@ -88,6 +88,7 @@ const cerrarSesion = () => {
   padding-bottom: 0;
   margin: 0;
   height: 10vh;
+
 }
 
 .logo-container {
@@ -101,7 +102,21 @@ const cerrarSesion = () => {
 
 .header-text {
   color: white;
-  font-size: 18px;
+  font-size: 1.9em;
+  margin-right: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+  color: white;
+  /* Tamaño de fuente más grande */
+  font-weight: bold;
+  /* Texto en negrita */
+  font-family: 'Arial', sans-serif;
+  /* Tipo de fuente personalizado */
+  text-transform: uppercase;
+  /* Convertir el texto a mayúsculas */
+  letter-spacing: 2px;
+  /* Espaciado entre letras */
   margin-right: 20px;
 }
 
@@ -114,20 +129,7 @@ const cerrarSesion = () => {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.header-text {
-  color: white;
-  font-size: 15px;
-  /* Tamaño de fuente más grande */
-  font-weight: bold;
-  /* Texto en negrita */
-  font-family: 'Arial', sans-serif;
-  /* Tipo de fuente personalizado */
-  text-transform: uppercase;
-  /* Convertir el texto a mayúsculas */
-  letter-spacing: 2px;
-  /* Espaciado entre letras */
-  margin-right: 20px;
-}
+
 
 .text-h6 {
   font-size: 1.25rem;

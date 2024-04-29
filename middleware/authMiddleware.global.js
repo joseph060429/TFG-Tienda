@@ -4,27 +4,18 @@ import useAuthStore from "~/stores/authStore.js";
 export default defineNuxtRouteMiddleware((to, from) => {
   if (process.client) {
     
+    const { checkUserRole } = useAuth();
+
     let authStore = useAuthStore();
 
     // Obtén el token del almacenamiento local
     const token = localStorage.getItem("token");
-    if(token){
-      authStore.auth.token = token
-    }
     const roles = localStorage.getItem("roles");
     const nombre = localStorage.getItem("nombre");
-    if(nombre){
-      authStore.auth.nombre = nombre
-    }
     const apellido = localStorage.getItem("apellido");
-    if(apellido){
-      authStore.auth.apellido = apellido
-    }
     const email = localStorage.getItem("email");
     const refreshToken = localStorage.getItem("refreshToken");
     const tiempoExpiracion = localStorage.getItem("tiempoExpiracion");
-
-    const { checkUserRole } = useAuth();
 
     if (!token) {
       // to.meta.role es la ruta que me viene de la vista actual
@@ -35,6 +26,15 @@ export default defineNuxtRouteMiddleware((to, from) => {
         return navigateTo("/auth/login");
       }
     } else {
+      // Lo pongo en la store para que si actualiza se mantengan los datos en el store
+      authStore.auth.token = token 
+      authStore.auth.email = email
+      authStore.auth.refreshToken = refreshToken
+      authStore.auth.tiempoExpiracion = tiempoExpiracion
+      authStore.auth.roles = roles
+      authStore.auth.nombre = nombre
+      authStore.auth.apellido = apellido
+
       // Si hay un token de autenticación
       console.log(to, "to");
       // Verifico si la ruta actual requiere el rol de administrador
@@ -53,6 +53,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
               localStorage.removeItem("email");
               localStorage.removeItem("refreshToken");
               localStorage.removeItem("tiempoExpiracion");
+              localStorage.removeItem("nombre");
+              localStorage.removeItem("apellido");
               // Le quito la autenticación a la store para que me salgan los botones de registro y de login
               authStore.loggedIn = false;
               // Redirijo al usuario a la página de inicio de sesión

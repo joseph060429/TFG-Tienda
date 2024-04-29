@@ -16,8 +16,8 @@ export const useAuthStore = defineStore({
       email: "",
       tiempoExpiracion: "", // Tiempo de expiración del token
       refreshToken: "", // Refrescoken del usuario
-      nombre: "",
-      apellido: "",
+      nombre: "", // Nombre/s del usuario
+      apellido: "", // Apellidos del usuario
     },
     loggedIn: false,
   }),
@@ -43,9 +43,6 @@ export const useAuthStore = defineStore({
         console.log(e);
       }
     },
-
-    // "start": "nuxt start"
-
     // STORE LOGIN
     async login(datosLogin) {
       try {
@@ -160,7 +157,6 @@ export const useAuthStore = defineStore({
 
     // STORE PARA VERIFICAR EL ROL DEL USUARIO 
     async checkUserRole() {
-      console.log("hola email", localStorage.getItem("email"));
       try {
         // Realizo la solicitud GET al endopoint que he hecho en el backend  para obtener comprobar que el email de usuario tiene ese rol
         const response = await useAxiosInstance().get("/quienSoy", {
