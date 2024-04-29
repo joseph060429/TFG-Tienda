@@ -13,8 +13,8 @@ import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
-import FormularioEditarPerfil from '~/components/formularioEditarPerfil.vue';
-// import {FormularioEditarPerfil} from '#components';
+
+// Prueba subida empresa numero 29
 
 
 
