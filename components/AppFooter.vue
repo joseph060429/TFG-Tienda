@@ -32,6 +32,8 @@
     /* Agrega un margen de 10px a ambos lados */
     background-color: #666666;
 
+    /* Prueba subida frontend */
+
 }
 
 
