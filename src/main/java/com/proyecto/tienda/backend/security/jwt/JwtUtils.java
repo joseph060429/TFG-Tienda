@@ -1,8 +1,13 @@
 package com.proyecto.tienda.backend.security.jwt;
 
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
+
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import java.security.Key;
@@ -25,31 +30,31 @@ public class JwtUtils {
     @Value("${jwt.refresh.time.expiration}")
     private String jwtRefreshTimeExpiration;
 
-
+  
 
     // GENERAR TOKEN DE ACCESO INCLUYENDO EL ROL DEL USUARIO EN EL TOKEN
     public String generateJwtToken(String email, String role) {
-        return Jwts.builder()
-                // .claim("role", role)
-                .setSubject(email)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationTime.trim()))) // Tiempo
-                                                                                                                // de
-                                                                                                                // expiración
-                                                                                                                // por
-                                                                                                                // eso
-                                                                                                                // se
-                                                                                                                // cierrra
-                                                                                                                // la
-                                                                                                                // sesion
-                                                                                                                // despues
-                                                                                                                // de 30
-                                                                                                                // minutos
-                .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
-                .compact();
+    return Jwts.builder()
+    // .claim("role", role)
+    .setSubject(email)
+    .setIssuedAt(new Date(System.currentTimeMillis()))
+    .setExpiration(new Date(System.currentTimeMillis() +
+    // Tiempo de
+    // expiración
+    // por
+    // eso
+    // se
+    // cierrra
+    // la
+    // sesion
+    // despues
+    // de 30
+    // minutos
+    Long.parseLong(jwtExpirationTime.trim())))
+    .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
+    .compact();
 
     }
-
 
     public String generateJwtTokenRefresh(String email, String role) {
         return Jwts.builder()
@@ -57,27 +62,23 @@ public class JwtUtils {
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtRefreshTimeExpiration.trim()))) // Tiempo
-                                                                                                                // de
-                                                                                                                // expiración
-                                                                                                                // por
-                                                                                                                // eso
-                                                                                                                // se
-                                                                                                                // cierrra
-                                                                                                                // la
-                                                                                                                // sesion
-                                                                                                                // despues
-                                                                                                                // de 30
-                                                                                                                // minutos
+                // de
+                // expiración
+                // por
+                // eso
+                // se
+                // cierrra
+                // la
+                // sesion
+                // despues
+                // de 30
+                // minutos
                 .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
                 .compact();
 
     }
 
-
-
     //
-
-
 
     // VALIDAR TOKEN DE ACCESO, AQUÍ SE LEE EL TOKEN
     public boolean isTokenValid(String token) {

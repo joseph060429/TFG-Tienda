@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.filter.JwtAuthenticationFilter;
 import com.proyecto.tienda.backend.security.filter.JwtAuthorizationFilter;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
@@ -35,6 +37,9 @@ public class SecurityConfig {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    UsuarioRepositorio usuarioRepositorio;
 
     @Autowired
     UserDetailsService userDetailsService;
@@ -58,7 +63,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpsSecurity, AuthenticationManager authenticationManager)
             throws Exception {
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils, usuarioRepositorio);
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
