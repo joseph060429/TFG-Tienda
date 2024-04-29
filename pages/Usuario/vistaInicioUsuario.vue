@@ -2,7 +2,7 @@
     <div>
       <h1>Bienvenido, Usuario</h1>
       <div>
-        <FormularioEditarPerfil v-model="motrarFormuEditarPeril" /> <q-btn @click="editarPerfil" label="Mi Perfil" />
+        <formularioEditarPerfil v-model="motrarFormuEditarPeril" /> <q-btn @click="editarPerfil" label="Mi Perfil" />
       </div>
       <q-btn @click="eliminarPerfil" label="Darte de baja" />
     </div>
@@ -13,7 +13,7 @@ import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { reactive } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
-import FormularioEditarPerfil from '~/components/FormularioEditarPerfil.vue';
+import FormularioEditarPerfil from '~/components/formularioEditarPerfil.vue';
 // import {FormularioEditarPerfil} from '#components';
 
 
