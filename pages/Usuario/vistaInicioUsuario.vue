@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Bienvenido, Usuario</h1>
+      <h1>Bienvenido, Usuario Soy Joseph</h1>
       <div>
         <formularioEditarPerfil v-model="motrarFormuEditarPeril" /> <q-btn @click="editarPerfil" label="Mi Perfil" />
       </div>
