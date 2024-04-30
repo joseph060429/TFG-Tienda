@@ -69,7 +69,7 @@ public class UsuarioPedidosController {
         List<PedidoInfoDTO> historialPedidos = responseEntity.getBody();
 
         if (historialPedidos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(historialPedidos);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(historialPedidos);
         }
         return ResponseEntity.ok(historialPedidos);
     }
