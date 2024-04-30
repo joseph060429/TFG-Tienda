@@ -109,9 +109,9 @@ const cambiarContrasenia = async () => {
         console.log("Response:", response.data)
         if (response.status === 200) {
             console.log("eliminacion del localStorage", localStorage.removeItem('codigoRecuperacion'));
-            localStorage.removeItem('codigoRecuperacion');
             mostrarAlertaExito('Contraseña cambiada exitosamente, inicie sesión', quasar)
             router.push({ path: '/auth/login' });
+            localStorage.removeItem('codigoRecuperacion');
         } else {
             mostrarAlertaError('Ya has utilizado el código de recuperación, o ha expirado, vuelve a pedir uno nuevo', quasar)
         }

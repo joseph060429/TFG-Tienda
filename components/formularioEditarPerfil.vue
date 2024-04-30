@@ -96,6 +96,7 @@ import { reactive } from "vue";
 import { usuarioComposable } from '~/composables/usuarioComposable';
 
 const { actualizacionUsuario } = usuarioComposable();
+
 const props = defineProps({
     formularioEditarPerfil: Boolean
 })
@@ -124,7 +125,7 @@ const mostrarContrasenia = ref(false);
 // FUNCION PARA ENVIAR EL FORMULARIO
 const actualizarDatosUsuario = async () => {
 
-    // Creo el usuario
+    // Actualizo el usuario
     try {
         const response = await actualizacionUsuario(datosActualizar);
         console.log("Response", response);

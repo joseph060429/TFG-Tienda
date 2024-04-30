@@ -10,12 +10,8 @@ export const usuarioStore = defineStore({
   id: "usuarios",
   state: () => ({
     // Defino el estado inicial de la store
-    auth: {
-      token: "",
-      nombre: "", // Token de autorizacion
-      //   roles: [], // Roles del usuario
-      apellido: "",
-      email: "", // Tiempo de expiración del token
+    usuario: {
+      direccionEnvio: "",
     },
     loggedIn: true,
   }),
@@ -30,8 +26,6 @@ export const usuarioStore = defineStore({
     async actualizacionUsuario(datosActualizar) {
       try {
         const token = localStorage.getItem("token");
-        console.log("token", token);
-
         const response = await useAxiosInstance().patch(
           "/usuarios/actualizarUsuario",
           {
@@ -57,8 +51,6 @@ export const usuarioStore = defineStore({
     async borrarUsuario() {
       try {
         const token = localStorage.getItem("token");
-        console.log("token", token);
-
         const response = await useAxiosInstance().delete(
           "/usuarios/borrarUsuario",
           {
@@ -73,7 +65,30 @@ export const usuarioStore = defineStore({
         return error.response;
       }
     },
+
+    // STORE VER TODOS LOS PEDIDOS
+    async historialPedidos() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await useAxiosInstance().get(
+          "/usuarios/pedidos/historialPedidos",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        this.usuario.direccionEnvio = response.data[0].direccionEnvio
+        return response;
+
+      } catch (error) {
+        console.log("Error en VER PEDIDOS STORE ==> ", error);
+        return error.response;
+      }
+    },
+  
   },
+
 });
 
 export default usuarioStore;

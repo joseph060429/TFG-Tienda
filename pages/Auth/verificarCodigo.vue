@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-    <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-    <!-- <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;"> -->
+        <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+        <!-- <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;"> -->
         <div class="verification-container">
             <h1 class="text-h4 q-mb-md text-center q-mt-lg"
                 style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
@@ -61,7 +61,6 @@ const verificarCodigo = async () => {
 
         if (response.data === 'Código válido. Puede proceder con la recuperación de contraseña.') {
             mostrarAlertaExito('Código válido, puede proceder con la recuperación de contraseña', quasar);
-            localStorage.removeItem('codigoRecuperacion');
             router.push({ path: '/auth/cambiarContrasenia' });
         } else {
             throw new Error('La respuesta del servidor no es válida');
@@ -108,11 +107,11 @@ const regresar = () => {
 }
 
 .container {
-  /* Ancho máximo del contenedor */
-  max-width: 100%;
-  /* Relleno */
-  padding: 2vh;
-  height: 80vh;
-  /* background-color: black; */
+    /* Ancho máximo del contenedor */
+    max-width: 100%;
+    /* Relleno */
+    padding: 2vh;
+    height: 80vh;
+    /* background-color: black; */
 }
 </style>

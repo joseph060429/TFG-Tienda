@@ -21,8 +21,9 @@
       </div>
       <!-- Botón para ver el historial de los pedidos -->
       <div class="ver-pedidos">
+        <historial-pedidos v-model="verPedidos" />
         <!-- Botón para ver pedidos -->
-        <q-btn @click="verPedidos" class="boton-ver-pedidos" label="Ver mis pedidos">
+        <q-btn @click="verMisPedidos" class="boton-ver-pedidos" label="Ver mis pedidos">
           <q-icon name="mdi-cart-outline" /> <!-- Icono de eliminar perfil -->
         </q-btn>
       </div>
@@ -36,13 +37,13 @@ import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { ref } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
 
-
 definePageMeta({
   role: ['ROLE_USER']
 });
 
 const mostrarFormularioEditarPerfil = ref(false);
 const mostrarDarseDeBaja = ref(false);
+const verPedidos = ref(false);
 const router = useRouter();
 
 const editarPerfil = () => {
@@ -56,6 +57,14 @@ const eliminarPerfil = () => {
   // Abro el formulario si no esta abierto
   if (!mostrarDarseDeBaja.value) {
     mostrarDarseDeBaja.value = true;
+  }
+};
+
+const verMisPedidos = () => {
+  // Abro el formulario si no esta abierto
+  if (!verPedidos.value) {
+    verPedidos.value = true;
+    
   }
 };
 </script>

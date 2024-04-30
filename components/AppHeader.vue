@@ -73,6 +73,8 @@ const cerrarSesion = () => {
   localStorage.removeItem('email')
   localStorage.removeItem('refreshToken')
   localStorage.removeItem('tiempoExpiracion')
+  localStorage.removeItem('nombre')
+  localStorage.removeItem('apellido')
   authStore.loggedIn = false;
   router.push({ path: '/' })
 }
@@ -128,8 +130,6 @@ const cerrarSesion = () => {
 .custom-btn:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
-
-
 
 .text-h6 {
   font-size: 1.25rem;
