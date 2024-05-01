@@ -1,5 +1,6 @@
 package com.proyecto.tienda.backend.service.ProductoServicio.AdminProductoServicio;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.*;
 import java.text.Normalizer;
@@ -25,14 +26,23 @@ import com.proyecto.tienda.backend.UtilEnum.EProducto;
 import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+
 @Service
 public class AdminProductoServicioImpl implements AdminProductoServicio {
 
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
-    @Value("${directorio.imagenes.path}")
-    private String directorioImagenesPath;
+    // @Value("${directorio.imagenes.path}")
+    // private String directorioImagenesPath;
+
+    @Value("${firebase.credentials.path}")
+    private String firebaseCredentialsPath;
 
     // IMPLEMENTACION DEL METODO PARA LA CONSTRUCCION DEL PRODUCTO
     private ResponseEntity<?> construirProducto(CrearProductoDTO crearProductoDTO, MultipartFile file) {
@@ -50,7 +60,7 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
             nuevoProducto.setPrecioProducto(crearProductoDTO.getPrecioProducto());
             nuevoProducto.setDisponibilidadProducto(crearProductoDTO.getCantidadProducto() > 0);
             nuevoProducto.setCantidadProducto(crearProductoDTO.getCantidadProducto());
-            nuevoProducto.setMarcaProducto(normalizeText(crearProductoDTO.getMarcaProducto().trim()));
+            nuevoProducto.setMarcaProducto(normalizeText(crearProductoDTO.getMarcaProducto().trim().toUpperCase()));
             nuevoProducto
                     .setEspecificacionesTecnicas(normalizeText(crearProductoDTO.getEspecificacionesTecnicas().trim()));
 
@@ -471,62 +481,151 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
     }
 
     // IMPLEMENTACION DEL METODO PARA SUBIR IMAGENES
+    // public ResponseEntity<String> subirImagen(MultipartFile file) {
+    //     try {
+
+    //         if (file.isEmpty()) {
+    //             return ResponseEntity.badRequest().body("La imágen no puede estar vacía");
+    //         }
+
+    //         String fileName = UUID.randomUUID().toString();
+    //         byte[] bytes = file.getBytes();
+    //         String fileOriginalName = file.getOriginalFilename();
+
+    //         long fileSize = file.getSize();
+    //         long maxFile = 5 * 1024 * 1024; // 5 MB
+
+    //         if (fileSize > maxFile) {
+    //             return ResponseEntity.badRequest().body("La imágen es demasiado grande");
+    //         }
+
+    //         if (!fileOriginalName.endsWith(".jpg") && !fileOriginalName.endsWith(".png")
+    //                 && !fileOriginalName.endsWith(".jpeg")) {
+    //             return ResponseEntity.badRequest().body("La imágen debe ser JPG, PNG o JPEG");
+    //         }
+
+    //         String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf(".") + 1);
+    //         String newFileName = fileName + "." + fileExtension;
+
+    //         // Viene del path
+    //         Path path = Paths.get(directorioImagenesPath + newFileName);
+    //         Files.write(path, bytes);
+
+    //         return ResponseEntity.ok(newFileName);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body("Error al subir la imagen: " + e.getMessage());
+    //     }
+    // }
     public ResponseEntity<String> subirImagen(MultipartFile file) {
         try {
-
             if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("La imágen no puede estar vacía");
+                return ResponseEntity.badRequest().body("La imagen no puede estar vacía");
             }
 
-            String fileName = UUID.randomUUID().toString();
-            byte[] bytes = file.getBytes();
             String fileOriginalName = file.getOriginalFilename();
+            String fileExtension = getFileExtension(fileOriginalName);
+            String fileName = UUID.randomUUID().toString() + "." + fileExtension;
 
             long fileSize = file.getSize();
             long maxFile = 5 * 1024 * 1024; // 5 MB
 
             if (fileSize > maxFile) {
-                return ResponseEntity.badRequest().body("La imágen es demasiado grande");
+                return ResponseEntity.badRequest().body("La imagen es demasiado grande");
             }
 
-            if (!fileOriginalName.endsWith(".jpg") && !fileOriginalName.endsWith(".png")
-                    && !fileOriginalName.endsWith(".jpeg")) {
-                return ResponseEntity.badRequest().body("La imágen debe ser JPG, PNG o JPEG");
+            if (!fileExtension.equals("jpg") && !fileExtension.equals("png")
+                    && !fileExtension.equals("jpeg")) {
+                return ResponseEntity.badRequest().body("La imagen debe ser JPG, PNG o JPEG");
             }
 
-            String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf(".") + 1);
-            String newFileName = fileName + "." + fileExtension;
+            // Cargar las credenciales de Firebase desde el archivo
+            GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(firebaseCredentialsPath));
+            System.out.println("Ruta del archivo de credenciales: " + credentials.toString());
+            // Configurar la identificación del proyecto y la autenticación
+            Storage storage = StorageOptions.newBuilder()
+                    .setCredentials(credentials)
+                    .setProjectId("proyecto-ionic-tienda")
+                    .build()
+                    .getService();
 
-            // Viene del path
-            Path path = Paths.get(directorioImagenesPath + newFileName);
-            Files.write(path, bytes);
+            // Crear una referencia a la carpeta en Firebase Storage donde deseas almacenar la imagen
+            BlobId blobId = BlobId.of("proyecto-ionic-tienda.appspot.com", "Imagenes-Productos/" + fileName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType("image/" + fileExtension)
+                .build();
 
-            return ResponseEntity.ok(newFileName);
+            // Subir el archivo a Firebase Storage
+            storage.create(blobInfo, file.getBytes());
+
+            return ResponseEntity.ok(fileName);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al subir la imagen: " + e.getMessage());
+                    .body("Error al subir la imagen a Firebase Storage: " + e.getMessage());
+        }
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName != null && fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        } else {
+            return "";
         }
     }
 
     // IMPLEMENTACION DEL METODO PARA BORRAR IMAGEN
-    private void borrarImagen(String nombreImagenActual) {
-        try {
-            if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {
-                // Crear la ruta completa del archivo
-                String nombreCompleto = nombreImagenActual;
-                Path path = Paths.get(directorioImagenesPath, nombreCompleto);
+    // private void borrarImagen(String nombreImagenActual) {
+    //     try {
+    //         if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {
+    //             // Crear la ruta completa del archivo
+    //             String nombreCompleto = nombreImagenActual;
+    //             Path path = Paths.get(directorioImagenesPath, nombreCompleto);
 
-                // Intentar eliminar el archivo con la extensión actual
-                Files.deleteIfExists(path);
-                System.out.println("Imagen eliminada: " + nombreCompleto);
+    //             // Intentar eliminar el archivo con la extensión actual
+    //             Files.deleteIfExists(path);
+    //             System.out.println("Imagen eliminada: " + nombreCompleto);
+    //         } else {
+    //             System.out.println("La cadena de nombre de imagen actual es nula o vacía.");
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         System.err.println("Error al intentar eliminar la imagen: " + e.getMessage());
+    //     }
+    // }
+
+
+    public void borrarImagen(String nombreImagen) {
+        try {
+            // Cargar las credenciales de Firebase desde el archivo JSON
+            GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(firebaseCredentialsPath));
+
+            // Configurar la identificación del proyecto y la autenticación
+            Storage storage = StorageOptions.newBuilder()
+                    .setCredentials(credentials)
+                    .setProjectId("proyecto-ionic-tienda")
+                    .build()
+                    .getService();
+
+            // Construir el identificador del blob (imagen) que se desea borrar
+            String bucketName = "proyecto-ionic-tienda.appspot.com";
+            BlobId blobId = BlobId.of(bucketName, "Imagenes-Productos/" + nombreImagen);
+
+            // Borrar la imagen del Firebase Storage
+            boolean borradoExitoso = storage.delete(blobId);
+
+            if (borradoExitoso) {
+                System.out.println("Imagen eliminada correctamente de Firebase Storage: " + nombreImagen);
             } else {
-                System.out.println("La cadena de nombre de imagen actual es nula o vacía.");
+                System.out.println("No se pudo eliminar la imagen de Firebase Storage: " + nombreImagen);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Error al intentar eliminar la imagen: " + e.getMessage());
+            System.err.println("Error al intentar eliminar la imagen de Firebase Storage: " + e.getMessage());
         }
     }
+
+   
 
 }
