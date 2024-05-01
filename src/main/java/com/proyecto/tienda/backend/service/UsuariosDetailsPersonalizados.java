@@ -19,6 +19,7 @@ public class UsuariosDetailsPersonalizados extends User {
             String userId) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.userId = userId;
+        // Hola
     }
 
     // OBTIENE EL ID DEL USUARIO.
