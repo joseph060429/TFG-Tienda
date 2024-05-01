@@ -2,8 +2,6 @@
 import { usuarioStore } from "~/stores/usuarioStore";
 import { storeToRefs } from 'pinia';
 
-
-
 // Defino y exporto el composable useAuth
 export const usuarioComposable = () => {
 
@@ -13,7 +11,7 @@ export const usuarioComposable = () => {
     // Obtengo la instancia del store de autenticación utilizando el hook useAuthStore
     const store = usuarioStore(pinia);
 
-    // Para llamar las variables del store en el composable
+    // Para llamar las variables del store(usuario) en el composable
     const { usuario } = storeToRefs(store)
 
     // FUNCION PARA REALIZAR EL LOGIN

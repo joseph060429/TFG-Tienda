@@ -6,7 +6,8 @@
           <div class="logo-container" style="cursor: pointer;" @click="home">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Logo-Imagenes%2FLogo-Letra.png?alt=media&token=04198112-d45c-4a6c-b014-accbeecbbd4d"
-              alt="Logo" class="logo" style="border-radius: 10px; border: 2px solid lightseagreen;  -webkit-user-drag: none;">
+              alt="Logo" class="logo"
+              style="border-radius: 10px; border: 2px solid lightseagreen;  -webkit-user-drag: none;">
           </div>
           <q-space></q-space> <!-- Espacio flexible para empujar los elementos hacia la derecha -->
           <h1 class="header-text">Explora el poder de la tecnología, crea tu futuro.</h1>
@@ -34,8 +35,13 @@
 // Importaciones
 import { useRouter } from 'vue-router'
 import useAuthStore from '~/stores/authStore.js'
-// import
+import { usuarioComposable } from '~/composables/usuarioComposable';
+
+const {  usuario } = usuarioComposable();
 let authStore = useAuthStore()
+
+
+
 
 // Rutas
 const router = useRouter()
@@ -51,8 +57,6 @@ onMounted(() => {
     isLogged = false
   }
 })
-
-
 
 const home = () => {
   router.push({ path: '/' })
@@ -77,6 +81,7 @@ const cerrarSesion = () => {
   localStorage.removeItem('apellido')
   authStore.loggedIn = false;
   router.push({ path: '/' })
+  usuario.pedidos=[]
 }
 
 

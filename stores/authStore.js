@@ -28,7 +28,6 @@ export const useAuthStore = defineStore({
 
   // Defino las acciones (métodos) que pueden modificar el estado del store
   actions: {
-
     // STORE PARA VER SI EL USUARIO ESTA LOGEADO Y TIENE TOKEN
     async checkLogin() {
       try {
@@ -57,7 +56,10 @@ export const useAuthStore = defineStore({
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("refreshToken", response.data.refreshToken);
           localStorage.setItem("email", response.data.email);
-          localStorage.setItem("tiempoExpiracion", response.data.tiempoExpiracion);
+          localStorage.setItem(
+            "tiempoExpiracion",
+            response.data.tiempoExpiracion
+          );
           localStorage.setItem("roles", response.data.roles);
           localStorage.setItem("nombre", response.data.nombre);
           localStorage.setItem("apellido", response.data.apellido);
@@ -155,7 +157,7 @@ export const useAuthStore = defineStore({
       }
     },
 
-    // STORE PARA VERIFICAR EL ROL DEL USUARIO 
+    // STORE PARA VERIFICAR EL ROL DEL USUARIO
     async checkUserRole() {
       try {
         // Realizo la solicitud GET al endopoint que he hecho en el backend  para obtener comprobar que el email de usuario tiene ese rol
@@ -179,6 +181,25 @@ export const useAuthStore = defineStore({
         throw error;
       }
     },
+  //   async refreshToken() {
+  //     try {
+  //       // Realizo la solicitud GET al endopoint que he hecho en el backend  para obtener comprobar que el email de usuario tiene ese rol
+  //       const response = await useAxiosInstance().get("/refreshToken", {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       });
+  //       console.log(response, "");
+  //       // Verifico si ese email, tiene ese rol
+  //       if (!response.data === "Token inválido") {
+  //         return false;
+  //       }
+  //       return true;
+  //     } catch (error) {
+  //       console.error("Error al verificar refreshToken", error);
+  //       throw error;
+  //     }
+  //   },
   },
 });
 

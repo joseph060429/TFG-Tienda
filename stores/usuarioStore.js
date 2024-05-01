@@ -1,17 +1,20 @@
 import { defineStore } from "pinia";
 import { useAxiosInstance } from "~/utils/axios";
 
-// Defino un endopoint que es el mismo para todos los metodos
-const endpoint = "/usuarios";
-
 // DEFINO Y EXPORTO LA STORE 'useAuthStore'
 export const usuarioStore = defineStore({
   // Identificador unico para el store
   id: "usuarios",
   state: () => ({
-    // Defino el estado inicial de la store
+    // Defino el estado inicial de la store, es este el nombre que le pongo para luego llamarlo en el composable
     usuario: {
-      direccionEnvio: "",
+      // direccionEnvio: "",
+      // tipoPago: "",
+      // estado: "",
+      // fecha: "",
+      // numPedido: "",
+      // productos: [],
+      pedidos: [],
     },
     loggedIn: true,
   }),
@@ -78,17 +81,37 @@ export const usuarioStore = defineStore({
             },
           }
         );
-        this.usuario.direccionEnvio = response.data[0].direccionEnvio
-        return response;
+        // Limpio la lista de pedidos antes de agregar nuevos a ella
+        this.usuario.pedidos = [];
 
+        // For each para iterar sobre cada pedido en la respuesta
+        response.data.forEach((pedido) => {
+          const pedidoFormateado = {
+            direccionEnvio: pedido.direccionEnvio,
+            tipoPago: pedido.tipoPago,
+            estado: pedido.estado,
+            fecha: pedido.fechaPedido,
+            numPedido: pedido.numPedido,
+            productos: pedido.productos.map((producto) => ({
+              cantidadPedida: producto.cantidadPedida,
+              nombre: producto.nombre,
+              marca: producto.marca,
+              precio: producto.precioProducto,
+            })),
+          };
+          this.usuario.pedidos.push(pedidoFormateado);
+        });
+        return response;
       } catch (error) {
         console.log("Error en VER PEDIDOS STORE ==> ", error);
         return error.response;
       }
     },
-  
   },
 
+  limpiarPedidos() {
+    this.usuario.pedidos = [];
+  },
 });
 
 export default usuarioStore;
