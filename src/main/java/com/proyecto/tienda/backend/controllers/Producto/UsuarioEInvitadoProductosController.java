@@ -22,7 +22,7 @@ public class UsuarioEInvitadoProductosController {
     @GetMapping("/listarProductos")
     public ResponseEntity<List<Map<String, Object>>> listarProductos(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
 
         try {
             List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.listarProductos(page, size);

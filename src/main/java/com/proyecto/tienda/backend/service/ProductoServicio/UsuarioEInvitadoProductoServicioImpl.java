@@ -5,13 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.text.Normalizer;
 import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
@@ -35,6 +33,7 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
 
         for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
+            mapaProductos.put("_id", producto.get_id());
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
             mapaProductos.put("categoria", producto.getCategoriaProducto());
             mapaProductos.put("nombre", producto.getNombreProducto());
@@ -86,6 +85,7 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
 
         for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
+            mapaProductos.put("_id", producto.get_id());
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
             mapaProductos.put("categoria", producto.getCategoriaProducto());
             mapaProductos.put("nombre", producto.getNombreProducto());
@@ -120,6 +120,7 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
 
         for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
+            mapaProductos.put("_id", producto.get_id());
             mapaProductos.put("descripcion", producto.getDescripcionProducto());
             mapaProductos.put("categoria", producto.getCategoriaProducto());
             mapaProductos.put("nombre", producto.getNombreProducto());
@@ -157,6 +158,7 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
 
             for (ProductoModelo producto : productosPage.getContent()) {
                 Map<String, Object> mapaProductos = new HashMap<>();
+                mapaProductos.put("_id", producto.get_id());
                 mapaProductos.put("descripcion", producto.getDescripcionProducto());
                 mapaProductos.put("categoria", producto.getCategoriaProducto());
                 mapaProductos.put("nombre", producto.getNombreProducto());
