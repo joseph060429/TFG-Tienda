@@ -28,6 +28,9 @@
         </q-btn>
       </div>
     </div>
+    <div>
+      <CardProducto />
+    </div>
   </div>
 </template>
 
@@ -64,7 +67,7 @@ const verMisPedidos = () => {
   // Abro el formulario si no esta abierto
   if (!verPedidos.value) {
     verPedidos.value = true;
-    
+
   }
 };
 </script>
@@ -87,7 +90,7 @@ const verMisPedidos = () => {
 .title {
   /* Tamaño de fuente */
   padding: 0;
-  margin: 0;
+  margin: 0.5em;
   font-size: 2.5em;
   /* Margen inferior */
   margin-bottom: 20px;
@@ -106,6 +109,7 @@ const verMisPedidos = () => {
   justify-content: space-between;
   align-items: center;
   width: 50%;
+  margin: 1em;
 
 
 }

@@ -3,10 +3,15 @@
     <div class="q-pa-md">
       <q-table class="my-sticky-header-table" flat bordered title="Historial de pedidos" title-tag="h2"
         :rows="detallePedidosFlat" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
-        :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]" />
+        :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]">
+        <template v-slot:top-right>
+          <q-btn color="negative" icon="mdi-cancel" label="Cancelar pedidos" class="q-mb-md" @click="cancelarPedidos" />
+        </template>
+      </q-table>
     </div>
   </q-dialog>
 </template>
+
 <!-- SCRIPT -->
 <script setup>
 import { ref, defineProps, onBeforeMount, computed } from 'vue';

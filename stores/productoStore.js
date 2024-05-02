@@ -30,9 +30,21 @@ export const productoStore = defineStore({
             }
 
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     },
-
-
 });
 
 export default productoStore;

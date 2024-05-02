@@ -1,37 +1,43 @@
 <template>
-  <div class="q-pa-md row items-start q-gutter-md">
-    <!-- Itero sobre cada producto -->
-    <div v-for="producto in productos">
+  <div class="flex flex-center q-mt-md q-col">
+    <!-- Itero sobre cada producto en la página actual -->
+    <div v-for="producto in productosPaginados" :key="producto.id" class="card-container">
+
       <q-card class="card q-mx-auto q-sm-w-75 q-md-w-50 q-lg-w-33" flat bordered>
         <!-- Imagen del producto -->
-        <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md" style="max-width: 150px;" />
+        <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md centered-image"
+          style="max-width: 45%; height: auto;" />
 
         <q-card-section>
           <!-- Nombre del producto -->
-          <div class="row no-wrap items-center">
-            <div class="col text-h6 ellipsis">
-              {{ producto.nombre }}
-            </div>
+          <div>
+            Nombre: <span class="text-title">{{ producto.nombre }}</span>
           </div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
           <!-- Marca del producto -->
           <div class="text-subtitle1">
-            {{ producto.marca }}
+            Marca: {{ producto.marca }}
           </div>
           <!-- Precio del producto -->
           <div class="text-caption">
-            {{ producto.precio }}
+            Precio: {{ producto.precio }} €
           </div>
         </q-card-section>
 
         <q-separator />
       </q-card>
     </div>
+
+    <!-- Paginación -->
+    <!-- <div class="flex flex-center q-mt-md q-col"> -->
+      <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links
+        icon-first="mdi-skip-previous" icon-last="mdi-skip-next" icon-prev="mdi-fast-rewind"
+        icon-next="mdi-fast-forward" />
+    <!-- </div> -->
   </div>
 </template>
 
+
+<!-- SCRIPTS -->
 <script setup>
 import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { productoComposable } from '~/composables/productoComposable';
@@ -44,20 +50,18 @@ const quasar = useQuasar()
 
 const router = useRouter()
 
+// FUCNIONES
 
-// Props
-const nombreProducto = 'Nombre del producto';
-const marcaProducto = 'Marca del producto';
-const precioProducto = 'Precio';
-
+// FUNCION PARA CARGAR LOS PRODUCTOS  ANTES DE QUE SE MONTE EL COMPONENTE
 onBeforeMount(async () => {
   await cargarProductos();
   console.log("Productos cargados en el compornente card", productos.value);
 })
 
+// FUNCION PARA CARGAR LOS PRODUCTOS
 const cargarProductos = async () => {
   try {
-    const response = await  listarProductos();
+    const response = await listarProductos();
     console.log("RESPONSE: ", response.data);
   } catch (error) {
     // Error de red u otro error
@@ -65,36 +69,64 @@ const cargarProductos = async () => {
     mostrarAlertaError('Error al ver el historial de pedidos', quasar);
   }
 }
-
-
+// FUNCION PARA TRERME LAS IMAGENES DE LOS PRODUCTOS
 const getImagenURL = (imagenProducto) => {
   return `https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Imagenes-Productos%2F${imagenProducto}?alt=media`;
 };
 
 
+// Calculo el número de productos por página
+// const elementosPorPagina = 20;
+const elementosPorPagina = 8;
 
+// Calculo el total de páginas
+const totalPaginas = computed(() => Math.ceil(productos.value.length / elementosPorPagina));
 
-
-
-
-
-
+// Calculo los productos a mostrar en la página actual
+const paginaActual = ref(1);
+const productosPaginados = computed(() => {
+  const indiceInicial = (paginaActual.value - 1) * elementosPorPagina;
+  const indiceFinal = indiceInicial + elementosPorPagina;
+  return productos.value.slice(indiceInicial, indiceFinal);
+});
 
 </script>
 
 <style lang="scss" scoped>
 /* Custom styles */
-.text-h6 {
-  font-size: 1.25rem; /* Tamaño de fuente más grande para el nombre del producto */
+.text-title {
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+
 }
 
 .text-subtitle1 {
-  font-size: 1rem; /* Tamaño de fuente para la marca del producto */
-  color: #333; /* Color del texto más oscuro */
+  font-size: 1em;
+  color: #333;
 }
 
 .text-caption {
-  font-size: 0.875rem; /* Tamaño de fuente para el precio del producto */
-  color: #666; /* Color de texto gris */
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.card-container {
+  /* Ancho fijo para todas las tarjetas */
+  width: 24%;
+  box-sizing: border-box;
+  padding-top: 1%;
+
+  /* Media query para ajustar el ancho en dispositivos móviles */
+  @media screen and (max-width: 600px) {
+    width: 100%;
+
+  }
+}
+
+.centered-image {
+  /* Para centrar la imagen */
+  display: block;
+  margin: 0 auto;
 }
 </style>
