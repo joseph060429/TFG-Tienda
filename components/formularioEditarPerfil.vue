@@ -170,7 +170,7 @@ const cambiarMostrarPassword = () => {
 
 
 .full-width {
-    /* Ajusto el ancho según tus preferencias */
+    /* Ajusto el ancho  */
     width: calc(50% - 10px);
 }
 </style>

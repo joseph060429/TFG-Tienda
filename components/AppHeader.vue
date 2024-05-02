@@ -39,15 +39,14 @@ import { usuarioComposable } from '~/composables/usuarioComposable';
 
 // Para limpiar los pedidos de la store cuando el usuario cierra sesion
 const { limpiarPedidos } = usuarioComposable();
+
+// Variable para traerme las stores de autenticación
 let authStore = useAuthStore()
-
-
-
 
 // Rutas
 const router = useRouter()
 
-
+//Variable para controlar si esta logueado el usuario 
 let isLogged = ref(false);
 
 onMounted(() => {
