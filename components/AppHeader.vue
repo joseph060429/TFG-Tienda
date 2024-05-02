@@ -37,7 +37,8 @@ import { useRouter } from 'vue-router'
 import useAuthStore from '~/stores/authStore.js'
 import { usuarioComposable } from '~/composables/usuarioComposable';
 
-const {  usuario } = usuarioComposable();
+// Para limpiar los pedidos de la store cuando el usuario cierra sesion
+const { limpiarPedidos } = usuarioComposable();
 let authStore = useAuthStore()
 
 
@@ -55,6 +56,7 @@ onMounted(() => {
       isLogged = true
   } else {
     isLogged = false
+    limpiarPedidos()
   }
 })
 
@@ -80,8 +82,9 @@ const cerrarSesion = () => {
   localStorage.removeItem('nombre')
   localStorage.removeItem('apellido')
   authStore.loggedIn = false;
+  authStore.$reset()
+  limpiarPedidos()
   router.push({ path: '/' })
-  usuario.pedidos=[]
 }
 
 

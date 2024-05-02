@@ -107,11 +107,24 @@ export const usuarioStore = defineStore({
         return error.response;
       }
     },
+
+    limpiarPedidos() {
+      this.usuario.pedidos = [];
+    },
+
+
+
+
+
+
+
+
+
+
+
   },
 
-  limpiarPedidos() {
-    this.usuario.pedidos = [];
-  },
+
 });
 
 export default usuarioStore;

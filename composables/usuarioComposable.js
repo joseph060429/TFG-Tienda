@@ -27,12 +27,17 @@ export const usuarioComposable = () => {
         return await store.historialPedidos()
     }
 
+    const limpiarPedidos = () => {
+        store.limpiarPedidos()
+    }
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         actualizacionUsuario,
         borrarUsuario,
         historialPedidos,
-        usuario
+        usuario,
+        limpiarPedidos,
+
     }
 }
