@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,7 +46,7 @@ public class CrearProductoDTO {
     @Pattern(regexp = "^(?!\\s)(?=\\S)(.{2,50})(?!\\s)$", message = "La marca del producto debe tener entre 2 y 50 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String marcaProducto;
 
-    @Pattern(regexp = "^\\S.{0,}$", message = "Las especificaciones tecnicas del producto debe tener como mínimo 2 caracteres y no puede empezar con espacio en blanco")
+    @Size(min = 2, message = "Las especificaciones técnicas del producto no puede tener menos de 2 caracteres")
     @NotBlank(message = "Las especificaciones tecnicas del producto no puede estar en blanco")
     private String especificacionesTecnicas;
 

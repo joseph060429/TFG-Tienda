@@ -112,7 +112,7 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                     String nombreImagen = nuevoProducto.getImagenProducto();
 
                     if (nombreImagen.endsWith(".jpg") || nombreImagen.endsWith(".jpng")
-                            || nombreImagen.endsWith(".png")) {
+                            || nombreImagen.endsWith(".png") || nombreImagen.endsWith(".webp")) {
                         borrarImagen(nombreImagen);
                     }
                     return ResponseEntity.status(400).body("Ya existe un producto con el mismo identificador");
@@ -223,7 +223,8 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                 // Actualizo el nombre del producto
                 if (actualizarProductoDTO.getNombreProducto() != null
                         && !actualizarProductoDTO.getNombreProducto().isEmpty()) {
-                    producto.setNombreProducto(normalizeText(actualizarProductoDTO.getNombreProducto().trim().toUpperCase()));
+                    producto.setNombreProducto(
+                            normalizeText(actualizarProductoDTO.getNombreProducto().trim().toUpperCase()));
                 }
 
                 // Actualizo la descripcion del producto
@@ -237,7 +238,7 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                 // Actualizo la marca del producto
                 if (actualizarProductoDTO.getMarcaProducto() != null
                         && !actualizarProductoDTO.getMarcaProducto().isEmpty()) {
-                    producto.setMarcaProducto(normalizeText(actualizarProductoDTO.getMarcaProducto().trim()));
+                    producto.setMarcaProducto(normalizeText(actualizarProductoDTO.getMarcaProducto().trim().toUpperCase()));
                 }
 
                 // Actualizo el precio del producto
@@ -404,7 +405,8 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
         String normalizedEspecificacion = normalizeText(especificacion);
 
         // UtilizO el método del repositorio con paginación
-        Page<ProductoModelo> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
+        Page<ProductoModelo> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(
+                normalizedEspecificacion,
                 pageable);
 
         // Transformo los productos con los campos que quiero en la respuesta
@@ -481,43 +483,6 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
     }
 
     // IMPLEMENTACION DEL METODO PARA SUBIR IMAGENES
-    // public ResponseEntity<String> subirImagen(MultipartFile file) {
-    //     try {
-
-    //         if (file.isEmpty()) {
-    //             return ResponseEntity.badRequest().body("La imágen no puede estar vacía");
-    //         }
-
-    //         String fileName = UUID.randomUUID().toString();
-    //         byte[] bytes = file.getBytes();
-    //         String fileOriginalName = file.getOriginalFilename();
-
-    //         long fileSize = file.getSize();
-    //         long maxFile = 5 * 1024 * 1024; // 5 MB
-
-    //         if (fileSize > maxFile) {
-    //             return ResponseEntity.badRequest().body("La imágen es demasiado grande");
-    //         }
-
-    //         if (!fileOriginalName.endsWith(".jpg") && !fileOriginalName.endsWith(".png")
-    //                 && !fileOriginalName.endsWith(".jpeg")) {
-    //             return ResponseEntity.badRequest().body("La imágen debe ser JPG, PNG o JPEG");
-    //         }
-
-    //         String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf(".") + 1);
-    //         String newFileName = fileName + "." + fileExtension;
-
-    //         // Viene del path
-    //         Path path = Paths.get(directorioImagenesPath + newFileName);
-    //         Files.write(path, bytes);
-
-    //         return ResponseEntity.ok(newFileName);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    //                 .body("Error al subir la imagen: " + e.getMessage());
-    //     }
-    // }
     public ResponseEntity<String> subirImagen(MultipartFile file) {
         try {
             if (file.isEmpty()) {
@@ -536,8 +501,8 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
             }
 
             if (!fileExtension.equals("jpg") && !fileExtension.equals("png")
-                    && !fileExtension.equals("jpeg")) {
-                return ResponseEntity.badRequest().body("La imagen debe ser JPG, PNG o JPEG");
+                    && !fileExtension.equals("jpeg") && !fileExtension.equals("webp")) {
+                return ResponseEntity.badRequest().body("La imagen debe ser JPG, PNG, JPEG o WEBP");
             }
 
             // Cargar las credenciales de Firebase desde el archivo
@@ -550,11 +515,12 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                     .build()
                     .getService();
 
-            // Crear una referencia a la carpeta en Firebase Storage donde deseas almacenar la imagen
+            // Crear una referencia a la carpeta en Firebase Storage donde deseas almacenar
+            // la imagen
             BlobId blobId = BlobId.of("proyecto-ionic-tienda.appspot.com", "Imagenes-Productos/" + fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
-                .setContentType("image/" + fileExtension)
-                .build();
+                    .setContentType("image/" + fileExtension)
+                    .build();
 
             // Subir el archivo a Firebase Storage
             storage.create(blobInfo, file.getBytes());
@@ -576,26 +542,6 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
     }
 
     // IMPLEMENTACION DEL METODO PARA BORRAR IMAGEN
-    // private void borrarImagen(String nombreImagenActual) {
-    //     try {
-    //         if (nombreImagenActual != null && !nombreImagenActual.isEmpty()) {
-    //             // Crear la ruta completa del archivo
-    //             String nombreCompleto = nombreImagenActual;
-    //             Path path = Paths.get(directorioImagenesPath, nombreCompleto);
-
-    //             // Intentar eliminar el archivo con la extensión actual
-    //             Files.deleteIfExists(path);
-    //             System.out.println("Imagen eliminada: " + nombreCompleto);
-    //         } else {
-    //             System.out.println("La cadena de nombre de imagen actual es nula o vacía.");
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //         System.err.println("Error al intentar eliminar la imagen: " + e.getMessage());
-    //     }
-    // }
-
-
     public void borrarImagen(String nombreImagen) {
         try {
             // Cargar las credenciales de Firebase desde el archivo JSON
@@ -625,7 +571,5 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
             System.err.println("Error al intentar eliminar la imagen de Firebase Storage: " + e.getMessage());
         }
     }
-
-   
 
 }
