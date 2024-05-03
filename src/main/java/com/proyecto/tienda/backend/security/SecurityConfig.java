@@ -77,6 +77,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/envioCodigoRecuperacion").permitAll();
                     auth.requestMatchers("/verificarCodigo").permitAll();
                     auth.requestMatchers("/listarProductos").permitAll();
+                    auth.requestMatchers("/listarUnProducto").permitAll();
                     auth.requestMatchers("/buscarPorCamposImportantes").permitAll();
                     auth.requestMatchers("/buscarPorEspecificacion").permitAll();
                     auth.requestMatchers("/buscarPorRangoDePrecio").permitAll();

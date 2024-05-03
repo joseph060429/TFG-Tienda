@@ -3,6 +3,8 @@ package com.proyecto.tienda.backend.service.ProductoServicio;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
+
 public interface UsuarioEInvitadoProductoServicio {
 
     // METODO PARA BUSCAR TODOS LOS PRODUCTOS
@@ -18,4 +20,7 @@ public interface UsuarioEInvitadoProductoServicio {
 
     // METODO PARA BUSCAR PRODUCTOS POR EL RANGO DE PRECIO
     List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax, int page, int size);
+
+    // METODO PARA LISTAR UN PRODUCTO POR ID
+    ResponseEntity<?> listarUnProducto(String _id);
 }

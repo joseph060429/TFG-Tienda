@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +23,8 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
     @Autowired
     private ProductoRepositorio productoRepositorio;
 
-    // IMPLEMENTACION DEL LISTAR TODOS LOS PRODUCTOS SOLO ME MUESTRA LO QUE QUIERO QUE VEA EL USUARIO
+    // IMPLEMENTACION DEL LISTAR TODOS LOS PRODUCTOS SOLO ME MUESTRA LO QUE QUIERO
+    // QUE VEA EL USUARIO
     @Override
     public List<Map<String, Object>> listarProductos(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -49,7 +53,32 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
         return productosResponse;
     }
 
-    // IMPLEMENTACION DEL METODO PARA BUSCAR POR CAMPOS IMPORTANTES Y SOLO ME MUESTRE LO QUE QUIERO QUE VEA EL
+    @Override
+    public ResponseEntity<?> listarUnProducto(String _id) {
+        Optional<ProductoModelo> productOptional = productoRepositorio.findById(_id);
+        if (productOptional.isPresent()) {
+            ProductoModelo producto = productOptional.get();
+
+            // List<Map<String, Object>> productosResponse = new ArrayList<>();
+            Map<String, Object> mapaProductos = new HashMap<>();
+            mapaProductos.put("_id", producto.get_id());
+            mapaProductos.put("descripcion", producto.getDescripcionProducto());
+            mapaProductos.put("categoria", producto.getCategoriaProducto());
+            mapaProductos.put("nombre", producto.getNombreProducto());
+            mapaProductos.put("precio", producto.getPrecioProducto());
+            mapaProductos.put("marca", producto.getMarcaProducto());
+            mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
+            mapaProductos.put("imagenProducto", producto.getImagenProducto());
+            mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+
+            return ResponseEntity.ok(mapaProductos);
+        } else {
+            return ResponseEntity.status(404).body("Producto no encontrado");
+        }
+    }
+
+    // IMPLEMENTACION DEL METODO PARA BUSCAR POR CAMPOS IMPORTANTES Y SOLO ME
+    // MUESTRE LO QUE QUIERO QUE VEA EL
     // USUARIO
     @Override
     public List<Map<String, Object>> buscarProductosPorCampos(String descripcion, String categoria, String nombre,
@@ -112,7 +141,8 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
         String normalizedEspecificacion = normalizeText(especificacion);
 
         // Utilizo el método del repositorio con paginación
-        Page<ProductoModelo> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(normalizedEspecificacion,
+        Page<ProductoModelo> productosPage = productoRepositorio.findByAllFieldsContainingIgnoreCase(
+                normalizedEspecificacion,
                 pageable);
 
         // Transformo los productos con los campos que quiero en la respuesta
