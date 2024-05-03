@@ -12,10 +12,16 @@ export const productoComposable = () => {
     const store = productoStore(pinia);
 
     // Para llamar las variables del store(usuario) en el composable
-    const { productos } = storeToRefs(store)
+    const { productos, producto } = storeToRefs(store)
+
+
 
     const listarProductos = async () => {
         return await store.listarProductos()
+    }
+
+    const listarUnProducto = async (id) => {
+        return await store.listarUnProducto(id)
     }
 
     // const limpiarProductos = () => {
@@ -25,8 +31,10 @@ export const productoComposable = () => {
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         listarProductos,
+        listarUnProducto,
         // limpiarProductos,
-        productos
+        productos,
+        producto
 
 
     }

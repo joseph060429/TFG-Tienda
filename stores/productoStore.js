@@ -8,6 +8,7 @@ export const productoStore = defineStore({
     state: () => ({
         // Defino el estado inicial de la store, es este el nombre que le pongo para luego llamarlo en el composable
         productos: [],
+        producto: {},
         loggedIn: false,
     }),
 
@@ -22,7 +23,24 @@ export const productoStore = defineStore({
             try {
                 const response = await useAxiosInstance().get("/listarProductos");
                 // Agrego los datos de los productos recibidos en la respuesta al array de productos
-                this.productos =response.data;
+                this.productos = response.data;
+                return response;
+            } catch (error) {
+                console.log("Error en VER LISTAR PRODUCTOS STORE ==> ", error);
+                return error.response;
+            }
+
+        },
+
+        async listarUnProducto(id) {
+            try {
+                const response = await useAxiosInstance().get("/listarUnProducto", {
+                    params: {
+                        _id: id
+                    }
+                });
+                // Agrego los datos del producto recibido en la respuesta al objeto producto
+                this.producto = response.data;
                 return response;
             } catch (error) {
                 console.log("Error en VER LISTAR PRODUCTOS STORE ==> ", error);
@@ -43,7 +61,7 @@ export const productoStore = defineStore({
 
 
 
-        
+
     },
 });
 

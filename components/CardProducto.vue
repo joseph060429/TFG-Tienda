@@ -1,38 +1,41 @@
 <template>
-  <div class="flex flex-center q-mt-md q-col">
+  <!-- <div style="border: 1px solid black;" class="flex flex-center q-mt-md q-col"> -->
+  <!-- <div style="padding-bottom: 6%;" class="contenedor flex flex-center "> -->
+  <div style="padding-bottom: 6%;" class="contenedor">
+
+    <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links
+      icon-first="mdi-skip-previous" icon-last="mdi-skip-next" icon-prev="mdi-fast-rewind"
+      icon-next="mdi-fast-forward" />
+
+
     <!-- Itero sobre cada producto en la página actual -->
-    <div v-for="producto in productosPaginados" :key="producto.id" class="card-container">
+    <div id="contenedor-items" class="flex flex-center">
+      <div v-for="producto in productosPaginados" class="card-container">
 
-      <q-card class="card q-mx-auto q-sm-w-75 q-md-w-50 q-lg-w-33" flat bordered>
-        <!-- Imagen del producto -->
-        <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md centered-image"
-          style="max-width: 45%; height: auto;" />
+        <q-card class="card q-mx-auto q-sm-w-75 q-md-w-50 q-lg-w-33" flat bordered>
+          <!-- Imagen del producto -->
+          <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md centered-image"
+            style="max-width: 45%; height: auto;" @click="goTo(producto)" />
 
-        <q-card-section>
-          <!-- Nombre del producto -->
-          <div>
-            Nombre: <span class="text-title">{{ producto.nombre }}</span>
-          </div>
-          <!-- Marca del producto -->
-          <div class="text-subtitle1">
-            Marca: {{ producto.marca }}
-          </div>
-          <!-- Precio del producto -->
-          <div class="text-caption">
-            Precio: {{ producto.precio }} €
-          </div>
-        </q-card-section>
+          <q-card-section>
+            <!-- Nombre del producto -->
+            <div>
+              Nombre: <span class="text-title">{{ producto.nombre }}</span>
+            </div>
+            <!-- Marca del producto -->
+            <div class="text-subtitle1">
+              Marca: {{ producto.marca }}
+            </div>
+            <!-- Precio del producto -->
+            <div class="text-caption">
+              Precio: {{ producto.precio }} €
+            </div>
+          </q-card-section>
 
-        <q-separator />
-      </q-card>
+          <q-separator />
+        </q-card>
+      </div>
     </div>
-
-    <!-- Paginación -->
-    <!-- <div class="flex flex-center q-mt-md q-col"> -->
-      <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links
-        icon-first="mdi-skip-previous" icon-last="mdi-skip-next" icon-prev="mdi-fast-rewind"
-        icon-next="mdi-fast-forward" />
-    <!-- </div> -->
   </div>
 </template>
 
@@ -41,6 +44,7 @@
 <script setup>
 import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { productoComposable } from '~/composables/productoComposable';
+import {getImagenURL} from '~/utils/imagenURL.js';
 
 // El usuario es el de las stores
 const { listarProductos, productos } = productoComposable();
@@ -55,8 +59,12 @@ const router = useRouter()
 // FUNCION PARA CARGAR LOS PRODUCTOS  ANTES DE QUE SE MONTE EL COMPONENTE
 onBeforeMount(async () => {
   await cargarProductos();
-  console.log("Productos cargados en el compornente card", productos.value);
+  console.log("Productos cargados en el componente card", productos.value);
 })
+
+function goTo(item) {
+  router.push({ path: `/producto/${item._id}` })
+}
 
 // FUNCION PARA CARGAR LOS PRODUCTOS
 const cargarProductos = async () => {
@@ -70,14 +78,14 @@ const cargarProductos = async () => {
   }
 }
 // FUNCION PARA TRERME LAS IMAGENES DE LOS PRODUCTOS
-const getImagenURL = (imagenProducto) => {
-  return `https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Imagenes-Productos%2F${imagenProducto}?alt=media`;
-};
+// const getImagenURL = (imagenProducto) => {
+//   return `https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Imagenes-Productos%2F${imagenProducto}?alt=media`;
+// };
 
 
 // Calculo el número de productos por página
-// const elementosPorPagina = 20;
-const elementosPorPagina = 8;
+const elementosPorPagina = 16;
+// const elementosPorPagina = 8;
 
 // Calculo el total de páginas
 const totalPaginas = computed(() => Math.ceil(productos.value.length / elementosPorPagina));
@@ -93,6 +101,20 @@ const productosPaginados = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  /* Media query para ajustar el ancho en dispositivos móviles */
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    margin: 5px;
+
+  }
+}
+
+
 /* Custom styles */
 .text-title {
   font-size: 1em;
@@ -116,10 +138,12 @@ const productosPaginados = computed(() => {
   width: 24%;
   box-sizing: border-box;
   padding-top: 1%;
-
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
+    height: 38vh;
     width: 100%;
+    margin-top: 1px;
+    padding: auto;
 
   }
 }
