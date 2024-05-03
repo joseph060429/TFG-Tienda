@@ -1,12 +1,7 @@
 <template>
-  <!-- <div style="border: 1px solid black;" class="flex flex-center q-mt-md q-col"> -->
-  <!-- <div style="padding-bottom: 6%;" class="contenedor flex flex-center "> -->
   <div style="padding-bottom: 6%;" class="contenedor">
 
-    <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links
-      icon-first="mdi-skip-previous" icon-last="mdi-skip-next" icon-prev="mdi-fast-rewind"
-      icon-next="mdi-fast-forward" />
-
+    <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links/>
 
     <!-- Itero sobre cada producto en la página actual -->
     <div id="contenedor-items" class="flex flex-center">
@@ -44,7 +39,7 @@
 <script setup>
 import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { productoComposable } from '~/composables/productoComposable';
-import {getImagenURL} from '~/utils/imagenURL.js';
+import { getImagenURL } from '~/utils/imagenURL.js';
 
 // El usuario es el de las stores
 const { listarProductos, productos } = productoComposable();
@@ -133,9 +128,10 @@ const productosPaginados = computed(() => {
   width: 24%;
   box-sizing: border-box;
   padding-top: 1%;
+
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
-    height: 40vh;
+    height: 40.5vh;
     width: 100%;
     margin-top: 1px;
     padding: auto;
@@ -149,3 +145,5 @@ const productosPaginados = computed(() => {
   margin: 0 auto;
 }
 </style>
+
+

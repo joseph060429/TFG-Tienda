@@ -1,32 +1,58 @@
 <template>
-  <div class="q-pa-md producto-container">
-    <div class="q-gutter-md q-col-gutter-sm q-row">
-      <div class="q-col-xs-12 q-col-md-6">
-        <div class="producto-info">
-          <h2 class="producto-nombre">{{ producto.nombre }}</h2>
-          <div><strong>Marca:</strong> {{ producto.marca }}</div>
-          <div><strong>Precio:</strong> {{ producto.precio }} €</div>
-          <div><strong>Descripción:</strong> {{ producto.descripcion }}</div>
-          <div><strong>Categoría:</strong> {{ producto.categoria }}</div>
-          <div><strong>Especificaciones Técnicas:</strong></div>
-          <div v-html="formatearEspecificacionesTecnicas(producto.especificacionesTecnicas)"></div>
+  <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+  <div style="overflow: auto;">
+    <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto; border: none !important;">
+
+      <!-- Sección de información del producto -->
+      <q-card-section class="info-section">
+        <!-- Nombre del producto -->
+        <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
+          {{ producto.nombre }}
         </div>
-      </div>
-      <div class="q-col-xs-12 q-col-md-6">
-        <div class="contenedor-imagen">
-          <q-img class="imagen-producto" :src="getImagenURL(producto.imagenProducto)" />
+        <br>
+        <!-- Marca del producto -->
+        <div class="text-subtitle1" style="margin-bottom: 4px;">
+          <strong> MARCA: </strong> {{ producto.marca }}
         </div>
-      </div>
+        <br>
+        <!-- Precio del producto -->
+        <div style="margin-bottom: 4px;">
+          <strong> PRECIO: </strong> <span class="text-body1">{{ producto.precio }} &euro;</span>
+        </div>
+        <br>
+        <div style="margin-bottom: 4px;">
+          <strong> DESCRIPCIÓN: </strong> <span class="text-body1">{{ producto.descripcion }}</span>
+        </div>
+        <br>
+        <div><strong>ESPECIFICACIONES TÉCNICAS:</strong></div>
+        <br>
+        <div v-html="formatearEspecificacionesTecnicas(producto.especificacionesTecnicas)"></div>
+      </q-card-section>
+
+      <!-- Sección de imagen del producto -->
+      <q-card-section class="image-section" style="margin-bottom: 20px;">
+        <div class="q-col-xs-12 q-col-md-6 d-flex justify-center align-center imagen-producto">
+          <q-img class="centered-image" :src="getImagenURL(producto.imagenProducto)"
+            style="max-width: 40%; max-height: 50vh; height: auto;" />
+        </div>
+      </q-card-section>
+
     </div>
   </div>
 </template>
+
+
 <script setup>
 import { productoComposable } from '~/composables/productoComposable';
 import { getImagenURL } from '~/utils/imagenURL.js';
 
+definePageMeta({
+  role: ['PUBLIC']
+})
 //USAR QUASAR
 const quasar = useQuasar()
 const { producto, listarUnProducto } = productoComposable();
+
 
 const route = useRoute()
 
@@ -39,21 +65,19 @@ onBeforeMount(async () => {
 });
 
 const formatearEspecificacionesTecnicas = (especificaciones) => {
-  // Verifico si especificaciones está vacía
+  // Verificar si especificaciones está vacía
   if (typeof especificaciones === 'string' && especificaciones.trim() !== '') {
-    // Reemplazo todos los '\\\\' con '<br>'
-    return especificaciones.replace(/\\\\/g, '<br>');
+    // Dividir las especificaciones en líneas y agregar puntos al principio de cada línea
+    return especificaciones.split('\n').map(linea => `<div style="text-align: left;"><span style="display: inline-block; width: 1em; text-align: center;">•</span>${linea}</div>`).join('<br>');
   } else {
-    // En caso de que especificaciones no sea una cadena o esté vacía, devuelvo que está cargando
+    // Devolver un mensaje de carga si las especificaciones están vacías
     return "Cargando...";
   }
 };
 
-definePageMeta({
-  role: ['PUBLIC']
-})
 
-
+// RUTAS
+const router = useRouter()
 
 // FUNCION QUE CARGA EL PRODUCTO
 const listarProducto = async () => {
@@ -67,69 +91,56 @@ const listarProducto = async () => {
   }
 }
 
+const regresar = () => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    // Si hay un token almacenado,a la vista del usuario
+    router.push({ path: '/usuario/vistaInicioUsuario' });
+  } else {
+    // Si no hay token almacenado, al index
+    router.push({ path: '/' });
+  }
+};
+
 </script>
 
 <style lang="scss" scoped>
-// .producto-container {
-//   display: flex;
-//   flex-wrap: wrap;
-//   width: 70%;
-//   margin: 2em auto;
-//   border: 1px solid #ccc;
-  
-// }
-
-// .producto-info {
-//   display: flex;
-//   flex-direction: column;
-//   border: 1px solid #ccc;
-//   width: 50%;
-//   padding: 2em;
-// }
-
-// .contenedor-imagen{
-//   display: flex;
-//   // margin-left: auto;
-//   width: 50%;
-//   text-align: center;
-//   // margin-bottom: 10%;
-//   border: 3px solid black;
-//   padding: 2em;
-// }
-
-// .producto-nombre {
-//   font-size: 24px;
-//   margin-bottom: 10px;
-// }
-
-// .producto-detalles {
-//   margin-bottom: 20px;
-// }
-
-
-// .q-pa-md {
-//   padding: 20px;
-// }
-
-// /* Estilo para la imagen */
-// .imagen-producto {
-//   max-width: 100%;
-//   height: auto;
-// }
-
 .imagen-producto {
   max-width: 50%;
   height: auto;
-  margin: 0 auto; /* Centra la imagen horizontalmente */
+  margin: 0 auto;
+  border: 100px;
+  /* Centra la imagen horizontalmente */
 }
 
-/* Ajuste para pantallas grandes */
-@media screen and (min-width: 768px) {
-  .producto-container {
-    max-width: 1200px;
-    margin: auto;
+
+.image-section {
+  padding-bottom: 15%;
+  /* Ajusta el padding según sea necesario */
+}
+
+.centered-image {
+  /* Para centrar la imagen */
+  display: block;
+  margin: 0 auto;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .info-section {
+    padding: 5px;
+    /* Ajusta el padding según sea necesario para móviles */
+  }
+
+  .image-section {
+    padding-bottom: 30%;
+    /* Ajusta el padding según sea necesario para móviles */
+  }
+
+  .imagen-producto {
+    max-width: 100%;
+    /* Ajusta el ancho máximo de la imagen */
   }
 }
-
-
 </style>

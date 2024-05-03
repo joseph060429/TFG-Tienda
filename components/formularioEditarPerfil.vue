@@ -1,5 +1,4 @@
 <template>
-    <!-- Boton de volver atras -->
         <q-dialog v-model="mostrarFormuEditarPerfil"> <q-card>
                 <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;">
                     <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
