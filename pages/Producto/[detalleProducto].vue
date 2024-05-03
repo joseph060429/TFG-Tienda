@@ -68,12 +68,19 @@ const formatearEspecificacionesTecnicas = (especificaciones) => {
   // Verificar si especificaciones está vacía
   if (typeof especificaciones === 'string' && especificaciones.trim() !== '') {
     // Dividir las especificaciones en líneas y agregar puntos al principio de cada línea
-    return especificaciones.split('\n').map(linea => `<div style="text-align: left;"><span style="display: inline-block; width: 1em; text-align: center;">•</span>${linea}</div>`).join('<br>');
+    return especificaciones.trim().split('\n').map(linea => {
+      // Eliminar todos los caracteres '\' al final de la línea
+      linea = linea.replace(/\\+$/, '');
+      return `<div style="text-align: left;"><span style="display: inline-block; width: 1em; text-align: center;">•</span>${linea}</div>`;
+    }).join('<br>');
   } else {
     // Devolver un mensaje de carga si las especificaciones están vacías
     return "Cargando...";
   }
 };
+
+
+
 
 
 // RUTAS
