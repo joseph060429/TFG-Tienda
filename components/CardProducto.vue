@@ -77,11 +77,6 @@ const cargarProductos = async () => {
     mostrarAlertaError('Error al ver el historial de pedidos', quasar);
   }
 }
-// FUNCION PARA TRERME LAS IMAGENES DE LOS PRODUCTOS
-// const getImagenURL = (imagenProducto) => {
-//   return `https://firebasestorage.googleapis.com/v0/b/proyecto-ionic-tienda.appspot.com/o/Imagenes-Productos%2F${imagenProducto}?alt=media`;
-// };
-
 
 // Calculo el número de productos por página
 const elementosPorPagina = 16;
@@ -140,7 +135,7 @@ const productosPaginados = computed(() => {
   padding-top: 1%;
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
-    height: 38vh;
+    height: 40vh;
     width: 100%;
     margin-top: 1px;
     padding: auto;
