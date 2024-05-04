@@ -5,10 +5,33 @@
         :rows="detallePedidosFlat" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
         :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]">
         <template v-slot:top-right>
-          <q-btn color="negative" icon="mdi-cancel" label="Cancelar pedidos" class="q-mb-md" @click="cancelarPedidos" />
+          <!-- Botones cancelar y devolver  pedidos -->
+          <div class="botones-container">
+            <!-- Boton para abirl el dialogo de eliminar pedido -->
+            <!-- Botón para cancelar pedidos -->
+            <q-btn color="negative" icon="mdi-cancel" label="Cancelar pedidos" class="q-mb-md boton-cancelar"
+              @click="abrirDialogoEliminar" />
+
+            <!-- Botón para abrir el diálogo de devolución de pedidos -->
+            <q-btn color="negative" icon="mdi-undo" label="Devolución de pedidos" class="q-mb-md boton-devolucion"
+              @click="abrirFormularioDevolverPedido" />
+          </div>
         </template>
       </q-table>
     </div>
+
+    <!-- Diálogo para ingresar número de pedido -->
+    <q-dialog v-model="mostrarDialogoEliminar">
+      <div class="q-pa-md">
+        <q-input v-model="numeroPedidoCancelar" label="Número de pedido" outlined />
+        <q-card-actions align="right">
+          <!-- Botón "Cancelar" en el diálogo -->
+          <q-btn label="Cancelar" color="negative" @click="cerrarDialogoEliminar" />
+          <!-- Botón "Eliminar pedido" en el diálogo -->
+          <q-btn label="Eliminar pedido" color="negative" @click="cancelarPedido" />
+        </q-card-actions>
+      </div>
+    </q-dialog>
   </q-dialog>
 </template>
 
@@ -18,7 +41,7 @@ import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { usuarioComposable } from '~/composables/usuarioComposable';
 
 // El usuario es el de las stores
-const { historialPedidos, usuario } = usuarioComposable();
+const { historialPedidos, usuario, cancelarPedidos } = usuarioComposable();
 
 //USAR QUASAR
 const quasar = useQuasar()
@@ -31,13 +54,14 @@ const props = defineProps({
 
 const verPedidos = ref(props.mostrarLosPedidos)
 
-
 // FUNCIONES
 // FUNCION PARA TRAER LOS PEDIDOS DEL USUARIO 
 onBeforeMount(async () => {
   await historialDePedidos();
   console.log("detalles pedidos", detallePedidos.value);
 })
+
+// FUNCION PARA VER EL HISTORIAL DE PEDIDOS
 const historialDePedidos = async () => {
   try {
     const response = await historialPedidos();
@@ -94,6 +118,55 @@ const detallePedidosFlat = computed(() => {
 });
 
 
+// Referencia para controlar la visibilidad del diálogo
+const mostrarDialogoEliminar = ref(false);
+
+// Referencia para almacenar el número de pedido a cancelar
+const numeroPedidoCancelar = ref('');
+
+// FUNCION PARA ABRIR EL DIALOGO DE CANCELAR PEDIDO
+const abrirDialogoEliminar = () => {
+  mostrarDialogoEliminar.value = true;
+};
+
+// FUNCION PARA CERRAR EL DIALOGO DE CANCELAR PEDIDOS
+const cerrarDialogoEliminar = () => {
+  mostrarDialogoEliminar.value = false;
+};
+
+// FUNCION PARA CANCELAR LOS PEDIDOS
+const cancelarPedido = async () => {
+  try {
+    // Llamo a la función para cancelar el pedido, pasando el número de pedido
+    const response = await cancelarPedidos(numeroPedidoCancelar.value);
+    // Reviso el código de estado de la respuesta para determinar el mensaje a mostrar al usuario
+    if (response.status === 404) {
+      // Si el pedido no se encontró, muestro un mensaje de error
+      mostrarAlertaError('Error al cancelar el pedido: Pedido no encontrado', quasar);
+    } else if (response.status === 401) {
+      // Si el usuario no tiene permiso para cancelar el pedido, muestro un mensaje de error
+      mostrarAlertaError('Error al cancelar el pedido: Solo puedes cancelar tus pedidos', quasar);
+    } else if (response.status === 400) {
+      // Si el pedido no es cancelable por algún motivo, muestro un mensaje de error
+      mostrarAlertaError('Pedido no cancelable: ya ha sido cancelado o tiene otro estado.', quasar);
+    } else if (response.status === 200) {
+      // Si el pedido se canceló exitosamente, muestro un mensaje de éxito
+      mostrarAlertaExito('Pedido cancelado exitosamente, usted ha recibido un email', quasar)
+
+    }
+    console.log("RESPONSE: ", response.data);
+    console.log("RESPONSE: ", response.status);
+  } catch (error) {
+    // Error de red u otro error
+    console.error('Error al cancelar pedido', error);
+    // Si ocurre un error durante la solicitud, muestro un mensaje de error genérico
+    mostrarAlertaError('Error al cancelar el pedido', quasar);
+  }
+}
+
+
+
+
 
 </script>
 
@@ -108,4 +181,21 @@ const detallePedidosFlat = computed(() => {
   font-family: Arial, sans-serif;
   border: 3px solid black;
 }
+
+.botones-container {
+  display: flex;
+}
+
+.boton-cancelar {
+  margin-right: 10px; /* Ajusta el margen entre los botones según sea necesario */
+}
+
+@media (max-width: 600px) {
+  .boton-cancelar,
+  .boton-devolucion {
+    font-size: 10px; /* Tamaño de fuente aún más pequeño en dispositivos móviles */
+    padding: 3px 6px; /* Padding más pequeño en dispositivos móviles */
+  }
+}
+
 </style>

@@ -41,7 +41,7 @@ import { ref } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
 
 definePageMeta({
-  role: ['ROLE_USER']
+  role: ['ROLE_USER', 'ROLE_ADMIN']
 });
 
 const mostrarFormularioEditarPerfil = ref(false);

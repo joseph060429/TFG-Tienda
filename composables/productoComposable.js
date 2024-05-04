@@ -24,10 +24,6 @@ export const productoComposable = () => {
         return await store.listarUnProducto(id)
     }
 
-    // const limpiarProductos = () => {
-    //     store.limpiarProductos()
-    // }
-
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         listarProductos,

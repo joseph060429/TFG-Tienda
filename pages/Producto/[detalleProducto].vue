@@ -1,10 +1,13 @@
 <template>
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+  <q-btn @click="agregarAlCarrito" label="Añadir al carrito" icon="mdi-cart-plus" class="btn-anadir-carrito" />
   <div style="overflow: auto;">
-    <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto; border: none !important;">
-
+    <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
+      
       <!-- Sección de información del producto -->
-      <q-card-section class="info-section">
+      <q-card-section class="info-section"> 
+        <!-- Botón de añadir al carrito -->
+  
         <!-- Nombre del producto -->
         <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
           {{ producto.nombre }}
@@ -36,7 +39,6 @@
             style="max-width: 40%; max-height: 50vh; height: auto;" />
         </div>
       </q-card-section>
-
     </div>
   </div>
 </template>
@@ -53,7 +55,8 @@ definePageMeta({
 const quasar = useQuasar()
 const { producto, listarUnProducto } = productoComposable();
 
-
+// RUTAS
+const router = useRouter()
 const route = useRoute()
 
 // Constante para coger el parametro id
@@ -65,26 +68,19 @@ onBeforeMount(async () => {
 });
 
 const formatearEspecificacionesTecnicas = (especificaciones) => {
-  // Verificar si especificaciones está vacía
+  // Verifico si especificaciones está vacía
   if (typeof especificaciones === 'string' && especificaciones.trim() !== '') {
-    // Dividir las especificaciones en líneas y agregar puntos al principio de cada línea
+    // Divido las especificaciones en líneas y agrego puntos al principio de cada línea
     return especificaciones.trim().split('\n').map(linea => {
-      // Eliminar todos los caracteres '\' al final de la línea
+      // Elimino todos los caracteres '\' al final de la línea
       linea = linea.replace(/\\+$/, '');
       return `<div style="text-align: left;"><span style="display: inline-block; width: 1em; text-align: center;">•</span>${linea}</div>`;
     }).join('<br>');
   } else {
-    // Devolver un mensaje de carga si las especificaciones están vacías
+    // Devuelvo un mensaje de carga si las especificaciones están vacías
     return "Cargando...";
   }
 };
-
-
-
-
-
-// RUTAS
-const router = useRouter()
 
 // FUNCION QUE CARGA EL PRODUCTO
 const listarProducto = async () => {
@@ -98,6 +94,7 @@ const listarProducto = async () => {
   }
 }
 
+// FUNCION PARA REGRESAR, LA FLECHITA
 const regresar = () => {
   const token = localStorage.getItem('token');
 
@@ -110,8 +107,21 @@ const regresar = () => {
   }
 };
 
+// FUNCIÓN PARA AÑADIR PPRODUCTOS AL CARRITO
+const agregarAlCarrito=()=>{
+  const token = localStorage.getItem('token');
+  if (!token) {
+    // Si hay un token almacenado,a la vista del usuario
+    router.push({ path: '/auth/login' });
+    mostrarAlertaError('Debes estar registrado para añadir productos al carrito', quasar)
+  } else {
+    console.log("Al carrito a comprar");
+  }
+}
+
 </script>
 
+<!-- STYLOS -->
 <style lang="scss" scoped>
 .imagen-producto {
   max-width: 50%;
@@ -133,11 +143,11 @@ const regresar = () => {
   margin: 0 auto;
 }
 
-
+// // El boton del carrito se pone abajo del todo
 @media only screen and (max-width: 600px) {
   .info-section {
     padding: 5px;
-    /* Ajusta el padding según sea necesario para móviles */
+    
   }
 
   .image-section {
@@ -146,8 +156,56 @@ const regresar = () => {
   }
 
   .imagen-producto {
-    max-width: 100%;
     /* Ajusta el ancho máximo de la imagen */
+    max-width: 100%;
   }
 }
+
+/* Asegura que el botón esté posicionado correctamente */
+.q-card {
+  position: relative;
+}
+
+/* Estilos para el botón "Añadir al carrito" */
+.btn-anadir-carrito {
+  /* Posiciona el botón de forma absoluta dentro de la tarjeta */
+  position: fixed; 
+  top: 15%;
+  right: 5%;
+  /* Para que esté por encima del contenido */
+  z-index: 1; 
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: #6c757d; 
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-anadir-carrito:hover {
+  background-color:#3b8af9; 
+}
+
+@media (max-width: 600px) {
+  /* Estilos responsivos para dispositivos móviles */
+  .btn-anadir-carrito {
+    top: 11%;
+    bottom: 96%;
+    margin-right:2%;
+    position: absolute;
+    right: 0px;
+    font-size: 13px;
+  }
+}
+
+
+
+
+
+
+
+
+
 </style>

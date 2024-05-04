@@ -60,7 +60,20 @@ onMounted(() => {
 })
 
 const home = () => {
-  router.push({ path: '/' })
+
+  const token = localStorage.getItem('token');
+  const rol = localStorage.getItem('roles')
+
+  if (token && rol === 'ROLE_USER') {
+    // Si hay un token almacenado,a la vista del usuario
+    router.push({ path: '/usuario/vistaInicioUsuario' });
+  } else if (token && rol === 'ROLE_ADMIN') {
+    // Si no hay token almacenado, al index
+    router.push({ path: '/admin/vistaInicioAdmin' });
+  } else {
+    router.push({ path: '/' })
+  }
+
 };
 
 const login = () => {

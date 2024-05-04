@@ -108,23 +108,33 @@ export const usuarioStore = defineStore({
       }
     },
 
+    // STORE PARA CANCELAR PEDIDOS
+    async cancelarPedidos(numPedido) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await useAxiosInstance().delete(
+          "/usuarios/pedidos/eliminarPedido",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              numeroPedido: numPedido,
+            },
+          }
+        );
+        return response;
+      } catch (error) {
+        console.log("Error en CANCELAR PEDIDOS STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+    // Para limpiar los pedidos de la store del usuario
     limpiarPedidos() {
       this.usuario.pedidos = [];
     },
-
-
-
-
-
-
-
-
-
-
-
   },
-
-
 });
 
 export default usuarioStore;
