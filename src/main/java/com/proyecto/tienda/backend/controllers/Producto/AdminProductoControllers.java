@@ -90,7 +90,7 @@ public class AdminProductoControllers {
     @GetMapping("/listarProductos")
     public ResponseEntity<List<ProductoModelo>> listarProductos(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
         Page<ProductoModelo> productosPage = adminProductoServicio.listarProductosAdmin(page, size);
         List<ProductoModelo> productos = productosPage.getContent();
         return ResponseEntity.ok(productos);
