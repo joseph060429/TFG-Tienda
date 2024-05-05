@@ -121,7 +121,6 @@ const productosPaginados = computed(() => {
     font-size: 1em;
     font-weight: bold;
     color: #333;
-
 }
 
 .text-subtitle1 {
@@ -142,7 +141,7 @@ const productosPaginados = computed(() => {
 
     /* Media query para ajustar el ancho en dispositivos móviles */
     @media screen and (max-width: 600px) {
-        height: 40.5vh;
+        height: 45vh;
         width: 100%;
         margin-top: 1px;
         padding: auto;
