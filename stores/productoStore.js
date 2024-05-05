@@ -18,7 +18,7 @@ export const productoStore = defineStore({
 
     // Defino las acciones (métodos) que pueden modificar el estado del store
     actions: {
-        // STORE VER TODOS LOS PRODUCTOS
+        // STORE VER TODOS LOS PRODUCTOS SIENDO USUARIO
         async listarProductos() {
             try {
                 const response = await useAxiosInstance().get("/listarProductos");
@@ -32,6 +32,7 @@ export const productoStore = defineStore({
 
         },
 
+        // STORE VER UN PRODUCTO SIENDO USUARIO
         async listarUnProducto(id) {
             try {
                 const response = await useAxiosInstance().get("/listarUnProducto", {
@@ -48,17 +49,6 @@ export const productoStore = defineStore({
             }
 
         },
-
-
-
-
-
-
-
-
-
-
-
 
 
 

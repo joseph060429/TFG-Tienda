@@ -1,18 +1,186 @@
 <template>
-    <div>
-        <h1> Soy la vista admin</h1>
+    <div class="container">
+        <!-- Título principal -->
+        <h1 class="title">Bienvenido/a, {{ nombre }}</h1>
+        <!-- Sección del perfil -->
+        <div class="botones">
+            <div class="perfil">
+                <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" />
+                <!-- Botón para editar el perfil -->
+                <q-btn @click="editarPerfil" class="boton-mi-perfil" label="Mi Perfil">
+                    <q-icon name="mdi-account" /> <!-- Icono de perfil -->
+                </q-btn>
+            </div>
+            <!-- Botón para eliminar el perfil -->
+            <div class="productos">
+                <!-- Botón para editar el perfil -->
+                <q-btn @click="todoProductos" class="boton-producto" label="Productos">
+                    <q-icon name="mdi-package-variant-closed" /> 
+                </q-btn>
+            </div>
+            <!-- Botón para ver el historial de los pedidos -->
+            <div class="usuarios">
+                <!-- Botón para ver pedidos -->
+                <q-btn @click="perfilesDeUsuario" class="boton-usuarios" label="Usuarios">
+                    <q-icon name="mdi-account-group" /> 
+                </q-btn>
+            </div>
+            <!-- Botón para ver todo lo de pedidos -->
+            <div class="pedidos">
+                <!-- Botón para ver pedidos -->
+                <q-btn @click="todoPedidos" class="boton-pedidos" label="Pedidos">
+                    <q-icon name="mdi-cart-outline" /> 
+                </q-btn>
+            </div>
+        </div>
+        <div>
+            <CardProductoAdmin />
+        </div>
     </div>
 </template>
 
 <script setup>
-// Importo el middleware que has creado
-import authMiddleware from '~/middleware/authMiddleware.global.js';
+import { ref } from "vue";
+import { useRouter } from 'vue-router'
 
-// Agrega el middleware a la configuración de la página
 definePageMeta({
     role: ['ROLE_ADMIN']
 });
 
+// RUTAS
+const router = useRouter()
+
+let authStore = useAuthStore();
+const nombre = authStore.auth.nombre
+
+
+const mostrarFormularioEditarPerfil = ref(false);
+
+const editarPerfil = () => {
+    // Abro el formulario si no esta abierto
+    if (!mostrarFormularioEditarPerfil.value) {
+        mostrarFormularioEditarPerfil.value = true;
+    }
+};
+
+const todoProductos = () => {
+    router.push({ path: '/admin/adminProductos' })
+};
+
+const perfilesDeUsuario = () => {
+    router.push({ path: '/admin/adminUsuarios' })
+};
+const todoPedidos = () => {
+    router.push({ path: '/admin/adminPedidos' })
+};
+
+
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+    /* Ancho máximo del contenedor */
+    max-width: 100%;
+    // height: 20vh;
+    /* Centrar horizontalmente */
+    margin: 0 auto;
+    /* Relleno */
+    /* 1% de la altura de la ventana */
+    padding: 2vh;
+    height: 80vh;
+}
+
+/* TITULO */
+.title {
+    /* Tamaño de fuente */
+    padding: 0;
+    margin: 0.5em;
+    font-size: 2.5em;
+    /* Margen inferior */
+    margin-bottom: 20px;
+    /* Color rojo */
+    color: #F44336;
+    /* Negrita */
+    font-weight: bold;
+    /* Sombra de texto */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+// CONTENEDOR BOTONES
+.botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    margin: 1em;
+}
+
+// BOTON DE MI PERFIL
+.boton-mi-perfil {
+    background-color: #FF5722;
+    color: #fff;
+    transition: background-color 0.3s;
+    min-width: 200px;
+    margin-bottom: 2.5%;
+}
+
+.boton-mi-perfi:hover {
+    background-color: #F44336;
+
+}
+
+// BOTON DE PRODUCTO
+.boton-producto {
+    // margin-top: 20px;
+    /* Color naranja */
+    background-color: #F44336;
+    // background-color: #F44336;
+    /* Texto blanco */
+    color: #fff;
+    transition: background-color 0.3s;
+    min-width: 200px;
+    margin-bottom: 2.5%;
+}
+
+.boton-producto:hover {
+    background-color: #D32F2F;
+}
+
+// BOTON DE USUARIOS
+.boton-usuarios {
+    // margin-top: 20px;
+    /* Color naranja */
+    background-color: #F44336;
+    // background-color: #F44336;
+    /* Texto blanco */
+    color: #fff;
+    transition: background-color 0.3s;
+    min-width: 200px;
+    margin-bottom: 2.5%;
+}
+
+.boton-usuarios:hover {
+    background-color: #D32F2F;
+}
+
+// BOTON DE USUARIOS
+.boton-pedidos {
+    // margin-top: 20px;
+    /* Color naranja */
+    background-color: #F44336;
+    // background-color: #F44336;
+    /* Texto blanco */
+    color: #fff;
+    transition: background-color 0.3s;
+    min-width: 200px;
+    margin-bottom: 2.5%;
+}
+
+.boton-pedidos:hover {
+    background-color: #D32F2F;
+}
+
+
+
+</style>

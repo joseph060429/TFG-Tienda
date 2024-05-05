@@ -36,9 +36,11 @@
 import { useRouter } from 'vue-router'
 import useAuthStore from '~/stores/authStore.js'
 import { usuarioComposable } from '~/composables/usuarioComposable';
+import {productoAdminComposable} from '~/composables/productoAdminComposable'
 
 // Para limpiar los pedidos de la store cuando el usuario cierra sesion
 const { limpiarPedidos } = usuarioComposable();
+const {limpiarProductosAdmin} = productoAdminComposable();
 
 // Variable para traerme las stores de autenticación
 let authStore = useAuthStore()
@@ -96,6 +98,7 @@ const cerrarSesion = () => {
   authStore.loggedIn = false;
   authStore.$reset()
   limpiarPedidos()
+  limpiarProductosAdmin()
   router.push({ path: '/' })
 }
 

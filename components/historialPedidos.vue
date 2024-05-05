@@ -23,10 +23,11 @@
     <!-- Diálogo para ingresar número de pedido -->
     <q-dialog v-model="mostrarDialogoEliminar">
       <div class="q-pa-md">
-        <q-input v-model="numeroPedidoCancelar" label="Número de pedido" outlined />
+        <q-input v-model="numeroPedidoCancelar" label="Número de pedido" outlined type="number" color="#ffcccc"
+          class="input-custom" />
         <q-card-actions align="right">
           <!-- Botón "Cancelar" en el diálogo -->
-          <q-btn label="Cancelar" color="negative" @click="cerrarDialogoEliminar" />
+          <q-btn label="Cancelar" color="primary" @click="cerrarDialogoEliminar" />
           <!-- Botón "Eliminar pedido" en el diálogo -->
           <q-btn label="Eliminar pedido" color="negative" @click="cancelarPedido" />
         </q-card-actions>
@@ -113,7 +114,7 @@ const detallePedidosFlat = computed(() => {
     // Creo un nuevo objeto que contiene los detalles del pedido
     ...pedido,
     // Modifico la propiedad 'productos' del pedido para que sea una cadena plana que contenga detalles de cada producto
-    productos: pedido.productos.map(producto => ` PRODUCTO: (NOMBRE: ${producto.nombre} - MARCA: ${producto.marca} - CANTIDAD: ${producto.cantidadPedida} - PRECIO: ${producto.precio}) `).join('')
+    productos: pedido.productos.map(producto => ` PRODUCTO: (NOMBRE: ${producto.nombre} - MARCA: ${producto.marca} - CANTIDAD: ${producto.cantidadPedida} - PRECIO UNITARIO: ${producto.precio}) `).join('')
   }));
 });
 
@@ -151,7 +152,7 @@ const cancelarPedido = async () => {
       mostrarAlertaError('Pedido no cancelable: ya ha sido cancelado o tiene otro estado.', quasar);
     } else if (response.status === 200) {
       // Si el pedido se canceló exitosamente, muestro un mensaje de éxito
-      mostrarAlertaExito('Pedido cancelado exitosamente, usted ha recibido un email', quasar)
+      mostrarAlertaExito('Pedido cancelado. Se ha enviado un correo electrónico y los cambios se reflejarán al iniciar sesión nuevamente.', quasar)
 
     }
     console.log("RESPONSE: ", response.data);
@@ -187,15 +188,27 @@ const cancelarPedido = async () => {
 }
 
 .boton-cancelar {
-  margin-right: 10px; /* Ajusta el margen entre los botones según sea necesario */
+  margin-right: 10px;
+  /* Ajusta el margen entre los botones según sea necesario */
 }
 
 @media (max-width: 600px) {
+
   .boton-cancelar,
   .boton-devolucion {
-    font-size: 10px; /* Tamaño de fuente aún más pequeño en dispositivos móviles */
-    padding: 3px 6px; /* Padding más pequeño en dispositivos móviles */
+    font-size: 10px;
+    /* Tamaño de fuente aún más pequeño en dispositivos móviles */
+    padding: 3px 6px;
+    /* Padding más pequeño en dispositivos móviles */
   }
 }
 
+.input-custom {
+  width: 100%;
+  /* Ancho completo del input */
+  margin-bottom: 20px;
+  /* Margen inferior */
+  background-color: rgba(255, 255, 255, 0.8);
+  /* Color de fondo */
+}
 </style>

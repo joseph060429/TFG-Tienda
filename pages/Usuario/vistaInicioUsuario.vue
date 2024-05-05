@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- Título principal -->
-    <h1 class="title">Bienvenido, Usuario</h1>
+    <h1 class="title">Bienvenido/a, {{ nombre }}</h1>
     <!-- Sección del perfil -->
     <div class="botones">
       <div class="perfil">
@@ -43,6 +43,11 @@ import { useAuth } from '~/composables/useAuth.js';
 definePageMeta({
   role: ['ROLE_USER', 'ROLE_ADMIN']
 });
+
+let authStore = useAuthStore();
+
+const nombre = authStore.auth.nombre
+
 
 const mostrarFormularioEditarPerfil = ref(false);
 const mostrarDarseDeBaja = ref(false);

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1> pruebaa</h1>
+        Soy todo pedidos
     </div>
 </template>
 

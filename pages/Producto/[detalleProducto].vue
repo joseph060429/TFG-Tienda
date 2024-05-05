@@ -97,8 +97,9 @@ const listarProducto = async () => {
 // FUNCION PARA REGRESAR, LA FLECHITA
 const regresar = () => {
   const token = localStorage.getItem('token');
+  const rol = localStorage.getItem('roles')
 
-  if (token) {
+  if (token && rol === 'ROLE_USER') {
     // Si hay un token almacenado,a la vista del usuario
     router.push({ path: '/usuario/vistaInicioUsuario' });
   } else {
