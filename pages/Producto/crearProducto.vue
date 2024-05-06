@@ -32,8 +32,8 @@
 
 
                     <!-- Campo descripcionProducto -->
-                    <q-input filled v-model="datosProducto.descripcionProducto" label="Descripción del producto *" type="textarea"
-                        lazy-rules :rules="[
+                    <q-input filled v-model="datosProducto.descripcionProducto" label="Descripción del producto *"
+                        type="textarea" lazy-rules :rules="[
                             val => val && val.length > 0 || 'Por favor, introduce algo',
                             // val => /^.{2}$/.test(val) || 'La descripción del producto debe tener entre 2 y 70 caracteres',
                             val => /^\S.*\S$/.test(val) || 'La descripción del producto no puede empezar ni terminar con espacios en blanco',
@@ -101,7 +101,8 @@
                         label="Imagen del Producto *" :rules="[val => !!val || 'Por favor, selecciona una imagen']">
                         <template v-slot:append>
                             <q-icon name="mdi-paperclip" />
-                            <q-icon name="mdi-close" @click.stop.prevent="datosProducto.imagen = null" class="cursor-pointer" />
+                            <q-icon name="mdi-close" @click.stop.prevent="datosProducto.imagen = null"
+                                class="cursor-pointer" />
 
                         </template>
                     </q-file>
@@ -125,6 +126,7 @@
         </div>
     </div>
 </template>
+
 
 <script setup>
 
@@ -162,11 +164,11 @@ const datosProducto = reactive({
 
 // Subir imagen
 function onFileChange(event) {
- 
+
     const file = event.target.files[0];
     datosProducto.imagen = file
     console.log("file", file);
-    
+
 }
 
 const opcionesCategorias = ['Portatil', 'Sobremesa', 'Componentes'];
@@ -201,7 +203,7 @@ const crearProductos = async () => {
         }
 
         const response = await crearProducto(formData);
-        
+
         if (response.data === 'Producto creado exitosamente') {
             mostrarAlertaExito('Producto creado exitosamente', quasar);
             borrar();
@@ -243,14 +245,9 @@ const regresar = () => {
 <style scoped>
 .container {
     max-width: 80%;
-    /* padding: 2vh; */
     border: 5px solid #ccc;
-    /* display: flex; */
-    /* flex-direction: column; */
     max-height: 100vh;
-    /* Máximo 80% del alto de la pantalla */
-    overflow: hidden;
-    /* Oculta el desplazamiento hacia abajo en el contenedor principal */
+    /* overflow: hidden; */
 }
 
 
