@@ -34,21 +34,6 @@ public class AdminProductoControllers {
     private AdminProductoServicio adminProductoServicio;
 
     // CONTROLADOR PARA CREAR UN PRODUCTO
-    // @PostMapping("/crearProducto")
-    // public ResponseEntity<?> crearProducto(@Valid @ModelAttribute
-    // CrearProductoDTO crearProductoDTO,
-    // @RequestParam("img") MultipartFile file) {
-    // try {
-
-    // // Validar y crear el producto
-    // ResponseEntity<?> response =
-    // adminProductoServicio.crearProducto(crearProductoDTO, file);
-    // return ResponseEntity.ok(response.getBody());
-    // } catch (Exception e) {
-    // return ResponseEntity.status(500).body("Error interno del servidor");
-    // }
-    // }
-
     @PostMapping("/crearProducto")
     public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO,
             HttpServletRequest request) {
