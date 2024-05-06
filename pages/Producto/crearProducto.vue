@@ -246,18 +246,19 @@ const regresar = () => {
 .container {
     max-width: 80%;
     border: 5px solid #ccc;
-    max-height: 100vh;
-    /* overflow: hidden; */
+    /* max-height: 100vh; */
+    min-height: 100vh; 
 }
 
 
-@media screen and (min-width: 600px) {
-
-    /* Estilos específicos para pantallas con ancho mínimo de 600px */
+@media screen and (max-width: 600px) and (max-height: 600px) {
+    /* Estilos específicos para dispositivos móviles con pantallas pequeñas */
     .container {
         max-width: 100%;
-        /* margin: auto; */
-        padding-bottom: 100%;
+        margin: auto;
+        max-height: 600px; /* Establece una altura máxima del contenedor */
+        overflow-y: auto; /* Permite el desplazamiento vertical */
     }
 }
+
 </style>
