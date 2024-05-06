@@ -17,10 +17,13 @@ import com.proyecto.tienda.backend.DTO.DTOProducto.ActualizarProductoDTO;
 import com.proyecto.tienda.backend.DTO.DTOProducto.CrearProductoDTO;
 import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.service.ProductoServicio.AdminProductoServicio.AdminProductoServicio;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @RestController
 @RequestMapping("/admin/productos")
@@ -31,10 +34,28 @@ public class AdminProductoControllers {
     private AdminProductoServicio adminProductoServicio;
 
     // CONTROLADOR PARA CREAR UN PRODUCTO
+    // @PostMapping("/crearProducto")
+    // public ResponseEntity<?> crearProducto(@Valid @ModelAttribute
+    // CrearProductoDTO crearProductoDTO,
+    // @RequestParam("img") MultipartFile file) {
+    // try {
+
+    // // Validar y crear el producto
+    // ResponseEntity<?> response =
+    // adminProductoServicio.crearProducto(crearProductoDTO, file);
+    // return ResponseEntity.ok(response.getBody());
+    // } catch (Exception e) {
+    // return ResponseEntity.status(500).body("Error interno del servidor");
+    // }
+    // }
+
     @PostMapping("/crearProducto")
     public ResponseEntity<?> crearProducto(@Valid @ModelAttribute CrearProductoDTO crearProductoDTO,
-            @RequestParam("img") MultipartFile file) {
+            HttpServletRequest request) {
         try {
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+            System.out.println("CREANDO PRODUCTO" + multipartRequest);
+            MultipartFile file = multipartRequest.getFile("img");
 
             // Validar y crear el producto
             ResponseEntity<?> response = adminProductoServicio.crearProducto(crearProductoDTO, file);
