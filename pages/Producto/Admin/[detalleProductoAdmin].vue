@@ -227,7 +227,7 @@ const regresar = () => {
 
   /* Estilos responsivos para dispositivos móviles */
   .b-tn-eliminar {
-    top: 23%;
+    top: 24.5%;
     bottom: 96%;
     margin-right: 2%;
     position: absolute;
@@ -236,7 +236,7 @@ const regresar = () => {
   }
 
   .b-tn-actualizar{
-    top: 19%;
+    top: 20%;
     bottom: 96%;
     margin-right: 2%;
     position: absolute;
