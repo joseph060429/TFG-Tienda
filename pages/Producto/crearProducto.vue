@@ -255,10 +255,9 @@ const regresar = () => {
 
     /* Estilos específicos para pantallas con ancho mínimo de 600px */
     .container {
-        max-width: 70%;
-        /* Máximo 80% del ancho de la pantalla */
-        margin: auto;
-        /* Centrar el contenedor horizontalmente */
+        max-width: 100%;
+        /* margin: auto; */
+        padding-bottom: 100%;
     }
 }
 </style>
