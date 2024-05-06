@@ -313,7 +313,7 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
         Optional<ProductoModelo> productOptional = productoRepositorio.findById(_id);
         if (productOptional.isPresent()) {
             // System.out.println("Producto: " + productOptional.get());
-            return ResponseEntity.ok(productOptional);
+            return ResponseEntity.ok(productOptional.get());
         } else {
             return ResponseEntity.status(404).body("Producto no encontrado");
         }
