@@ -1,134 +1,134 @@
 <template>
     <!-- Boton de volver atras -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-    <div style="overflow: auto;">
+    <!-- <div style="overflow: auto;"> -->
         <!-- <div class="container"> -->
-        <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
+        <div class="q-pa-xs">
             <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
-                <h1 class="text-h4 q-mb-md text-center q-mt-lg"
+                <h1 class="text-h4 q-mb-xs text-center q-mt-none"
                     style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
                     Crear producto
                 </h1>
                 <div style="overflow: auto;">
-                    <q-form @submit.prevent="crearProductos" @reset="borrar" class="q-gutter-xs"
-                        style="max-width: 100%; max-height: 60vh; margin: auto;">
+                <q-form @submit.prevent="crearProductos" @reset="borrar" class="q-gutter-xs"
+                    style="max-width: 100%; margin: auto; max-height: 60vh;">
 
-                        <!-- Campo categoria producto -->
-                        <q-select v-model="datosProducto.categoriaProducto" :options="opcionesCategorias"
-                            label="Categoría del producto *" :rules="[v => !!v || 'Debes seleccionar una categoría']" />
-
-
-                        <!-- Campo nombreProducto -->
-                        <q-input filled v-model="datosProducto.nombreProducto" label="Nombre del producto *" lazy-rules
-                            :rules="[
-                                val => val && val.length > 0 || 'Por favor, introduce algo',
-                                val => /^.{2,70}$/.test(val) || 'El nombre del producto debe tener entre 2 y 70 caracteres',
-                                val => /^\S.*\S$/.test(val) || 'El nombre del producto no puede empezar ni terminar con espacios en blanco',
-                            ]">
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-label" />
-                            </template>
-                        </q-input>
+                    <!-- Campo categoria producto -->
+                    <q-select v-model="datosProducto.categoriaProducto" :options="opcionesCategorias"
+                        label="Categoría del producto *" :rules="[v => !!v || 'Debes seleccionar una categoría']" />
 
 
-
-                        <!-- Campo descripcionProducto -->
-                        <q-input filled v-model="datosProducto.descripcionProducto" label="Descripción del producto *"
-                            type="textarea" lazy-rules :rules="[
-                                val => val && val.length > 0 || 'Por favor, introduce algo',
-                                // val => /^.{2}$/.test(val) || 'La descripción del producto debe tener entre 2 y 70 caracteres',
-                                val => /^\S.*\S$/.test(val) || 'La descripción del producto no puede empezar ni terminar con espacios en blanco',
-                            ]">
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-comment-text-outline" />
-                            </template>
-                        </q-input>
-
-                        <!-- Campo precioProducto -->
-                        <q-input filled v-model="datosProducto.precioProducto" label="Precio del producto *" lazy-rules
-                            :rules="[
-                                val => val && val.length > 0 || 'Por favor, introduce algo',
-                                val => !isNaN(val) || 'El precio debe ser un número',
-                                val => parseFloat(val) > 0 || 'El precio debe ser mayor que cero'
-                            ]">
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-currency-eur" />
-                            </template>
-                        </q-input>
-
-                        <!-- Campo cantidadProducto -->
-                        <q-input filled v-model="datosProducto.cantidadProducto" label="Cantidad del producto *"
-                            lazy-rules :rules="[
-                                val => val && val.length > 0 || 'Por favor, introduce algo',
-                                val => !isNaN(val) || 'La cantidad debe ser un número',
-                                val => parseInt(val) >= 0 || 'La cantidad debe ser mayor o igual que cero'
-                            ]">
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-numeric" />
-                            </template>
-                        </q-input>
+                    <!-- Campo nombreProducto -->
+                    <q-input filled v-model="datosProducto.nombreProducto" label="Nombre del producto *" lazy-rules
+                        :rules="[
+                            val => val && val.length > 0 || 'Por favor, introduce algo',
+                            val => /^.{2,70}$/.test(val) || 'El nombre del producto debe tener entre 2 y 70 caracteres',
+                            val => /^\S.*\S$/.test(val) || 'El nombre del producto no puede empezar ni terminar con espacios en blanco',
+                        ]">
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-label" />
+                        </template>
+                    </q-input>
 
 
 
-                        <!-- Campo marcaProducto -->
-                        <q-input filled v-model="datosProducto.marcaProducto" label="Marca del producto *" lazy-rules
-                            :rules="[
-                                val => val && val.length > 0 || 'Por favor, introduce algo',
-                                val => /^.{2,50}$/.test(val) || 'La marca del producto debe tener entre 2 y 50 caracteres',
-                                val => /^\S.*\S$/.test(val) || 'La marca del producto no puede empezar ni terminar con espacios en blanco',
+                    <!-- Campo descripcionProducto -->
+                    <q-input filled v-model="datosProducto.descripcionProducto" label="Descripción del producto *"
+                        type="textarea" lazy-rules :rules="[
+                            val => val && val.length > 0 || 'Por favor, introduce algo',
+                            // val => /^.{2}$/.test(val) || 'La descripción del producto debe tener entre 2 y 70 caracteres',
+                            val => /^\S.*\S$/.test(val) || 'La descripción del producto no puede empezar ni terminar con espacios en blanco',
+                        ]">
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-comment-text-outline" />
+                        </template>
+                    </q-input>
 
-                            ]">
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-watermark" />
-                            </template>
-                        </q-input>
+                    <!-- Campo precioProducto -->
+                    <q-input filled v-model="datosProducto.precioProducto" label="Precio del producto *" lazy-rules
+                        :rules="[
+                            val => val && val.length > 0 || 'Por favor, introduce algo',
+                            val => !isNaN(val) || 'El precio debe ser un número',
+                            val => parseFloat(val) > 0 || 'El precio debe ser mayor que cero'
+                        ]">
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-currency-eur" />
+                        </template>
+                    </q-input>
+
+                    <!-- Campo cantidadProducto -->
+                    <q-input filled v-model="datosProducto.cantidadProducto" label="Cantidad del producto *" lazy-rules
+                        :rules="[
+                            val => val && val.length > 0 || 'Por favor, introduce algo',
+                            val => !isNaN(val) || 'La cantidad debe ser un número',
+                            val => parseInt(val) >= 0 || 'La cantidad debe ser mayor o igual que cero'
+                        ]">
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-numeric" />
+                        </template>
+                    </q-input>
 
 
-                        <!-- Campo especificacionesTecnicas -->
-                        <q-input v-model="datosProducto.especificacionesTecnicas" filled
-                            label="Especificaciones técnicas del producto *" type="textarea" dense :rows="5" :rules="[
-                                val => val && val.length > 0 || 'Por favor, introduce algo',
-                                val => val.length >= 2 || 'Las especificaciones técnicas del producto deben tener al menos 2 caracteres',
-                                val => /^\S.*\S$/.test(val.replace(/\n|\r/g, '')) || 'Las especificaciones técnicas del producto no pueden empezar ni terminar con espacios en blanco'
 
-                            ]">
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-text-box-multiple" />
-                            </template>
-                        </q-input>
+                    <!-- Campo marcaProducto -->
+                    <q-input filled v-model="datosProducto.marcaProducto" label="Marca del producto *" lazy-rules
+                        :rules="[
+                            val => val && val.length > 0 || 'Por favor, introduce algo',
+                            val => /^.{2,50}$/.test(val) || 'La marca del producto debe tener entre 2 y 50 caracteres',
+                            val => /^\S.*\S$/.test(val) || 'La marca del producto no puede empezar ni terminar con espacios en blanco',
 
-                        <!-- Campo imagenProducto -->
-                        <q-file v-model="datosProducto.imagen" @update:model-value="onFileChange" filled
-                            label="Imagen del Producto *" :rules="[val => !!val || 'Por favor, selecciona una imagen']">
-                            <template v-slot:append>
-                                <q-icon name="mdi-paperclip" />
-                                <q-icon name="mdi-close" @click.stop.prevent="datosProducto.imagen = null"
-                                    class="cursor-pointer" />
+                        ]">
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-watermark" />
+                        </template>
+                    </q-input>
 
-                            </template>
-                        </q-file>
 
-                        <!-- Botones de enviar y reiniciar -->
-                        <div class="q-mt-lg d-flex justify-around">
-                            <!-- Boton de enviar -->
-                            <q-btn label="Crear Producto" type="submit"
-                                class="full-width enviar-button col-xs-12 col-sm-6">
-                                <q-icon name="mdi-plus-circle" class="q-ml-md inline"></q-icon>
-                                <!-- Icono para el botón -->
-                            </q-btn>
+                    <!-- Campo especificacionesTecnicas -->
+                    <q-input v-model="datosProducto.especificacionesTecnicas" filled
+                        label="Especificaciones técnicas del producto *" type="textarea" dense :rows="5" :rules="[
+                            val => val && val.length > 0 || 'Por favor, introduce algo',
+                            val => val.length >= 2 || 'Las especificaciones técnicas del producto deben tener al menos 2 caracteres',
+                            val => /^\S.*\S$/.test(val.replace(/\n|\r/g, '')) || 'Las especificaciones técnicas del producto no pueden empezar ni terminar con espacios en blanco'
 
-                            <!-- Boton de reiniciar -->
-                            <q-btn label="Reiniciar" type="reset" flat
-                                class="full-width q-ml-sm custom-button-reiniciar col-xs-12 col-sm-6">
-                                <q-icon name="mdi-refresh" class="q-ml-md inline"></q-icon> <!-- Icono para el botón -->
-                            </q-btn>
-                        </div>
+                        ]">
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-text-box-multiple" />
+                        </template>
+                    </q-input>
 
-                    </q-form>
+                    <!-- Campo imagenProducto -->
+                    <q-file v-model="datosProducto.imagen" @update:model-value="onFileChange" filled
+                        label="Imagen del Producto *" :rules="[val => !!val || 'Por favor, selecciona una imagen']">
+                        <template v-slot:append>
+                            <q-icon name="mdi-paperclip" />
+                            <q-icon name="mdi-close" @click.stop.prevent="datosProducto.imagen = null"
+                                class="cursor-pointer" />
+
+                        </template>
+                    </q-file>
+
+                    <!-- Botones de enviar y reiniciar -->
+                    <div class="q-mt-lg d-flex justify-around">
+                        <!-- Boton de enviar -->
+                        <q-btn label="Crear Producto" type="submit" class="full-width enviar-button col-xs-12 col-sm-6">
+                            <q-icon name="mdi-plus-circle" class="q-ml-md inline"></q-icon>
+                            <!-- Icono para el botón -->
+                        </q-btn>
+
+                        <!-- Boton de reiniciar -->
+                        <q-btn label="Reiniciar" type="reset" flat
+                            class="full-width q-ml-sm custom-button-reiniciar col-xs-12 col-sm-6">
+                            <q-icon name="mdi-refresh" class="q-ml-md inline"></q-icon> <!-- Icono para el botón -->
+                        </q-btn>
+                    </div>
+                </q-form>
                 </div>
+
+
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </template>
 
 
@@ -255,15 +255,15 @@ const regresar = () => {
 }
 
 
-@media screen and (max-width: 600px) and (max-height: 600px) {
+@media screen and (max-width: 600px) {
 
     /* Estilos específicos para dispositivos móviles con pantallas pequeñas */
     .container {
         max-width: 100%;
         margin: auto;
         /* max-height: 600px; */
-        min-height: 100vh;
-        overflow-y: auto;
+        max-height: 1vh;
+        /* overflow-y: auto; */
     }
 }
 </style>
