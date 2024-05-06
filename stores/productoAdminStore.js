@@ -88,9 +88,11 @@ export const productoAdminStore = defineStore({
 
         const response = await useAxiosInstance().post(
           "/admin/productos/crearProducto",
+          formData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data"
             }
           });
         // Devuelvo la respuesta de la petición

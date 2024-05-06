@@ -28,8 +28,8 @@ export const productoAdminComposable = () => {
         store.limpiarProductosAdmin();
     };
 
-    const crearProducto = (datosProducto, imagen) => {
-        return store.crearProducto(datosProducto, imagen);
+    const crearProducto = (formData) => {
+        return store.crearProducto(formData);
     };
 
 
