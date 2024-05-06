@@ -38,6 +38,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       // Si hay un token de autenticación
       console.log(to, "to");
       // Verifico si la ruta actual requiere el rol de administrador
+      // to.meta.role && to.meta.role.includes("ROLE_ADMIN")
       if (to.meta.role.includes("ROLE_ADMIN")) {
         // Variable donde almaceno el estado del usuario
         let estado;

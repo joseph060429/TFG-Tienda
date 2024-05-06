@@ -46,6 +46,7 @@ export const productoAdminStore = defineStore({
 
     // STORE VER UN PRODUCTO SIENDO USUARIO
     async listarUnProductoAdmin(id) {
+      const token = localStorage.getItem("token");
       try {
         const response = await useAxiosInstance().get(
           "/admin/productos/listarUnProducto",
@@ -54,13 +55,12 @@ export const productoAdminStore = defineStore({
               Authorization: `Bearer ${token}`,
             },
             params: {
-              _id: id,
+              id: id,
             },
           }
         );
         // Agrego los datos del producto recibido en la respuesta al objeto producto
         this.productoAdmin = response.data;
-        console.log(response, "response desde listarProductosAdmin");
         return response;
       } catch (error) {
         console.log("Error en VER LISTAR PRODUCTOS STORE ==> ", error);

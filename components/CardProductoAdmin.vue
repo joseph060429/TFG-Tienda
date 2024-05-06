@@ -15,7 +15,7 @@
 
                     <q-card-section>
                         <div>
-                            Id: <span class="text-title">{{ producto._id }}</span>
+                            Identificador: <span class="text-title">{{ producto.identificador }}</span>
                         </div>
 
                         <!-- Nombre del producto -->
@@ -67,7 +67,7 @@ onBeforeMount(async () => {
 
 function goTo(item) {
     // console.log( router.push({ path: `/producto/${item._id}` }));
-    router.push({ path: `/producto/${item._id}` })
+    router.push({ path: `/producto/admin/${item._id}` })
     // console.log( router.push({ path: `/producto/${item._id}` }));
     // console.log(`/producto/${item._id}`);
 }
@@ -86,7 +86,6 @@ const cargarProductos = async () => {
 
 // Calculo el número de productos por página
 const elementosPorPagina = 16;
-// const elementosPorPagina = 8;
 
 // Calculo el total de páginas
 const totalPaginas = computed(() => Math.ceil(productos.value.length / elementosPorPagina));

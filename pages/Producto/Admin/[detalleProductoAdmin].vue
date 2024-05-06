@@ -1,45 +1,53 @@
 <template>
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-  <!-- Botón de añadir al carrito -->
-  <q-btn @click="agregarAlCarrito" label="Añadir al carrito" icon="mdi-cart-plus" class="btn-anadir-carrito" />
+  <!-- <q-btn @click="agregarAlCarrito" label="Añadir al carrito" icon="mdi-cart-plus" class="btn-anadir-carrito" /> -->
   <div style="overflow: auto;">
     <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
-
       <!-- Sección de información del producto -->
       <q-card-section class="info-section">
-        <!-- Nombre del producto -->
-        <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
-          {{ producto.nombre }}
+        <!-- Categoría del producto-->
+        <div class="text-subtitle1" style="margin-bottom: 4px;">
+          <strong> CATEGORÍA: </strong> {{ productoAdmin.categoriaProducto }}
         </div>
         <br>
-        <!-- Marca del producto -->
+        <!-- Identificador del producto -->
         <div class="text-subtitle1" style="margin-bottom: 4px;">
-          <strong> MARCA: </strong> {{ producto.marca }}
+          <strong> IDENTIFICADOR: </strong> {{ productoAdmin.identificador }}
+        </div>
+        <br>
+        <!-- Disponibilidad del producto -->
+        <div class="text-subtitle1" style="margin-bottom: 4px;">
+          <strong> DISPONIBILIDAD: </strong> {{ productoAdmin.disponibilidadProducto ? 'SI' : 'No Disponible' }}
+        </div>
+        <br>
+        <!-- Nombre del producto -->
+        <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
+          {{ productoAdmin.nombreProducto }}
+        </div>
+        <br>
+        <!-- Marca del producto-->
+        <div class="text-subtitle1" style="margin-bottom: 4px;">
+          <strong> MARCA: </strong> {{ productoAdmin.marcaProducto }}
         </div>
         <br>
         <!-- Precio del producto -->
         <div style="margin-bottom: 4px;">
-          <strong> PRECIO: </strong> <span class="text-body1">{{ producto.precio }} &euro;</span>
+          <strong> PRECIO: </strong> <span class="text-body1">{{ productoAdmin.precioProducto }} &euro;</span>
         </div>
         <br>
         <div style="margin-bottom: 4px;">
-          <strong> DESCRIPCIÓN: </strong> <span class="text-body1">{{ producto.descripcion }}</span>
-        </div>
-        <br>
-          <!-- Disponibilidad del producto -->
-          <div class="text-subtitle1" style="margin-bottom: 4px;">
-          <strong> DISPONIBILIDAD: </strong> {{ producto.disponibilidad ? 'SI' : 'No Disponible' }}
+          <strong> DESCRIPCIÓN: </strong> <span class="text-body1">{{ productoAdmin.descripcionProducto }}</span>
         </div>
         <br>
         <div><strong>ESPECIFICACIONES TÉCNICAS:</strong></div>
         <br>
-        <div v-html="formatearEspecificacionesTecnicas(producto.especificacionesTecnicas)"></div>
+        <div v-html="formatearEspecificacionesTecnicas(productoAdmin.especificacionesTecnicas)"></div>
       </q-card-section>
 
       <!-- Sección de imagen del producto -->
       <q-card-section class="image-section" style="margin-bottom: 20px;">
         <div class="q-col-xs-12 q-col-md-6 d-flex justify-center align-center imagen-producto">
-          <q-img class="centered-image" :src="getImagenURL(producto.imagenProducto)"
+          <q-img class="centered-image" :src="getImagenURL(productoAdmin.imagenProducto)"
             style="max-width: 40%; max-height: 50vh; height: auto;" />
         </div>
       </q-card-section>
@@ -49,26 +57,29 @@
 
 
 <script setup>
-import { productoComposable } from '~/composables/productoComposable';
+import { productoAdminComposable } from '~/composables/productoAdminComposable';
 import { getImagenURL } from '~/utils/imagenURL.js';
 
 definePageMeta({
-  role: ['PUBLIC']
+  role: ['ADMIN']
 })
 //USAR QUASAR
 const quasar = useQuasar()
-const { producto, listarUnProducto } = productoComposable();
+const { productoAdmin, listarUnProductoAdmin } = productoAdminComposable();
 
 // RUTAS
 const router = useRouter()
 const route = useRoute()
 
 // Constante para coger el parametro id
-const _id = route.params.detalleProducto;
+const _id = route.params.detalleProductoAdmin;
+
+
+console.log("producto", productoAdmin);
 
 // FUNCIO PARA QUE SIEMPRE SE MANTENGA LA PAGINA DEL PRODUCTO AL INICIAR LA PAGINA
 onBeforeMount(async () => {
-  await listarProducto(_id);
+  await listarProductoAdmin(_id);
 });
 
 const formatearEspecificacionesTecnicas = (especificaciones) => {
@@ -87,25 +98,28 @@ const formatearEspecificacionesTecnicas = (especificaciones) => {
 };
 
 // FUNCION QUE CARGA EL PRODUCTO
-const listarProducto = async () => {
+const listarProductoAdmin = async () => {
   try {
-    const response = await listarUnProducto(_id);
+
+    const response = await listarUnProductoAdmin(_id);
     console.log("RESPONSE: ", response.data);
   } catch (error) {
     // Error de red u otro error
-    console.error('Error al ver el producto', error);
-    mostrarAlertaError('Error al ver el producto', quasar);
+    console.error('Error al ver el producto Admin', error);
+    mostrarAlertaError('Error al ver el producto Admin', quasar);
   }
 }
 
 // FUNCION PARA REGRESAR, LA FLECHITA
 const regresar = () => {
   const token = localStorage.getItem('token');
-  const rol = localStorage.getItem('roles')
+  // const rol = localStorage.getItem('roles')
 
-  if (token && rol === 'ROLE_USER') {
+  // console.log(rol, "roless");
+
+  if (token) {
     // Si hay un token almacenado,a la vista del usuario
-    router.push({ path: '/usuario/vistaInicioUsuario' });
+    router.push({ path: '/admin/vistaInicioAdmin' });
   } else {
     // Si no hay token almacenado, al index
     router.push({ path: '/' });
@@ -113,16 +127,16 @@ const regresar = () => {
 };
 
 // FUNCIÓN PARA AÑADIR PPRODUCTOS AL CARRITO
-const agregarAlCarrito = () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    // Si hay un token almacenado,a la vista del usuario
-    router.push({ path: '/auth/login' });
-    mostrarAlertaError('Debes estar registrado para añadir productos al carrito', quasar)
-  } else {
-    console.log("Al carrito a comprar");
-  }
-}
+//   const agregarAlCarrito=()=>{
+//     const token = localStorage.getItem('token');
+//     if (!token) {
+//       // Si hay un token almacenado,a la vista del usuario
+//       router.push({ path: '/auth/login' });
+//       mostrarAlertaError('Debes estar registrado para añadir productos al carrito', quasar)
+//     } else {
+//       console.log("Al carrito a comprar");
+//     }
+//   }
 
 </script>
 
