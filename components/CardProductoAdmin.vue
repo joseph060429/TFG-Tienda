@@ -66,10 +66,8 @@ onBeforeMount(async () => {
 })
 
 function goTo(item) {
-    // console.log( router.push({ path: `/producto/${item._id}` }));
     router.push({ path: `/producto/admin/${item._id}` })
-    // console.log( router.push({ path: `/producto/${item._id}` }));
-    // console.log(`/producto/${item._id}`);
+
 }
 
 // FUNCION PARA CARGAR LOS PRODUCTOS

@@ -9,6 +9,18 @@ export const productoAdminStore = defineStore({
     // Defino el estado inicial de la store, es este el nombre que le pongo para luego llamarlo en el composable
     productos: [],
     productoAdmin: {},
+    // Para crear los datos del producto
+    // categoriaProducto: "",
+    // nombreProducto: "",
+    // descripcionProducto: "",
+    // precioProducto: "",
+    // cantidadProducto: "",
+    // marcaProducto: "",
+    // especificacionesTecnicas: "",
+
+
+
+
     loggedIn: false,
   }),
 
@@ -68,7 +80,36 @@ export const productoAdminStore = defineStore({
       }
     },
 
-    
+
+    // STORE PARA CREAR PRODUCTO
+    async crearProducto(formData) {
+      const token = localStorage.getItem("token");
+      try {
+
+        const response = await useAxiosInstance().post(
+          "/admin/productos/crearProducto",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          });
+        // Devuelvo la respuesta de la petición
+        return response;
+      } catch (error) {
+        // Si hay un error devuelvo la respuesta de la petición
+        console.log("Error en CREAR PRODUCTO STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+
+
+
+
+
+
+
+
   },
 });
 

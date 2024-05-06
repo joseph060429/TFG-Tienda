@@ -14,7 +14,7 @@
             <!-- Botón para eliminar el perfil -->
             <div class="productos">
                 <!-- Botón para editar el perfil -->
-                <q-btn @click="todoProductos" class="boton-producto" label="Productos">
+                <q-btn @click="todoProductos" class="boton-producto" label="Crear Producto">
                     <q-icon name="mdi-package-variant-closed" /> 
                 </q-btn>
             </div>
@@ -64,7 +64,7 @@ const editarPerfil = () => {
 };
 
 const todoProductos = () => {
-    router.push({ path: '/admin/adminProductos' })
+    router.push({ path: '/producto/crearProducto' })
 };
 
 const perfilesDeUsuario = () => {

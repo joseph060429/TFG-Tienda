@@ -26,13 +26,19 @@ export const productoAdminComposable = () => {
 
     const limpiarProductosAdmin = () => {
         store.limpiarProductosAdmin();
-      };
+    };
+
+    const crearProducto = (datosProducto, imagen) => {
+        return store.crearProducto(datosProducto, imagen);
+    };
+
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         listarProductosAdmin,
         listarUnProductoAdmin,
         limpiarProductosAdmin,
+        crearProducto,
         productoAdmin,
         productos,
 
