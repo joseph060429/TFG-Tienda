@@ -11,7 +11,7 @@
                 </h1>
                 <div style="overflow: auto;">
                 <q-form @submit.prevent="crearProductos" @reset="borrar" class="q-gutter-xs"
-                    style="max-width: 100%; margin: auto; max-height: 53.5vh;">
+                    style="max-width: 100%; margin: auto; max-height: 52.8vh;">
 
                     <!-- Campo categoria producto -->
                     <q-select v-model="datosProducto.categoriaProducto" :options="opcionesCategorias"
