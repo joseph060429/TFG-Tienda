@@ -1,11 +1,17 @@
 <template>
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-  <!-- <q-btn @click="agregarAlCarrito" label="Añadir al carrito" icon="mdi-cart-plus" class="btn-anadir-carrito" /> -->
+  <q-btn @click="actualizarProducto" label="Actualizar" icon="mdi-update" class="b-tn-actualizar"/>
+  <q-btn @click="eliminarProducto" label="Eliminar"  icon="mdi-delete" class="b-tn-eliminar" />
   <div style="overflow: auto;">
     <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
       <!-- Sección de información del producto -->
       <q-card-section class="info-section">
         <!-- Categoría del producto-->
+        <!-- Nombre del producto -->
+        <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
+          {{ productoAdmin.nombreProducto }}
+        </div>
+        <br>
         <div class="text-subtitle1" style="margin-bottom: 4px;">
           <strong> CATEGORÍA: </strong> {{ productoAdmin.categoriaProducto }}
         </div>
@@ -20,14 +26,14 @@
           <strong> DISPONIBILIDAD: </strong> {{ productoAdmin.disponibilidadProducto ? 'SI' : 'No Disponible' }}
         </div>
         <br>
-        <!-- Nombre del producto -->
-        <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
-          {{ productoAdmin.nombreProducto }}
-        </div>
-        <br>
         <!-- Marca del producto-->
         <div class="text-subtitle1" style="margin-bottom: 4px;">
           <strong> MARCA: </strong> {{ productoAdmin.marcaProducto }}
+        </div>
+        <br>
+        <!-- Nombre del producto -->
+        <div class="text-subtitle1" style="margin-bottom: 4px;">
+          <strong> CANTIDAD: </strong> {{ productoAdmin.cantidadProducto }}
         </div>
         <br>
         <!-- Precio del producto -->
@@ -126,17 +132,7 @@ const regresar = () => {
   }
 };
 
-// FUNCIÓN PARA AÑADIR PPRODUCTOS AL CARRITO
-//   const agregarAlCarrito=()=>{
-//     const token = localStorage.getItem('token');
-//     if (!token) {
-//       // Si hay un token almacenado,a la vista del usuario
-//       router.push({ path: '/auth/login' });
-//       mostrarAlertaError('Debes estar registrado para añadir productos al carrito', quasar)
-//     } else {
-//       console.log("Al carrito a comprar");
-//     }
-//   }
+
 
 </script>
 
@@ -149,7 +145,6 @@ const regresar = () => {
   border: 100px;
   /* Centra la imagen horizontalmente */
 }
-
 
 .image-section {
   padding-bottom: 15%;
@@ -186,7 +181,7 @@ const regresar = () => {
 }
 
 /* Estilos para el botón "Añadir al carrito" */
-.btn-anadir-carrito {
+.b-tn-eliminar {
   /* Posiciona el botón de forma absoluta dentro de la tarjeta */
   position: fixed;
   top: 15%;
@@ -195,7 +190,7 @@ const regresar = () => {
   z-index: 1;
   padding: 10px 20px;
   border-radius: 20px;
-  background-color: #6c757d;
+  background-color: #ff4757;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -203,15 +198,45 @@ const regresar = () => {
   transition: background-color 0.3s ease;
 }
 
-.btn-anadir-carrito:hover {
+.b-tn-eliminar:hover {
+  background-color:red
+}
+
+.b-tn-actualizar {
+  /* Posiciona el botón de forma absoluta dentro de la tarjeta */
+  position: fixed;
+  top: 15%;
+  right: 15%;
+  /* Para que esté por encima del contenido */
+  z-index: 1;
+  padding: 10px 20px;
+  border-radius: 20px;
   background-color: #3b8af9;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.b-tn-actualizar {
+  background-color: #1e6fd4;
 }
 
 @media (max-width: 600px) {
 
   /* Estilos responsivos para dispositivos móviles */
-  .btn-anadir-carrito {
-    top: 11%;
+  .b-tn-eliminar {
+    top: 23%;
+    bottom: 96%;
+    margin-right: 2%;
+    position: absolute;
+    right: 0px;
+    font-size: 13px;
+  }
+
+  .b-tn-actualizar{
+    top: 19%;
     bottom: 96%;
     margin-right: 2%;
     position: absolute;
