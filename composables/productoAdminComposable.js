@@ -32,6 +32,10 @@ export const productoAdminComposable = () => {
         return store.crearProducto(formData);
     };
 
+    const actualizarProducto = async (formData, id) => {
+        return await store.actualizarProducto(formData, id);
+    };
+
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
@@ -39,6 +43,7 @@ export const productoAdminComposable = () => {
         listarUnProductoAdmin,
         limpiarProductosAdmin,
         crearProducto,
+        actualizarProducto,
         productoAdmin,
         productos,
 

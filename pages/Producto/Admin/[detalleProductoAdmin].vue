@@ -1,6 +1,7 @@
 <template>
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-  <q-btn @click="actualizarProducto" label="Actualizar" icon="mdi-update" class="b-tn-actualizar"/>
+  <formulario-actualizar-producto v-if="mostrarFormularioEditarProducto" v-model="mostrarFormularioEditarProducto" />
+  <q-btn @click="abrirFormulario" label="Actualizar" icon="mdi-update" class="b-tn-actualizar"/>
   <q-btn @click="eliminarProducto" label="Eliminar"  icon="mdi-delete" class="b-tn-eliminar" />
   <div style="overflow: auto;">
     <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
@@ -79,9 +80,17 @@ const route = useRoute()
 
 // Constante para coger el parametro id
 const _id = route.params.detalleProductoAdmin;
+// console.log("producto", productoAdmin);
+
+const mostrarFormularioEditarProducto = ref(false);
+
+const abrirFormulario = () => {
+  // Cambia el valor de la variable para mostrar el formulario
+  mostrarFormularioEditarProducto.value = true;
+};
 
 
-console.log("producto", productoAdmin);
+
 
 // FUNCIO PARA QUE SIEMPRE SE MANTENGA LA PAGINA DEL PRODUCTO AL INICIAR LA PAGINA
 onBeforeMount(async () => {

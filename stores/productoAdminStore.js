@@ -80,7 +80,6 @@ export const productoAdminStore = defineStore({
       }
     },
 
-
     // STORE PARA CREAR PRODUCTO
     async crearProducto(formData) {
       const token = localStorage.getItem("token");
@@ -100,6 +99,32 @@ export const productoAdminStore = defineStore({
       } catch (error) {
         // Si hay un error devuelvo la respuesta de la petición
         console.log("Error en CREAR PRODUCTO STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+    // STORE PARA ACTUALIZAR PRODUCTO
+    async actualizarProducto(formData, id) {
+      const token = localStorage.getItem("token");
+      try {
+
+        const response = await useAxiosInstance().patch(
+          "/admin/productos/actualizarProducto",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data"
+            },
+            params: {
+              id: id,
+            },
+          });
+        // Devuelvo la respuesta de la petición
+        return response;
+      } catch (error) {
+        // Si hay un error devuelvo la respuesta de la petición
+        console.log("Error en ACTUALIZAR PRODUCTO STORE ==> ", error);
         return error.response;
       }
     },

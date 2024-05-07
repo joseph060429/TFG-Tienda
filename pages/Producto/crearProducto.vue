@@ -168,7 +168,6 @@ const datosProducto = reactive({
 
 // Subir imagen
 function onFileChange(event) {
-
     const file = event.target.files[0];
     datosProducto.imagen = file
     console.log("file", file);
