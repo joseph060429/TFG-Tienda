@@ -2,14 +2,14 @@
     <!-- Boton de volver atras -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <!-- <div style="overflow: auto;"> -->
-        <!-- <div class="container"> -->
-        <div class="q-pa-xs">
-            <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
-                <h1 class="text-h4 q-mb-xs text-center q-mt-none"
-                    style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
-                    Crear producto
-                </h1>
-                <div style="overflow: auto;">
+    <!-- <div class="container"> -->
+    <div class="q-pa-xs">
+        <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
+            <h1 class="text-h4 q-mb-xs text-center q-mt-none"
+                style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+                Crear producto
+            </h1>
+            <div style="overflow: auto;">
                 <q-form @submit.prevent="crearProductos" @reset="borrar" class="q-gutter-xs"
                     style="max-width: 100%; margin: auto; max-height: 51.5vh;">
 
@@ -123,11 +123,11 @@
                         </q-btn>
                     </div>
                 </q-form>
-                </div>
-
-
             </div>
+
+
         </div>
+    </div>
     <!-- </div> -->
 </template>
 
@@ -168,6 +168,7 @@ const datosProducto = reactive({
 
 // Subir imagen
 function onFileChange(event) {
+    console.log("ENTRA AQUI", file);
     const file = event.target.files[0];
     datosProducto.imagen = file
     console.log("file", file);
@@ -178,7 +179,6 @@ const opcionesCategorias = ['Portatil', 'Sobremesa', 'Componentes'];
 
 
 // FUNCIONES
-
 // FUNCION PARA ENVIAR EL FORMULARIO
 const crearProductos = async () => {
     console.log('datos productos', datosProducto);
@@ -212,6 +212,8 @@ const crearProductos = async () => {
             borrar();
         } if (response.data === 'Ya existe un producto con el mismo identificador') {
             mostrarAlertaError('Ya existe un producto con el mismo identificador', quasar);
+        } if (response.data === 'Error al construir el producto: La imagen debe ser JPG, PNG, JPEG o WEBP') {
+            mostrarAlertaError('La imagen debe ser JPG, PNG, JPEG o WEBP', quasar);
         }
     } catch (error) {
         // Error de red o algo parecido

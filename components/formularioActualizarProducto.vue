@@ -96,8 +96,6 @@
                                 </template>
                             </q-input>
 
-
-
                             <!-- Campo imagenProducto -->
                             <q-file v-model="datosProductoActualizar.imagen" @update:model-value="onFileChange" filled
                                 label="Imagen del Producto *">
