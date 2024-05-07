@@ -72,8 +72,8 @@ public class AdminProductoControllers {
         try {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartRequest.getFile("img");
-            ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id,
-                    actualizarProductoDTO, file);
+            System.out.println("IMAGEN RECIBIDA: " + file);
+            ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id,actualizarProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();

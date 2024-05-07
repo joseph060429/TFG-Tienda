@@ -168,6 +168,8 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
     public ResponseEntity<?> actualizarProducto(String _id, ActualizarProductoDTO actualizarProductoDTO,
             MultipartFile file) {
 
+                System.out.println("IMAGEN jakjajkakjakjajkajk: " + file);
+
         try {
 
             Optional<ProductoModelo> productOptional = productoRepositorio.findById(_id);
@@ -191,21 +193,26 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                     if (productoRepositorio.existsByIdentificador(identificadorActualizado)) {
                         // Si existe un producto con el mismo identificador, verifico si el producto
                         // encontrado es el mismo que estoy intentando actualizar
-                        if (!productoRepositorio.findByIdentificador(identificadorActualizado).get().get_id()
+                        if (productoRepositorio.findByIdentificador(identificadorActualizado).get().get_id()
                                 .equals(producto.get_id())) {
                             // Si el producto encontrado tiene el mismo _id que el producto que estoy
                             // intentando actualizar, no hago nada
                             // Esto significa que el producto que estoy intentando actualizar ya existe en
                             // el repositorio
                             // con el mismo identificador y no hay conflicto
+                            
+                        } else{
                             return ResponseEntity.status(400).body("Ya existe un producto con el mismo identificador");
-                        } 
+                        }
                     }
                     producto.setIdentificador(identificadorActualizado);
                 }
                 // Si todo va bien osea si el identificador no existe en la base de datos, tanto
                 // si he puesto los campos importantes o no actualizo la imagen
-                else if (file != null) {
+                System.out.println("IMAGEN: " + file);
+                
+                if (file != null) {
+                    System.out.println("hola" + file);
                     ResponseEntity<String> responseImagen = subirImagen(file);
                     if (responseImagen.getStatusCode().is2xxSuccessful()) {
                         String nombreImagenNueva = responseImagen.getBody();
@@ -222,7 +229,10 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                         return ResponseEntity.badRequest()
                                 .body("Error al construir el producto: " + responseImagen.getBody());
                     }
+                }else{
+                    System.out.println("ADIOS" +  file);
                 }
+                
                 // Actualizo la categoria
                 if (actualizarProductoDTO.getCategoriaProducto() != null) {
                     producto.setCategoriaProducto(EProducto.valueOf(actualizarProductoDTO.getCategoriaProducto()));
@@ -287,6 +297,7 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                     .body("Error al ACTUALIZAR el producto: " + e.getMessage());
         }
     }
+
 
     // IDENTIFICADOR PARA NO INSERTAR EL MISMO PRODUCTO 2 VECES EN LA ACTUALIZACIÓN
     private String construirIdentificadorActualizado(ActualizarProductoDTO actualizarProductoDTO,
