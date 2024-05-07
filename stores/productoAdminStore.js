@@ -107,7 +107,6 @@ export const productoAdminStore = defineStore({
     async actualizarProducto(formData, id) {
       const token = localStorage.getItem("token");
       try {
-
         const response = await useAxiosInstance().patch(
           "/admin/productos/actualizarProducto",
           formData,
@@ -128,6 +127,31 @@ export const productoAdminStore = defineStore({
         return error.response;
       }
     },
+
+  //STORE PARA ELIMINAR PRODUCTO
+  async actualizarProducto(id) {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await useAxiosInstance().delete(
+        "/admin/productos/actualizarProducto",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // "Content-Type": "multipart/form-data"
+          },
+          params: {
+            id: id,
+          },
+        });
+      // Devuelvo la respuesta de la petición
+      return response;
+    } catch (error) {
+      // Si hay un error devuelvo la respuesta de la petición
+      console.log("Error en ELIMINAR PRODUCTO STORE ==> ", error);
+      return error.response;
+    }
+  },
 
 
 

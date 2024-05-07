@@ -2,6 +2,7 @@
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
   <formulario-actualizar-producto v-if="mostrarFormularioEditarProducto" v-model="mostrarFormularioEditarProducto" />
   <q-btn @click="abrirFormulario" label="Actualizar" icon="mdi-update" class="b-tn-actualizar"/>
+  <eliminar-producto v-if="mostrarEliminarProducto" v-model="mostrarEliminarProducto" />
   <q-btn @click="eliminarProducto" label="Eliminar"  icon="mdi-delete" class="b-tn-eliminar" />
   <div style="overflow: auto;">
     <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
@@ -83,13 +84,17 @@ const _id = route.params.detalleProductoAdmin;
 // console.log("producto", productoAdmin);
 
 const mostrarFormularioEditarProducto = ref(false);
+const mostrarEliminarProducto = ref(false);
+const eliminarProducto = () => {
+  console.log("has presionado eliminar");
+  // Abro el formulario si no esta abierto
+  mostrarEliminarProducto.value = true;
+};
 
 const abrirFormulario = () => {
   // Cambia el valor de la variable para mostrar el formulario
   mostrarFormularioEditarProducto.value = true;
 };
-
-
 
 
 // FUNCIO PARA QUE SIEMPRE SE MANTENGA LA PAGINA DEL PRODUCTO AL INICIAR LA PAGINA
@@ -140,7 +145,6 @@ const regresar = () => {
     router.push({ path: '/' });
   }
 };
-
 
 
 </script>
