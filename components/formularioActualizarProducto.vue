@@ -100,8 +100,7 @@
 
                             <!-- Campo imagenProducto -->
                             <q-file v-model="datosProductoActualizar.imagen" @update:model-value="onFileChange" filled
-                                label="Imagen del Producto *"
-                                :rules="[val => !!val || 'Por favor, selecciona una imagen']">
+                                label="Imagen del Producto *">
                                 <template v-slot:append>
                                     <q-icon name="mdi-paperclip" />
                                     <q-icon name="mdi-close" @click.stop.prevent="datosProductoActualizar.imagen = null"
@@ -221,6 +220,8 @@ const actualizarDatosProducto = async () => {
             router.push({ path: '/admin/vistaInicioAdmin' });
         } if (response.data === 'Ya existe un producto con el mismo identificador') {
             mostrarAlertaError('Ya existe un producto con el mismo identificador', quasar);
+        } if (response.data === 'Error al construir el producto: La imagen debe ser JPG, PNG, JPEG o WEBP') {
+            mostrarAlertaError('La imagen debe ser JPG, PNG, JPEG o WEBP', quasar);
         }
     } catch (error) {
         // Error de red o algo parecido
