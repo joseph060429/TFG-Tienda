@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,8 +40,8 @@ public class AdminProductoControllers {
             HttpServletRequest request) {
         try {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            System.out.println("CREANDO PRODUCTO" + multipartRequest);
             MultipartFile file = multipartRequest.getFile("img");
+            System.out.println("IMAGEN RECIBIDA: " + file);
 
             // Validar y crear el producto
             ResponseEntity<?> response = adminProductoServicio.crearProducto(crearProductoDTO, file);
@@ -51,12 +52,28 @@ public class AdminProductoControllers {
     }
 
     // CONTROLADOR PARA ACTUALIZAR UN PRODUCTO
+    // @PatchMapping("/actualizarProducto")
+    // public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id,
+    // @RequestParam(required = false, value = "img") MultipartFile file,
+    // @Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO) {
+    // try {
+    // ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id,
+    // actualizarProductoDTO, file);
+    // return ResponseEntity.ok(response.getBody());
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return ResponseEntity.status(500).body("Error interno del servidor");
+    // }
+    // }
+
     @PatchMapping("/actualizarProducto")
-    public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id,
-            @RequestParam(required = false, value = "img") MultipartFile file,
-            @Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO) {
+    public ResponseEntity<?> actualizarProducto(@Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO,
+            @RequestParam("id") String id, HttpServletRequest request) {
         try {
-            ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id, actualizarProductoDTO, file);
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+            MultipartFile file = multipartRequest.getFile("img");
+            ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id,
+                    actualizarProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();

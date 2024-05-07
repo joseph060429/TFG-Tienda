@@ -186,13 +186,22 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                         actualizarProductoDTO.getNombreProducto() != null ||
                         actualizarProductoDTO.getMarcaProducto() != null) {
 
-                    // Construyo el identificador solo si al menos uno de los campos NO es nulo
-                    producto.setIdentificador(identificadorActualizado);
-
-                    // Verifico si el identificador ya existe en la base de datos
+                    // Verifico si ya existe un producto en el repositorio con el mismo
+                    // identificador
                     if (productoRepositorio.existsByIdentificador(identificadorActualizado)) {
-                        return ResponseEntity.status(400).body("Ya existe un producto con el mismo identificador");
+                        // Si existe un producto con el mismo identificador, verifico si el producto
+                        // encontrado es el mismo que estoy intentando actualizar
+                        if (!productoRepositorio.findByIdentificador(identificadorActualizado).get().get_id()
+                                .equals(producto.get_id())) {
+                            // Si el producto encontrado tiene el mismo _id que el producto que estoy
+                            // intentando actualizar, no hago nada
+                            // Esto significa que el producto que estoy intentando actualizar ya existe en
+                            // el repositorio
+                            // con el mismo identificador y no hay conflicto
+                            return ResponseEntity.status(400).body("Ya existe un producto con el mismo identificador");
+                        } 
                     }
+                    producto.setIdentificador(identificadorActualizado);
                 }
                 // Si todo va bien osea si el identificador no existe en la base de datos, tanto
                 // si he puesto los campos importantes o no actualizo la imagen
@@ -238,7 +247,8 @@ public class AdminProductoServicioImpl implements AdminProductoServicio {
                 // Actualizo la marca del producto
                 if (actualizarProductoDTO.getMarcaProducto() != null
                         && !actualizarProductoDTO.getMarcaProducto().isEmpty()) {
-                    producto.setMarcaProducto(normalizeText(actualizarProductoDTO.getMarcaProducto().trim().toUpperCase()));
+                    producto.setMarcaProducto(
+                            normalizeText(actualizarProductoDTO.getMarcaProducto().trim().toUpperCase()));
                 }
 
                 // Actualizo el precio del producto

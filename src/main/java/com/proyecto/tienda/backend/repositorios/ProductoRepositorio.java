@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
+import java.util.List;
+
 
 // ESTO SON LAS CONSULTAS CLAVES DE SPRING DATA, AL IGUAL QUE TODOS LOS REPOSITORIOS
 @Repository
@@ -15,6 +17,11 @@ public interface ProductoRepositorio extends MongoRepository<ProductoModelo, Str
   // CONSULTA PARA VER SI EXISTE UN IDENTIFICADOR DEL PRODUCTO IGNORANDO
   // MAYUSCULAS Y MINUSCULAS
   boolean existsByIdentificador(String identificador);
+
+  // CONSULTA PARA VER SI EL IDENTIFICADOR EXISTE EN MI BASE DE DATOS
+  Optional<ProductoModelo> findByIdentificador(String identificador);
+
+  // CONSULTA DE BUSQUEDA POR DESCRIPCION DEL PRODUCTO IGNORANDO MAYUSCULAS Y
 
   // CONSULTA DE BUSQUEDA POR DESCRIPCION DEL PRODUCTO IGNORANDO MAYUSCULAS Y
   // MINUSCULAS
