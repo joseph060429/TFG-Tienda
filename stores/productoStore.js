@@ -50,6 +50,49 @@ export const productoStore = defineStore({
 
         },
 
+        // STORE BUSCAR UN PRODUCTO SIENDO USUARIO POR ESPECIFICACIÓN
+        async buscarProductoPorEspecificacion(especificacionProducto) {
+            try {
+                const response = await useAxiosInstance().get("/buscarPorEspecificacion", {
+                    params: {
+                        especificacion: especificacionProducto
+                    }
+                });
+                // Agrego los datos del producto recibido en la respuesta al objeto producto
+                this.producto = response.data;
+                return response;
+            } catch (error) {
+                console.log("Error en BUSCAR POR ESPECIFICACION PRODUCTOS STORE ==> ", error);
+                return error.response;
+            }
+
+        },
+
+        // STORE BUSCAR UN PRODUCTO POR CAMPOS IMPORTANTES
+        async buscarProductosPorCampos(nombreProducto, descripcionProducto, categoriaProducto, marcaProducto) {
+            try {
+                const response = await useAxiosInstance().get("/buscarPorCamposImportantes", {
+                    params: {
+                        categoria: categoriaProducto,
+                        nombre: nombreProducto,
+                        marca: marcaProducto,
+                        descripcion: descripcionProducto
+                    }
+                });
+                // Agrego los datos del producto recibido en la respuesta al objeto producto
+                this.producto = response.data;
+                return response;
+            } catch (error) {
+                console.log("Error en BUSCAR POR CAMPOS IMPORTANTES PRODUCTOS STORE ==> ", error);
+                return error.response;
+            }
+
+        },
+
+
+
+
+
 
 
     },

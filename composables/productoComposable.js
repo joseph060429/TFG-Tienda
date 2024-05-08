@@ -24,10 +24,22 @@ export const productoComposable = () => {
         return await store.listarUnProducto(id)
     }
 
+    const buscarProductoPorEspecificacion = async (especificacionProducto) => {
+        return await store.buscarProductoPorEspecificacion(especificacionProducto)
+    }
+
+    const buscarProductosPorCampos = async (nombreProducto, descripcionProducto, categoriaProducto, marcaProducto) => {
+        return await store.buscarProductosPorCampos(nombreProducto, descripcionProducto, categoriaProducto, marcaProducto)
+    }
+
+
+
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         listarProductos,
         listarUnProducto,
+        buscarProductoPorEspecificacion,
+        buscarProductosPorCampos,
         // limpiarProductos,
         productos,
         producto

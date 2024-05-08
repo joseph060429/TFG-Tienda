@@ -1,13 +1,14 @@
 <template>
+  <!-- <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links /> -->
+
+  <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links id="yryryr" />
+
   <div style="padding-bottom: 6%;" class="contenedor">
-
-    <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links/>
-
     <!-- Itero sobre cada producto en la página actual -->
     <div id="contenedor-items" class="flex flex-center">
-      <div v-for="producto in productosPaginados" class="card-container">
+      <div v-for="producto in productosPaginados" class="card-container w-100">
 
-        <q-card class="card q-mx-auto q-sm-w-75 q-md-w-50 q-lg-w-33" flat bordered>
+        <q-card class="card q-mx-auto q-sm-w-50 q-md-w-50 q-lg-w-33" flat bordered>
           <!-- Imagen del producto -->
           <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md centered-image"
             style="max-width: 45%; height: auto;" @click="goTo(producto)" />
@@ -41,8 +42,9 @@ import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { productoComposable } from '~/composables/productoComposable';
 import { getImagenURL } from '~/utils/imagenURL.js';
 
+
 // El usuario es el de las stores
-const { listarProductos, productos } = productoComposable();
+const { listarProductos, productos, buscarProductoPorEspecificacion } = productoComposable();
 
 //USAR QUASAR
 const quasar = useQuasar()
@@ -73,7 +75,7 @@ const cargarProductos = async () => {
   }
 }
 
-// Calculo el número de productos por página
+// // Calculo el número de productos por página
 const elementosPorPagina = 16;
 // const elementosPorPagina = 8;
 
@@ -95,6 +97,7 @@ const productosPaginados = computed(() => {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
 
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
@@ -125,7 +128,7 @@ const productosPaginados = computed(() => {
 
 .card-container {
   /* Ancho fijo para todas las tarjetas */
-  width: 24%;
+  width: 45vh;
   box-sizing: border-box;
   padding-top: 1%;
 
@@ -144,6 +147,10 @@ const productosPaginados = computed(() => {
   display: block;
   margin: 0 auto;
 }
+
+
+
+.pagination-container {
+  text-align: center;
+}
 </style>
-
-

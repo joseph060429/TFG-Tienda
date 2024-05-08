@@ -2,7 +2,7 @@
   <q-dialog v-model="dialogVisible" class="q-dialog-max-w-lg">
     <q-card class="q-dialog">
       <q-card-section class="text-center">
-        <q-card-title class="text-h6">Confirmación</q-card-title>
+        <q-card-title class="text-h6" style="color: #2196F3;">Confirmación</q-card-title>
         <p style="color: #757575;">¿Estás seguro de que quieres darte de baja?</p>
       </q-card-section>
       <q-card-actions align="center" class="q-mt-lg">

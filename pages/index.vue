@@ -1,5 +1,7 @@
 <template>
+  
   <div class="container">
+    <BarraDeBusquedaUsuario />
     <CardProducto />
   </div>
 </template>
@@ -7,7 +9,8 @@
 <script setup>
 // Importaciones
 import { useRouter } from 'vue-router'
-import CardProducto from '~/components/CardProducto.vue';
+const productos = productoComposable().productos
+
 definePageMeta({
   role: ['PUBLIC']
 })
@@ -21,13 +24,15 @@ const axios = useNuxtApp().$axios
 </script>
 
 <style lang="scss" scoped>
-.container{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    height: 70vh;
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 70vh;
 }
+
 .card-producto {
-  max-height: 70vh; /* Establecer la altura máxima de la tarjeta */
+  max-height: 70vh;
+  /* Establecer la altura máxima de la tarjeta */
 }
 </style>

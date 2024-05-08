@@ -29,6 +29,9 @@
       </div>
     </div>
     <div>
+      <BarraDeBusquedaUsuario />
+    </div>
+    <div>
       <CardProducto />
     </div>
   </div>
