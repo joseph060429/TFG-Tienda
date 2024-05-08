@@ -54,7 +54,7 @@ public class UsuarioEInvitadoProductosController {
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String marca,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
         try {
             List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.buscarProductosPorCampos(descripcion,
                     categoria, nombre,
@@ -71,7 +71,7 @@ public class UsuarioEInvitadoProductosController {
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorEspecificacion(
             @RequestParam(required = false) String especificacion,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
         try {
             List<Map<String, Object>> productos = usuarioEInvitadoProductoServicio.buscarProductosPorEspecificacion(
                     especificacion,
