@@ -1,9 +1,10 @@
 <template>
   <!-- <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links /> -->
 
-  <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links id="yryryr" />
+  <!-- <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links id="yryryr" /> -->
 
   <div style="padding-bottom: 6%;" class="contenedor">
+    <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links  />
     <!-- Itero sobre cada producto en la página actual -->
     <div id="contenedor-items" class="flex flex-center">
       <div v-for="producto in productosPaginados" class="card-container w-100">

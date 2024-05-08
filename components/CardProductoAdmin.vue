@@ -1,6 +1,7 @@
 <template>
+     <!-- <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links
+            boundary-links /> -->
     <div style="padding-bottom: 6%;" class="contenedor">
-
         <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links
             boundary-links />
 
@@ -99,56 +100,117 @@ const productosPaginados = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+// .contenedor {
+//     display: flex;
+//     flex-wrap: wrap;
+//     justify-content: center;
+//     width: 100%;
+
+//     /* Media query para ajustar el ancho en dispositivos móviles */
+//     @media screen and (max-width: 600px) {
+//         width: 100%;
+//         margin: 5px;
+
+//     }
+// }
+
+
+// /* Custom styles */
+// .text-title {
+//     font-size: 1em;
+//     font-weight: bold;
+//     color: #333;
+// }
+
+// .text-subtitle1 {
+//     font-size: 1em;
+//     color: #333;
+// }
+
+// .text-caption {
+//     font-size: 0.875rem;
+//     color: #666;
+// }
+
+// .card-container {
+//     /* Ancho fijo para todas las tarjetas */
+//     width: 24%;
+//     box-sizing: border-box;
+//     padding-top: 1%;
+
+//     /* Media query para ajustar el ancho en dispositivos móviles */
+//     @media screen and (max-width: 600px) {
+//         height: 45vh;
+//         width: 100%;
+//         margin-top: 1px;
+//         padding: auto;
+
+//     }
+// }
+
+// .centered-image {
+//     /* Para centrar la imagen */
+//     display: block;
+//     margin: 0 auto;
+// }
 .contenedor {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
 
-    /* Media query para ajustar el ancho en dispositivos móviles */
-    @media screen and (max-width: 600px) {
-        width: 100%;
-        margin: 5px;
+  /* Media query para ajustar el ancho en dispositivos móviles */
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    margin: 5px;
 
-    }
+  }
 }
 
 
 /* Custom styles */
 .text-title {
-    font-size: 1em;
-    font-weight: bold;
-    color: #333;
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+
 }
 
 .text-subtitle1 {
-    font-size: 1em;
-    color: #333;
+  font-size: 1em;
+  color: #333;
 }
 
 .text-caption {
-    font-size: 0.875rem;
-    color: #666;
+  font-size: 0.875rem;
+  color: #666;
 }
 
 .card-container {
-    /* Ancho fijo para todas las tarjetas */
-    width: 24%;
-    box-sizing: border-box;
-    padding-top: 1%;
+  /* Ancho fijo para todas las tarjetas */
+  width: 45vh;
+  box-sizing: border-box;
+  padding-top: 1%;
 
-    /* Media query para ajustar el ancho en dispositivos móviles */
-    @media screen and (max-width: 600px) {
-        height: 45vh;
-        width: 100%;
-        margin-top: 1px;
-        padding: auto;
+  /* Media query para ajustar el ancho en dispositivos móviles */
+  @media screen and (max-width: 600px) {
+    height: 40.5vh;
+    width: 100%;
+    margin-top: 1px;
+    padding: auto;
 
-    }
+  }
 }
 
 .centered-image {
-    /* Para centrar la imagen */
-    display: block;
-    margin: 0 auto;
+  /* Para centrar la imagen */
+  display: block;
+  margin: 0 auto;
+}
+
+
+
+.pagination-container {
+  text-align: center;
 }
 </style>

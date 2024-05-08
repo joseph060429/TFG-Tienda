@@ -11,27 +11,30 @@
                     <q-icon name="mdi-account" /> <!-- Icono de perfil -->
                 </q-btn>
             </div>
-            <!-- Botón para eliminar el perfil -->
+            <!-- Botón para crear productos  -->
             <div class="productos">
                 <!-- Botón para editar el perfil -->
                 <q-btn @click="todoProductos" class="boton-producto" label="Crear Producto">
-                    <q-icon name="mdi-package-variant-closed" /> 
+                    <q-icon name="mdi-package-variant-closed" />
                 </q-btn>
             </div>
             <!-- Botón para ver el historial de los pedidos -->
             <div class="usuarios">
                 <!-- Botón para ver pedidos -->
                 <q-btn @click="perfilesDeUsuario" class="boton-usuarios" label="Usuarios">
-                    <q-icon name="mdi-account-group" /> 
+                    <q-icon name="mdi-account-group" />
                 </q-btn>
             </div>
             <!-- Botón para ver todo lo de pedidos -->
             <div class="pedidos">
                 <!-- Botón para ver pedidos -->
                 <q-btn @click="todoPedidos" class="boton-pedidos" label="Pedidos">
-                    <q-icon name="mdi-cart-outline" /> 
+                    <q-icon name="mdi-cart-outline" />
                 </q-btn>
             </div>
+        </div>
+        <div>
+            <BarraDeBusquedaAdmin />
         </div>
         <div>
             <CardProductoAdmin />
@@ -180,7 +183,4 @@ const todoPedidos = () => {
 .boton-pedidos:hover {
     background-color: #D32F2F;
 }
-
-
-
 </style>

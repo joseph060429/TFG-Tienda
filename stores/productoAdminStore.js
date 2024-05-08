@@ -9,18 +9,6 @@ export const productoAdminStore = defineStore({
     // Defino el estado inicial de la store, es este el nombre que le pongo para luego llamarlo en el composable
     productos: [],
     productoAdmin: {},
-    // Para crear los datos del producto
-    // categoriaProducto: "",
-    // nombreProducto: "",
-    // descripcionProducto: "",
-    // precioProducto: "",
-    // cantidadProducto: "",
-    // marcaProducto: "",
-    // especificacionesTecnicas: "",
-
-
-
-
     loggedIn: false,
   }),
 
@@ -56,10 +44,9 @@ export const productoAdminStore = defineStore({
       this.productoAdmin = {};
     },
 
-    limpiarProducto(){
+    limpiarProducto() {
       this.productoAdmin = {};
     },
-
 
     // STORE VER UN PRODUCTO SIENDO USUARIO
     async listarUnProductoAdmin(id) {
@@ -89,16 +76,16 @@ export const productoAdminStore = defineStore({
     async crearProducto(formData) {
       const token = localStorage.getItem("token");
       try {
-
         const response = await useAxiosInstance().post(
           "/admin/productos/crearProducto",
           formData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data"
-            }
-          });
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         // Devuelvo la respuesta de la petición
         return response;
       } catch (error) {
@@ -118,12 +105,13 @@ export const productoAdminStore = defineStore({
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data"
+              "Content-Type": "multipart/form-data",
             },
             params: {
               id: id,
             },
-          });
+          }
+        );
         // Devuelvo la respuesta de la petición
         return response;
       } catch (error) {
@@ -133,38 +121,57 @@ export const productoAdminStore = defineStore({
       }
     },
 
-  //STORE PARA ELIMINAR PRODUCTO
-  async eliminarProducto(id) {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await useAxiosInstance().delete(
-        "/admin/productos/eliminarProducto",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // "Content-Type": "multipart/form-data"
-          },
-          params: {
-            id: id,
-          },
-        });
-      // Devuelvo la respuesta de la petición
-      return response;
-    } catch (error) {
-      // Si hay un error devuelvo la respuesta de la petición
-      console.log("Error en ELIMINAR PRODUCTO STORE ==> ", error);
-      return error.response;
-    }
-  },
+    //STORE PARA ELIMINAR PRODUCTO
+    async eliminarProducto(id) {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await useAxiosInstance().delete(
+          "/admin/productos/eliminarProducto",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // "Content-Type": "multipart/form-data"
+            },
+            params: {
+              id: id,
+            },
+          }
+        );
+        // Devuelvo la respuesta de la petición
+        return response;
+      } catch (error) {
+        // Si hay un error devuelvo la respuesta de la petición
+        console.log("Error en ELIMINAR PRODUCTO STORE ==> ", error);
+        return error.response;
+      }
+    },
 
-
-
-
-
-
-
-
-
+    // STORE BUSCAR UN PRODUCTO SIENDO ADMIN POR ESPECIFICACIÓN
+    async buscarProductoPorEspecificacion(especificacionProducto) {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await useAxiosInstance().get(
+          "/admin/productos/buscarProductosPorEspecificacion",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // "Content-Type": "multipart/form-data"
+            },
+            params: {
+              especificacion: especificacionProducto,
+            },
+          }
+        );
+        this.productoAdmin = response.data;
+        return response;
+      } catch (error) {
+        console.log(
+          "Error en BUSCAR POR ESPECIFICACION PRODUCTOS STORE ==> ",
+          error
+        );
+        return error.response;
+      }
+    },
   },
 });
 

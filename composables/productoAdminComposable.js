@@ -44,6 +44,10 @@ export const productoAdminComposable = () => {
         return store.limpiarProducto();
     }
 
+    const buscarProductoPorEspecificacion = async (especificacionProducto) => {
+        return await store.buscarProductoPorEspecificacion(especificacionProducto)
+    }
+
 
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
@@ -55,6 +59,7 @@ export const productoAdminComposable = () => {
         actualizarProducto,
         eliminarProducto,
         limpiarProducto,
+        buscarProductoPorEspecificacion,
         productoAdmin,
         productos,
 

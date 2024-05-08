@@ -80,7 +80,7 @@ export const productoStore = defineStore({
                     }
                 });
                 // Agrego los datos del producto recibido en la respuesta al objeto producto
-                this.producto = response.data;
+                // this.producto = response.data;
                 return response;
             } catch (error) {
                 console.log("Error en BUSCAR POR CAMPOS IMPORTANTES PRODUCTOS STORE ==> ", error);
