@@ -36,9 +36,13 @@ export const productoAdminComposable = () => {
         return await store.actualizarProducto(formData, id);
     };
 
-    const borrarProducto = async (id) => {
-        return await store.borrarProducto(id);
+    const eliminarProducto = async (id) => {
+        return await store.eliminarProducto(id);
     };
+
+    const limpiarProducto=()=>{
+        return store.limpiarProducto();
+    }
 
 
 
@@ -49,7 +53,8 @@ export const productoAdminComposable = () => {
         limpiarProductosAdmin,
         crearProducto,
         actualizarProducto,
-        borrarProducto,
+        eliminarProducto,
+        limpiarProducto,
         productoAdmin,
         productos,
 

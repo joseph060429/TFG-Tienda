@@ -223,8 +223,8 @@ const actualizarDatosProducto = async () => {
         }
     } catch (error) {
         // Error de red o algo parecido
-        console.error('Error al crear el producto:', error);
-        mostrarAlertaError('Error al crear el producto intentelo más tarde', quasar);
+        console.error('Error al actualizar el producto:', error);
+        mostrarAlertaError('Error al actualizar el producto intentelo más tarde', quasar);
     }
 }
 

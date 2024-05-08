@@ -53,8 +53,13 @@ export const productoAdminStore = defineStore({
 
     limpiarProductosAdmin() {
       this.productos = [];
-      this.productoAdmin = [];
+      this.productoAdmin = {};
     },
+
+    limpiarProducto(){
+      this.productoAdmin = {};
+    },
+
 
     // STORE VER UN PRODUCTO SIENDO USUARIO
     async listarUnProductoAdmin(id) {
@@ -129,12 +134,11 @@ export const productoAdminStore = defineStore({
     },
 
   //STORE PARA ELIMINAR PRODUCTO
-  async actualizarProducto(id) {
+  async eliminarProducto(id) {
     const token = localStorage.getItem("token");
     try {
       const response = await useAxiosInstance().delete(
-        "/admin/productos/actualizarProducto",
-        formData,
+        "/admin/productos/eliminarProducto",
         {
           headers: {
             Authorization: `Bearer ${token}`,

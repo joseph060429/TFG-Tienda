@@ -1,8 +1,8 @@
 <template>
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-  <formulario-actualizar-producto v-if="mostrarFormularioEditarProducto" v-model="mostrarFormularioEditarProducto" />
+  <FormularioActualizarProducto v-if="mostrarFormularioEditarProducto" v-model="mostrarFormularioEditarProducto" />
   <q-btn @click="abrirFormulario" label="Actualizar" icon="mdi-update" class="b-tn-actualizar"/>
-  <eliminar-producto v-if="mostrarEliminarProducto" v-model="mostrarEliminarProducto" />
+  <EliminarProducto v-if="mostrarEliminarProducto" v-model="mostrarEliminarProducto" />
   <q-btn @click="eliminarProducto" label="Eliminar"  icon="mdi-delete" class="b-tn-eliminar" />
   <div style="overflow: auto;">
     <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
