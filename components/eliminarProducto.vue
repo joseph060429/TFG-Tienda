@@ -2,17 +2,17 @@
   <q-dialog v-model="dialogVisible" class="q-dialog-max-w-lg">
     <q-card class="q-dialog">
       <q-card-section class="text-center">
-        <q-card-title class="text-h6">Confirmación</q-card-title>
-        <p>¿Estás seguro de que quieres eliminar el producto?</p>
+        <q-card-title class="text-h6" style="color: #2196F3;">Confirmación</q-card-title>
+        <p style="color: #757575;">¿Estás seguro de que quieres eliminar el producto?</p>
       </q-card-section>
       <q-card-actions align="center" class="q-mt-lg">
-        <q-btn label="Cancelar" color="primary" @click="cerrarDialogo" class="q-mr-md" v-close-popup />
-        <q-btn label="Eliminar Producto" color="negative" @click="confirmarEliminarProducto" class="q-ml-md"
-          v-close-popup />
+        <q-btn label="Cancelar" color="primary" @click="cerrarDialogo" class="q-mr-md" style="color: #fff; background-color: #2196F3;" v-close-popup />
+        <q-btn label="Eliminar Producto" color="negative" @click="confirmarEliminarProducto" class="q-ml-md" style="color: #fff; background-color: #f44336;" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
+
 
 
 <!-- SCRIPT -->

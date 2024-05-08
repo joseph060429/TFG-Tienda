@@ -3,7 +3,7 @@
     <q-card class="q-dialog">
       <q-card-section class="text-center">
         <q-card-title class="text-h6">Confirmación</q-card-title>
-        <p>¿Estás seguro de que quieres darte de baja?</p>
+        <p style="color: #757575;">¿Estás seguro de que quieres darte de baja?</p>
       </q-card-section>
       <q-card-actions align="center" class="q-mt-lg">
         <q-btn label="Cancelar" color="primary" @click="cerrarDialogo" class="q-mr-md" v-close-popup />
