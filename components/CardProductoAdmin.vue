@@ -193,14 +193,17 @@ const productosPaginados = computed(() => {
   padding-top: 1%;
 
   /* Media query para ajustar el ancho en dispositivos móviles */
-  @media screen and (max-width: 600px) {
-    height: 40.5vh;
-    width: 100%;
-    margin-top: 1px;
-    padding: auto;
+//     /* Media query para ajustar el ancho en dispositivos móviles */
+    @media screen and (max-width: 600px) {
+        height: 50vh;
+        width: 100%;
+        margin-top: 1px;
+        padding: auto;
 
-  }
+    }
 }
+
+
 
 .centered-image {
   /* Para centrar la imagen */
