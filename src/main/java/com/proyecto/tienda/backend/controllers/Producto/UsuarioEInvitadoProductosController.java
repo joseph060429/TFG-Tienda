@@ -105,7 +105,7 @@ public class UsuarioEInvitadoProductosController {
             @RequestParam(required = false) Optional<Double> precioMin,
             @RequestParam(required = false) Optional<Double> precioMax,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
         try {
             // Obtener el valor o usar 0 si está ausente
             double min = precioMin.orElse(0.0);

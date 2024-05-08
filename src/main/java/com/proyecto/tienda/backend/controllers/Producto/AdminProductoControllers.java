@@ -129,7 +129,7 @@ public class AdminProductoControllers {
             @RequestParam(required = false) String marca,
             @RequestParam(required = false) Boolean disponibilidad,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
         try {
             List<Map<String, Object>> productos = adminProductoServicio.buscarProductosAdmin(descripcion, categoria,
                     nombre, marca, page, size);
@@ -147,7 +147,7 @@ public class AdminProductoControllers {
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorEspecificacionAdmin(
             @RequestParam(required = false) String especificacion,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
         try {
             List<Map<String, Object>> productos = adminProductoServicio.buscarProductosPorEspecificacionAdmin(
                     especificacion,
@@ -164,7 +164,7 @@ public class AdminProductoControllers {
             @RequestParam(required = false) Optional<Double> precioMin,
             @RequestParam(required = false) Optional<Double> precioMax,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "1000") int size) {
         try {
             // Obtener el valor o usar 0 si está ausente
             double min = precioMin.orElse(0.0);
