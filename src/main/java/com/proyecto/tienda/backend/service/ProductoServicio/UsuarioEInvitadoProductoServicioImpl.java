@@ -38,14 +38,14 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
         for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("_id", producto.get_id());
-            mapaProductos.put("descripcion", producto.getDescripcionProducto());
-            mapaProductos.put("categoria", producto.getCategoriaProducto());
-            mapaProductos.put("nombre", producto.getNombreProducto());
-            mapaProductos.put("precio", producto.getPrecioProducto());
-            mapaProductos.put("marca", producto.getMarcaProducto());
+            mapaProductos.put("descripcionProducto", producto.getDescripcionProducto());
+            mapaProductos.put("categoriaProducto", producto.getCategoriaProducto());
+            mapaProductos.put("nombreProducto", producto.getNombreProducto());
+            mapaProductos.put("precioProducto", producto.getPrecioProducto());
+            mapaProductos.put("marcaProducto", producto.getMarcaProducto());
             mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
-            mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+            mapaProductos.put("disponibilidadProducto", producto.isDisponibilidadProducto());
 
             // CAMBIO
             productosResponse.add(mapaProductos);
@@ -62,14 +62,14 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
             // List<Map<String, Object>> productosResponse = new ArrayList<>();
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("_id", producto.get_id());
-            mapaProductos.put("descripcion", producto.getDescripcionProducto());
-            mapaProductos.put("categoria", producto.getCategoriaProducto());
-            mapaProductos.put("nombre", producto.getNombreProducto());
-            mapaProductos.put("precio", producto.getPrecioProducto());
-            mapaProductos.put("marca", producto.getMarcaProducto());
+            mapaProductos.put("descripcionProducto", producto.getDescripcionProducto());
+            mapaProductos.put("categoriaProducto", producto.getCategoriaProducto());
+            mapaProductos.put("nombreProducto", producto.getNombreProducto());
+            mapaProductos.put("precioProducto", producto.getPrecioProducto());
+            mapaProductos.put("marcaProducto", producto.getMarcaProducto());
             mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
-            mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+            mapaProductos.put("disponibilidadProducto", producto.isDisponibilidadProducto());
 
             return ResponseEntity.ok(mapaProductos);
         } else {
@@ -151,14 +151,14 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
         for (ProductoModelo producto : productosPage.getContent()) {
             Map<String, Object> mapaProductos = new HashMap<>();
             mapaProductos.put("_id", producto.get_id());
-            mapaProductos.put("descripcion", producto.getDescripcionProducto());
-            mapaProductos.put("categoria", producto.getCategoriaProducto());
-            mapaProductos.put("nombre", producto.getNombreProducto());
-            mapaProductos.put("precio", producto.getPrecioProducto());
-            mapaProductos.put("marca", producto.getMarcaProducto());
+            mapaProductos.put("descripcionProducto", producto.getDescripcionProducto());
+            mapaProductos.put("categoriaProducto", producto.getCategoriaProducto());
+            mapaProductos.put("nombreProducto", producto.getNombreProducto());
+            mapaProductos.put("precioProducto", producto.getPrecioProducto());
+            mapaProductos.put("marcaProducto", producto.getMarcaProducto());
             mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
-            mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+            mapaProductos.put("disponibilidadProducto", producto.isDisponibilidadProducto());
 
             productosResponse.add(mapaProductos);
         }

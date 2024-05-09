@@ -52,20 +52,6 @@ public class AdminProductoControllers {
     }
 
     // CONTROLADOR PARA ACTUALIZAR UN PRODUCTO
-    // @PatchMapping("/actualizarProducto")
-    // public ResponseEntity<?> actualizarProducto(@RequestParam("id") String id,
-    // @RequestParam(required = false, value = "img") MultipartFile file,
-    // @Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO) {
-    // try {
-    // ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id,
-    // actualizarProductoDTO, file);
-    // return ResponseEntity.ok(response.getBody());
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // return ResponseEntity.status(500).body("Error interno del servidor");
-    // }
-    // }
-
     @PatchMapping("/actualizarProducto")
     public ResponseEntity<?> actualizarProducto(@Valid @ModelAttribute ActualizarProductoDTO actualizarProductoDTO,
             @RequestParam("id") String id, HttpServletRequest request) {
@@ -73,7 +59,7 @@ public class AdminProductoControllers {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartRequest.getFile("img");
             System.out.println("IMAGEN RECIBIDA: " + file);
-            ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id,actualizarProductoDTO, file);
+            ResponseEntity<?> response = adminProductoServicio.actualizarProducto(id, actualizarProductoDTO, file);
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
