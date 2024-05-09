@@ -4,6 +4,8 @@
         <template v-slot:prepend>
             <q-icon name="mdi-magnify" class="icono-buscar" />
         </template>
+
+
         <q-select v-model="tipo_busqueda" :options="opcionesBusqueda" dense outlined>
             <template v-slot:append>
                 <q-icon name="mdi-format-list-checks" size="sm" />
@@ -14,23 +16,19 @@
         <q-select v-if="tipo_busqueda === 'nombre'" :options="filtrado" dense outlined>
         </q-select>
 
-        <q-select v-else-if="tipo_busqueda === 'categoria'" :options="filtrado" dense outlined />
+        <q-select v-else-if="tipo_busqueda === 'categoria'" v-model="categoriaSeleccionada" :options="filtrado" dense outlined />
 
 
         <q-select v-else="tipo_busqueda === 'marca'" :options="filtrado" dense outlined />
 
-
-
-
+        
 
 
     </q-input>
 
-    <q-select v-if="tipo_busqueda === 'nombre'" :options="filtrado" dense outlined>
-        <template v-slot:append>
-            <q-icon name="mdi-label" size="sm" />
-        </template>
-    </q-select>
+  
+
+ 
 </template>
 
 
@@ -40,9 +38,14 @@ import { productoComposable } from '~/composables/productoComposable';
 
 
 const especificacion_del_producto = ref('');
+
+const precioMin = ref('');
+const precioMax = ref('');
 // console.log("especificacion del producto", especificacion_del_producto);
 
 const { buscarProductoPorEspecificacion, productos } = productoComposable();
+
+
 
 const buscarProductoEspecificacion = async () => {
     console.log(especificacion_del_producto.value);
@@ -72,6 +75,60 @@ const opcionesBusqueda = [
 
 const categoriaSeleccionada = ref('');
 
+const nombreProductoSeleccionado = ref('')
+
+const marcaProductoSeleccionado = ref('')
+
+
+
+
+// const filtrado = computed(() => {
+//     // console.log('Esto es tipoBusqueda ==> ', tipo_busqueda.value);
+//     switch (tipo_busqueda.value.value) {
+//         case 'nombre':
+//             // console.log("tipo busqueda", tipo_busqueda.value);
+//             return productos.value.map(producto => producto.nombreProducto);
+//             // const productosPorNombre = productos.value.map(producto => producto.nombreProducto);
+//             // if(nombreProductoSeleccionado !==''){
+//             //     console.log("Producto seleccionado", nombreProductoSeleccionado);
+//             //     console.log("productos.value", productos.value);
+//             //     const response = productos.value.filter(producto => producto.nombreProducto === nombreProductoSeleccionado.value);
+//             //     console.log("response", response);
+//             //     productos.value = response
+//             // }else{
+//             //     productosPorNombre
+//             // }
+
+//         case 'categoria':
+//             // const categoriasUnicas = [...new Set(productos.value.map(producto => producto.categoriaProducto))];
+//             // return categoriasUnicas;
+//             const categoriasUnicas = [...new Set(productos.value.map(producto => producto.categoriaProducto))];
+//             if (categoriaSeleccionada.value !== '') {
+//                 console.log("categoria seleccionada", categoriaSeleccionada.value);
+//                 console.log("productos.value", productos.value);
+//                 const response = productos.value.filter(producto => producto.categoriaProducto === categoriaSeleccionada.value);
+//                 console.log("response", response);
+//                 productos.value = response
+//             } else {
+//                 return categoriasUnicas;
+//             }
+
+
+//         case 'marca':
+//             const marcasUnicas = [...new Set(productos.value.map(producto => producto.marcaProducto))];
+//             if(marcaProductoSeleccionado !== ''){
+//                 console.log("marca seleccionada", marcaProductoSeleccionado.value);
+//                 console.log("productos.value", productos.value);
+//                 const response = productos.value.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value )
+//                 console.log('response', response);
+//                 productos.value = response
+//             }else{
+//                 return marcasUnicas;
+//             }
+       
+//     }
+// });
+
 
 const filtrado = computed(() => {
     console.log('Esto es tipoBusqueda ==> ', tipo_busqueda.value);
@@ -99,7 +156,9 @@ const filtrado = computed(() => {
     }
 });
 
-watch(tipo_busqueda, (x) => {
+
+
+watch(categoriaSeleccionada, (x) => {
     console.log("x ==>", x);
 });
 

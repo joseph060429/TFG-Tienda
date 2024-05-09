@@ -32,6 +32,10 @@ export const productoComposable = () => {
     //     return await store.buscarProductosPorCampos(nombreProducto, descripcionProducto, categoriaProducto, marcaProducto)
     // }
 
+    // const buscarProductosPorRangoPrecio = async(precioMinimo, precioMaximo) =>{
+    //     return await store.buscarProductosPorRangoPrecio(precioMinimo,precioMaximo)
+    // }
+
 
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
@@ -39,6 +43,7 @@ export const productoComposable = () => {
         listarProductos,
         listarUnProducto,
         buscarProductoPorEspecificacion,
+        // buscarProductosPorRangoPrecio,
         // buscarProductosPorCampos,
         // limpiarProductos,
         productos,
