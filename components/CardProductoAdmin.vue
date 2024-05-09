@@ -11,6 +11,7 @@
 
                 <q-card class="card q-mx-auto q-sm-w-75 q-md-w-50 q-lg-w-33" flat bordered>
                     <!-- Imagen del producto -->
+                    <!-- {{ producto }} -->
                     <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md centered-image"
                         style="max-width: 45%; height: auto;" @click="goTo(producto)" />
 
@@ -21,11 +22,11 @@
 
                         <!-- Nombre del producto -->
                         <div>
-                            Nombre: <span class="text-title">{{ producto.nombreProducto }}</span>
+                            Nombre: <span class="text-title">{{ producto.nombreProducto}}</span>
                         </div>
                         <!-- Marca del producto -->
                         <div class="text-subtitle1">
-                            Marca: {{ producto.marcaProducto }}
+                            Marca: {{ producto.marcaProducto}}
                         </div>
                         <!-- Precio del producto -->
                         <div class="text-caption">
@@ -46,7 +47,7 @@
 
 <!-- SCRIPTS -->
 <script setup>
-import { ref, defineProps, onBeforeMount, computed } from 'vue';
+import { ref, defineProps, onBeforeMount, computed, watch } from 'vue';
 import { productoAdminComposable } from '~/composables/productoAdminComposable';
 import { getImagenURL } from '~/utils/imagenURL.js';
 
@@ -67,6 +68,7 @@ onBeforeMount(async () => {
 })
 
 function goTo(item) {
+    console.log("Item: ", item);
     router.push({ path: `/producto/admin/${item._id}` })
 
 }
@@ -76,6 +78,8 @@ const cargarProductos = async () => {
     try {
         const response = await listarProductosAdmin();
         console.log("RESPONSE: ", response.data);
+        // Actualizar productos después de aplicar el filtro de búsqueda
+        // productos.value = response.data;
     } catch (error) {
         // Error de red u otro error
         console.error('Error al ver el historial de pedidos', error);
@@ -83,18 +87,24 @@ const cargarProductos = async () => {
     }
 }
 
+
 // Calculo el número de productos por página
 const elementosPorPagina = 16;
 
 // Calculo el total de páginas
 const totalPaginas = computed(() => Math.ceil(productos.value.length / elementosPorPagina));
 
+
 // Calculo los productos a mostrar en la página actual
 const paginaActual = ref(1);
+
 const productosPaginados = computed(() => {
     const indiceInicial = (paginaActual.value - 1) * elementosPorPagina;
     const indiceFinal = indiceInicial + elementosPorPagina;
     return productos.value.slice(indiceInicial, indiceFinal);
+});
+watch(productos, () => {
+    totalPaginas.value = Math.ceil(productos.value.length / elementosPorPagina);
 });
 
 </script>

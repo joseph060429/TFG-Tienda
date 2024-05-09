@@ -17,15 +17,15 @@
           <q-card-section>
             <!-- Nombre del producto -->
             <div>
-              Nombre: <span class="text-title">{{ producto.nombre }}</span>
+              Nombre: <span class="text-title">{{ producto.nombreProducto}}</span>
             </div>
             <!-- Marca del producto -->
             <div class="text-subtitle1">
-              Marca: {{ producto.marca }}
+              Marca: {{ producto.marcaProducto }}
             </div>
             <!-- Precio del producto -->
             <div class="text-caption">
-              Precio: {{ producto.precio }} €
+              Precio: {{ producto.precioProducto }} €
             </div>
           </q-card-section>
 

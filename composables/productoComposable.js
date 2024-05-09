@@ -8,7 +8,7 @@ export const productoComposable = () => {
     // Obtengo la instancia de Pinia para acceder al store de autenticación
     const pinia = usePinia();
 
-    // Obtengo la instancia del store de autenticación utilizando el hook useAuthStore
+    // Obtengo la instancia del store de autenticación utilizando el hook productoStore
     const store = productoStore(pinia);
 
     // Para llamar las variables del store(usuario) en el composable
@@ -28,9 +28,9 @@ export const productoComposable = () => {
         return await store.buscarProductoPorEspecificacion(especificacionProducto)
     }
 
-    const buscarProductosPorCampos = async (nombreProducto, descripcionProducto, categoriaProducto, marcaProducto) => {
-        return await store.buscarProductosPorCampos(nombreProducto, descripcionProducto, categoriaProducto, marcaProducto)
-    }
+    // const buscarProductosPorCampos = async (nombreProducto, descripcionProducto, categoriaProducto, marcaProducto) => {
+    //     return await store.buscarProductosPorCampos(nombreProducto, descripcionProducto, categoriaProducto, marcaProducto)
+    // }
 
 
 
@@ -39,7 +39,7 @@ export const productoComposable = () => {
         listarProductos,
         listarUnProducto,
         buscarProductoPorEspecificacion,
-        buscarProductosPorCampos,
+        // buscarProductosPorCampos,
         // limpiarProductos,
         productos,
         producto

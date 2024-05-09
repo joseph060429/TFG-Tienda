@@ -20,13 +20,16 @@ import { productoAdminComposable } from '~/composables/productoAdminComposable';
 const especificacion_del_producto = ref('');
 console.log("especificacion del producto", especificacion_del_producto);
 
-const { buscarProductoPorEspecificacion, productos, productoAdmin } = productoAdminComposable();
+const { buscarProductoPorEspecificacionAdmin, productos, productoAdmin } = productoAdminComposable();
 
 const buscarProductoEspecificacion = async () => {
     console.log(especificacion_del_producto.value);
+    console.log("productos", productos.value);
+    
     try {
-        const response = await buscarProductoPorEspecificacion(especificacion_del_producto.value);
+        const response = await buscarProductoPorEspecificacionAdmin(especificacion_del_producto.value);
         productos.value = response.data;
+        console.log("PRODUCTOS", productos);
         console.log("producto admin" , productoAdmin.value);
         console.log("se filtra", response.data);
 

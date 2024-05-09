@@ -15,7 +15,7 @@
         </div>
         <br>
         <div class="text-subtitle1" style="margin-bottom: 4px;">
-          <strong> CATEGORÍA: </strong> {{ productoAdmin.categoriaProducto }}
+          <strong> CATEGORÍA: </strong> {{ productoAdmin.categoriaProducto}}
         </div>
         <br>
         <!-- Identificador del producto -->

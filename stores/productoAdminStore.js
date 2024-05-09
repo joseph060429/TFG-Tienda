@@ -147,7 +147,7 @@ export const productoAdminStore = defineStore({
     },
 
     // STORE BUSCAR UN PRODUCTO SIENDO ADMIN POR ESPECIFICACIÓN
-    async buscarProductoPorEspecificacion(especificacionProducto) {
+    async buscarProductoPorEspecificacionAdmin(especificacionProducto) {
       const token = localStorage.getItem("token");
       try {
         const response = await useAxiosInstance().get(
@@ -162,8 +162,10 @@ export const productoAdminStore = defineStore({
             },
           }
         );
-        this.productoAdmin = response.data;
+        // this.productos = response.data;
+        console.log(" response.data ==> ", response.data);
         return response;
+        
       } catch (error) {
         console.log(
           "Error en BUSCAR POR ESPECIFICACION PRODUCTOS STORE ==> ",
@@ -172,6 +174,20 @@ export const productoAdminStore = defineStore({
         return error.response;
       }
     },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   },
 });
 

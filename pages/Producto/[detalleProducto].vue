@@ -14,21 +14,21 @@
         <br>
         <!-- Marca del producto -->
         <div class="text-subtitle1" style="margin-bottom: 4px;">
-          <strong> MARCA: </strong> {{ producto.marca }}
+          <strong> MARCA: </strong> {{ producto.marcaProducto }}
         </div>
         <br>
         <!-- Precio del producto -->
         <div style="margin-bottom: 4px;">
-          <strong> PRECIO: </strong> <span class="text-body1">{{ producto.precio }} &euro;</span>
+          <strong> PRECIO: </strong> <span class="text-body1">{{ producto.precioProducto }} &euro;</span>
         </div>
         <br>
         <div style="margin-bottom: 4px;">
-          <strong> DESCRIPCIÓN: </strong> <span class="text-body1">{{ producto.descripcion }}</span>
+          <strong> DESCRIPCIÓN: </strong> <span class="text-body1">{{ producto.descripcionProducto }}</span>
         </div>
         <br>
           <!-- Disponibilidad del producto -->
           <div class="text-subtitle1" style="margin-bottom: 4px;">
-          <strong> DISPONIBILIDAD: </strong> {{ producto.disponibilidad ? 'SI' : 'No Disponible' }}
+          <strong> DISPONIBILIDAD: </strong> {{ producto.disponibilidadProducto ? 'SI' : 'No Disponible' }}
         </div>
         <br>
         <div><strong>ESPECIFICACIONES TÉCNICAS:</strong></div>
