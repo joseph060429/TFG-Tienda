@@ -1,7 +1,9 @@
 <template>
   
   <div class="container">
-    <BarraDeBusquedaUsuario />
+    <template v-if="productos.length > 0" >
+      <BarraDeBusquedaUsuario />
+    </template>
     <CardProducto />
   </div>
 </template>
@@ -9,7 +11,9 @@
 <script setup>
 // Importaciones
 import { useRouter } from 'vue-router'
-const productos = productoComposable().productos
+import { productoComposable } from '~/composables/productoComposable';
+
+const { productos } = productoComposable();
 
 definePageMeta({
   role: ['PUBLIC']

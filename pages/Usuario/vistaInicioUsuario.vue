@@ -29,7 +29,9 @@
       </div>
     </div>
     <div>
-      <BarraDeBusquedaUsuario />
+      <template v-if="productos.length > 0" >
+        <BarraDeBusquedaUsuario />
+      </template>
     </div>
     <div>
       <CardProducto />
@@ -42,12 +44,14 @@ import { useRouter } from 'vue-router';
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { ref } from "vue";
 import { useAuth } from '~/composables/useAuth.js';
+import { productoComposable } from '~/composables/productoComposable';
 
 definePageMeta({
   role: ['ROLE_USER', 'ROLE_ADMIN']
 });
 
 let authStore = useAuthStore();
+const { productos } = productoComposable();
 
 const nombre = authStore.auth.nombre
 
