@@ -78,7 +78,7 @@ const resetearCategoria = () => {
 onBeforeMount(() => {
     marcasUnicas.value = [...new Set(productos.value.map(producto => producto.marcaProducto))];
     categoriasUnicas.value = [...new Set(productos.value.map(producto => producto.categoriaProducto))];
-    resetearTipoBusqueda();
+    // resetearTipoBusqueda();
 })
 
 const opcionesBusqueda = [
@@ -103,7 +103,7 @@ const actualizarMarcas = (e) => {
     const filtroPorMarca = copiaProductos.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value)
     console.log('response desde marca', filtroPorMarca);
     productos.value = filtroPorMarca
-    resetearTipoBusqueda();
+    // resetearTipoBusqueda();
 }
 
 // FUNCION PARA BUSCAR POR CATEGORIAS
@@ -113,7 +113,7 @@ const actualizarCategoria = (e) => {
     const filtroPorCategoria = copiaProductos.filter(producto => producto.categoriaProducto === categoriaSeleccionada.value)
     console.log('response desde categoria', filtroPorCategoria);
     productos.value = filtroPorCategoria
-    resetearTipoBusqueda();
+    // resetearTipoBusqueda();
 }
 
 

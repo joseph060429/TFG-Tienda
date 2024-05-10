@@ -1,12 +1,15 @@
 <template>
-  <q-btn @click="regresar" flat dense class="custom-regresar-button">
-    Volver <q-icon name="mdi-refresh" />
-  </q-btn>
   <template v-if="productos.length > 0">
     <div class="barra-busqueda">
       <BarraDeBusquedaUsuario />
     </div>
+    <q-btn @click="regresar" flat dense class="custom-regresar-button">
+    Volver <q-icon name="mdi-refresh" />
+  </q-btn>
   </template>
+  <!-- <q-btn @click="regresar" flat dense class="custom-regresar-button">
+    Volver <q-icon name="mdi-refresh" />
+  </q-btn> -->
   <div class="container">
     <CardProducto />
   </div>
@@ -62,7 +65,7 @@ const regresar = () => {
 
 @media screen and (max-width: 600px) {
   .custom-regresar-button {
-    top: 28vh;
+    top: 27vh;
     /* Ajusta la posición vertical para dispositivos móviles */
   }
 }
