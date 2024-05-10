@@ -32,7 +32,8 @@ import { ref, watch } from 'vue';
 import { productoComposable } from '~/composables/productoComposable';
 
 
-
+//USAR QUASAR
+const quasar = useQuasar()
 const { buscarProductoPorEspecificacion, productos, listarProductos } = productoComposable();
 
 const especificacion_del_producto = ref('');
@@ -40,27 +41,38 @@ const buscarProductoEspecificacion = async () => {
     console.log(especificacion_del_producto.value);
     try {
         const response = await buscarProductoPorEspecificacion(especificacion_del_producto.value);
-        productos.value = response.data;
-        console.log("se filtra", response.data);
+        console.log("response de especificacion", response);
+
+        if (response.data.length === 0) {
+            mostrarAlertaError('No hay productos que coincidan con la busqueda', quasar)
+            // copiaProductos = response.data
+            // productos.value
+        } else {
+            productos.value = response.data;
+            console.log("se filtra", response.data);
+        }
 
     } catch (error) {
         console.error(error);
     }
 }
 
+
+
 // Watcher para la variable especificacion_del_producto
 watch(especificacion_del_producto, (newValue, oldValue) => {
     buscarProductoEspecificacion();
 });
 
+
+
 const marcasUnicas = ref(null);
 const categoriasUnicas = ref(null);
+const copiaProductos = [...productos.value];
+
 onBeforeMount(() => {
     marcasUnicas.value = [...new Set(productos.value.map(producto => producto.marcaProducto))];
     categoriasUnicas.value = [...new Set(productos.value.map(producto => producto.categoriaProducto))];
-    console.log("productos", productos);
-    console.log("marcasUnicas", marcasUnicas.value);
-    console.log("categoriasUnicas", categoriasUnicas.value);
 })
 
 
@@ -81,38 +93,22 @@ const actualizarFiltros = (e) => {
 }
 
 
-// const actualizarMarcas = (e) => {
-//     console.log("marca seleccionada", marcaProductoSeleccionado.value);
-//     console.log("productos.value", productos.value);
-//     const response = productos.value.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value)
-//     console.log('response desde marca', response);
-//     productos.value = response
-// }
-
-
-
+// FUNCION PARA BUSCAR POR MARCAS
 const actualizarMarcas = (e) => {
     console.log("marca seleccionada", marcaProductoSeleccionado.value);
-    console.log("productos.value", productos.value);
-    const filtroPorMarca = productos.value.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value)
+    console.log("copiaProductos", copiaProductos);
+    const filtroPorMarca = copiaProductos.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value)
     console.log('response desde marca', filtroPorMarca);
     productos.value = filtroPorMarca
 }
 
-
-
-
-
-
-
-
-
+// FUNCION PARA BUSCAR POR CATEGORIAS
 const actualizarCategoria = (e) => {
     console.log("categoria seleccionada", categoriaSeleccionada.value);
-    console.log("productos.value", productos.value);
-    const response = productos.value.filter(producto => producto.categoriaProducto === categoriaSeleccionada.value)
-    console.log('response desde categoria', response);
-    productos.value = response
+    console.log("copiaProductos", copiaProductos);
+    const filtroPorCategoria = copiaProductos.filter(producto => producto.categoriaProducto === categoriaSeleccionada.value)
+    console.log('response desde categoria', filtroPorCategoria);
+    productos.value = filtroPorCategoria
 }
 
 
