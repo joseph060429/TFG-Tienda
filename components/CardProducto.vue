@@ -2,7 +2,6 @@
   <!-- <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links /> -->
 
   <!-- <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links id="yryryr" /> -->
-
   <div style="padding-bottom: 6%;" class="contenedor">
     <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links  />
     <!-- Itero sobre cada producto en la página actual -->
@@ -99,6 +98,7 @@ const productosPaginados = computed(() => {
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
+  // justify-content: flex-start;
 
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
@@ -154,4 +154,6 @@ const productosPaginados = computed(() => {
 .pagination-container {
   text-align: center;
 }
+
+
 </style>

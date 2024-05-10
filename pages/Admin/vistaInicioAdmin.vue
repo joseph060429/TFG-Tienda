@@ -34,8 +34,13 @@
             </div>
         </div>
         <div>
-            <BarraDeBusquedaAdmin />
+            <template v-if="productos.length > 0">
+                <BarraDeBusquedaAdmin />
+            </template>
         </div>
+        <q-btn @click="regresar" flat dense class="custom-regresar-button">
+            Volver <q-icon name="mdi-refresh" />
+        </q-btn>
         <div>
             <CardProductoAdmin />
         </div>
@@ -45,6 +50,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from 'vue-router'
+import { productoAdminComposable } from '~/composables/productoAdminComposable';
 
 definePageMeta({
     role: ['ROLE_ADMIN']
@@ -56,7 +62,7 @@ const router = useRouter()
 let authStore = useAuthStore();
 const nombre = authStore.auth.nombre
 
-
+const { productos } = productoAdminComposable();
 const mostrarFormularioEditarPerfil = ref(false);
 
 const editarPerfil = () => {
@@ -77,6 +83,10 @@ const todoPedidos = () => {
     router.push({ path: '/admin/adminPedidos' })
 };
 
+const regresar = () => {
+  window.location.reload();
+};
+
 
 </script>
 
@@ -89,7 +99,7 @@ const todoPedidos = () => {
     margin: 0 auto;
     /* Relleno */
     /* 1% de la altura de la ventana */
-    padding: 2vh;
+    // padding: 2vh;
     height: 80vh;
 }
 

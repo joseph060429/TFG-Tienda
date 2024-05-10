@@ -29,10 +29,14 @@
       </div>
     </div>
     <div>
-      <template v-if="productos.length > 0" >
+      <template v-if="productos.length > 0">
         <BarraDeBusquedaUsuario />
       </template>
     </div>
+    <q-btn @click="regresar" flat dense class="custom-regresar-button">
+      Volver <q-icon name="mdi-refresh" />
+    </q-btn>
+
     <div>
       <CardProducto />
     </div>
@@ -82,6 +86,10 @@ const verMisPedidos = () => {
 
   }
 };
+
+const regresar = () => {
+  window.location.reload();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -93,7 +101,7 @@ const verMisPedidos = () => {
   margin: 0 auto;
   /* Relleno */
   /* 1% de la altura de la ventana */
-  padding: 2vh;
+  // padding: 2vh;
   height: 80vh;
   // background-color: black;
 }

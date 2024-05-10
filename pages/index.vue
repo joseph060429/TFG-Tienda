@@ -1,9 +1,13 @@
 <template>
-  
-  <div class="container">
-    <template v-if="productos.length > 0" >
+  <q-btn @click="regresar" flat dense class="custom-regresar-button">
+    Volver <q-icon name="mdi-refresh" />
+  </q-btn>
+  <template v-if="productos.length > 0">
+    <div class="barra-busqueda">
       <BarraDeBusquedaUsuario />
-    </template>
+    </div>
+  </template>
+  <div class="container">
     <CardProducto />
   </div>
 </template>
@@ -25,6 +29,10 @@ const router = useRouter()
 // Prueba axios
 const axios = useNuxtApp().$axios
 
+const regresar = () => {
+  window.location.reload();
+};
+
 </script>
 
 <style lang="scss" scoped>
@@ -38,5 +46,24 @@ const axios = useNuxtApp().$axios
 .card-producto {
   max-height: 70vh;
   /* Establecer la altura máxima de la tarjeta */
+}
+
+.custom-regresar-button {
+  position: absolute;
+  /* Posiciona el botón de manera absoluta */
+  left: 0;
+  /* Alinea el botón a la izquierda del contenedor */
+  top: 29vh;
+  /* Centra verticalmente el botón */
+  transform: translateY(-50%);
+  /* Ajusta la posición vertical */
+}
+
+
+@media screen and (max-width: 600px) {
+  .custom-regresar-button {
+    top: 28vh;
+    /* Ajusta la posición vertical para dispositivos móviles */
+  }
 }
 </style>
