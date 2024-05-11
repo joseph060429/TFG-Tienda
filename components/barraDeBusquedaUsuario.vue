@@ -74,13 +74,6 @@ const categoriasUnicas = ref(null);
 const copiaProductos = [...productos.value];
 
 const tipo_busqueda = ref('');
-const resetearTipoBusqueda = () => {
-    tipo_busqueda.value = '';
-};
-
-const resetearCategoria = () => {
-    categoriaSeleccionada.value = '';
-};
 
 onBeforeMount(() => {
     marcasUnicas.value = [...new Set(productos.value.map(producto => producto.marcaProducto))];
@@ -89,7 +82,6 @@ onBeforeMount(() => {
 })
 
 const opcionesBusqueda = [
-    // { label: 'Selecciona una opción', value: '' },
     { label: 'Categoría', value: 'categoria' },
     { label: 'Marca', value: 'marcas' },
 ];

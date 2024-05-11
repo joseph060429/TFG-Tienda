@@ -115,7 +115,7 @@ const regresar = () => {
   /* Margen inferior */
   margin-bottom: 20px;
   /* Color rojo */
-  color: #F44336;
+  color:  #BF360C;
   /* Negrita */
   font-weight: bold;
   /* Sombra de texto */
@@ -136,15 +136,15 @@ const regresar = () => {
 
 // BOTON DE MI PERFIL
 .boton-mi-perfil {
-  background-color: #FF5722;
-  color: #fff;
+  background-color: gray;
+  color: black;
   transition: background-color 0.3s;
   min-width: 200px;
   margin-bottom: 2.5%;
 }
 
-.boton-mi-perfi:hover {
-  background-color: #F44336;
+.boton-mi-perfil:hover {
+  background-color: #464646;
 
 }
 
@@ -152,33 +152,32 @@ const regresar = () => {
 .boton-borrar {
   // margin-top: 20px;
   /* Color naranja */
-  background-color: #F44336;
-  // background-color: #F44336;
+  background-color:gray;
   /* Texto blanco */
-  color: #fff;
+  color: black;
   transition: background-color 0.3s;
   min-width: 200px;
   margin-bottom: 2.5%;
 }
 
 .boton-borrar:hover {
-  background-color: #D32F2F;
+  background-color: #464646;
 }
 
 // BOTON DE VER PEDIDOS
 .boton-ver-pedidos {
   // margin-top: 20px;
   /* Color naranja */
-  background-color: #F44336;
+  background-color: gray;
   // background-color: #F44336;
   /* Texto blanco */
-  color: #fff;
+  color: black;
   transition: background-color 0.3s;
   min-width: 200px;
   margin-bottom: 2.5%;
 }
 
 .boton-ver-pedidos:hover {
-  background-color: #D32F2F;
+  background-color: #464646;
 }
 </style>

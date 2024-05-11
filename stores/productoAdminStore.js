@@ -165,7 +165,6 @@ export const productoAdminStore = defineStore({
         // this.productos = response.data;
         console.log(" response.data ==> ", response.data);
         return response;
-        
       } catch (error) {
         console.log(
           "Error en BUSCAR POR ESPECIFICACION PRODUCTOS STORE ==> ",
@@ -175,19 +174,33 @@ export const productoAdminStore = defineStore({
       }
     },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    async buscarProductosPorRangoPrecioAdmin(precioMinimo, precioMaximo) {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await useAxiosInstance().get(
+          "/admin/productos/buscarPorRangoDePrecio",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // "Content-Type": "multipart/form-data"
+            },
+            params: {
+              precioMin: precioMinimo,
+              precioMax: precioMaximo,
+            },
+          }
+        );
+        // Agrego los datos del producto recibido en la respuesta al objeto producto
+        // this.producto = response.data;
+        return response;
+      } catch (error) {
+        console.log(
+          "Error en BUSCAR POR RANGO DE PRECIO EN PRODUCTO STORE ADMIN ==> ",
+          error
+        );
+        return error.response;
+      }
+    },
   },
 });
 

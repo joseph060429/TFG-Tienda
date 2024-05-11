@@ -48,6 +48,10 @@ export const productoAdminComposable = () => {
         return await store.buscarProductoPorEspecificacionAdmin(especificacionProducto)
     }
 
+    const buscarProductosPorRangoPrecioAdmin = async(precioMinimo, precioMaximo) =>{
+        return await store.buscarProductosPorRangoPrecioAdmin(precioMinimo,precioMaximo)
+    }
+
 
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
@@ -60,6 +64,7 @@ export const productoAdminComposable = () => {
         eliminarProducto,
         limpiarProducto,
         buscarProductoPorEspecificacionAdmin,
+        buscarProductosPorRangoPrecioAdmin,
         productoAdmin,
         productos,
 

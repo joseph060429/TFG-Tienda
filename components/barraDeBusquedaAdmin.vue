@@ -1,15 +1,16 @@
 <template>
-    <q-input class="input-buscar" filled v-model="especificacion_del_producto" placeholder="Especificación del producto"
-        @keyup.enter="buscarProductoEspecificacion">
-        <template v-slot:prepend>
-            <q-icon name="mdi-magnify" class="icono-buscar" />
-        </template>
-    </q-input>
-        
+    <div class="contenedor-input-select">
+        <q-input class="input-buscar" filled v-model="especificacion_del_producto"
+            placeholder="Especificación del producto" @keyup.enter="buscarProductoEspecificacion">
+            <template v-slot:prepend>
+                <q-icon name="mdi-magnify" class="icono-buscar" />
+            </template>
+        </q-input>
         <q-select v-model="tipo_busqueda" :options="opcionesBusqueda" dense outlined
             @update:model-value="actualizarFiltros">
             <template v-slot:append>
-                <q-icon name="mdi-format-list-checks" size="sm" />
+                <span style="font-size: 0.8em;">Selecciona una opción</span><q-icon name="mdi-format-list-checks"
+                    size="sm" />
             </template>
         </q-select>
 
@@ -22,7 +23,15 @@
             <q-select v-model="marcaProductoSeleccionado" :options="marcasUnicas" dense outlined
                 @update:model-value="actualizarMarcas" />
         </template>
+    </div>
+    <div class="boton-precio">
+        <busqueda-precio v-model="mostrarRangoPrecio" />
+        <q-btn @click="mostrarPrecios" class="boton-precio" label="Buscar por precios">
+            <q-icon name="mdi-cash-multiple" /> <!-- Icono de precios -->
+        </q-btn>
+    </div>
 </template>
+
 
 
 
@@ -111,7 +120,15 @@ const actualizarCategoria = (e) => {
 
 
 
+const mostrarRangoPrecio = ref(false);
 
+const mostrarPrecios = () => {
+    // Abro el formulario si no esta abierto
+    if (!mostrarRangoPrecio.value) {
+        mostrarRangoPrecio.value = true;
+        console.log('boton mosstrar precios presionado');
+    }
+};
 
 
 
@@ -123,20 +140,6 @@ const actualizarCategoria = (e) => {
 
 
 <style lang="scss" scoped>
-.barra-busqueda {
-    width: 100%;
-    height: 8vh;
-    // display: flex;
-    text-align: center;
-    margin: auto;
-    // background-color: #333;
-}
-
-.btn-buscar {
-    width: 1%;
-    height: 5.5vh;
-}
-
 .input-buscar {
     width: 100%;
     flex: 1;
@@ -147,6 +150,25 @@ const actualizarCategoria = (e) => {
     width: 100%;
     max-height: 5vh;
     height: auto;
-    background-color:#d2e8e6;
+    background-color: #d2e8e6;
+}
+
+.boton-precio {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: black;
+
+}
+
+.boton-precio .q-btn {
+    background-color: #d2e8e6; /* Color de fondo verde */
+    transition: background-color 0.3s, color 0.3s; /* Transición suave */
+}
+@media (max-width: 600px) {
+    .boton-precio .q-btn {
+        padding: 8px 16px; /* Espaciado interno más pequeño */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+    }
 }
 </style>

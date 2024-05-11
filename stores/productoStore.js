@@ -72,7 +72,6 @@ export const productoStore = defineStore({
     },
     
     // STORE PARA BUSCAR POR RANGO DE PRECIO
-
     async buscarProductosPorRangoPrecio(precioMinimo, precioMaximo) {
         try {
             const response = await useAxiosInstance().get("/buscarPorRangoDePrecio", {
