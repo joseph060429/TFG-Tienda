@@ -1,28 +1,35 @@
 <template>
-     <div class="contenedor-input-select">
-    <q-input class="input-buscar" filled v-model="especificacion_del_producto" placeholder="Especificación del producto"
-        @keyup.enter="buscarProductoEspecificacion">
-        <template v-slot:prepend>
-            <q-icon name="mdi-magnify" class="icono-buscar" />
+    <div class="contenedor-input-select">
+        <q-input class="input-buscar" filled v-model="especificacion_del_producto"
+            placeholder="Especificación del producto" @keyup.enter="buscarProductoEspecificacion">
+            <template v-slot:prepend>
+                <q-icon name="mdi-magnify" class="icono-buscar" />
+            </template>
+        </q-input>
+        <q-select v-model="tipo_busqueda" :options="opcionesBusqueda" dense outlined
+            @update:model-value="actualizarFiltros">
+            <template v-slot:append>
+                <span style="font-size: 0.8em;">Selecciona una opción</span><q-icon name="mdi-format-list-checks"
+                    size="sm" />
+            </template>
+        </q-select>
+
+
+        <q-select v-if="tipo_busqueda === 'categoria'" v-model="categoriaSeleccionada" :options="categoriasUnicas" dense
+            outlined @update:model-value="actualizarCategoria" />
+
+        <!-- q-select para 'marca' -->
+        <template v-if="tipo_busqueda === 'marcas'">
+            <q-select v-model="marcaProductoSeleccionado" :options="marcasUnicas" dense outlined
+                @update:model-value="actualizarMarcas" />
         </template>
-    </q-input>
-    <q-select v-model="tipo_busqueda" :options="opcionesBusqueda" dense outlined
-        @update:model-value="actualizarFiltros">
-        <template v-slot:append>
-            <span style="font-size: 0.8em;">Selecciona una opción</span><q-icon name="mdi-format-list-checks" size="sm" />
-        </template>
-    </q-select>
-
-
-    <q-select v-if="tipo_busqueda === 'categoria'" v-model="categoriaSeleccionada" :options="categoriasUnicas" dense
-        outlined @update:model-value="actualizarCategoria" />
-
-    <!-- q-select para 'marca' -->
-    <template v-if="tipo_busqueda === 'marcas'">
-        <q-select v-model="marcaProductoSeleccionado" :options="marcasUnicas" dense outlined
-            @update:model-value="actualizarMarcas" />
-    </template>
-</div>
+    </div>
+    <div class="boton-precio">
+        <busqueda-precio v-model="mostrarRangoPrecio" />
+        <q-btn @click="mostrarPrecios" class="boton-precio" label="Buscar por precios">
+            <q-icon name="mdi-cash-multiple" /> <!-- Icono de precios -->
+        </q-btn>
+    </div>
 </template>
 
 
@@ -116,12 +123,19 @@ const actualizarCategoria = (e) => {
     // resetearTipoBusqueda();
 }
 
+const mostrarRangoPrecio = ref(false);
 
+const mostrarPrecios = () => {
+    // Abro el formulario si no esta abierto
+    if (!mostrarRangoPrecio.value) {
+        mostrarRangoPrecio.value = true;
+        console.log('boton mosstrar precios presionado');
+    }
+};
 </script>
 
 
 <style lang="scss" scoped>
-
 .input-buscar {
     width: 100%;
     flex: 1;
@@ -132,8 +146,25 @@ const actualizarCategoria = (e) => {
     width: 100%;
     max-height: 5vh;
     height: auto;
-    background-color:#d2e8e6;
+    background-color: #d2e8e6;
 }
 
+.boton-precio {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: black;
 
+}
+
+.boton-precio .q-btn {
+    background-color: #d2e8e6; /* Color de fondo verde */
+    transition: background-color 0.3s, color 0.3s; /* Transición suave */
+}
+@media (max-width: 600px) {
+    .boton-precio .q-btn {
+        padding: 8px 16px; /* Espaciado interno más pequeño */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+    }
+}
 </style>

@@ -28,13 +28,9 @@ export const productoComposable = () => {
         return await store.buscarProductoPorEspecificacion(especificacionProducto)
     }
 
-    // const buscarProductosPorCampos = async (nombreProducto, descripcionProducto, categoriaProducto, marcaProducto) => {
-    //     return await store.buscarProductosPorCampos(nombreProducto, descripcionProducto, categoriaProducto, marcaProducto)
-    // }
-
-    // const buscarProductosPorRangoPrecio = async(precioMinimo, precioMaximo) =>{
-    //     return await store.buscarProductosPorRangoPrecio(precioMinimo,precioMaximo)
-    // }
+    const buscarProductosPorRangoPrecio = async(precioMinimo, precioMaximo) =>{
+        return await store.buscarProductosPorRangoPrecio(precioMinimo,precioMaximo)
+    }
 
 
 
@@ -43,8 +39,7 @@ export const productoComposable = () => {
         listarProductos,
         listarUnProducto,
         buscarProductoPorEspecificacion,
-        // buscarProductosPorRangoPrecio,
-        // buscarProductosPorCampos,
+        buscarProductosPorRangoPrecio,
         // limpiarProductos,
         productos,
         producto

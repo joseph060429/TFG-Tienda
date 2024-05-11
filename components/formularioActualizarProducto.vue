@@ -1,5 +1,5 @@
 <template>
-    <q-dialog v-model="mostrarFormuEditarPerfil"> <q-card>
+    <q-dialog v-model="mostrarFormularioActualizarProducto"> <q-card>
             <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
             <div class="q-pa-xs">
                 <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
@@ -142,9 +142,9 @@ import { productoAdminComposable } from '~/composables/productoAdminComposable';
 const { actualizarProducto, productoAdmin } = productoAdminComposable();
 
 const props = defineProps({
-    formularioEditarPerfil: Boolean
+    formularioActualizarProducto: Boolean
 })
-const mostrarFormuEditarPerfil = ref(props.formularioEditarPerfil)
+const mostrarFormularioActualizarProducto = ref(props.formularioActualizarProducto)
 
 // RUTAS
 const router = useRouter()

@@ -70,47 +70,26 @@ export const productoStore = defineStore({
         return error.response;
       }
     },
-
-    // STORE BUSCAR UN PRODUCTO POR CAMPOS IMPORTANTES
-    // async buscarProductosPorCampos(nombreProducto, descripcionProducto, categoriaProducto, marcaProducto) {
-    //     try {
-    //         const response = await useAxiosInstance().get("/buscarPorCamposImportantes", {
-    //             params: {
-    //                 categoria: categoriaProducto,
-    //                 nombre: nombreProducto,
-    //                 marca: marcaProducto,
-    //                 descripcion: descripcionProducto
-    //             }
-    //         });
-    //         // Agrego los datos del producto recibido en la respuesta al objeto producto
-    //         // this.producto = response.data;
-    //         return response;
-    //     } catch (error) {
-    //         console.log("Error en BUSCAR POR CAMPOS IMPORTANTES PRODUCTOS STORE ==> ", error);
-    //         return error.response;
-    //     }
-
-    // },
     
     // STORE PARA BUSCAR POR RANGO DE PRECIO
 
-    // async buscarProductosPorRangoPrecio(precioMinimo, precioMaximo) {
-    //     try {
-    //         const response = await useAxiosInstance().get("/buscarPorRangoDePrecio", {
-    //             params: {
-    //                 precioMin: precioMinimo,
-    //                 precioMax:precioMaximo
-    //             }
-    //         });
-    //         // Agrego los datos del producto recibido en la respuesta al objeto producto
-    //         // this.producto = response.data;
-    //         return response;
-    //     } catch (error) {
-    //         console.log("Error en BUSCAR POR CAMPOS IMPORTANTES PRODUCTOS STORE ==> ", error);
-    //         return error.response;
-    //     }
+    async buscarProductosPorRangoPrecio(precioMinimo, precioMaximo) {
+        try {
+            const response = await useAxiosInstance().get("/buscarPorRangoDePrecio", {
+                params: {
+                    precioMin: precioMinimo,
+                    precioMax:precioMaximo
+                }
+            });
+            // Agrego los datos del producto recibido en la respuesta al objeto producto
+            // this.producto = response.data;
+            return response;
+        } catch (error) {
+            console.log("Error en BUSCAR POR RANGO DE PRECIO EN PRODUCTO STORE ==> ", error);
+            return error.response;
+        }
 
-    // },
+    },
 
 
 
