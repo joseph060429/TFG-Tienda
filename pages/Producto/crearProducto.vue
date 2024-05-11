@@ -263,7 +263,7 @@ const regresar = () => {
         max-width: 100%;
         margin: auto;
         /* max-height: 600px; */
-        max-height: 1vh;
+        /* max-height: 1vh; */
         /* overflow-y: auto; */
     }
 }

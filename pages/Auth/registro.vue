@@ -180,7 +180,7 @@ const cambiarMostrarPassword = () => {
 <!--  ESTILOS -->
 <style scoped>
 .full-width {
-  /* Ajusto el ancho según tus preferencias */
+  /* Ajusto el ancho*/
   width: calc(50% - 10px);
 }
 .container {
@@ -190,7 +190,19 @@ const cambiarMostrarPassword = () => {
   padding: 2vh;
   height: 80vh;
   overflow: auto;
-  /* background-color: black; */
+ 
+}
+
+@media screen and (max-width: 600px) {
+
+/* Estilos específicos para dispositivos móviles con pantallas pequeñas */
+.container {
+    max-width: 100%;
+    /* margin: auto; */
+    /* max-height: 600px; */
+    max-height: 70vh;
+    /* overflow-y: auto; */
+}
 }
 
 @media screen and (max-width: 590px) {
