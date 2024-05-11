@@ -134,7 +134,7 @@ const productosPaginados = computed(() => {
 
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
-    height: 41.5vh;
+    height: 44vh;
     width: 100%;
     margin-top: 1px;
     padding: auto;

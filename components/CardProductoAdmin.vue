@@ -156,7 +156,7 @@ const regresar = () => {
   /* Media query para ajustar el ancho en dispositivos móviles */
 //     /* Media query para ajustar el ancho en dispositivos móviles */
     @media screen and (max-width: 600px) {
-        height: 51.5vh;
+        height: 52vh;
         width: 100%;
         margin-top: 1px;
         padding: auto;
