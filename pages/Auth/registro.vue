@@ -7,10 +7,11 @@
 
     <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
       <h1 class="text-h4 q-mb-md text-center q-mt-lg"
-        style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+        style="color: #333333;font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
         Regístrate 
       </h1>
-      <q-form @submit.prevent="registroUsuario" @reset="borrar" class="q-gutter-md">
+      <div style="overflow: auto;">
+      <q-form  @submit.prevent="registroUsuario" @reset="borrar" class="q-gutter-md">
 
         <!-- Campo nombre -->
         <q-input filled v-model="datosRegistro.nombre" label="Nombre *" hint="Nombre" lazy-rules :rules="[
@@ -82,6 +83,7 @@
         </div>
 
       </q-form>
+      </div>
     </div>
   </div>
   <!-- </div> -->
@@ -187,6 +189,13 @@ const cambiarMostrarPassword = () => {
   /* Relleno */
   padding: 2vh;
   height: 80vh;
+  overflow: auto;
   /* background-color: black; */
+}
+
+@media screen and (max-width: 590px) {
+  .q-gutter-md {
+    overflow: auto;
+  }
 }
 </style>

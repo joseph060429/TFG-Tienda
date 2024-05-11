@@ -1,7 +1,4 @@
 <template>
-    <!-- Boton de volver atras -->
-    <!-- <div style="overflow: auto;"> -->
-    <!-- <div class="container"> -->
     <q-dialog v-model="mostrarFormuEditarPerfil"> <q-card>
             <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
             <div class="q-pa-xs">
