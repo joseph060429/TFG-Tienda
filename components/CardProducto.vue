@@ -2,7 +2,7 @@
   <!-- <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links /> -->
 
   <!-- <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links id="yryryr" /> -->
-  <div style="padding-bottom: 6%;" class="contenedor">
+  <div style="padding-bottom: 6%; overflow: auto;" class="contenedor">
     <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links  />
     <!-- Itero sobre cada producto en la página actual -->
     <div id="contenedor-items" class="flex flex-center">
@@ -103,8 +103,7 @@ const productosPaginados = computed(() => {
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
     width: 100%;
-    margin: 5px;
-
+    margin: 4px;
   }
 }
 
@@ -135,7 +134,7 @@ const productosPaginados = computed(() => {
 
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
-    height: 40.5vh;
+    height: 41.5vh;
     width: 100%;
     margin-top: 1px;
     padding: auto;

@@ -1,7 +1,7 @@
 <template>
      <!-- <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links
             boundary-links /> -->
-    <div style="padding-bottom: 6%;" class="contenedor">
+    <div style="padding-bottom: 6%; overflow: auto;" class="contenedor">
         <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links
             boundary-links />
 
@@ -156,15 +156,13 @@ const regresar = () => {
   /* Media query para ajustar el ancho en dispositivos móviles */
 //     /* Media query para ajustar el ancho en dispositivos móviles */
     @media screen and (max-width: 600px) {
-        height: 50vh;
+        height: 51.5vh;
         width: 100%;
         margin-top: 1px;
         padding: auto;
 
     }
 }
-
-
 
 .centered-image {
   /* Para centrar la imagen */
