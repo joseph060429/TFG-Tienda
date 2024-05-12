@@ -78,39 +78,47 @@ const listarTodosLosUsuarios = async () => {
 const obtenerRoles = (roles) => {
     // Verifico si el usuario tiene roles y si la lista de roles no está vacía
     if (roles && roles.length > 0) {
+        // Mapeo los roles para obtener solo los nombres y los uno en una cadena separada por comas
         return roles.map(role => role.name).join(', ');
     } else {
+         // Si el usuario no tiene roles, devuelvo un mensaje predeterminado
         return 'Sin roles';
     }
 };
 
 // FUNCION PARA OBTENER LA FECHA DE MODIFICACION 
 const obtenerFechaModificacion = (fechaModificacion) => {
+    // Verifico si hay una fecha de modificación proporcionada
     if (fechaModificacion) {
-
+        // Devuelvo la fecha de modificación tal como está
         return fechaModificacion
     } else {
+        // Si no hay fecha de modificación, devuelvo un mensaje predeterminado
         return 'Sin modificaciones';
     }
 };
 
 // FUNCION PARA OBTENER LAS DIRECCIONES DE ENVIO formateada
 const obtenerDireccionesEnvio = (direccionesEnvio) => {
+    // Verifico si hay direcciones de envío y si la lista no está vacía
     if (direccionesEnvio && direccionesEnvio.length > 0) {
         // Consturyo una cadena con las direcciones de envío
         return direccionesEnvio.map(direccion => `• ${direccion}`).join('<br>'); // Agrego un punto delante de cada dirección y une las direcciones con saltos de línea
     } else {
-        return 'Sin comprar'; // Devuelve este mensaje si no hay direcciones de envío
+        // Si no hay direcciones de envío, devuelvo un mensaje predeterminado
+        return 'Sin comprar'; 
     }
 };
 
 // FUNCION PARA OBTENER LAS DIRECCIONES DE FACTURACION FORMATEADA
 const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
+    // Verifico si hay direcciones de facturación y si la lista no está vacía
     if (direcionesFacturacion && direcionesFacturacion.length > 0) {
         // Consturyo una cadena con las direcciones de envío
         return direcionesFacturacion.map(direccion => `• ${direccion}`).join('<br>'); // Agrego un punto delante de cada dirección y une las direcciones con saltos de línea
     } else {
-        return 'Sin comprar'; // Devuelvo este mensaje si no hay direcciones de envío
+         // Si no hay direcciones de facturación, devuelvo un mensaje predeterminado
+        return 'Sin comprar'; 
     }
 };
 </script>
