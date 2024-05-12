@@ -1,14 +1,11 @@
 <template>
-  <!-- <q-pagination style="padding-top: 1%;" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links /> -->
-
-  <!-- <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links id="yryryr" /> -->
   <div style="padding-bottom: 6%; overflow: auto;" class="contenedor">
     <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links  />
     <!-- Itero sobre cada producto en la página actual -->
     <div id="contenedor-items" class="flex flex-center">
       <div v-for="producto in productosPaginados" class="card-container w-100">
 
-        <q-card class="card q-mx-auto q-sm-w-50 q-md-w-50 q-lg-w-33" flat bordered>
+        <q-card class="card q-mx-auto q-sm-w-50 q-md-w-50 q-lg-w-33" flat bordered @click="goTo(producto)">
           <!-- Imagen del producto -->
           <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md centered-image"
             style="max-width: 45%; height: auto;" @click="goTo(producto)" />

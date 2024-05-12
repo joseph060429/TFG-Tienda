@@ -9,7 +9,7 @@
         <div id="contenedor-items" class="flex flex-center">
             <div v-for="producto in productosPaginados" class="card-container">
 
-                <q-card class="card q-mx-auto q-sm-w-75 q-md-w-50 q-lg-w-33" flat bordered>
+                <q-card class="card q-mx-auto q-sm-w-75 q-md-w-50 q-lg-w-33" flat bordered @click="goTo(producto)">
                     <!-- Imagen del producto -->
                     <!-- {{ producto }} -->
                     <q-img :src="getImagenURL(producto.imagenProducto)" class="q-ma-md centered-image"

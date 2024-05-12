@@ -56,7 +56,7 @@ const regresar = () => {
   /* Posiciona el botón de manera absoluta */
   left: 0;
   /* Alinea el botón a la izquierda del contenedor */
-  top: 29vh;
+  top: 31.5vh;
   /* Centra verticalmente el botón */
   transform: translateY(-50%);
   /* Ajusta la posición vertical */

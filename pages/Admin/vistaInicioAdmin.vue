@@ -125,7 +125,7 @@ const regresar = () => {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
+    width: 70%;
     margin: 1em;
 }
 

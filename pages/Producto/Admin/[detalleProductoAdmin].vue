@@ -161,7 +161,6 @@ const regresar = () => {
 
 .image-section {
   padding-bottom: 15%;
-  /* Ajusta el padding según sea necesario */
 }
 
 .centered-image {
@@ -198,10 +197,10 @@ const regresar = () => {
   /* Posiciona el botón de forma absoluta dentro de la tarjeta */
   position: fixed;
   top: 15%;
-  right: 5%;
+  right: 3%;
   /* Para que esté por encima del contenido */
   z-index: 1;
-  padding: 10px 20px;
+  // padding: 10px 20px;
   border-radius: 20px;
   background-color: #ff4757;
   color: white;

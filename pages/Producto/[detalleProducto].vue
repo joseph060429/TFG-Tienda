@@ -9,7 +9,7 @@
       <q-card-section class="info-section">
         <!-- Nombre del producto -->
         <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
-          {{ producto.nombre }}
+          {{ producto.nombreProducto }}
         </div>
         <br>
         <!-- Marca del producto -->
