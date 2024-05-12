@@ -58,12 +58,11 @@ const router = useRouter()
 
 // FUNCIONES
 
-// FUNCION PARA CARGAR LOS PRODUCTOS  ANTES DE QUE SE MONTE EL COMPONENTE
+// FUNCION PARA CARGAR LOS USUARIOS  ANTES DE QUE SE MONTE EL COMPONENTE
 onBeforeMount(async () => {
     await listarTodosLosUsuarios();
-    console.log("Usuarios cargados", usuarios);
 })
-// FUNCION PARA CARGAR LOS PRODUCTOS
+// FUNCION PARA CARGAR LOS USUARIOS
 const listarTodosLosUsuarios = async () => {
     try {
         const response = await listarUsuarios();
@@ -75,9 +74,9 @@ const listarTodosLosUsuarios = async () => {
     }
 }
 
+// FUNCIONES AUXILIARES
 const obtenerRoles = (roles) => {
     if (roles && roles.length > 0) {
-
         return roles.map(role => role.name).join(', ');
     } else {
         return 'Sin roles';
@@ -94,8 +93,8 @@ const obtenerFechaModificacion = (fechaModificacion) => {
 };
 const obtenerDireccionesEnvio = (direccionesEnvio) => {
     if (direccionesEnvio && direccionesEnvio.length > 0) {
-        // Construir una cadena con las direcciones de envío
-        return direccionesEnvio.map(direccion => `• ${direccion}`).join('<br>'); // Agrega un punto delante de cada dirección y une las direcciones con saltos de línea
+        // Consturyo una cadena con las direcciones de envío
+        return direccionesEnvio.map(direccion => `• ${direccion}`).join('<br>'); // Agrego un punto delante de cada dirección y une las direcciones con saltos de línea
     } else {
         return 'Sin comprar'; // Devuelve este mensaje si no hay direcciones de envío
     }
@@ -103,10 +102,10 @@ const obtenerDireccionesEnvio = (direccionesEnvio) => {
 
 const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
     if (direcionesFacturacion && direcionesFacturacion.length > 0) {
-        // Construir una cadena con las direcciones de envío
-        return direcionesFacturacion.map(direccion => `• ${direccion}`).join('<br>'); // Agrega un punto delante de cada dirección y une las direcciones con saltos de línea
+        // Consturyo una cadena con las direcciones de envío
+        return direcionesFacturacion.map(direccion => `• ${direccion}`).join('<br>'); // Agrego un punto delante de cada dirección y une las direcciones con saltos de línea
     } else {
-        return 'Sin comprar'; // Devuelve este mensaje si no hay direcciones de envío
+        return 'Sin comprar'; // Devuelvo este mensaje si no hay direcciones de envío
     }
 };
 </script>
@@ -121,6 +120,15 @@ const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
     background-color: #A9A9A9;
     font-family: Arial, sans-serif;
     border: 3px solid black;
+    border-collapse: collapse;
+}
+@media (max-width: 600px) {
+    .tabla {
+        width: 100%; 
+        margin: 0 auto; 
+        height: 58vh;
+        font-size: 0.8em; 
+    }
 }
 
 .tabla th {
