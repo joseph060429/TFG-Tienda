@@ -74,8 +74,9 @@ const listarTodosLosUsuarios = async () => {
     }
 }
 
-// FUNCIONES AUXILIARES
+// FUNCION PARA OBTENER LOS ROLES DEL USUARIO
 const obtenerRoles = (roles) => {
+    // Verifico si el usuario tiene roles y si la lista de roles no está vacía
     if (roles && roles.length > 0) {
         return roles.map(role => role.name).join(', ');
     } else {
@@ -83,6 +84,7 @@ const obtenerRoles = (roles) => {
     }
 };
 
+// FUNCION PARA OBTENER LA FECHA DE MODIFICACION 
 const obtenerFechaModificacion = (fechaModificacion) => {
     if (fechaModificacion) {
 
@@ -91,6 +93,8 @@ const obtenerFechaModificacion = (fechaModificacion) => {
         return 'Sin modificaciones';
     }
 };
+
+// FUNCION PARA OBTENER LAS DIRECCIONES DE ENVIO formateada
 const obtenerDireccionesEnvio = (direccionesEnvio) => {
     if (direccionesEnvio && direccionesEnvio.length > 0) {
         // Consturyo una cadena con las direcciones de envío
@@ -100,6 +104,7 @@ const obtenerDireccionesEnvio = (direccionesEnvio) => {
     }
 };
 
+// FUNCION PARA OBTENER LAS DIRECCIONES DE FACTURACION FORMATEADA
 const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
     if (direcionesFacturacion && direcionesFacturacion.length > 0) {
         // Consturyo una cadena con las direcciones de envío
@@ -126,7 +131,7 @@ const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
     .tabla {
         width: 100%; 
         margin: 0 auto; 
-        height: 58vh;
+        height: 50vh;
         font-size: 0.8em; 
     }
 }
