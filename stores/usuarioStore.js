@@ -8,12 +8,6 @@ export const usuarioStore = defineStore({
   state: () => ({
     // Defino el estado inicial de la store, es este el nombre que le pongo para luego llamarlo en el composable
     usuario: {
-      // direccionEnvio: "",
-      // tipoPago: "",
-      // estado: "",
-      // fecha: "",
-      // numPedido: "",
-      // productos: [],
       pedidos: [],
     },
     loggedIn: true,

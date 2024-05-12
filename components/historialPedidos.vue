@@ -1,9 +1,11 @@
 <template>
+  <!-- :rows-per-page-options="[10]">  PARA QUE ME MUESTRE EL HISTORIAL DE PEDIDOS DE 10 EN 10-->
   <q-dialog v-model="verPedidos">
     <div class="q-pa-md">
-      <q-table class="my-sticky-header-table" flat bordered title="Historial de pedidos" title-tag="h2"
-        :rows="detallePedidosFlat" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
-        :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]">
+      <q-table class="tabla" flat bordered title="Historial de pedidos" title-tag="h2" :rows="pedidos"
+        row-key="index" virtual-scroll :virtual-scroll-item-size="48" :virtual-scroll-sticky-size-start="48"
+        :pagination="true"
+        :rows-per-page-options="[10]">
         <template v-slot:top-right>
           <!-- Botones cancelar y devolver  pedidos -->
           <div class="botones-container">
@@ -17,6 +19,32 @@
               @click="abrirFormularioDevolverPedido" />
           </div>
         </template>
+
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th key="fechaPedido">Fecha del pedido</q-th>
+            <q-th key="fechaEnvio">Fecha de envío</q-th>
+            <q-th key="numPedido">Numero de pedido</q-th>
+            <q-th key="productos">Productos pedidos</q-th>
+            <q-th key="estado">Estado del pedido</q-th>
+            <q-th key="direccionEnvio">Direccion/es de envío</q-th>
+
+          </q-tr>
+        </template>
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td>{{ props.row.fechaPedido }}</q-td>
+            <q-td>{{ fechaEnvio(props.row.fechaEnvio) }}</q-td>
+            <q-td>{{ props.row.numPedido }}</q-td>
+            <q-td>
+              <span v-html="productosFormateados(props.row.productos)"></span>
+            </q-td>
+            <q-td>{{ props.row.estado }}</q-td>
+            <q-td>{{ props.row.direccionEnvio }}</q-td>
+
+          </q-tr>
+        </template>
+
       </q-table>
     </div>
 
@@ -59,65 +87,24 @@ const verPedidos = ref(props.mostrarLosPedidos)
 // FUNCION PARA TRAER LOS PEDIDOS DEL USUARIO 
 onBeforeMount(async () => {
   await historialDePedidos();
-  console.log("detalles pedidos", detallePedidos.value);
+  console.log("PEDIDOS", pedidos);
 })
 
 // FUNCION PARA VER EL HISTORIAL DE PEDIDOS
+
+const pedidos = ref([]);
+
 const historialDePedidos = async () => {
   try {
     const response = await historialPedidos();
     console.log("RESPONSE: ", response.data);
+    pedidos.value = response.data;
   } catch (error) {
     // Error de red u otro error
     console.error('Error al ver el historial de pedidos', error);
     mostrarAlertaError('Error al ver el historial de pedidos', quasar);
   }
 }
-
-// FUNCION PARA VER LOS DETALLES DE LOS PEDIDOS
-const detallePedidos = computed(() => {
-  // Verifico si soy un usuario y si hay pedidos
-  if (usuario.value && usuario.value.pedidos) {
-    // Recorro cada pedido que tengo y creo un nuevo objeto con sus detalles
-    return usuario.value.pedidos.map(pedido => ({
-      // Asigno la dirección de envío del pedido.
-      direccionEnvio: pedido.direccionEnvio,
-      // Asigno el tipo de pago del pedido
-      tipoPago: pedido.tipoPago,
-      // Asigno el estado del pedido
-      estado: pedido.estado,
-      // Asigno la fecha del pedido
-      fecha: pedido.fecha,
-      // Asigno el número de pedido
-      numPedido: pedido.numPedido,
-      // Recorro cada producto en el pedido y creo un nuevo objeto con sus detalles
-      productos: pedido.productos.map(producto => ({
-        // Asigno el nombre del producto
-        nombre: producto.nombre,
-        // Asigno la marca del producto
-        marca: producto.marca,
-        // Asigno el precio del producto
-        precio: producto.precio,
-        // Asigno la cantidad pedida del producto
-        cantidadPedida: producto.cantidadPedida
-      }))
-    }));
-  } else {
-    return [];
-  }
-});
-
-// FUNCION PARA JUNTAR LOS PEDIDOS EN FORMATO DE TEXTO PLANO
-const detallePedidosFlat = computed(() => {
-  // Utilizo la función flatMap para recorrer cada pedido y sus productos, y luego poner en plano el resultado
-  return detallePedidos.value.flatMap(pedido => ({
-    // Creo un nuevo objeto que contiene los detalles del pedido
-    ...pedido,
-    // Modifico la propiedad 'productos' del pedido para que sea una cadena plana que contenga detalles de cada producto
-    productos: pedido.productos.map(producto => ` PRODUCTO: (NOMBRE: ${producto.nombre} - MARCA: ${producto.marca} - CANTIDAD: ${producto.cantidadPedida} - PRECIO UNITARIO: ${producto.precio}) `).join('')
-  }));
-});
-
 
 // Referencia para controlar la visibilidad del diálogo
 const mostrarDialogoEliminar = ref(false);
@@ -165,6 +152,25 @@ const cancelarPedido = async () => {
   }
 }
 
+const fechaEnvio = (fechaEnvio) => {
+  return fechaEnvio ? fechaEnvio : 'Disponible solo cuando el estado del pedido es ENVIADO';
+};
+
+
+const productosFormateados = (productos) => {
+  if (productos && productos.length > 0) {
+    // Mapear cada producto y formatear sus propiedades
+    const formattedProducts = productos.map(producto => {
+      return `•Nombre: ${producto.nombre}, Marca: ${producto.marca}, Cantidad: ${producto.cantidadPedida}, Precio Unitario: ${producto.precioProducto} € <br>`;
+    });
+    // Unir los productos formateados con saltos de línea
+    return formattedProducts.join('');
+  } 
+};
+
+
+
+
 
 
 
@@ -175,7 +181,7 @@ const cancelarPedido = async () => {
 
 <!-- STYLE -->
 <style lang="scss" scoped>
-.my-sticky-header-table {
+.tabla{
   height: 50vh;
   width: 100%;
   background-color: #A9A9A9;
@@ -186,6 +192,17 @@ const cancelarPedido = async () => {
 .botones-container {
   display: flex;
 }
+
+
+.tabla th {
+  font-weight: bold;
+}
+
+
+.tabla td {
+    text-align: center;
+}
+
 
 .boton-cancelar {
   margin-right: 10px;
