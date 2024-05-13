@@ -181,25 +181,25 @@ export const useAuthStore = defineStore({
         throw error;
       }
     },
-  //   async refreshToken() {
-  //     try {
-  //       // Realizo la solicitud GET al endopoint que he hecho en el backend  para obtener comprobar que el email de usuario tiene ese rol
-  //       const response = await useAxiosInstance().get("/refreshToken", {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //         },
-  //       });
-  //       console.log(response, "");
-  //       // Verifico si ese email, tiene ese rol
-  //       if (!response.data === "Token inválido") {
-  //         return false;
-  //       }
-  //       return true;
-  //     } catch (error) {
-  //       console.error("Error al verificar refreshToken", error);
-  //       throw error;
-  //     }
-  //   },
+    //   async refreshToken() {
+    //     try {
+    //       // Realizo la solicitud GET al endopoint que he hecho en el backend  para obtener comprobar que el email de usuario tiene ese rol
+    //       const response = await useAxiosInstance().get("/refreshToken", {
+    //         headers: {
+    //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //         },
+    //       });
+    //       console.log(response, "");
+    //       // Verifico si ese email, tiene ese rol
+    //       if (!response.data === "Token inválido") {
+    //         return false;
+    //       }
+    //       return true;
+    //     } catch (error) {
+    //       console.error("Error al verificar refreshToken", error);
+    //       throw error;
+    //     }
+    //   },
   },
 });
 

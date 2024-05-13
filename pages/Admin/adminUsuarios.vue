@@ -31,8 +31,11 @@
                         {{ obtenerRoles(props.row.roles) }}
                         <q-select v-model="rolSeleccionado" :options="optionesParaRoles"
                             @update:model-value="seleccionarRoles(props.row._id)"
-                            style="position: absolute; right: 0; top: 0;" />
+                            style="position: absolute; right: 0; top: 30%; border: none;" 
+                            append-to-body/>
                     </q-td>
+
+                 
 
 
                     <q-td>{{ props.row.fechaCreacion }}</q-td>
@@ -60,6 +63,15 @@ definePageMeta({
     role: ['ROLE_ADMIN']
 });
 
+// FUNCION PARA CARGAR LOS USUARIOS  ANTES DE QUE SE MONTE EL COMPONENTE
+onBeforeMount(async () => {
+    await listarTodosLosUsuarios();
+    const usuarioId = usuarios.value._id;
+
+    console.log("usuarioId: ", usuarioId);
+
+})
+
 // El usuario es el de las stores
 const { listarUsuarios, usuarios, actualizarRol } = adminComposable();
 
@@ -74,9 +86,8 @@ const regresar = () => {
 };
 
 // FUNCIONES
-
 const optionesParaRoles = [
-    { label: 'ADMIN', value: 'ADMIN' },
+    { label: 'ADMINISTRADOR', value: 'ADMIN' },
     { label: 'USUARIO', value: 'USER' },
 ];
 
@@ -85,41 +96,29 @@ const optionesParaRoles = [
 const rolSeleccionado = ref('');
 const seleccionarRoles = async (idUsuario) => {
     try {
-
-        // if(rol_seleccionado.value === 'ADMIN'){
-        //     rol_seleccionado.value = 'USER';
-        // }else if(rol_seleccionado.value === 'USER'){
-        //     rol_seleccionado.value = 'ADMIN';
-        // }
-
-        const id = idUsuario._id;
-        console.log("idUsuario: ", id);
-
-        console.log('rol seleccionado ', rolSeleccionado.value.value);
-
-        console.log('opciones para roles ', optionesParaRoles);
-
-        const response = await actualizarRol(id, rolSeleccionado.value.value);
-
+        const response = await actualizarRol(idUsuario, rolSeleccionado.value.value);
         console.log("RESPONSE de actualizarRol: ", response.data);
 
+        if (response.data === 'Rol actualizado correctamente') {
+            mostrarAlertaExito('Rol actualizado exitosamente', quasar)
+            setTimeout(actualizarVentana, 1000);
+        }
+        if (response.data === 'El usuario ya tiene ese rol') {
+            mostrarAlertaError('El usuario ya tiene ese rol', quasar)
+            setTimeout(actualizarVentana, 800);
+        }
+
     } catch (error) {
-        console.error("Error en seleccionarRol: ", error);
+        // Error de red u otro error
+        console.error("Error al actualizar rol: ", error);
     }
-
-
 }
 
+const actualizarVentana = () => {
+    window.location.reload();
+};
 
 
-// FUNCION PARA CARGAR LOS USUARIOS  ANTES DE QUE SE MONTE EL COMPONENTE
-onBeforeMount(async () => {
-    await listarTodosLosUsuarios();
-    const usuarioId = usuarios.value._id;
-
-    console.log("usuarioId: ", usuarioId);
-
-})
 // FUNCION PARA CARGAR LOS USUARIOS
 const listarTodosLosUsuarios = async () => {
     try {
