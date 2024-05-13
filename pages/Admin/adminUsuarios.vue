@@ -94,6 +94,8 @@ const optionesParaRoles = [
 
 
 const rolSeleccionado = ref('');
+
+// FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
 const seleccionarRoles = async (idUsuario) => {
     try {
         const response = await actualizarRol(idUsuario, rolSeleccionado.value.value);
@@ -196,7 +198,7 @@ const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
 <!-- STYLE -->
 <style lang="scss" scoped>
 .tabla {
-    height: 63vh;
+    height: 55vh;
     width: 100%;
     background-color: #A9A9A9;
     font-family: Arial, sans-serif;
