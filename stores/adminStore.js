@@ -34,6 +34,54 @@ export const adminStore = defineStore({
         return error.response;
       }
     },
+
+
+    async actualizarRol(id, nombreRol) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("NOMBRE ROL STORE", nombreRol)
+        const response = await useAxiosInstance().patch(
+          "/admin/productos/actualizarRolUsuario",
+          {nombreRol: nombreRol},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              id: id,
+            },
+          }
+        );
+        // Agrego los datos de los usuarios recibidos en la respuesta al array de usuarios
+        console.log("NOMBRE ROL STOREaaa", nombreRol)
+        this.usuarios = response.data;
+      
+        return response;
+      } catch (error) {
+        console.log("Error en ACTUALIZAR ROL  STORE ==> ", error);
+        return error.response;
+      }
+    },
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   },
 });
 

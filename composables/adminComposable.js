@@ -20,9 +20,14 @@ export const adminComposable = () => {
         return await store.listarUsuarios()
     }
 
+    const actualizarRol = async (id, nuevoRol) => {
+        return await store.actualizarRol(id, nuevoRol)
+    }
+
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         listarUsuarios,
+        actualizarRol,
         usuarios
     }
 }

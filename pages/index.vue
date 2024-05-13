@@ -3,13 +3,10 @@
     <div class="barra-busqueda">
       <BarraDeBusquedaUsuario />
     </div>
-    <q-btn @click="regresar" flat dense class="custom-regresar-button">
+  </template>
+  <q-btn @click="regresar" flat dense class="custom-regresar-button">
     Volver <q-icon name="mdi-refresh" />
   </q-btn>
-  </template>
-  <!-- <q-btn @click="regresar" flat dense class="custom-regresar-button">
-    Volver <q-icon name="mdi-refresh" />
-  </q-btn> -->
   <div class="container">
     <CardProducto />
   </div>
@@ -51,16 +48,16 @@ const regresar = () => {
   /* Establecer la altura máxima de la tarjeta */
 }
 
-.custom-regresar-button {
-  position: absolute;
-  /* Posiciona el botón de manera absoluta */
-  left: 0;
-  /* Alinea el botón a la izquierda del contenedor */
-  top: 31.5vh;
-  /* Centra verticalmente el botón */
-  transform: translateY(-50%);
-  /* Ajusta la posición vertical */
-}
+// .custom-regresar-button {
+//   position: absolute;
+//   /* Posiciona el botón de manera absoluta */
+//   left: 0;
+//   /* Alinea el botón a la izquierda del contenedor */
+//   top: 29.5vh;
+//   /* Centra verticalmente el botón */
+//   transform: translateY(-50%);
+//   /* Ajusta la posición vertical */
+// }
 
 
 @media screen and (max-width: 600px) {

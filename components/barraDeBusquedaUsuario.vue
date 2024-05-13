@@ -34,7 +34,7 @@
 
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onUnmounted, onBeforeMount, onMounted } from 'vue';
 import { productoComposable } from '~/composables/productoComposable';
 // import {actualizarFiltros, actualizarMarcas, actualizarCategoria} from '~/utils/filtros'
 
@@ -71,15 +71,51 @@ watch(especificacion_del_producto, (newValue, oldValue) => {
 
 const marcasUnicas = ref(null);
 const categoriasUnicas = ref(null);
+
+// Array para copiar los productos
 const copiaProductos = [...productos.value];
+
+
 
 const tipo_busqueda = ref('');
 
+let categoriasUnicasIniciales = [];
+
+onMounted(() => {
+    console.log('ONMOUNTEDDD => ', categoriaSeleccionada.value);
+    categoriaSeleccionada.value = null;
+    console.log('ONMOUNTEDDD 222 => ', categoriaSeleccionada.value);
+});
+
+
+// const cargarCategoriasUnicas = () => {
+//     categoriasUnicas.value = [...new Set(copiaProductos.map(producto => producto.categoriaProducto))];
+//     console.log('Categorías únicas cargadas: ', categoriasUnicas.value);
+// };
+
 onBeforeMount(() => {
+    categoriasUnicasIniciales = [...new Set(copiaProductos.map(producto => producto.categoriaProducto))];
+    categoriasUnicas.value = categoriasUnicasIniciales;
+    console.log('categorias unicas iniciales onBeforeMount==> ', categoriasUnicasIniciales);
+
+
+
+
     marcasUnicas.value = [...new Set(productos.value.map(producto => producto.marcaProducto))];
-    categoriasUnicas.value = [...new Set(productos.value.map(producto => producto.categoriaProducto))];
-    // resetearTipoBusqueda();
+
+
+
+    // cargarCategoriasUnicas()
+   
 })
+
+onUnmounted(() => {
+    console.log('Copia de productos en onUNMOUNTED ==> ', copiaProductos);
+    categoriasUnicasIniciales = [...new Set(copiaProductos.map(producto => producto.categoriaProducto))];
+    console.log("categorias unicas iniciales ONUNMOUNTED", categoriasUnicasIniciales);
+
+    // cargarCategoriasUnicas();
+});
 
 const opcionesBusqueda = [
     { label: 'Categoría', value: 'categoria' },
@@ -89,6 +125,10 @@ const opcionesBusqueda = [
 const marcaProductoSeleccionado = ref(null)
 
 const categoriaSeleccionada = ref(null);
+
+watch(categoriaSeleccionada, (x) => {
+    console.log('Categoria seleccionada WATCH ==> ', x);
+})
 
 const actualizarFiltros = (e) => {
     tipo_busqueda.value = e.value;
@@ -101,19 +141,23 @@ const actualizarMarcas = (e) => {
     console.log("copiaProductos", copiaProductos);
     const filtroPorMarca = copiaProductos.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value)
     console.log('response desde marca', filtroPorMarca);
+    console.log("filtro por marca", filtroPorMarca);
     productos.value = filtroPorMarca
     // resetearTipoBusqueda();
 }
 
 // FUNCION PARA BUSCAR POR CATEGORIAS
 const actualizarCategoria = (e) => {
-    console.log("categoria seleccionada", categoriaSeleccionada.value);
+    console.log('EJECUTANDO');
+    console.log("categoria seleccionada 😁😁😁😁", categoriaSeleccionada.value);
     console.log("copiaProductos", copiaProductos);
     const filtroPorCategoria = copiaProductos.filter(producto => producto.categoriaProducto === categoriaSeleccionada.value)
-    console.log('response desde categoria', filtroPorCategoria);
+    console.log("Filtro por categoria 😁😁😁😁", filtroPorCategoria);
+    // console.log('response desde categoria', filtroPorCategoria);
     productos.value = filtroPorCategoria
-    // resetearTipoBusqueda();
 }
+
+
 
 const mostrarRangoPrecio = ref(false);
 
