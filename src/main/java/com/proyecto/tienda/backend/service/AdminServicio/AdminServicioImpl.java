@@ -82,12 +82,27 @@ public class AdminServicioImpl implements AdminServicio {
 
         Optional<UsuarioModelo> optionalUsuario = usuarioRepositorio.findById(usuarioId);
 
+        // if (optionalUsuario.isPresent()) {
+        //     UsuarioModelo usuario = optionalUsuario.get();
+
+        //     usuario.setRoles(roles);
+        //     usuarioRepositorio.save(usuario);
+
+        //     return ResponseEntity.ok("Rol actualizado correctamente");
+
         if (optionalUsuario.isPresent()) {
             UsuarioModelo usuario = optionalUsuario.get();
-
+    
+            // Verificar si el usuario ya tiene alguno de los roles nuevos
+            for (RolesModelo nuevoRol : roles) {
+                if (usuario.getRoles().contains(nuevoRol)) {
+                    return ResponseEntity.badRequest().body("El usuario ya tiene ese rol");
+                }
+            }
+    
             usuario.setRoles(roles);
             usuarioRepositorio.save(usuario);
-
+    
             return ResponseEntity.ok("Rol actualizado correctamente");
         } else {
             return ResponseEntity.badRequest().body("Usuario no encontrado");
