@@ -62,8 +62,7 @@ const regresar = () => {
 
 @media screen and (max-width: 600px) {
   .custom-regresar-button {
-    top: 29vh;
-    /* Ajusta la posición vertical para dispositivos móviles */
+    top: 0.5vh;
   }
 }
 </style>
