@@ -27,9 +27,6 @@ import { productoAdminComposable} from '~/composables/productoAdminComposable';
 
 
 const roles = localStorage.getItem('roles');
-
-
-
 const isAdmin = () => {
     // Verificar si el rol de administrador está presente en los roles del usuario
     return roles && roles.includes('ROLE_ADMIN');

@@ -1,6 +1,6 @@
 <template>
     <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" />
-    <!-- <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :email="props.row.email" /> -->
+    <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :id="idUsuarioActualizar" />
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 usuarios -->
@@ -50,11 +50,11 @@
 
                     <q-td class="text-center">
                         <div class="row justify-center">
-                            <!-- <formulario-editar-perfil :email="props.row.email" v-model="mostrarFormularioEditarPerfil" />
+                            <!-- <formulario-editar-perfil :email="props.row.email" v-model="mostrarFormularioEditarPerfil" /> -->
                        
-                            <q-btn @click="editarPerfil"  class="boton-mi-perfil" style="background-color:  #4169E1; margin-right: 8px;">
+                            <q-btn @click="editarPerfil(props.row._id)"  class="boton-mi-perfil" style="background-color:  #4169E1; margin-right: 8px;">
                                 <q-icon name="mdi-pencil" /> 
-                            </q-btn> -->
+                            </q-btn> 
 
                             <!-- Botón para eliminar el perfil del usuario-->
                             <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar"
@@ -201,21 +201,27 @@ const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
 const emailUsuarioAeliminar = ref(null);
 const mostrarEliminarUsuario = ref(false);
 
+
+
 const eliminarUsuarioAdmin = (email) => {
-    // Abro el formulario si no esta abierto
+    // Abro el dialogo si no esta abierto
     if (!mostrarEliminarUsuario.value) {
         mostrarEliminarUsuario.value = true;
     }
+    // Guardo el email del usuario que quiero eliminar
     emailUsuarioAeliminar.value = email;
     console.log("email del usuario a eliminar", emailUsuarioAeliminar.value)
 };
 
 const mostrarFormularioEditarPerfil = ref(false);
-const editarPerfil = () => {
+const idUsuarioActualizar = ref(null);
+const editarPerfil = (id) => {
     // Abro el formulario si no esta abierto
     if (!mostrarFormularioEditarPerfil.value) {
         mostrarFormularioEditarPerfil.value = true;
     }
+    idUsuarioActualizar.value = id;
+    console.log("id del usuario a editar", idUsuarioActualizar.value)
 };
 
 

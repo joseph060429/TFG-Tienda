@@ -27,12 +27,16 @@ export const adminComposable = () => {
     const eliminarUsuario = async (email) => {
         return await store.eliminarUsuario(email)
     }
+    const actualizacionUsuarioAdmin = async (id, datosActualizar) => {
+        return await store.actualizacionUsuarioAdmin(id, datosActualizar);
+      };
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
     return {
         listarUsuarios,
         actualizarRol,
         eliminarUsuario,
+        actualizacionUsuarioAdmin,
         usuarios
     }
 }

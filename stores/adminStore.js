@@ -91,6 +91,36 @@ export const adminStore = defineStore({
 
 
 
+    async actualizacionUsuarioAdmin(id, datosActualizar) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await useAxiosInstance().patch(
+          "/admin/actualizarUsuario",
+          {
+            nombre: datosActualizar.nombre,
+            apellido: datosActualizar.apellido,
+            email: datosActualizar.email,
+            password: datosActualizar.password,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              id: id,
+            }
+          }
+        );
+        console.log("id del usuario a actualizar", id);
+        return response;
+      } catch (error) {
+        console.log("Error en ACTUALIZAR USUARIO ADMIN STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+
+
 
 
 
