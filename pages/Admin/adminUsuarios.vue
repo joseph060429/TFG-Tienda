@@ -1,6 +1,6 @@
 <template>
     <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" />
-    <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :id="idUsuarioActualizar" />
+    <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :id="objetoUsuarioActualizar" />
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 usuarios -->
@@ -51,10 +51,11 @@
                     <q-td class="text-center">
                         <div class="row justify-center">
                             <!-- <formulario-editar-perfil :email="props.row.email" v-model="mostrarFormularioEditarPerfil" /> -->
-                       
-                            <q-btn @click="editarPerfil(props.row._id)"  class="boton-mi-perfil" style="background-color:  #4169E1; margin-right: 8px;">
-                                <q-icon name="mdi-pencil" /> 
-                            </q-btn> 
+
+                            <q-btn @click="editarPerfil(props.row)" class="boton-mi-perfil"
+                                style="background-color:  #4169E1; margin-right: 8px;">
+                                <q-icon name="mdi-pencil" />
+                            </q-btn>
 
                             <!-- Botón para eliminar el perfil del usuario-->
                             <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar"
@@ -83,7 +84,6 @@ definePageMeta({
 // FUNCION PARA CARGAR LOS USUARIOS  ANTES DE QUE SE MONTE EL COMPONENTE
 onBeforeMount(async () => {
     await listarTodosLosUsuarios();
-    const usuarioId = usuarios.value._id;
 })
 
 // El usuario es el de las stores
@@ -214,14 +214,14 @@ const eliminarUsuarioAdmin = (email) => {
 };
 
 const mostrarFormularioEditarPerfil = ref(false);
-const idUsuarioActualizar = ref(null);
+const objetoUsuarioActualizar = ref(null);
 const editarPerfil = (id) => {
     // Abro el formulario si no esta abierto
     if (!mostrarFormularioEditarPerfil.value) {
         mostrarFormularioEditarPerfil.value = true;
     }
-    idUsuarioActualizar.value = id;
-    console.log("id del usuario a editar", idUsuarioActualizar.value)
+    objetoUsuarioActualizar.value = id;
+    console.log("Objeto usuario a editar", objetoUsuarioActualizar)
 };
 
 

@@ -111,7 +111,7 @@ export const adminStore = defineStore({
             }
           }
         );
-        console.log("id del usuario a actualizar", id);
+        console.log("id del usuario a actualizar desde store", id);
         return response;
       } catch (error) {
         console.log("Error en ACTUALIZAR USUARIO ADMIN STORE ==> ", error);

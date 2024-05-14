@@ -106,7 +106,7 @@ const props = defineProps({
 })
 const mostrarFormuEditarPerfil = ref(props.formularioEditarPerfil)
 
-console.log(props.id, 'id de usuario');
+
 
 let authStore = useAuthStore();
 
@@ -125,9 +125,9 @@ const datosActualizar = reactive({
 })
 
 // const datosActualizarAdmin = reactive({
-//     nombre: usuarios.value.nombre,
-//     apellido: usuarios.value.apellido,
-//     email: usuarios.value.email,
+//     nombre: props.id.nombre,
+//     apellido: props.id.apellido,
+//     email: props.id.email,
 //     password: ''
 // })
 
@@ -141,7 +141,6 @@ const mostrarContrasenia = ref(false);
 
 
 // FUNCIONES
-
 const roles = localStorage.getItem('roles');
 const isAdmin = () => {
     // Verificar si el rol de administrador está presente en los roles del usuario
@@ -159,11 +158,15 @@ const manejoEnvioFormulario = () => {
 
 const actualizarDatosUsuarioAdmin = async () => {
 
-    console.log(props.id, 'id a actualizar');
+    console.log(props.id._id, 'id a actualizar');
+    console.log(props.id.nombre, 'nombre usuario');
+    console.log(props.id.apellido, 'apellido usuario');
+    console.log(props.id.email, 'email usuario');
+    // console.log(props.id.password, 'password usuario');
 
 // Actualizo el usuario
 try {
-    const response = await actualizacionUsuarioAdmin(props.id, datosActualizarAdmin);
+    const response = await actualizacionUsuarioAdmin(props.id._id, datosActualizarAdmin);
     console.log("Response", response);
     // Verifico el estado de la respuesta y muestro el mensaje correspondiente
     if (response.data === "El email ya esta en uso") {
