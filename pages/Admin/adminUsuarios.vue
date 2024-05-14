@@ -49,20 +49,17 @@
 
 
                     <q-td class="text-center">
-                        <div class="row justify-center">
+                       
                             <!-- <formulario-editar-perfil :email="props.row.email" v-model="mostrarFormularioEditarPerfil" /> -->
 
-                            <q-btn @click="editarPerfil(props.row)" class="boton-mi-perfil"
-                                style="background-color:  #4169E1; margin-right: 8px;">
+                            <q-btn @click="editarPerfil(props.row)" class="boton-perfil">
                                 <q-icon name="mdi-pencil" />
                             </q-btn>
 
                             <!-- Botón para eliminar el perfil del usuario-->
-                            <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar"
-                                style="background-color: #FF4500;">
+                            <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar">
                                 <q-icon name="mdi-delete" />
                             </q-btn>
-                        </div>
                     </q-td>
 
                 </q-tr>
@@ -280,4 +277,49 @@ const editarPerfil = (id) => {
 .custom-regresar-button {
     margin-top: 0.1em;
 }
+
+.boton-perfil {
+    background-color: #4169E1;
+    margin-right: 8px;
+    border: 1px solid;
+}
+
+.boton-borrar {
+    background-color: #FF4500;
+    border: 1px solid;
+    
+}
+
+.boton-perfil:hover {
+    background-color: rgba(65, 105, 225, 0.8); 
+   
+}
+
+.boton-borrar:hover {
+    background-color: rgba(255, 69, 0, 0.8); 
+    
+}
+
+
+
+.boton-perfil,
+.boton-borrar {
+    font-size: 0.8em; 
+    padding: 5px 10px; 
+    margin: 0 5px; 
+}
+
+
+
+@media only screen and (max-width: 600px) {
+    .boton-perfil,
+    .boton-borrar {
+        font-size: 14px;
+        padding: 3px 6px;
+    }
+}
+
+
+
+
 </style>
