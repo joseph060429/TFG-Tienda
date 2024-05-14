@@ -75,8 +75,7 @@ public class AdminControllers {
 
     // CONTROLADOR PARA BORRAR UN USUARIO SIENDO ADMIN
     @DeleteMapping("/borrarUsuario")
-    public ResponseEntity<String> eliminarUsuario(@RequestBody Map<String, String> requestBody) {
-        String email = requestBody.get("email");
+    public ResponseEntity<String> eliminarUsuario(@RequestParam String email) {
         String resultado = adminServicio.eliminarUsuarioSiendoAdmin(email);
         return ResponseEntity.ok(resultado);
     }
