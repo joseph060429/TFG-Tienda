@@ -37,6 +37,8 @@
 import { ref, watch, onUnmounted, onBeforeMount, onMounted } from 'vue';
 import { productoComposable } from '~/composables/productoComposable';
 // import {actualizarFiltros, actualizarMarcas, actualizarCategoria} from '~/utils/filtros'
+import { cloneDeep } from 'lodash';
+
 
 
 //USAR QUASAR
@@ -67,8 +69,6 @@ watch(especificacion_del_producto, (newValue, oldValue) => {
     buscarProductoEspecificacion();
 });
 
-
-
 const marcasUnicas = ref(null);
 const categoriasUnicas = ref(null);
 
@@ -94,7 +94,8 @@ onMounted(() => {
 // };
 
 onBeforeMount(() => {
-    categoriasUnicasIniciales = [...new Set(copiaProductos.map(producto => producto.categoriaProducto))];
+    const clone = cloneDeep(productos.value);
+    categoriasUnicasIniciales = [...new Set(clone.map(producto => producto.categoriaProducto))];
     categoriasUnicas.value = categoriasUnicasIniciales;
     console.log('categorias unicas iniciales onBeforeMount==> ', categoriasUnicasIniciales);
 

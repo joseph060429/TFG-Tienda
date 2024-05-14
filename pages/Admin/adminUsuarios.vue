@@ -1,10 +1,12 @@
 <template>
+    <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" />
+    <!-- <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :email="props.row.email" /> -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 usuarios -->
         <h5 class="titulo">PANEL DE ADMINISTRACIÓN</h5>
         <q-table class="tabla" flat :rows="usuarios" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
-            :pagination="true" :rows-per-page-options="[50]">
+            :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]">
             <!-- Cabeceras de la tabla -->
             <template v-slot:header="props">
                 <q-tr :props="props">
@@ -15,7 +17,7 @@
                     <q-th key="fechaCreacion">Fecha de Creación</q-th>
                     <q-th key="fechaModificacion">Fecha de Modificación</q-th>
                     <q-th key="direccionEnvio">Direccion/es de envío</q-th>
-                    <q-th key="direccionFacturacion">Direccion/es de facturación</q-th>
+                    <!-- <q-th key="direccionFacturacion">Direccion/es de facturación</q-th> -->
                 </q-tr>
             </template>
 
@@ -31,23 +33,37 @@
                         {{ obtenerRoles(props.row.roles) }}
                         <q-select v-model="rolSeleccionado" :options="optionesParaRoles"
                             @update:model-value="seleccionarRoles(props.row._id)"
-                            style="position: absolute; right: 0; top: 30%; border: none;" 
-                            append-to-body/>
+                            style="position: absolute; right: 0; top: 30%; border: none;" append-to-body />
                     </q-td>
 
-                 
+
 
 
                     <q-td>{{ props.row.fechaCreacion }}</q-td>
                     <q-td>{{ obtenerFechaModificacion(props.row.fechaModificacion) }}</q-td>
 
 
-                    <q-td> <!-- No especificamos alineación para estas dos celdas -->
+                    <q-td>
                         <span v-html="obtenerDireccionesEnvio(props.row.direccionesEnvio)"></span>
                     </q-td>
-                    <q-td> <!-- No especificamos alineación para estas dos celdas -->
-                        <span v-html="obtenerDireccionesFacturacion(props.row.direcionesFacturacion)"></span>
+
+
+                    <q-td class="text-center">
+                        <div class="row justify-center">
+                            <!-- <formulario-editar-perfil :email="props.row.email" v-model="mostrarFormularioEditarPerfil" />
+                       
+                            <q-btn @click="editarPerfil"  class="boton-mi-perfil" style="background-color:  #4169E1; margin-right: 8px;">
+                                <q-icon name="mdi-pencil" /> 
+                            </q-btn> -->
+
+                            <!-- Botón para eliminar el perfil del usuario-->
+                            <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar"
+                                style="background-color: #FF4500;">
+                                <q-icon name="mdi-delete" />
+                            </q-btn>
+                        </div>
                     </q-td>
+
                 </q-tr>
             </template>
         </q-table>
@@ -59,6 +75,7 @@ import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { adminComposable } from '~/composables/adminComposable';
 
 
+
 definePageMeta({
     role: ['ROLE_ADMIN']
 });
@@ -67,9 +84,6 @@ definePageMeta({
 onBeforeMount(async () => {
     await listarTodosLosUsuarios();
     const usuarioId = usuarios.value._id;
-
-    console.log("usuarioId: ", usuarioId);
-
 })
 
 // El usuario es el de las stores
@@ -97,6 +111,8 @@ const rolSeleccionado = ref('');
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
 const seleccionarRoles = async (idUsuario) => {
+
+
     try {
         const response = await actualizarRol(idUsuario, rolSeleccionado.value.value);
         console.log("RESPONSE de actualizarRol: ", response.data);
@@ -180,6 +196,27 @@ const obtenerDireccionesFacturacion = (direcionesFacturacion) => {
         return 'Sin comprar';
     }
 }
+
+
+const emailUsuarioAeliminar = ref(null);
+const mostrarEliminarUsuario = ref(false);
+
+const eliminarUsuarioAdmin = (email) => {
+    // Abro el formulario si no esta abierto
+    if (!mostrarEliminarUsuario.value) {
+        mostrarEliminarUsuario.value = true;
+    }
+    emailUsuarioAeliminar.value = email;
+    console.log("email del usuario a eliminar", emailUsuarioAeliminar.value)
+};
+
+const mostrarFormularioEditarPerfil = ref(false);
+const editarPerfil = () => {
+    // Abro el formulario si no esta abierto
+    if (!mostrarFormularioEditarPerfil.value) {
+        mostrarFormularioEditarPerfil.value = true;
+    }
+};
 
 
 

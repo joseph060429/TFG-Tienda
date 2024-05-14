@@ -17,7 +17,7 @@ export const adminStore = defineStore({
 
   // Defino las acciones (métodos) que pueden modificar el estado del store
   actions: {
-    // STORE ACTUALIZAR USUARIO
+    // STORE LSITAR TODOS LOS USUARIO
     async listarUsuarios() {
       try {
         const token = localStorage.getItem("token");
@@ -35,6 +35,8 @@ export const adminStore = defineStore({
       }
     },
 
+
+    // STORE PARA ACTUALIZARLE EL ROL A UN USUARIO
     async actualizarRol(id, nombreRol) {
       try {
         const token = localStorage.getItem("token");
@@ -61,6 +63,31 @@ export const adminStore = defineStore({
       }
     },
 
+    // STORE PARA ELIMINAR UN USUARIO
+    async eliminarUsuario(email) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("NOMBRE EMAIL STORE", email);
+        const response = await useAxiosInstance().delete(
+          "/admin/borrarUsuario",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              email: email,
+            }
+          }
+        );
+        console.log("NOMBRE EMAIL STOREAA", email);
+        this.usuarios = response.data;
+
+        return response;
+      } catch (error) {
+        console.log("Error en ELIMINAR USUARIO STORE ==> ", error);
+        return error.response;
+      }
+    },
 
 
 
@@ -69,7 +96,8 @@ export const adminStore = defineStore({
 
 
 
-    
+
+
   },
 });
 

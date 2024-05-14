@@ -9,13 +9,13 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "node .output/server/index.mjs"
-    
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
     "@quasar/extras": "^1.16.11",
     "axios": "^1.6.8",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "nuxt": "^3.11.2",
     "quasar": "^2.15.2",
     "vue-router": "^4.3.0"
