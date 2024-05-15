@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarDireccionEnvioDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.EnviarCorreoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
@@ -41,6 +42,13 @@ public class AdminPedidosController {
 
     @Autowired
     private ResendUtil resend;
+
+
+    @GetMapping("/listarPedidos")
+  public ResponseEntity<List<PedidoInfoDTO>> listarPedidos() {
+        List<PedidoInfoDTO> pedidos = adminPedidoServicio.listarPedidos();
+        return ResponseEntity.ok(pedidos);
+    }
 
     // CONTROLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO
     @PatchMapping("/actualizarEstadoPedidoEnviado")

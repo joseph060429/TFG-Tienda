@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,11 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarDireccionEnvioDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
+import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.UsuarioPedidoDTO;
 import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
+// import com.proyecto.tienda.backend.repositorios.PedidoRepositorio.UsuarioProjection;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.util.ResendUtil;
 
@@ -33,6 +37,34 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
 
     @Autowired
     private ResendUtil resend;
+
+    // IMPLEMENTADCION DEL METODO PARA LISTAR TODOS LOS USUARIOS
+    @Override
+     public List<PedidoInfoDTO> listarPedidos() {
+        List<PedidosModelo> pedidos = pedidoRepositorio.findAll();
+
+        return pedidos.stream().map(pedido -> {
+            PedidoInfoDTO pedidoDTO = new PedidoInfoDTO();
+            pedidoDTO.set_id(pedido.get_id());
+            pedidoDTO.setFechaPedido(pedido.getFechaPedido());
+            pedidoDTO.setFechaEnvio(pedido.getFechaEnvio());
+            pedidoDTO.setNumPedido(pedido.getNumPedido().intValue());
+            pedidoDTO.setProductos(pedido.getProductos());
+            pedidoDTO.setTipoPago(pedido.getTipoPago());
+            pedidoDTO.setEstado(pedido.getEstado());
+            pedidoDTO.setNumTelefono(pedido.getNumTelefono().intValue());
+            pedidoDTO.setDireccionEnvio(pedido.getDireccionCompletaEnvio());
+
+           
+            UsuarioModelo usuario = pedido.getUsuario();
+
+            pedidoDTO.setDatosUsuarioPedidoDTO(new UsuarioPedidoDTO(usuario.get_id(), usuario.getNombre(), usuario.getApellido(), usuario.getEmail()));
+
+            return pedidoDTO;
+        }).collect(Collectors.toList());
+    }
+
+
 
     // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENVIADO
     @Transactional
@@ -351,8 +383,9 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
         }
     }
 
-
-    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO REPROGRAMADO_PARA_ENTREGA CUANDO EL REPARTIDOR LLEGA Y NO HAY NADIE EN CASA O NO RESPONDEN AL MÓVIL
+    // IMPLEMENTACION DEL METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO
+    // REPROGRAMADO_PARA_ENTREGA CUANDO EL REPARTIDOR LLEGA Y NO HAY NADIE EN CASA O
+    // NO RESPONDEN AL MÓVIL
     @Override
     public ResponseEntity<?> actualizarEstadoReprogramadoParaEntrega(String _id,
             ActualizarPedidoDTO actualizarPedidoDTO) {

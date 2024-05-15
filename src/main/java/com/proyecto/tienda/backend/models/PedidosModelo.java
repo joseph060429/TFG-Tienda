@@ -32,7 +32,7 @@ public class PedidosModelo {
     // solo con el dto que es lo que quiero
     @DBRef
     @Field("id_usuario")
-    @JsonIgnore
+    // @JsonIgnore
     private UsuarioModelo usuario;
 
     private UsuarioPedidoDTO usuarioPedido;
@@ -88,4 +88,6 @@ public class PedidosModelo {
         return usuarioPedidoDTO;
     }
 
+
+   
 }

@@ -19,5 +19,14 @@ public class PedidoInfoDTO {
     private String tipoPago;
     private String estado;
     private String direccionEnvio;
+    private int numTelefono;
+
+    private UsuarioPedidoDTO datosUsuarioPedidoDTO;
+
+
+    
+
+
+
     
 }

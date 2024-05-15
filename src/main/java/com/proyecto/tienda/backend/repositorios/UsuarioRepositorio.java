@@ -1,7 +1,9 @@
 package com.proyecto.tienda.backend.repositorios;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 
@@ -30,5 +32,8 @@ public interface UsuarioRepositorio extends MongoRepository<UsuarioModelo, Strin
     // CONSULTA PARA BUSCAR UN USUARIO POR EL CAMPO QUE TENGO EN MI BASE DE DATOS
     // QUE SE LLAMA EXPIRACION RECUPERAR CONTRASEÑA
     Optional<UsuarioModelo> findByExpiracionRecuperarContrasenia(String expiracionRecuperarContrasenia);
+
+    @Query(value = "{}", fields = "{ 'password' : 0 }")
+    List<UsuarioModelo> findAllWithoutPassword();
 
 }

@@ -32,7 +32,7 @@ public class AdminServicioImpl implements AdminServicio {
     // IMPLEMENTADCION DEL METODO PARA LISTAR TODOS LOS USUARIOS
     @Override
     public List<UsuarioModelo> listarUsuarios() {
-        return usuarioRepositorio.findAll();
+        return usuarioRepositorio.findAllWithoutPassword();
     }
 
     // IMPLEMENTACION DEL METODO PARA LISTAR UN USUARIO

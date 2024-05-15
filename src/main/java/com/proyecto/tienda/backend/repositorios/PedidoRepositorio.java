@@ -1,6 +1,5 @@
 package com.proyecto.tienda.backend.repositorios;
 
-
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -19,7 +18,7 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
   @Query("{'numPedido' : {$exists : true}}")
   List<PedidosModelo> findTopByOrderByNumPedidoDesc();
 
-  // CONSULTA DE BUSQUEDA POR ID DE PEDIDO 
+  // CONSULTA DE BUSQUEDA POR ID DE PEDIDO
   Optional<PedidosModelo> findBy_id(String _id);
 
   // CONSULTA PARA BUSCAR PEDIDOS POR ESTADO PENDIENTE Y CON PAGINACION
@@ -30,5 +29,15 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
 
   // CONSULTA DE BUSQUEDA PARA UN PEDIDO POR USUARIO
   List<PedidosModelo> findByUsuario(UsuarioModelo usuario);
+
+  // // CONSULTA PERSONALIZADA PARA DEVOLVER SOLO CAMPOS ESPECIFICOS
+  // @Query(value = "{'usuario._id': ?0}", fields = "{'usuario.nombre': 1, 'usuario.apellido': 1, 'usuario.email': 1}")
+  // UsuarioProjection findUsuarioProjectionById(String id);
+
+  // public interface UsuarioProjection {
+  //     String getNombre();
+  //     String getApellido();
+  //     String getEmail();
+  // }
 
 }
