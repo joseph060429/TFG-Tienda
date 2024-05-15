@@ -27,6 +27,17 @@
           <q-icon name="mdi-cart-outline" /> <!-- Icono de eliminar perfil -->
         </q-btn>
       </div>
+
+      <div class="ver-carrito">
+        <carrito v-model="verCarrito" />
+        <!-- Botón para ver pedidos -->
+        <q-btn @click="verMiCarrito" class="boton-ver-pedidos" label="Ver mi carrito">
+          <q-icon name="mdi-cart" /> <!-- Icono de eliminar perfil -->
+        </q-btn>
+      </div>
+
+
+
     </div>
     <div>
       <template v-if="productos.length > 0">
@@ -36,6 +47,8 @@
     <q-btn @click="regresar" flat dense class="custom-regresar-button">
       Volver <q-icon name="mdi-refresh" />
     </q-btn>
+
+
 
     <div>
       <CardProducto />
@@ -63,6 +76,7 @@ const nombre = authStore.auth.nombre
 const mostrarFormularioEditarPerfil = ref(false);
 const mostrarDarseDeBaja = ref(false);
 const verPedidos = ref(false);
+const verCarrito = ref(false);
 const router = useRouter();
 
 const editarPerfil = () => {
@@ -86,6 +100,16 @@ const verMisPedidos = () => {
 
   }
 };
+
+
+const verMiCarrito = () => {
+  // Abro el formulario si no esta abierto
+  if (!verCarrito.value) {
+    verCarrito.value = true;
+
+  }
+};
+
 
 const regresar = () => {
   window.location.reload();
@@ -115,7 +139,7 @@ const regresar = () => {
   /* Margen inferior */
   margin-bottom: 20px;
   /* Color rojo */
-  color:  #BF360C;
+  color: #BF360C;
   /* Negrita */
   font-weight: bold;
   /* Sombra de texto */
@@ -152,7 +176,7 @@ const regresar = () => {
 .boton-borrar {
   // margin-top: 20px;
   /* Color naranja */
-  background-color:gray;
+  background-color: gray;
   /* Texto blanco */
   color: black;
   transition: background-color 0.3s;

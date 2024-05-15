@@ -26,8 +26,8 @@
           <strong> DESCRIPCIÓN: </strong> <span class="text-body1">{{ producto.descripcionProducto }}</span>
         </div>
         <br>
-          <!-- Disponibilidad del producto -->
-          <div class="text-subtitle1" style="margin-bottom: 4px;">
+        <!-- Disponibilidad del producto -->
+        <div class="text-subtitle1" style="margin-bottom: 4px;">
           <strong> DISPONIBILIDAD: </strong> {{ producto.disponibilidadProducto ? 'SI' : 'No Disponible' }}
         </div>
         <br>
@@ -90,7 +90,10 @@ const formatearEspecificacionesTecnicas = (especificaciones) => {
 const listarProducto = async () => {
   try {
     const response = await listarUnProducto(_id);
+    // console.log("_id producto", _id);
     console.log("RESPONSE: ", response.data);
+
+
   } catch (error) {
     // Error de red u otro error
     console.error('Error al ver el producto', error);
@@ -120,7 +123,36 @@ const agregarAlCarrito = () => {
     router.push({ path: '/auth/login' });
     mostrarAlertaError('Debes estar registrado para añadir productos al carrito', quasar)
   } else {
-    console.log("Al carrito a comprar");
+
+    if (producto) {
+      // Verifico si ya hay información en el localStorage sobre los productos en el carrito
+      let detalleProductoCarrito = JSON.parse(localStorage.getItem('detalleProductoCarrito')) || [];
+
+      // Verifico si el producto ya existe en el carrito para evitar duplicados
+      const productoExistente = detalleProductoCarrito.find(item => item._id === producto.value._id);
+
+      // Si el producto ya existe en el carrito, no lo anado
+      if (productoExistente) {
+        mostrarAlertaError('El producto ya está en el carrito', quasar)
+      } else {
+        // Crea objeto con detalles del producto
+        const nuevoProducto = {
+          _id: producto.value._id,
+          nombre: producto.value.nombreProducto,
+          marca: producto.value.marcaProducto,
+          precio: producto.value.precioProducto,
+          imagen: getImagenURL(producto.imagenProducto)
+        };
+
+        // Agrego el nuevo producto al array existente
+        detalleProductoCarrito.push(nuevoProducto);
+        // Almaceno el array actualizado en el localStorage
+        localStorage.setItem('detalleProductoCarrito', JSON.stringify(detalleProductoCarrito));
+        mostrarAlertaExito('Producto añadido al carrito', quasar);
+      }
+    } else {
+      console.error('No se encontró ningún producto para añadir al carrito.');
+    }
   }
 }
 

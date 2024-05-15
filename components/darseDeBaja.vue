@@ -74,6 +74,7 @@ const borrar = () => {
   localStorage.removeItem('tiempoExpiracion');
   localStorage.removeItem('nombre');
   localStorage.removeItem('apellido');
+  localStorage.removeItem('detalleProductocarrito');
   authStore.loggedIn = false;
   router.push({ path: '/' });
 };

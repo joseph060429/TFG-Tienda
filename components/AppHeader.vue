@@ -95,6 +95,7 @@ const cerrarSesion = () => {
   localStorage.removeItem('tiempoExpiracion')
   localStorage.removeItem('nombre')
   localStorage.removeItem('apellido')
+  // localStorage.removeItem('detalleProductoCarrito')
   authStore.loggedIn = false;
   authStore.$reset()
   limpiarPedidos()
