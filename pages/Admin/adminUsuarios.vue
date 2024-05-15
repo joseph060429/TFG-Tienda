@@ -1,6 +1,6 @@
 <template>
     <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" />
-    <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :id="objetoUsuarioActualizar" />
+    <!-- <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :id="objetoUsuarioActualizar" /> -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 usuarios -->
@@ -50,11 +50,10 @@
 
                     <q-td class="text-center">
                        
-                            <!-- <formulario-editar-perfil :email="props.row.email" v-model="mostrarFormularioEditarPerfil" /> -->
 
-                            <q-btn @click="editarPerfil(props.row)" class="boton-perfil">
+                            <!-- <q-btn @click="editarPerfil(props.row)" class="boton-perfil">
                                 <q-icon name="mdi-pencil" />
-                            </q-btn>
+                            </q-btn> -->
 
                             <!-- Botón para eliminar el perfil del usuario-->
                             <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar">
