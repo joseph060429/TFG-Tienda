@@ -24,12 +24,11 @@
         <historial-pedidos v-model="verPedidos" />
         <!-- Botón para ver pedidos -->
         <q-btn @click="verMisPedidos" class="boton-ver-pedidos" label="Ver mis pedidos">
-          <q-icon name="mdi-cart-outline" /> <!-- Icono de eliminar perfil -->
+          <q-icon name="mdi-package-variant-closed" style="color:black" /> <!-- Icono de eliminar perfil -->
         </q-btn>
       </div>
 
       <div class="ver-carrito">
-        <carrito v-model="verCarrito" />
         <!-- Botón para ver pedidos -->
         <q-btn @click="verMiCarrito" class="boton-ver-pedidos" label="Ver mi carrito">
           <q-icon name="mdi-cart" /> <!-- Icono de eliminar perfil -->
@@ -103,11 +102,7 @@ const verMisPedidos = () => {
 
 
 const verMiCarrito = () => {
-  // Abro el formulario si no esta abierto
-  if (!verCarrito.value) {
-    verCarrito.value = true;
-
-  }
+  router.push({ path: '/pedido/carritoCompra' });
 };
 
 
@@ -152,7 +147,7 @@ const regresar = () => {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
+  width: 70%;
   margin: 1em;
 
 
