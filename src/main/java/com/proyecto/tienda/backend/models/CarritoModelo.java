@@ -1,34 +1,33 @@
-// package com.proyecto.tienda.backend.models;
+package com.proyecto.tienda.backend.models;
 
-// import java.util.List;
+import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-// import org.springframework.data.annotation.Id;
-// import org.springframework.data.mongodb.core.mapping.DBRef;
-// import org.springframework.data.mongodb.core.mapping.Document;
-// import org.springframework.data.mongodb.core.mapping.Field;
+@Data // getters y setters
+@AllArgsConstructor // constructor con todos los atributos
+@NoArgsConstructor // constructor sin atributos
+@Builder
+@Document(value = "Carrito")
+public class CarritoModelo {
 
+    @Id
+    private String _id;
 
-// import lombok.AllArgsConstructor;
-// import lombok.Builder;
-// import lombok.Data;
-// import lombok.NoArgsConstructor;
+    @DBRef
+    @Field("id_usuario")
+    private UsuarioModelo usuario;
 
-// @Data // getters y setters
-// @AllArgsConstructor // constructor con todos los atributos
-// @NoArgsConstructor // constructor sin atributos
-// @Builder
-// @Document(value = "Pedidos")
-// public class CarritoModelo {
+    @DBRef
+    @Field("id_producto")
+    private List<ProductoModelo> productos;
 
-//     @Id
-//     private String _id;
+    private int cantidadAnadidaAlCarrito;
 
-//     @DBRef
-//     @Field("id_usuario")
-//     private UsuarioModelo usuario;
-
-//     @DBRef
-//     @Field("id_producto")
-//     private List<ProductoModelo> productos;
-
-// }
+}
