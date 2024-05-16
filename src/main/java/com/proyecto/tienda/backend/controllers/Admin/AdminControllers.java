@@ -51,6 +51,8 @@ public class AdminControllers {
     // @Autowired
 	// private UsuarioRepositorio usuarioRepositorio;
 
+    //Se hace?
+
     // CONTROLADOR PARA LISTAR TODOS LOS USUARIOS (ESTE MÉTODO SOLO SE LO HE IMPLEMENTADO
     // AL ADMIN)
     @GetMapping("/listarUsuarios")
