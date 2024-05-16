@@ -44,14 +44,18 @@ public class CarritoServicioImpl implements CarritoServicio {
 
         UsuarioModelo usuario = usuarioOptional.get();
 
+        String idUsuario = usuario.get_id(); 
+
         // Busco el carrito o creo uno nuevo si no existe
-        Optional<CarritoModelo> carritoOptional = carritoRepositorio.findByUsuario(usuario);
+        Optional<CarritoModelo> carritoOptional = carritoRepositorio.findByIdUsuario(idUsuario);
         CarritoModelo carrito;
         if (carritoOptional.isPresent()) {
             carrito = carritoOptional.get();
         } else {
             carrito = new CarritoModelo();
-            carrito.setUsuario(usuario);
+            // carrito.setUsuario(usuario);
+            carrito.setEmail(usuario.getEmail());
+            carrito.setIdUsuario(usuario.get_id());
             carrito.setProductos(new ArrayList<>());
             carrito.setCantidadAnadidaAlCarrito(cantidad);
         }
@@ -76,6 +80,7 @@ public class CarritoServicioImpl implements CarritoServicio {
         // Verifico si el producto ya está en el carrito para no añadirlo 2 veces
         boolean productoEnCarrito = false;
         for (ProductoModelo p : carrito.getProductos()) {
+
             if (p.get_id().equals(productoId)) {
                 productoEnCarrito = true;
                 break;

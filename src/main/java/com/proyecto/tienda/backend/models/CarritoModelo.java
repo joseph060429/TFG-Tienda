@@ -20,9 +20,12 @@ public class CarritoModelo {
     @Id
     private String _id;
 
-    @DBRef
+    // @DBRef
     @Field("id_usuario")
-    private UsuarioModelo usuario;
+    // private UsuarioModelo usuario;
+
+    private String idUsuario;
+    private String email;
 
     @DBRef
     @Field("id_producto")

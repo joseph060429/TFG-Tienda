@@ -10,6 +10,8 @@ import com.proyecto.tienda.backend.models.UsuarioModelo;
 @Repository
 public interface CarritoRepositorio extends MongoRepository<CarritoModelo, String> {
 
-   Optional<CarritoModelo> findByUsuario(UsuarioModelo usuario);
+   // Optional<CarritoModelo> findByUsuario(UsuarioModelo usuario);
+
+   Optional<CarritoModelo> findByIdUsuario(String idUsuario);
     
 }
