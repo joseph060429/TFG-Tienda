@@ -66,6 +66,9 @@ definePageMeta({
   role: ['ROLE_USER', 'ROLE_ADMIN']
 });
 
+//USAR QUASAR
+const quasar = useQuasar()
+
 let authStore = useAuthStore();
 const { productos } = productoComposable();
 
@@ -102,7 +105,15 @@ const verMisPedidos = () => {
 
 
 const verMiCarrito = () => {
-  router.push({ path: '/pedido/carritoCompra' });
+  const detalleProductoCarrito = localStorage.getItem('detalleProductoCarrito');
+
+  if (detalleProductoCarrito && detalleProductoCarrito.length > 0) {
+    // Si el carrito no está vacío, redirige a la página del carrito
+    router.push({ path: '/pedido/carritoCompra' });
+  } else {
+    // Si el carrito está vacío, muestra un mensaje o toma alguna otra acción
+    mostrarAlertaError('El carrito está vacío', quasar);
+  }
 };
 
 

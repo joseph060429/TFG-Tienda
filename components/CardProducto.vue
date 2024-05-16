@@ -53,7 +53,7 @@ const router = useRouter()
 // FUNCION PARA CARGAR LOS PRODUCTOS  ANTES DE QUE SE MONTE EL COMPONENTE
 onBeforeMount(async () => {
   await cargarProductos();
-  console.log("Productos cargados en el componente card", productos.value);
+  // console.log("Productos cargados en el componente card", productos.value);
 })
 
 function goTo(item) {

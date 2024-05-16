@@ -49,12 +49,6 @@
 
 
                     <q-td class="text-center">
-                       
-
-                            <!-- <q-btn @click="editarPerfil(props.row)" class="boton-perfil">
-                                <q-icon name="mdi-pencil" />
-                            </q-btn> -->
-
                             <!-- Botón para eliminar el perfil del usuario-->
                             <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar">
                                 <q-icon name="mdi-delete" />
@@ -322,3 +316,13 @@ const editarPerfil = (id) => {
 
 
 </style>
+
+
+
+
+
+
+
+
+
+

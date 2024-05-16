@@ -4,8 +4,7 @@
     <div class="q-pa-md">
       <q-table class="tabla" flat bordered title="Historial de pedidos" title-tag="h2" :rows="pedidos"
         row-key="index" virtual-scroll :virtual-scroll-item-size="48" :virtual-scroll-sticky-size-start="48"
-        :pagination="true"
-        :rows-per-page-options="[10]">
+        :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]">
         <template v-slot:top-right>
           <!-- Botones cancelar y devolver  pedidos -->
           <div class="botones-container">

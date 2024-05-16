@@ -138,10 +138,13 @@ const agregarAlCarrito = () => {
         // Crea objeto con detalles del producto
         const nuevoProducto = {
           _id: producto.value._id,
-          nombre: producto.value.nombreProducto,
-          marca: producto.value.marcaProducto,
-          precio: producto.value.precioProducto,
-          imagen: getImagenURL(producto.imagenProducto)
+          nombreProducto: producto.value.nombreProducto,
+          marcaProducto: producto.value.marcaProducto,
+          precioProducto: producto.value.precioProducto,
+          // cantidadProducto: producto.value.cantidadProducto,
+          cantidadProducto: 1,
+          cantidadProductoStore: producto.value.cantidadProducto,
+          imagenProducto: getImagenURL(producto.value.imagenProducto)
         };
 
         // Agrego el nuevo producto al array existente
