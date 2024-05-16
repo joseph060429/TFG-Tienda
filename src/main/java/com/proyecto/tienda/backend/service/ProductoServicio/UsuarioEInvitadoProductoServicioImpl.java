@@ -45,6 +45,7 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
             mapaProductos.put("marcaProducto", producto.getMarcaProducto());
             mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
+            // mapaProductos.put("cantidadProducto", producto.getCantidadProducto());
             mapaProductos.put("disponibilidadProducto", producto.isDisponibilidadProducto());
 
             // CAMBIO
@@ -69,6 +70,7 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
             mapaProductos.put("marcaProducto", producto.getMarcaProducto());
             mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
+            // mapaProductos.put("cantidadProducto", producto.getCantidadProducto());
             mapaProductos.put("disponibilidadProducto", producto.isDisponibilidadProducto());
 
             return ResponseEntity.ok(mapaProductos);
@@ -158,6 +160,7 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
             mapaProductos.put("marcaProducto", producto.getMarcaProducto());
             mapaProductos.put("especificacionesTecnicas", producto.getEspecificacionesTecnicas());
             mapaProductos.put("imagenProducto", producto.getImagenProducto());
+            // mapaProductos.put("cantidadProducto", producto.getCantidadProducto());
             mapaProductos.put("disponibilidadProducto", producto.isDisponibilidadProducto());
 
             productosResponse.add(mapaProductos);
