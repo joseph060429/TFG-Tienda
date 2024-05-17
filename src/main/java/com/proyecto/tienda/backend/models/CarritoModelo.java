@@ -25,7 +25,7 @@ public class CarritoModelo {
     // private UsuarioModelo usuario;
 
     private String idUsuario;
-    private String email;
+    // private String email;
 
     // @DBRef
     // private List<ProductoModelo> productos;
@@ -33,13 +33,13 @@ public class CarritoModelo {
     @Field("id_producto")
     private String idProducto;
 
-    private String nombreProducto;
+    // private String nombreProducto;
 
-    private String marcaProducto;
+    // private String marcaProducto;
 
-    private Double precioProducto;
+    // private Double precioProducto;
 
-    private String imagenProducto;
+    // private String imagenProducto;
 
     private int cantidadAnadidaAlCarrito;
 

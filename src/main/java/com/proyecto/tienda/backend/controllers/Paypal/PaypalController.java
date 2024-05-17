@@ -12,6 +12,8 @@ import com.paypal.base.rest.PayPalRESTException;
 import com.proyecto.tienda.backend.DTO.DTOPedido.FacturaDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
+import com.proyecto.tienda.backend.models.UsuarioModelo;
+import com.proyecto.tienda.backend.repositorios.CarritoRepositorio;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.service.Paypal.PayPalServicio;
 import com.proyecto.tienda.backend.service.PedidoServicio.UsuarioPedidoServicioImpl;
@@ -36,6 +38,9 @@ public class PaypalController {
     private UsuarioPedidoServicioImpl usuarioPedidoServicioImpl;
 
     @Autowired
+    private CarritoRepositorio carritoRepositorio;
+
+    @Autowired
     private ResendUtil resend;
 
     // CONTROLADOR DEL PAYPAL PARA CUANDO SE CREA UN NUEVO PEDIDO
@@ -51,6 +56,9 @@ public class PaypalController {
 
             // Traigo el pedido que se va a pagar
             PedidosModelo pedido = (PedidosModelo) ses.getAttribute("pedido");
+
+            // Obtengo el usuario asociado al pedido
+            UsuarioModelo usuario = pedido.getUsuario();
 
             // Traigo la lista de los productosPedido para restar los productos antes de
             // guardar el pedido en la base de datos
@@ -75,6 +83,10 @@ public class PaypalController {
             // Envio un email al usuario con su factura cuando la compra ha sido exitosa
             resend.enviarEmailFacturaPdf(pedido.getUsuario().getEmail(), facturaDTO);
 
+            // Elimino todos los productos del carrito de ese usuario
+            carritoRepositorio.deleteByIdUsuario(usuario.get_id());
+
+            
             // Guardo el pedido en la base de datos
             pedidoRepositorio.save(pedido);
 

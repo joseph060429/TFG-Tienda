@@ -16,5 +16,7 @@ public class ProductoCarrito {
     private String marcaProducto;
     private Double precioProducto;
     private String imagenProducto;
+    private String idUsuario;
+    private int cantidadAnadidaAlCarrito;
     
 }
