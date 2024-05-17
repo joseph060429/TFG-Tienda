@@ -105,15 +105,7 @@ const verMisPedidos = () => {
 
 
 const verMiCarrito = () => {
-  const detalleProductoCarrito = localStorage.getItem('detalleProductoCarrito');
-
-  if (detalleProductoCarrito && detalleProductoCarrito.length > 0) {
-    // Si el carrito no está vacío, redirige a la página del carrito
     router.push({ path: '/pedido/carritoCompra' });
-  } else {
-    // Si el carrito está vacío, muestra un mensaje o toma alguna otra acción
-    mostrarAlertaError('El carrito está vacío', quasar);
-  }
 };
 
 

@@ -1,7 +1,7 @@
 <template>
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <h2 class="titulo">Carrito de Compras</h2>
-    <q-table class="tabla" flat bordered :rows="productos" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
+    <q-table class="tabla" flat bordered :rows="carrito" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
         :virtual-scroll-sticky-size-start="48" :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]">
 
         <template v-slot:header="props">
@@ -18,18 +18,19 @@
             <q-tr :props="props">
                 <q-td>{{ props.row.nombreProducto }}</q-td>
                 <q-td>{{ props.row.marcaProducto }}</q-td>
-                <q-td>{{ props.row.precioProducto }}</q-td>
-                <q-td><q-img :src="props.row.imagenProducto" width="10vh"></q-img></q-td>
-                <q-td>
-                    <q-input v-model="props.row.cantidadProducto" type="number" min="1" dense
-                        style="width: 50px; height: 20px; font-size: 12px; text-align: right;"
-                        lazy-rules :rules="[
-                                    val => val !== null && val !== undefined || 'Por favor, introduce algo',
-                                    val => !isNaN(val) || 'La cantidad debe ser un número',
-                                    val => parseInt(val) >= 1 || 'La cantidad debe ser mayor o igual a 1'
-                                ]"></q-input>
+                <q-td>{{ props.row.precioProducto }} €</q-td>
+                <q-td><q-img class="imagen" :src="getImagenURL(props.row.imagenProducto)" />
                 </q-td>
-
+                <q-td>
+                    <q-input class="input-custom" v-model="props.row.cantidadAnadidaAlCarrito" type="number" min="1"
+                        dense
+                        style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;"
+                        lazy-rules :rules="[
+                            val => val !== null && val !== undefined || 'Por favor, introduce algo',
+                            val => !isNaN(val) || 'La cantidad debe ser un número',
+                            val => parseInt(val) >= 1 || 'La cantidad debe ser mayor o igual a 1'
+                        ]" @blur="probando(props.row)"></q-input>
+                </q-td>
                 <q-td class="text-center">
                     <q-btn @click="eliminarProducto()" class="boton-borrar">
                         <q-icon name="mdi-delete" />
@@ -41,60 +42,38 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-
-const required = (val) => !!val || 'Campo requerido';
-const minAmount = (val, row) => {
-    if (!val || val < 1) {
-        return 'La cantidad debe ser al menos 1';
-    }
-    if (val > row.cantidadProductoStore) {
-        return 'La cantidad excede el stock disponible';
-    }
-    return true;
-};
-
-
-
-
-
-
+import { getImagenURL } from '~/utils/imagenURL.js';
 
 definePageMeta({
     role: ['ROLE_USER']
 });
 
+const { verMiCarrito } = usuarioComposable();
+
 
 onMounted(() => {
-    obtenerProductosDelCarrito();
+    obtenerProductosDelCarrito()
+})
 
-    console.log();
-
-});
+function probando(item) {
+    console.log(item.productoId, 'item', item.cantidadProducto, 'cantidad');
+    // await store.actualizarCarrito(item.productoId, item.cantidadProducto)
+}
 
 // RUTAS
 const router = useRouter()
 
+const carrito = ref([]);
 
-
-// Referencia a los productos almacenados en el localStorage
-const productos = ref([]);
-
-
-const obtenerProductosDelCarrito = () => {
-    const detalleProductoCarrito = localStorage.getItem('detalleProductoCarrito') || [];
-    console.log("productos");
-    productos.value = JSON.parse(detalleProductoCarrito);
-    console.log('productos del carrito', detalleProductoCarrito);
-};
-
-const eliminarProducto = (index) => {
-    productos.value.splice(index, 1); // Elimina el producto seleccionado de la lista
-    if (productos.value.length > 0) {
-        // Actualizo el localStorage si hay productos otros productos
-        localStorage.setItem('detalleProductoCarrito', JSON.stringify(productos.value));
-    } else {
-        // Elimino todo si no hay productos
-        localStorage.removeItem('detalleProductoCarrito');
+const obtenerProductosDelCarrito = async () => {
+    try {
+        const response = await verMiCarrito();
+        console.log("RESPONSE: ", response.data);
+        carrito.value = response.data;
+    } catch (error) {
+        // Error de red u otro error
+        console.error('Error al ver el carrito de compra', error);
+        mostrarAlertaError('Error al ver el carrito de compra', quasar);
     }
 };
 
@@ -102,12 +81,12 @@ const regresar = () => {
     router.push({ path: '/usuario/vistaInicioUsuario' })
 };
 
+// const obtenerProductosDelCarrito = async () => {
 
-const verificarCantidad = (producto) => {
-    if (producto.cantidadProducto > producto.cantidadProductoStore) {
-        mostrarAlertaError('La cantidad seleccionada supera el stock disponible', quasar);
-    }
-};
+// }
+
+
+
 
 const procederAlPago = () => {
 
@@ -117,7 +96,7 @@ const procederAlPago = () => {
 
 <style scoped>
 .tabla {
-    height: 60vh;
+    height: 55vh;
     width: 90%;
     background-color: #F5F5F5;
     font-family: Arial, sans-serif;
@@ -135,13 +114,33 @@ const procederAlPago = () => {
     }
 }
 
+@media screen and (max-width: 600px) {
+    .imagen {
+        max-width: 90%;
+      
+        max-height: 70vh;
+    }
+}
+
 .tabla th {
     font-weight: bold;
+}
+
+.imagen {
+    max-width: 50%;
+    max-height: 50vh;
+    height: auto;
 }
 
 .tabla td {
     text-align: center;
 }
+
+.input-custom {
+    text-align: center;
+    margin: auto;
+}
+
 
 .titulo {
     font-size: 2em;

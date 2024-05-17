@@ -50,6 +50,7 @@
 
 <script setup>
 import { productoComposable } from '~/composables/productoComposable';
+import { usuarioComposable } from '~/composables/usuarioComposable';
 import { getImagenURL } from '~/utils/imagenURL.js';
 
 definePageMeta({
@@ -58,6 +59,10 @@ definePageMeta({
 //USAR QUASAR
 const quasar = useQuasar()
 const { producto, listarUnProducto } = productoComposable();
+
+const { anadirAlCarrito } = usuarioComposable();
+
+
 
 // RUTAS
 const router = useRouter()
@@ -115,49 +120,24 @@ const regresar = () => {
   }
 };
 
+const cantidad = ref(1);
 // FUNCIÓN PARA AÑADIR PPRODUCTOS AL CARRITO
-const agregarAlCarrito = () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    // Si hay un token almacenado,a la vista del usuario
-    router.push({ path: '/auth/login' });
-    mostrarAlertaError('Debes estar registrado para añadir productos al carrito', quasar)
-  } else {
+const agregarAlCarrito = async () => {
 
-    if (producto) {
-      // Verifico si ya hay información en el localStorage sobre los productos en el carrito
-      let detalleProductoCarrito = JSON.parse(localStorage.getItem('detalleProductoCarrito')) || [];
+  const response = await anadirAlCarrito(_id, cantidad.value);
 
-      // Verifico si el producto ya existe en el carrito para evitar duplicados
-      const productoExistente = detalleProductoCarrito.find(item => item._id === producto.value._id);
-
-      // Si el producto ya existe en el carrito, no lo anado
-      if (productoExistente) {
-        mostrarAlertaError('El producto ya está en el carrito', quasar)
-      } else {
-        // Crea objeto con detalles del producto
-        const nuevoProducto = {
-          _id: producto.value._id,
-          nombreProducto: producto.value.nombreProducto,
-          marcaProducto: producto.value.marcaProducto,
-          precioProducto: producto.value.precioProducto,
-          // cantidadProducto: producto.value.cantidadProducto,
-          cantidadProducto: 1,
-          cantidadProductoStore: producto.value.cantidadProducto,
-          imagenProducto: getImagenURL(producto.value.imagenProducto)
-        };
-
-        // Agrego el nuevo producto al array existente
-        detalleProductoCarrito.push(nuevoProducto);
-        // Almaceno el array actualizado en el localStorage
-        localStorage.setItem('detalleProductoCarrito', JSON.stringify(detalleProductoCarrito));
-        mostrarAlertaExito('Producto añadido al carrito', quasar);
-      }
-    } else {
-      console.error('No se encontró ningún producto para añadir al carrito.');
-    }
+  if (response.data === 'Producto agregado al carrito') {
+    mostrarAlertaExito('Producto agregado al carrito', quasar);
   }
+  if (response.data === 'El producto ya está en el carrito') {
+    mostrarAlertaError('El producto ya está en el carrito', quasar);
+  }
+
+  console.log("RESPONSE", response);
+
+
 }
+
 
 </script>
 

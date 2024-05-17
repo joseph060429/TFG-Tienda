@@ -18,6 +18,10 @@ export const usuarioComposable = () => {
     return await store.actualizacionUsuario(datosActualizar);
   };
 
+  const reset = () => {
+    store.$reset();
+  };
+
   // COMPOSABLE PARA BORRAR USUARIO
   const borrarUsuario = async () => {
     return await store.borrarUsuario();
@@ -33,6 +37,14 @@ export const usuarioComposable = () => {
     return await store.cancelarPedidos(numPedido);
   };
 
+  const anadirAlCarrito = async (productoId, cantidad) => {
+    return await store.anadirAlCarrito(productoId, cantidad);
+  };
+
+  const verMiCarrito = async (productoId, nuevaCantidad) => {
+    return await store.verMiCarrito(productoId, nuevaCantidad);
+  };
+
   // COMPOSABLE PARA LIMPIAR LOS PEDIDOS DEL USUARIO DE LA STORE
   const limpiarPedidos = () => {
     store.limpiarPedidos();
@@ -46,5 +58,8 @@ export const usuarioComposable = () => {
     usuario,
     limpiarPedidos,
     cancelarPedidos,
+    anadirAlCarrito,
+    verMiCarrito,
+    reset
   };
 };

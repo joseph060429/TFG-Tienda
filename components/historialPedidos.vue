@@ -90,7 +90,6 @@ onBeforeMount(async () => {
 })
 
 // FUNCION PARA VER EL HISTORIAL DE PEDIDOS
-
 const pedidos = ref([]);
 
 const historialDePedidos = async () => {

@@ -9,6 +9,7 @@ export const usuarioStore = defineStore({
     // Defino el estado inicial de la store, es este el nombre que le pongo para luego llamarlo en el composable
     usuario: {
       pedidos: [],
+      carrito: [],
     },
     loggedIn: true,
   }),
@@ -128,6 +129,90 @@ export const usuarioStore = defineStore({
     limpiarPedidos() {
       this.usuario.pedidos = [];
     },
+
+
+    // STORE PARA ANADIR AL CARRITO
+    async anadirAlCarrito(productoId, cantidad) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await useAxiosInstance().post(
+          "/carrito/anadirAlCarrito", null,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              productoId: productoId,
+              cantidad: cantidad,
+            },
+          }
+        );
+        // this.usuario.carrito = [];
+        this.usuario.carrito = response.data;
+        return response;
+      } catch (error) {
+        console.log("Error en AÑADIR AL CARRITO STORE ==> ", error);
+        return error.response;
+      }
+
+
+    },
+
+    // STORE PARA VER EL CARRITO
+    async verMiCarrito(productoId, nuevaCantidad) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await useAxiosInstance().get(
+          "/carrito/verCarrito",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              productoId: productoId,
+              nuevaCantidad: nuevaCantidad,
+            },
+          }
+        );
+        this.usuario.carrito = response.data;
+        console.log("carrito de store", this.usuario.carrito);
+        return response;
+      } catch (error) {
+        console.log("Error en VER CARRITO STORE ==> ", error);
+        return error.response;
+      }
+
+
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   },
 });
 

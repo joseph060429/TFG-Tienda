@@ -1,6 +1,5 @@
 <template>
     <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" />
-    <!-- <formulario-editar-perfil v-model="mostrarFormularioEditarPerfil" :id="objetoUsuarioActualizar" /> -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 usuarios -->
