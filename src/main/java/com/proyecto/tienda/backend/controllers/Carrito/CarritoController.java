@@ -1,5 +1,6 @@
 package com.proyecto.tienda.backend.controllers.Carrito;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,10 @@ public class CarritoController {
     }
 
     @GetMapping("/verCarrito")
-    public ResponseEntity<List<ProductoCarrito>> obtenerCarritoUsuario(@RequestHeader("Authorization") String token) {
-        return carritoServicio.obtenerCarritoUsuario(token, jwtUtils);
+    public ResponseEntity<List<ProductoCarrito>> obtenerCarritoUsuario(@RequestHeader("Authorization") String token,
+            @RequestParam(required = false) String productoId, @RequestParam(required = false) Integer nuevaCantidad) {
+        return carritoServicio.obtenerCarritoUsuario(token, jwtUtils, productoId, nuevaCantidad != null ? nuevaCantidad : 1);
     }
+    
 
 }

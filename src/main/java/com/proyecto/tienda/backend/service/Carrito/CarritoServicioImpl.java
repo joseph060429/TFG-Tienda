@@ -131,7 +131,7 @@ public class CarritoServicioImpl implements CarritoServicio {
 
     // METODO PARA TRAERME EL CARRITO DE CADA USUARIO
     @Override
-    public ResponseEntity<List<ProductoCarrito>> obtenerCarritoUsuario(String token, JwtUtils jwtUtils) {
+    public ResponseEntity<List<ProductoCarrito>> obtenerCarritoUsuario(String token, JwtUtils jwtUtils, String productoId, int nuevaCantidad) {
         // Elimino el prefijo "Bearer " del token JWT.
         String jwtToken = token.replace("Bearer ", "");
         // Luego, extraigo el email del token usando JwtUtils.
@@ -162,6 +162,12 @@ public class CarritoServicioImpl implements CarritoServicio {
                         // Obtengo el producto de la opción.
                         ProductoModelo producto = productoOptional.get();
 
+                        // Si el producto coincide con el ID y se proporciona una nueva cantidad,
+                        // actualizo la cantidad.
+                        if (producto.get_id().equals(productoId) && nuevaCantidad > 0) {
+                            item.setCantidadAnadidaAlCarrito(nuevaCantidad);
+                            carritoRepositorio.save(item); // Guardo los cambios en el carrito
+                        }
                         // Mapeo los datos del producto a un DTO incluyendo idUsuario y
                         // cantidadAnadidaAlCarrito.
                         ProductoCarrito productoDTO = new ProductoCarrito(

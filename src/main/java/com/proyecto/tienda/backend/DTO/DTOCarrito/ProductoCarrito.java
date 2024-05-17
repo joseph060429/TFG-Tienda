@@ -1,5 +1,7 @@
 package com.proyecto.tienda.backend.DTO.DTOCarrito;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +19,9 @@ public class ProductoCarrito {
     private Double precioProducto;
     private String imagenProducto;
     private String idUsuario;
+
+    @NotNull(message = "La cantidad del producto no puede estar en blanco")
+    @PositiveOrZero(message = "La cantidad del producto debe ser un número positivo o 0")
     private int cantidadAnadidaAlCarrito;
     
 }
