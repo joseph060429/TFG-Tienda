@@ -104,7 +104,7 @@ const procederAlPago = () => {
     .tabla {
         width: 90%;
         margin: 0 auto;
-        height: 55vh;
+        height: 45vh;
         font-size: 0.8em;
     }
 }
@@ -112,7 +112,6 @@ const procederAlPago = () => {
 @media screen and (max-width: 600px) {
     .imagen {
         max-width: 90%;
-      
         max-height: 70vh;
     }
 }
