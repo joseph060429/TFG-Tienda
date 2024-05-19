@@ -170,7 +170,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 // Si la cantidad solicitada es mayor que la disponible, devuelvo un
                                 // ResponseEntity con un mensaje de error
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                        .body("La cantidad solicitada supera la cantidad disponible del producto.");
+                                        .body("La cantidad solicitada supera la cantidad disponible del producto");
                             }
                             // Actualizo la cantidad añadida al carrito
                             item.setCantidadAnadidaAlCarrito(nuevaCantidad);
@@ -179,7 +179,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                             // Si la cantidad solicitada es menor o igual a cero, devuelvo un ResponseEntity
                             // con un mensaje de error
                             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                    .body("La cantidad solicitada debe ser mayor que cero.");
+                                    .body("La cantidad solicitada debe ser mayor que cero");
                         }
                         // Mapeo los datos del producto a un DTO incluyendo idUsuario y
                         // cantidadAnadidaAlCarrito.

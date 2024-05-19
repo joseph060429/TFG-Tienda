@@ -1,11 +1,6 @@
 package com.proyecto.tienda.backend.service.Carrito;
 
-
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
-
-import com.proyecto.tienda.backend.DTO.DTOCarrito.ProductoCarrito;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
 
