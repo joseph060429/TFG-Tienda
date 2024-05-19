@@ -81,11 +81,6 @@ const regresar = () => {
     router.push({ path: '/usuario/vistaInicioUsuario' })
 };
 
-// const obtenerProductosDelCarrito = async () => {
-
-// }
-
-
 
 
 const procederAlPago = () => {
@@ -109,7 +104,7 @@ const procederAlPago = () => {
     .tabla {
         width: 90%;
         margin: 0 auto;
-        height: 60vh;
+        height: 55vh;
         font-size: 0.8em;
     }
 }
