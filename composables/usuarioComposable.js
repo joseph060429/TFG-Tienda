@@ -37,18 +37,27 @@ export const usuarioComposable = () => {
     return await store.cancelarPedidos(numPedido);
   };
 
+  // COMPOSABLE PARA QUE EL USUARIO AÑADA AL CARRITO
   const anadirAlCarrito = async (productoId, cantidad) => {
     return await store.anadirAlCarrito(productoId, cantidad);
   };
 
+  // COMPOSABLE PARA QUE EL USUARIO VEA SU CARRITO
   const verMiCarrito = async (productoId, nuevaCantidad) => {
     return await store.verMiCarrito(productoId, nuevaCantidad);
   };
+
+    // COMPOSABLE PARA QUE EL USUARIO VEA SU CARRITO
+    const eliminarProductoCarrito = async (_idCarrito) => {
+      return await store.eliminarProductoCarrito(_idCarrito);
+    };
 
   // COMPOSABLE PARA LIMPIAR LOS PEDIDOS DEL USUARIO DE LA STORE
   const limpiarPedidos = () => {
     store.limpiarPedidos();
   };
+
+
 
   // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
   return {
@@ -60,6 +69,7 @@ export const usuarioComposable = () => {
     cancelarPedidos,
     anadirAlCarrito,
     verMiCarrito,
+    eliminarProductoCarrito,
     reset
   };
 };

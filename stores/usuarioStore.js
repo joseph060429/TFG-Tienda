@@ -181,9 +181,31 @@ export const usuarioStore = defineStore({
         console.log("Error en VER CARRITO STORE ==> ", error);
         return error.response;
       }
+  },
 
-
-    },
+  // Eliminar del carrito
+  async eliminarProductoCarrito(_idCarrito) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await useAxiosInstance().delete(
+        "/carrito/eliminarDelCarrito",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            _idCarrito: _idCarrito
+          },
+        }
+      );
+      this.usuario.carrito = response.data;
+      console.log("carrito de eliminar store", this.usuario.carrito);
+      return response;
+    } catch (error) {
+      console.log("Error en ELIMINAR CARRITO STORE ==> ", error);
+      return error.response;
+    }
+},
 
 
 

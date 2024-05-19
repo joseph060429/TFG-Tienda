@@ -23,22 +23,20 @@
                 </q-td>
                 <q-td>
                     <q-input class="input-custom" v-model="props.row.cantidadAnadidaAlCarrito" type="number" min="1"
-                        dense
+                        :max="999" dense
                         style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;"
-                        lazy-rules :rules="[
-                            val => val !== null && val !== undefined || 'Por favor, introduce algo',
-                            val => !isNaN(val) || 'La cantidad debe ser un número',
-                            val => parseInt(val) >= 1 || 'La cantidad debe ser mayor o igual a 1'
-                        ]" @blur="probando(props.row)"></q-input>
+                        @blur="anadirCantidadProducto(props.row)"></q-input>
                 </q-td>
                 <q-td class="text-center">
-                    <q-btn @click="eliminarProducto()" class="boton-borrar">
+                    <q-btn @click="eliminarProducto(props.row.idCarrito)" class="boton-borrar">
                         <q-icon name="mdi-delete" />
                     </q-btn>
                 </q-td>
             </q-tr>
         </template>
     </q-table>
+
+
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -47,24 +45,23 @@ import { getImagenURL } from '~/utils/imagenURL.js';
 definePageMeta({
     role: ['ROLE_USER']
 });
+//USAR QUASAR
+const quasar = useQuasar()
 
-const { verMiCarrito } = usuarioComposable();
+
+const { verMiCarrito, eliminarProductoCarrito } = usuarioComposable();
 
 
 onMounted(() => {
     obtenerProductosDelCarrito()
 })
 
-function probando(item) {
-    console.log(item.productoId, 'item', item.cantidadProducto, 'cantidad');
-    // await store.actualizarCarrito(item.productoId, item.cantidadProducto)
-}
-
 // RUTAS
 const router = useRouter()
 
 const carrito = ref([]);
 
+// FUNCION PARA OBTENER TODOS LOS PRODUCTOS DEL CARRITO
 const obtenerProductosDelCarrito = async () => {
     try {
         const response = await verMiCarrito();
@@ -77,8 +74,56 @@ const obtenerProductosDelCarrito = async () => {
     }
 };
 
+// const cantidadAnadidaAlCarrito = ref(null)
+
+// FUNCION PARA AÑADIR CANTIDAD DE PRODUCTOS AL CARRITO
+const anadirCantidadProducto = async (item) => {
+    try {
+        console.log(item.productoId, 'item', item.cantidadAnadidaAlCarrito, 'cantidad');
+        const response = await verMiCarrito(item.productoId, item.cantidadAnadidaAlCarrito);
+        console.log("RESPONSE: ", response.data);
+        if (response.data === 'La cantidad solicitada debe ser mayor que cero') {
+            mostrarAlertaError('La cantidad solicitada debe ser mayor que cero', quasar);
+        }
+        if (response.data === 'La cantidad solicitada supera la cantidad disponible del producto') {
+            mostrarAlertaError(' La cantidad solicitada supera la cantidad disponible del producto', quasar);
+        }
+    } catch (error) {
+        // Error de red u otro error
+        console.error('Error al ver el carrito de compra', error);
+        mostrarAlertaError('Error al ver el carrito de compra', quasar);
+    }
+};
+
+// console.log("_idCarrito", carrito.value.idCarrito);
+
+//FUNCION PARA ELIMINAR LOS PRODUCTOS DEL CARRITO
+const eliminarProducto = async (item) => {
+    try {
+        console.log('Carrito ID a eliminar:', item);
+        const response = await eliminarProductoCarrito(item);
+        console.log("RESPONSE: ", response.data);
+        if (response.data === 'Producto eliminado del carrito correctamente') {
+            mostrarAlertaExito('Producto eliminado del carrito correctamente', quasar);
+            setTimeout(() => {
+            refrescar();
+          }, 2000);
+
+        }
+    } catch (error) {
+        // Error de red u otro error
+        console.error('Error al ver el carrito de compras', error);
+        mostrarAlertaError('Error al ver el eliminar producto del carrito de compras', quasar);
+    }
+};
+
+
 const regresar = () => {
     router.push({ path: '/usuario/vistaInicioUsuario' })
+};
+
+const refrescar = () => {
+    window.location.reload();
 };
 
 
@@ -164,7 +209,7 @@ const procederAlPago = () => {
 
 @media only screen and (max-width: 600px) {
     .boton-borrar {
-        font-size: 14px;
+        font-size: 12px;
         padding: 3px 6px;
     }
 }
