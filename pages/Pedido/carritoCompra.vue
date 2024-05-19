@@ -104,7 +104,7 @@ const procederAlPago = () => {
     .tabla {
         width: 90%;
         margin: 0 auto;
-        height: 45vh;
+        height: 50vh;
         font-size: 0.8em;
     }
 }
