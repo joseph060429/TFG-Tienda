@@ -139,7 +139,7 @@ const procederAlPago = () => {
 .titulo {
     font-size: 2em;
     text-align: center;
-    margin: 1em;
+    /* margin-top: 0em; */
     color: #546e7a;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
