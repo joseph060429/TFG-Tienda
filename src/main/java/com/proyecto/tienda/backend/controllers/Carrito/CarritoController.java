@@ -48,7 +48,7 @@ public class CarritoController {
     }
 
     @GetMapping("/verCarrito")
-    public ResponseEntity<List<ProductoCarrito>> obtenerCarritoUsuario(@RequestHeader("Authorization") String token,
+    public ResponseEntity<?> obtenerCarritoUsuario(@RequestHeader("Authorization") String token,
             @RequestParam(required = false) String productoId, @RequestParam(required = false) Integer nuevaCantidad) {
         return carritoServicio.obtenerCarritoUsuario(token, jwtUtils, productoId, nuevaCantidad != null ? nuevaCantidad : 1);
     }

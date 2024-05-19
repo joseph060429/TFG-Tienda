@@ -131,42 +131,55 @@ public class CarritoServicioImpl implements CarritoServicio {
 
     // METODO PARA TRAERME EL CARRITO DE CADA USUARIO
     @Override
-    public ResponseEntity<List<ProductoCarrito>> obtenerCarritoUsuario(String token, JwtUtils jwtUtils, String productoId, int nuevaCantidad) {
+    public ResponseEntity<?> obtenerCarritoUsuario(String token, JwtUtils jwtUtils, String productoId, int nuevaCantidad) {
         // Elimino el prefijo "Bearer " del token JWT.
         String jwtToken = token.replace("Bearer ", "");
         // Luego, extraigo el email del token usando JwtUtils.
         String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
-
+    
         // Busco al usuario en el repositorio por el email extraído.
         Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
-
+    
         // Verifico si el usuario existe.
         if (usuarioOptional.isPresent()) {
             // Obtengo el usuario de la opción.
             UsuarioModelo usuario = usuarioOptional.get();
             // Busco los productos en el carrito del usuario por su ID.
             List<CarritoModelo> carrito = carritoRepositorio.findByIdUsuario(usuario.get_id());
-
+    
             // Verifico si el carrito no está vacío.
             if (!carrito.isEmpty()) {
                 // Creo una lista para los detalles del producto.
                 List<ProductoCarrito> productos = new ArrayList<>();
-
+    
                 // Recorro cada item del carrito.
                 for (CarritoModelo item : carrito) {
                     // Obtengo el producto por su ID.
                     Optional<ProductoModelo> productoOptional = productoRepositorio.findById(item.getIdProducto());
-
+    
                     // Verifico si el producto existe.
                     if (productoOptional.isPresent()) {
                         // Obtengo el producto de la opción.
                         ProductoModelo producto = productoOptional.get();
-
+    
                         // Si el producto coincide con el ID y se proporciona una nueva cantidad,
                         // actualizo la cantidad.
                         if (producto.get_id().equals(productoId) && nuevaCantidad > 0) {
+                            // Verifico si la nueva cantidad es mayor que la cantidad disponible del producto
+                            if (nuevaCantidad > producto.getCantidadProducto()) {
+                                // Si la cantidad solicitada es mayor que la disponible, devuelvo un
+                                // ResponseEntity con un mensaje de error
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                        .body("La cantidad solicitada supera la cantidad disponible del producto.");
+                            }
+                            // Actualizo la cantidad añadida al carrito
                             item.setCantidadAnadidaAlCarrito(nuevaCantidad);
                             carritoRepositorio.save(item); // Guardo los cambios en el carrito
+                        } else if (nuevaCantidad <= 0) {
+                            // Si la cantidad solicitada es menor o igual a cero, devuelvo un ResponseEntity
+                            // con un mensaje de error
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                    .body("La cantidad solicitada debe ser mayor que cero.");
                         }
                         // Mapeo los datos del producto a un DTO incluyendo idUsuario y
                         // cantidadAnadidaAlCarrito.
@@ -178,12 +191,12 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 producto.getImagenProducto(),
                                 item.getIdUsuario(),
                                 item.getCantidadAnadidaAlCarrito());
-
+    
                         // Añado el producto a la lista.
                         productos.add(productoDTO);
                     }
                 }
-
+    
                 // Devuelvo la lista de productos en el carrito.
                 return ResponseEntity.ok(productos);
             } else {
@@ -195,5 +208,7 @@ public class CarritoServicioImpl implements CarritoServicio {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
         }
     }
+    
+
 
 }

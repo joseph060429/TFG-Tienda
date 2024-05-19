@@ -15,6 +15,6 @@ public interface CarritoServicio {
 
     ResponseEntity <String> eliminarProductoDelCarrito(String token, JwtUtils jwtUtils, String _idCarrito);
 
-    ResponseEntity<List<ProductoCarrito>> obtenerCarritoUsuario(String token, JwtUtils jwtUtils, String productoId, int nuevaCantidad);
+    public ResponseEntity<?> obtenerCarritoUsuario(String token, JwtUtils jwtUtils, String productoId, int nuevaCantidad);
     
 }
