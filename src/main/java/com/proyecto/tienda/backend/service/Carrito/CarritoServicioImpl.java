@@ -190,6 +190,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 producto.getPrecioProducto(),
                                 producto.getImagenProducto(),
                                 item.getIdUsuario(),
+                                item.get_id(),
                                 item.getCantidadAnadidaAlCarrito());
     
                         // Añado el producto a la lista.
