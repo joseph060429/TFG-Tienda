@@ -158,6 +158,8 @@ public class CarritoServicioImpl implements CarritoServicio {
     
                 // Recorro cada item del carrito.
                 for (CarritoModelo item : carrito) {
+
+
                     // Obtengo el producto por su ID.
                     Optional<ProductoModelo> productoOptional = productoRepositorio.findById(item.getIdProducto());
     
@@ -176,10 +178,16 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                         .body("La cantidad solicitada supera la cantidad disponible del producto");
                             }
+                            double precioTotalCarrito = calcularPrecioTotal(carrito);
+
                             // Actualizo la cantidad añadida al carrito
                             item.setCantidadAnadidaAlCarrito(nuevaCantidad);
-                            double nuevoPrecioTotal = nuevaCantidad * producto.getPrecioProducto();
-                            item.setPrecioProducto(nuevoPrecioTotal);
+                            double nuevoPrecioTotalProducto = nuevaCantidad * producto.getPrecioProducto();
+                            item.setPrecioProducto(nuevoPrecioTotalProducto);
+
+                            // precioTotalCarrito = calcularPrecioTotal(carrito);
+                            // item.setTotalCarrito(precioTotalCarrito);
+                            // System.out.println("total carrito" + precioTotalCarrito);
                             carritoRepositorio.save(item); // Guardo los cambios en el carrito
                         } else if (nuevaCantidad <= 0) {
                             // Si la cantidad solicitada es menor o igual a cero, devuelvo un ResponseEntity
@@ -199,7 +207,9 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 producto.getImagenProducto(),
                                 item.getIdUsuario(),
                                 item.get_id(),
-                                item.getCantidadAnadidaAlCarrito());
+                                // item.getTotalCarrito(),
+                                item.getCantidadAnadidaAlCarrito()
+                                );
     
                         // Añado el producto a la lista.
                         productos.add(productoDTO);
@@ -217,6 +227,17 @@ public class CarritoServicioImpl implements CarritoServicio {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
         }
     }
+
+
+    private double calcularPrecioTotal(List<CarritoModelo> carrito) {
+        // Precio total del carrito 
+        double precioTotal = carrito.stream()
+            .mapToDouble(CarritoModelo::getPrecioProducto)
+            .sum();
+        
+        return precioTotal;
+    }
+    
     
 
 
