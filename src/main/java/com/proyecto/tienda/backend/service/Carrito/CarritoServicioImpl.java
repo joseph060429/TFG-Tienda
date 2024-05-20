@@ -174,6 +174,8 @@ public class CarritoServicioImpl implements CarritoServicio {
                             }
                             // Actualizo la cantidad añadida al carrito
                             item.setCantidadAnadidaAlCarrito(nuevaCantidad);
+                            double nuevoPrecioTotal = nuevaCantidad * producto.getPrecioProducto();
+                            producto.setPrecioProducto(nuevoPrecioTotal);
                             carritoRepositorio.save(item); // Guardo los cambios en el carrito
                         } else if (nuevaCantidad <= 0) {
                             // Si la cantidad solicitada es menor o igual a cero, devuelvo un ResponseEntity
@@ -181,6 +183,8 @@ public class CarritoServicioImpl implements CarritoServicio {
                             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                     .body("La cantidad solicitada debe ser mayor que cero");
                         }
+
+                        
                         // Mapeo los datos del producto a un DTO incluyendo idUsuario y
                         // cantidadAnadidaAlCarrito.
                         ProductoCarrito productoDTO = new ProductoCarrito(
