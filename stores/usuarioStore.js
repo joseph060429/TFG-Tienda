@@ -198,8 +198,8 @@ export const usuarioStore = defineStore({
           },
         }
       );
-      this.usuario.carrito = response.data;
-      console.log("carrito de eliminar store", this.usuario.carrito);
+      // this.usuario.carrito = response.data;
+      // console.log("carrito de eliminar store", this.usuario.carrito);
       return response;
     } catch (error) {
       console.log("Error en ELIMINAR CARRITO STORE ==> ", error);

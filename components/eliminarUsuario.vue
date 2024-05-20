@@ -45,7 +45,8 @@ const eliminarUsuarioAdmin = async (email) => {
     const response = await eliminarUsuario(props.email);
     if (response.data === "Usuario eliminado correctamente") {
       mostrarAlertaExito('Usuario eliminado correctamente', quasar);
-      setTimeout(refresh, 1000);
+
+      eliminar(props.email);
     } else {
       mostrarAlertaError('Error al eliminar el usuario intentelo más tarde', quasar);
     }
@@ -54,9 +55,9 @@ const eliminarUsuarioAdmin = async (email) => {
   }
 };
 
-
-const refresh = () => {
-  window.location.reload();
+// FUNCION PARA ELIMINARLO DE LA VISTA TAMBIEN
+const eliminar = (email) => {
+  usuarios.value.splice(usuarios.value.indexOf((variable) => (variable.email === email)), 1);
 };
 
 </script>

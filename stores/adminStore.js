@@ -80,7 +80,7 @@ export const adminStore = defineStore({
           }
         );
         console.log("NOMBRE EMAIL STOREAA", email);
-        this.usuarios = response.data;
+        // this.usuarios = response.data;
 
         return response;
       } catch (error) {

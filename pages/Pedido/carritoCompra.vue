@@ -1,15 +1,15 @@
 <template>
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-    <h2 class="titulo">Carrito de Compras</h2>
-    <q-table class="tabla" flat bordered :rows="carrito" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
+    <h2 class="titulo">CARRITO DE COMPRAS</h2>
+    <div class="precio-total">PRECIO TOTAL: {{ precioTotal }} €</div>
+    <q-table class="tabla" flat bordered :rows="usuario.carrito" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
         :virtual-scroll-sticky-size-start="48" :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]">
-
         <template v-slot:header="props">
             <q-tr :props="props">
                 <q-th key="nombreProducto">Producto</q-th>
                 <q-th key="marcaProducto">Marca</q-th>
                 <q-th key="precioProducto">Precio</q-th>
-                <q-th key="imagendProducto">Imágen</q-th>
+                <q-th key="imagendProducto">Imagen</q-th>
                 <q-th key="cantidadProducto">Cantidad</q-th>
                 <q-th key="acciones">Aciones</q-th>
             </q-tr>
@@ -18,29 +18,42 @@
             <q-tr :props="props">
                 <q-td>{{ props.row.nombreProducto }}</q-td>
                 <q-td>{{ props.row.marcaProducto }}</q-td>
-                <q-td>{{ props.row.precioProducto }} €</q-td>
+                <q-td>{{ props.row.precioProducto * props.row.cantidadAnadidaAlCarrito }} €</q-td>
                 <q-td><q-img class="imagen" :src="getImagenURL(props.row.imagenProducto)" />
                 </q-td>
                 <q-td>
-                    <q-input class="input-custom" v-model="props.row.cantidadAnadidaAlCarrito" type="number" min="1"
-                        :max="999" dense
-                        style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;"
+                    <!-- El atributo @blur en Vue.js se utiliza para asociar un manejador de eventos que se ejecutará cuando el elemento pierde el foco,
+                    Esto significa que cada vez que el usuario hace clic fuera del campo de entrada (es decir, el campo pierde el foco), se llamará a la función anadirCantidadProducto  -->
+                    <q-input class="input-custom" v-model="props.row.cantidadAnadidaAlCarrito" type="text" min="1"
+                        max="999" dense
+                        style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;" maxlength="3" :rules="[esNumero]"
                         @blur="anadirCantidadProducto(props.row)"></q-input>
                 </q-td>
                 <q-td class="text-center">
-                    <q-btn @click="eliminarProducto(props.row.idCarrito)" class="boton-borrar">
+                    <!-- <q-btn @click="eliminarProducto(props.row.idCarrito)" class="boton-borrar">
+                        <q-icon name="mdi-delete" />
+                    </q-btn> -->
+                    <eliminar-carrito :idCarrito="props.row.idCarrito" v-model="mostrarEliminarCarrito" />
+                    <q-btn @click="eliminarProducto" class="boton-borrar">
                         <q-icon name="mdi-delete" />
                     </q-btn>
                 </q-td>
             </q-tr>
         </template>
     </q-table>
-
-
+    <q-btn @click="seguirComprando" label="Seguir comprando" class="boton-seguir-comprando">
+        <q-icon name="mdi-cart-plus" />
+    </q-btn>
 </template>
+
+
+
 <script setup>
+
+import { usuarioComposable } from '~/composables/usuarioComposable';
 import { ref, onMounted } from 'vue';
 import { getImagenURL } from '~/utils/imagenURL.js';
+
 
 definePageMeta({
     role: ['ROLE_USER']
@@ -49,17 +62,21 @@ definePageMeta({
 const quasar = useQuasar()
 
 
-const { verMiCarrito, eliminarProductoCarrito } = usuarioComposable();
+const { verMiCarrito, usuario } = usuarioComposable();
 
 
-onMounted(() => {
+onBeforeMount(() => {
     obtenerProductosDelCarrito()
+
 })
 
 // RUTAS
 const router = useRouter()
 
 const carrito = ref([]);
+const mostrarEliminarCarrito = ref(false);
+const precioTotal = ref(0)
+
 
 // FUNCION PARA OBTENER TODOS LOS PRODUCTOS DEL CARRITO
 const obtenerProductosDelCarrito = async () => {
@@ -67,6 +84,7 @@ const obtenerProductosDelCarrito = async () => {
         const response = await verMiCarrito();
         console.log("RESPONSE: ", response.data);
         carrito.value = response.data;
+        calcularPrecioTotal();
     } catch (error) {
         // Error de red u otro error
         console.error('Error al ver el carrito de compra', error);
@@ -75,6 +93,9 @@ const obtenerProductosDelCarrito = async () => {
 };
 
 // const cantidadAnadidaAlCarrito = ref(null)
+const calcularPrecioTotal = () => {
+    precioTotal.value = carrito.value.reduce((total, item) => total + item.precioProducto * item.cantidadAnadidaAlCarrito, 0);
+}
 
 // FUNCION PARA AÑADIR CANTIDAD DE PRODUCTOS AL CARRITO
 const anadirCantidadProducto = async (item) => {
@@ -88,6 +109,8 @@ const anadirCantidadProducto = async (item) => {
         if (response.data === 'La cantidad solicitada supera la cantidad disponible del producto') {
             mostrarAlertaError(' La cantidad solicitada supera la cantidad disponible del producto', quasar);
         }
+        calcularPrecioTotal();
+
     } catch (error) {
         // Error de red u otro error
         console.error('Error al ver el carrito de compra', error);
@@ -95,48 +118,39 @@ const anadirCantidadProducto = async (item) => {
     }
 };
 
-// console.log("_idCarrito", carrito.value.idCarrito);
 
-//FUNCION PARA ELIMINAR LOS PRODUCTOS DEL CARRITO
-const eliminarProducto = async (item) => {
-    try {
-        console.log('Carrito ID a eliminar:', item);
-        const response = await eliminarProductoCarrito(item);
-        console.log("RESPONSE: ", response.data);
-        if (response.data === 'Producto eliminado del carrito correctamente') {
-            mostrarAlertaExito('Producto eliminado del carrito correctamente', quasar);
-            setTimeout(() => {
-            refrescar();
-          }, 2000);
-
-        }
-    } catch (error) {
-        // Error de red u otro error
-        console.error('Error al ver el carrito de compras', error);
-        mostrarAlertaError('Error al ver el eliminar producto del carrito de compras', quasar);
+const eliminarProducto = () => {
+    if (!mostrarEliminarCarrito.value) {
+        mostrarEliminarCarrito.value = true;
     }
 };
+
+
 
 
 const regresar = () => {
     router.push({ path: '/usuario/vistaInicioUsuario' })
 };
 
-const refrescar = () => {
-    window.location.reload();
+const seguirComprando = () => {
+    router.push({ path: '/pedido/formularioDireccion' });
 };
 
 
 
-const procederAlPago = () => {
-
+const esNumero = (val) => {
+  if (!val || isNaN(val)) {
+    // return 'Por favor, introduce solo números.';
+    mostrarAlertaError('Por favor, introduce solo números', quasar);
+  }
+  return true;
 };
 
 </script>
 
 <style scoped>
 .tabla {
-    height: 55vh;
+    height: 50vh;
     width: 90%;
     background-color: #F5F5F5;
     font-family: Arial, sans-serif;
@@ -149,7 +163,7 @@ const procederAlPago = () => {
     .tabla {
         width: 90%;
         margin: 0 auto;
-        height: 50vh;
+        height: 45vh;
         font-size: 0.8em;
     }
 }
@@ -213,4 +227,30 @@ const procederAlPago = () => {
         padding: 3px 6px;
     }
 }
+
+
+.precio-total {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 1vh;
+    text-align: right;
+    margin-right: 5%;
+}
+
+
+.boton-seguir-comprando{
+    margin-top: 1%;
+    margin-left: 84.5%;
+    background-color: #FF6347;
+}
+
+@media only screen and (max-width: 600px) {
+    .boton-seguir-comprando {
+        font-size: 12px;
+        padding: 3px 6px;
+        margin-top: 2%;
+        margin-left: 55%;
+    }
+}
+
 </style>
