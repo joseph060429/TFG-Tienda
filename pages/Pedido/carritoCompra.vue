@@ -155,7 +155,7 @@ const esNumero = (val) => {
 
 <style scoped>
 .tabla {
-    height: 50vh;
+    height: 45vh;
     width: 90%;
     background-color: #F5F5F5;
     font-family: Arial, sans-serif;
@@ -254,7 +254,7 @@ const esNumero = (val) => {
         font-size: 12px;
         padding: 3px 6px;
         margin-top: 2%;
-        margin-left: 55%;
+        margin-left: 62%;
     }
 }
 
