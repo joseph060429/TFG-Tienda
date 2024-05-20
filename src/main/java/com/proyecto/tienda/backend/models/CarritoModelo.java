@@ -24,6 +24,8 @@ public class CarritoModelo {
     @Field("id_producto")
     private String idProducto;
 
+    private Double precioProducto;
+
     private int cantidadAnadidaAlCarrito;
 
 }

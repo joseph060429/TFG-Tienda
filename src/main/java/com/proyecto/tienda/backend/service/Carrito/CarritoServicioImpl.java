@@ -67,6 +67,9 @@ public class CarritoServicioImpl implements CarritoServicio {
             return ResponseEntity.badRequest().body("El producto ya está en el carrito");
         }
 
+        double nuevoPrecioTotal = cantidad * producto.getPrecioProducto();
+        producto.setPrecioProducto(nuevoPrecioTotal);
+
         // Creo una nueva entrada del carrito
         CarritoModelo carrito = CarritoModelo.builder()
                 .idUsuario(usuario.get_id())
@@ -76,6 +79,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                 // .marcaProducto(producto.getMarcaProducto())
                 // .precioProducto(producto.getPrecioProducto())
                 // .imagenProducto(producto.getImagenProducto())
+                .precioProducto(nuevoPrecioTotal)
                 .cantidadAnadidaAlCarrito(cantidad)
                 .build();
 
@@ -175,7 +179,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                             // Actualizo la cantidad añadida al carrito
                             item.setCantidadAnadidaAlCarrito(nuevaCantidad);
                             double nuevoPrecioTotal = nuevaCantidad * producto.getPrecioProducto();
-                            producto.setPrecioProducto(nuevoPrecioTotal);
+                            item.setPrecioProducto(nuevoPrecioTotal);
                             carritoRepositorio.save(item); // Guardo los cambios en el carrito
                         } else if (nuevaCantidad <= 0) {
                             // Si la cantidad solicitada es menor o igual a cero, devuelvo un ResponseEntity
@@ -191,7 +195,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 producto.get_id(),
                                 producto.getNombreProducto(),
                                 producto.getMarcaProducto(),
-                                producto.getPrecioProducto(),
+                                item.getPrecioProducto(),
                                 producto.getImagenProducto(),
                                 item.getIdUsuario(),
                                 item.get_id(),
