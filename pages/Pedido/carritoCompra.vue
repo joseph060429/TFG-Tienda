@@ -41,7 +41,7 @@
             </q-tr>
         </template>
     </q-table>
-    <q-btn @click="seguirComprando" label="Seguir comprando" class="boton-seguir-comprando">
+    <q-btn @click="seguirComprando" label="Comprar" class="boton-seguir-comprando">
         <q-icon name="mdi-cart-plus" />
     </q-btn>
 </template>
