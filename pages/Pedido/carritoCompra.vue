@@ -18,7 +18,7 @@
             <q-tr :props="props">
                 <q-td>{{ props.row.nombreProducto }}</q-td>
                 <q-td>{{ props.row.marcaProducto }}</q-td>
-                <q-td>{{ props.row.precioProducto * props.row.cantidadAnadidaAlCarrito }} €</q-td>
+                <q-td>{{ props.row.precioProducto}} €</q-td>
                 <q-td><q-img class="imagen" :src="getImagenURL(props.row.imagenProducto)" />
                 </q-td>
                 <q-td>
@@ -30,9 +30,6 @@
                         @blur="anadirCantidadProducto(props.row)"></q-input>
                 </q-td>
                 <q-td class="text-center">
-                    <!-- <q-btn @click="eliminarProducto(props.row.idCarrito)" class="boton-borrar">
-                        <q-icon name="mdi-delete" />
-                    </q-btn> -->
                     <eliminar-carrito :idCarrito="props.row.idCarrito" v-model="mostrarEliminarCarrito" />
                     <q-btn @click="eliminarProducto" class="boton-borrar">
                         <q-icon name="mdi-delete" />
@@ -67,7 +64,6 @@ const { verMiCarrito, usuario } = usuarioComposable();
 
 onBeforeMount(() => {
     obtenerProductosDelCarrito()
-
 })
 
 // RUTAS
@@ -75,7 +71,7 @@ const router = useRouter()
 
 const carrito = ref([]);
 const mostrarEliminarCarrito = ref(false);
-const precioTotal = ref(0)
+// const precioTotal = ref(0)
 
 
 // FUNCION PARA OBTENER TODOS LOS PRODUCTOS DEL CARRITO
@@ -84,7 +80,7 @@ const obtenerProductosDelCarrito = async () => {
         const response = await verMiCarrito();
         console.log("RESPONSE: ", response.data);
         carrito.value = response.data;
-        calcularPrecioTotal();
+        // calcularPrecioTotal();
     } catch (error) {
         // Error de red u otro error
         console.error('Error al ver el carrito de compra', error);
@@ -92,10 +88,19 @@ const obtenerProductosDelCarrito = async () => {
     }
 };
 
-// const cantidadAnadidaAlCarrito = ref(null)
+// FUNCION PARA QUE ME MUESTRE EL PRECIO TOTAL 
+const precioTotal = ref(0)
 const calcularPrecioTotal = () => {
-    precioTotal.value = carrito.value.reduce((total, item) => total + item.precioProducto * item.cantidadAnadidaAlCarrito, 0);
+    precioTotal.value = carrito.value.reduce((total, item) => total + item.precioProducto, 0);
 }
+
+
+watch(carrito, (x, oldValue) => {
+    console.log("Nuevo carrito:", x);
+    console.log("Precio total:", precioTotal.value);
+    calcularPrecioTotal();
+}, { deep: true });
+
 
 // FUNCION PARA AÑADIR CANTIDAD DE PRODUCTOS AL CARRITO
 const anadirCantidadProducto = async (item) => {
@@ -109,7 +114,7 @@ const anadirCantidadProducto = async (item) => {
         if (response.data === 'La cantidad solicitada supera la cantidad disponible del producto') {
             mostrarAlertaError(' La cantidad solicitada supera la cantidad disponible del producto', quasar);
         }
-        calcularPrecioTotal();
+        // calcularPrecioTotal();
 
     } catch (error) {
         // Error de red u otro error
