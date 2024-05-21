@@ -28,6 +28,6 @@ public class CarritoModelo {
 
     private int cantidadAnadidaAlCarrito;
 
-    // private Double totalCarrito;
+    private Double totalCarrito;
 
 }
