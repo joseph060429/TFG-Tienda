@@ -83,7 +83,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                 .idProducto(productoId)
                 .precioProducto(nuevoPrecioTotal)
                 .cantidadAnadidaAlCarrito(cantidad)
-                .totalCarrito(totalCarrito) // establecer el total del carrito
+                // .totalCarrito(totalCarrito)
                 .build();
     
         // Asignar un ID al carrito si no tiene uno
@@ -190,7 +190,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                             item.setPrecioProducto(nuevoPrecioTotalProducto);
 
                             precioTotalCarrito = calcularPrecioTotal(carrito);
-                            item.setTotalCarrito(precioTotalCarrito);
+                            // item.setTotalCarrito(precioTotalCarrito);
                             System.out.println("total carrito" + precioTotalCarrito);
                             carritoRepositorio.save(item); // Guardo los cambios en el carrito
                         } else if (nuevaCantidad <= 0) {
@@ -211,7 +211,7 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 producto.getImagenProducto(),
                                 item.getIdUsuario(),
                                 item.get_id(),
-                                item.getTotalCarrito(),
+                                // item.getTotalCarrito(),
                                 item.getCantidadAnadidaAlCarrito()
                                 );
     

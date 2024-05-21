@@ -20,7 +20,7 @@ public class ProductoCarrito {
     private String imagenProducto;
     private String idUsuario;
     private String idCarrito;
-    private Double totalCarrito;
+    // private Double totalCarrito;
 
     @NotNull(message = "La cantidad del producto no puede estar en blanco")
     @PositiveOrZero(message = "La cantidad del producto debe ser un número positivo o 0")
