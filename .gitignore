@@ -62,7 +62,7 @@ build/
 ### VS Code ###
 .vscode/
 
-## credenciales test test
+## credenciales test 
 credentialesFirebase/*.json
 
 credentialesFirebase/proyecto-ionic-tienda-firebase-adminsdk-vqt4q-51e502076b.json
