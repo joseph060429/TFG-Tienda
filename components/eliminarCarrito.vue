@@ -54,7 +54,6 @@ const eliminarProducto = async () => {
 };
 
 const eliminar = (id) => {
-
     let producto = usuario.value.carrito.find((obj) => (obj.idCarrito == id));
     console.log('ID a eliminar:', usuario.value.carrito.indexOf((obj) => (obj.idCarrito === id)), producto);
     usuario.value.carrito.splice(usuario.value.carrito.indexOf(producto), 1);

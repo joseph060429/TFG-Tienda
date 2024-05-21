@@ -37,7 +37,7 @@
                     </q-btn>
                 </q-td>
             </q-tr>
-            <!-- {{ props.row.totalCarrito }} -->
+             {{ props.row.totalCarrito }} 
         </template>
     </q-table>
     <q-btn @click="seguirComprando" label="Comprar" class="boton-seguir-comprando">
