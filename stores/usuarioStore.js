@@ -130,6 +130,10 @@ export const usuarioStore = defineStore({
       this.usuario.pedidos = [];
     },
 
+    limpiarCarrito() {
+      this.usuario.carrito = [];
+    },
+
 
     // STORE PARA ANADIR AL CARRITO
     async anadirAlCarrito(productoId, cantidad) {

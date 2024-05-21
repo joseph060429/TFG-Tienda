@@ -57,6 +57,10 @@ export const usuarioComposable = () => {
     store.limpiarPedidos();
   };
 
+  const limpiarCarrito = () => {
+    store.limpiarCarrito();
+  };
+
 
 
   // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
@@ -70,6 +74,7 @@ export const usuarioComposable = () => {
     anadirAlCarrito,
     verMiCarrito,
     eliminarProductoCarrito,
+    limpiarCarrito,
     reset
   };
 };

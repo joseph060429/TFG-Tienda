@@ -2,7 +2,7 @@
     <q-dialog v-model="mostrarFormularioActualizarProducto"> <q-card>
             <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
             <div class="q-pa-xs">
-                <div class="d-flex justify-center align-center" style="max-width: 60%; margin: auto;">
+                <div class="d-flex justify-center align-center" style="max-width: 80%; margin: auto;">
                     <h1 class="text-h4 q-mb-xs text-center q-mt-none"
                         style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
                         Actualizar Producto

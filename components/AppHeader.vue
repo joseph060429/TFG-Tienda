@@ -39,7 +39,7 @@ import { usuarioComposable } from '~/composables/usuarioComposable';
 import {productoAdminComposable} from '~/composables/productoAdminComposable'
 
 // Para limpiar los pedidos de la store cuando el usuario cierra sesion
-const { limpiarPedidos } = usuarioComposable();
+const { limpiarPedidos, limpiarCarrito } = usuarioComposable();
 const {limpiarProductosAdmin} = productoAdminComposable();
 
 // Variable para traerme las stores de autenticación
@@ -58,6 +58,7 @@ onMounted(() => {
   } else {
     isLogged = false
     limpiarPedidos()
+    limpiarCarrito()
   }
 })
 
@@ -99,6 +100,7 @@ const cerrarSesion = () => {
   authStore.loggedIn = false;
   authStore.$reset()
   limpiarPedidos()
+  limpiarCarrito()
   limpiarProductosAdmin()
   router.push({ path: '/' })
 }

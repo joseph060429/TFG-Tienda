@@ -1,9 +1,11 @@
 <template>
+    <eliminar-carrito :idCarrito="productoAEliminar" v-model="mostrarEliminarCarrito" />
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <h2 class="titulo">CARRITO DE COMPRAS</h2>
-    <div class="precio-total">PRECIO TOTAL: {{ precioTotal }} €</div>
-    <q-table class="tabla" flat bordered :rows="usuario.carrito" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
-        :virtual-scroll-sticky-size-start="48" :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]">
+    <!-- <div class="precio-total">PRECIO TOTAL: {{ precioTotal }} €</div> -->
+    <q-table class="tabla" flat bordered :rows="usuario.carrito" row-key="index" virtual-scroll
+        :virtual-scroll-item-size="48" :virtual-scroll-sticky-size-start="48" :pagination="{ rowsPerPage: 50 }"
+        :rows-per-page-options="[50]">
         <template v-slot:header="props">
             <q-tr :props="props">
                 <q-th key="nombreProducto">Producto</q-th>
@@ -18,7 +20,7 @@
             <q-tr :props="props">
                 <q-td>{{ props.row.nombreProducto }}</q-td>
                 <q-td>{{ props.row.marcaProducto }}</q-td>
-                <q-td>{{ props.row.precioProducto}} €</q-td>
+                <q-td>{{ props.row.precioProducto }} €</q-td>
                 <q-td><q-img class="imagen" :src="getImagenURL(props.row.imagenProducto)" />
                 </q-td>
                 <q-td>
@@ -26,16 +28,16 @@
                     Esto significa que cada vez que el usuario hace clic fuera del campo de entrada (es decir, el campo pierde el foco), se llamará a la función anadirCantidadProducto  -->
                     <q-input class="input-custom" v-model="props.row.cantidadAnadidaAlCarrito" type="text" min="1"
                         max="999" dense
-                        style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;" maxlength="3" :rules="[esNumero]"
-                        @blur="anadirCantidadProducto(props.row)"></q-input>
+                        style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;"
+                        maxlength="3" :rules="[esNumero]" @blur="anadirCantidadProducto(props.row)"></q-input>
                 </q-td>
                 <q-td class="text-center">
-                    <eliminar-carrito :idCarrito="props.row.idCarrito" v-model="mostrarEliminarCarrito" />
-                    <q-btn @click="eliminarProducto" class="boton-borrar">
+                    <q-btn @click="eliminarProducto(props.row.idCarrito)" class="boton-borrar">
                         <q-icon name="mdi-delete" />
                     </q-btn>
                 </q-td>
             </q-tr>
+            <!-- {{ props.row.totalCarrito }} -->
         </template>
     </q-table>
     <q-btn @click="seguirComprando" label="Comprar" class="boton-seguir-comprando">
@@ -58,6 +60,7 @@ definePageMeta({
 //USAR QUASAR
 const quasar = useQuasar()
 
+const productoAEliminar = ref(null)
 
 const { verMiCarrito, usuario } = usuarioComposable();
 
@@ -74,6 +77,9 @@ const mostrarEliminarCarrito = ref(false);
 // const precioTotal = ref(0)
 
 
+console.log("carrito", carrito);
+
+
 // FUNCION PARA OBTENER TODOS LOS PRODUCTOS DEL CARRITO
 const obtenerProductosDelCarrito = async () => {
     try {
@@ -87,20 +93,6 @@ const obtenerProductosDelCarrito = async () => {
         mostrarAlertaError('Error al ver el carrito de compra', quasar);
     }
 };
-
-// FUNCION PARA QUE ME MUESTRE EL PRECIO TOTAL 
-const precioTotal = ref(0)
-const calcularPrecioTotal = () => {
-    precioTotal.value = carrito.value.reduce((total, item) => total + item.precioProducto, 0);
-}
-
-
-watch(carrito, (x, oldValue) => {
-    console.log("Nuevo carrito:", x);
-    console.log("Precio total:", precioTotal.value);
-    calcularPrecioTotal();
-}, { deep: true });
-
 
 // FUNCION PARA AÑADIR CANTIDAD DE PRODUCTOS AL CARRITO
 const anadirCantidadProducto = async (item) => {
@@ -124,7 +116,8 @@ const anadirCantidadProducto = async (item) => {
 };
 
 
-const eliminarProducto = () => {
+const eliminarProducto = (id) => {
+    productoAEliminar.value = id
     if (!mostrarEliminarCarrito.value) {
         mostrarEliminarCarrito.value = true;
     }
@@ -144,11 +137,11 @@ const seguirComprando = () => {
 
 
 const esNumero = (val) => {
-  if (!val || isNaN(val)) {
-    // return 'Por favor, introduce solo números.';
-    mostrarAlertaError('Por favor, introduce solo números', quasar);
-  }
-  return true;
+    if (!val || isNaN(val)) {
+        // return 'Por favor, introduce solo números.';
+        mostrarAlertaError('Por favor, introduce solo números', quasar);
+    }
+    return true;
 };
 
 </script>
@@ -243,7 +236,7 @@ const esNumero = (val) => {
 }
 
 
-.boton-seguir-comprando{
+.boton-seguir-comprando {
     margin-top: 1%;
     margin-left: 84.5%;
     background-color: #FF6347;
@@ -257,5 +250,4 @@ const esNumero = (val) => {
         margin-left: 62%;
     }
 }
-
 </style>

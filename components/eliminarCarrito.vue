@@ -54,13 +54,13 @@ const eliminarProducto = async () => {
 };
 
 const eliminar = (id) => {
-  usuario.value.carrito.splice(usuario.value.carrito.indexOf(id), 1);
+
+    let producto = usuario.value.carrito.find((obj) => (obj.idCarrito == id));
+    console.log('ID a eliminar:', usuario.value.carrito.indexOf((obj) => (obj.idCarrito === id)), producto);
+    usuario.value.carrito.splice(usuario.value.carrito.indexOf(producto), 1);
 };
 
 
-const refrescar = () => {
-    window.location.reload();
-};
 
 
 
