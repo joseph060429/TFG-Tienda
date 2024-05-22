@@ -1,48 +1,56 @@
 <template>
-    <eliminar-carrito :idCarrito="productoAEliminar" v-model="mostrarEliminarCarrito" />
-    <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-    <h2 class="titulo">CARRITO DE COMPRAS</h2>
-    <!-- <div class="precio-total">PRECIO TOTAL: {{ precioTotal }} €</div> -->
-    <q-table class="tabla" flat bordered :rows="usuario.carrito" row-key="index" virtual-scroll
-        :virtual-scroll-item-size="48" :virtual-scroll-sticky-size-start="48" :pagination="{ rowsPerPage: 50 }"
-        :rows-per-page-options="[50]">
-        <template v-slot:header="props">
-            <q-tr :props="props">
-                <q-th key="nombreProducto">Producto</q-th>
-                <q-th key="marcaProducto">Marca</q-th>
-                <q-th key="precioProducto">Precio</q-th>
-                <q-th key="imagendProducto">Imagen</q-th>
-                <q-th key="cantidadProducto">Cantidad</q-th>
-                <q-th key="acciones">Aciones</q-th>
-            </q-tr>
-        </template>
-        <template v-slot:body="props">
-            <q-tr :props="props">
-                <q-td>{{ props.row.nombreProducto }}</q-td>
-                <q-td>{{ props.row.marcaProducto }}</q-td>
-                <q-td>{{ props.row.precioProducto }} €</q-td>
-                <q-td><q-img class="imagen" :src="getImagenURL(props.row.imagenProducto)" />
-                </q-td>
-                <q-td>
-                    <!-- El atributo @blur en Vue.js se utiliza para asociar un manejador de eventos que se ejecutará cuando el elemento pierde el foco,
+    <div>
+        <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+        <eliminar-carrito :idCarrito="productoAEliminar" v-model="mostrarEliminarCarrito" />
+        <h2 class="titulo">CARRITO DE COMPRAS</h2>
+        <div class="precio-total">PRECIO TOTAL: {{ precioTotal }} €</div>
+        <q-table class="tabla" flat bordered :rows="usuario.carrito" row-key="index" virtual-scroll
+            :virtual-scroll-item-size="48" :virtual-scroll-sticky-size-start="48" :pagination="{ rowsPerPage: 50 }"
+            :rows-per-page-options="[50]" hide-no-data>
+            <template v-slot:header="">
+                <q-tr v-if="!loading">
+                    <q-th>Producto</q-th>
+                    <q-th>Marca</q-th>
+                    <q-th>Precio</q-th>
+                    <q-th>Imagen</q-th>
+                    <q-th>Cantidad</q-th>
+                    <q-th>Aciones</q-th>
+                </q-tr>
+                <q-tr v-if="loading">
+                    <img src="../../assets/loading.gif"
+                        class="loading" />
+                </q-tr>
+
+            </template>
+            <template v-slot:body="props">
+
+                <q-tr :props="props">
+                    <q-td>{{ props.row.nombreProducto }}</q-td>
+                    <q-td>{{ props.row.marcaProducto }}</q-td>
+                    <q-td>{{ props.row.precioProducto }} €</q-td>
+                    <q-td><q-img class="imagen" :src="getImagenURL(props.row.imagenProducto)" />
+                    </q-td>
+                    <q-td>
+                        <!-- El atributo @blur en Vue.js se utiliza para asociar un manejador de eventos que se ejecutará cuando el elemento pierde el foco,
                     Esto significa que cada vez que el usuario hace clic fuera del campo de entrada (es decir, el campo pierde el foco), se llamará a la función anadirCantidadProducto  -->
-                    <q-input class="input-custom" v-model="props.row.cantidadAnadidaAlCarrito" type="text" min="1"
-                        max="999" dense
-                        style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;"
-                        maxlength="3" :rules="[esNumero]" @blur="anadirCantidadProducto(props.row)"></q-input>
-                </q-td>
-                <q-td class="text-center">
-                    <q-btn @click="eliminarProducto(props.row.idCarrito)" class="boton-borrar">
-                        <q-icon name="mdi-delete" />
-                    </q-btn>
-                </q-td>
-            </q-tr>
-             {{ props.row.totalCarrito }} 
-        </template>
-    </q-table>
-    <q-btn @click="seguirComprando" label="Comprar" class="boton-seguir-comprando">
-        <q-icon name="mdi-cart-plus" />
-    </q-btn>
+                        <q-input class="input-custom" v-model="props.row.cantidadAnadidaAlCarrito" type="text" min="1"
+                            max="999" dense
+                            style="width: 50px; height: 30px; font-size: 14px; text-align: center; border-radius: 5px;"
+                            maxlength="3" :rules="[esNumero]" @blur="anadirCantidadProducto(props.row)"></q-input>
+                    </q-td>
+                    <q-td class="text-center">
+                        <q-btn @click="eliminarProducto(props.row.idCarrito)" class="boton-borrar">
+                            <q-icon name="mdi-delete" />
+                        </q-btn>
+                    </q-td>
+                </q-tr>
+                <!-- {{ props.row.totalCarrito }}  -->
+            </template>
+        </q-table>
+        <q-btn @click="seguirComprando" label="Comprar" class="boton-seguir-comprando">
+            <q-icon name="mdi-cart-plus" />
+        </q-btn>
+    </div>
 </template>
 
 
@@ -64,6 +72,7 @@ const productoAEliminar = ref(null)
 
 const { verMiCarrito, usuario } = usuarioComposable();
 
+const loading = ref(true)
 
 onBeforeMount(() => {
     obtenerProductosDelCarrito()
@@ -72,21 +81,22 @@ onBeforeMount(() => {
 // RUTAS
 const router = useRouter()
 
-const carrito = ref([]);
 const mostrarEliminarCarrito = ref(false);
-// const precioTotal = ref(0)
 
 
-console.log("carrito", carrito);
-
+// FUNCION PARA QUE ME MUESTRE EL PRECIO TOTAL 
+const precioTotal = computed(() => {
+    console.log("usuario.value", usuario.value);
+    console.log("usuario.value.carrito", usuario.value.carrito);
+    return usuario.value.carrito.reduce((total, item) => total += item.precioProducto, 0);
+})
 
 // FUNCION PARA OBTENER TODOS LOS PRODUCTOS DEL CARRITO
 const obtenerProductosDelCarrito = async () => {
     try {
         const response = await verMiCarrito();
         console.log("RESPONSE: ", response.data);
-        carrito.value = response.data;
-        // calcularPrecioTotal();
+        loading.value = false
     } catch (error) {
         // Error de red u otro error
         console.error('Error al ver el carrito de compra', error);
@@ -106,7 +116,6 @@ const anadirCantidadProducto = async (item) => {
         if (response.data === 'La cantidad solicitada supera la cantidad disponible del producto') {
             mostrarAlertaError(' La cantidad solicitada supera la cantidad disponible del producto', quasar);
         }
-        // calcularPrecioTotal();
 
     } catch (error) {
         // Error de red u otro error
@@ -122,9 +131,6 @@ const eliminarProducto = (id) => {
         mostrarEliminarCarrito.value = true;
     }
 };
-
-
-
 
 const regresar = () => {
     router.push({ path: '/usuario/vistaInicioUsuario' })
@@ -249,5 +255,16 @@ const esNumero = (val) => {
         margin-top: 2%;
         margin-left: 62%;
     }
+}
+
+
+.loading {
+    display:flex;
+    margin: auto;
+    width: 30vh;
+    padding-top: 2em;
+    justify-content: center; 
+    align-items: center; 
+    height: auto;
 }
 </style>

@@ -18,7 +18,7 @@
                     <q-icon name="mdi-package-variant-closed" />
                 </q-btn>
             </div>
-            <!-- Botón para ver el historial de los pedidos -->
+            <!-- Botón para ver todos los usuarios -->
             <div class="usuarios">
                 <!-- Botón para ver pedidos -->
                 <q-btn @click="perfilesDeUsuario" class="boton-usuarios" label="Usuarios">

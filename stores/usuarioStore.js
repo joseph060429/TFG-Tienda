@@ -10,6 +10,7 @@ export const usuarioStore = defineStore({
     usuario: {
       pedidos: [],
       carrito: [],
+      // datosUsuario:[]
     },
     loggedIn: true,
   }),
@@ -152,7 +153,7 @@ export const usuarioStore = defineStore({
           }
         );
         // this.usuario.carrito = [];
-        this.usuario.carrito = response.data;
+        // this.usuario.carrito = response.data;
         return response;
       } catch (error) {
         console.log("Error en AÑADIR AL CARRITO STORE ==> ", error);

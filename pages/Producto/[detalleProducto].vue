@@ -126,15 +126,14 @@ const agregarAlCarrito = async () => {
 
   const response = await anadirAlCarrito(_id, cantidad.value);
 
-  if (response.data === 'Producto agregado al carrito') {
+  console.log("response", response);
+
+  if (response.status === 200) {
     mostrarAlertaExito('Producto agregado al carrito', quasar);
   }
-  if (response.data === 'El producto ya está en el carrito') {
+  if (response.status === 400) {
     mostrarAlertaError('El producto ya está en el carrito', quasar);
   }
-
-  console.log("RESPONSE", response);
-
 
 }
 
@@ -148,13 +147,11 @@ const agregarAlCarrito = async () => {
   height: auto;
   margin: 0 auto;
   border: 100px;
-  /* Centra la imagen horizontalmente */
 }
 
 
 .image-section {
   padding-bottom: 15%;
-  /* Ajusta el padding según sea necesario */
 }
 
 .centered-image {

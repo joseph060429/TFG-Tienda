@@ -56,24 +56,11 @@ const eliminarUsuarioAdmin = async (email) => {
 };
 
 // FUNCION PARA ELIMINARLO DE LA VISTA TAMBIEN
-// const eliminar = (email) => {
-//   let usuario = usuarios.value.email.find((obj) => (obj.email == email));
-//   console.log('EMAIL A ELIMINAR de eliminar:', usuarios.value.email.indexOf((obj) => (obj.email === email)), usuario);
-
-//   usuarios.value.email.splice(usuario.value.email.indexOf(usuario), 1);
-// };
-
-
-
-
-// const eliminar = (id) => {
-
-// let producto = usuario.value.carrito.find((obj) => (obj.idCarrito == id));
-// console.log('ID a eliminar:', usuario.value.carrito.indexOf((obj) => (obj.idCarrito === id)), producto);
-// usuario.value.carrito.splice(usuario.value.carrito.indexOf(producto), 1);
-// };
-
-
+const eliminar = (email) => {
+  let usuario = usuarios.value.find((obj) => (obj.email == email));
+  console.log('EMAIL A ELIMINAR de eliminar:', usuarios.value.indexOf(usuario), usuario);
+  usuarios.value.splice(usuarios.value.indexOf(usuario), 1);
+};
 
 </script>
 
