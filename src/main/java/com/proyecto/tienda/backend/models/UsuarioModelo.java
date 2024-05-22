@@ -127,11 +127,12 @@ public class UsuarioModelo {
         direccionCompleta.append(direccion.trim()).append(", ");
         direccionCompleta.append("Nº ").append(numero.trim()).append(", ");
 
-        if (puerta != null && !puerta.isEmpty()) {
-            direccionCompleta.append("Puerta ").append(puerta.trim()).append(", ");
-        }
         if (piso != null && !piso.isEmpty()) {
             direccionCompleta.append("Piso ").append(piso.trim()).append(", ");
+        }
+
+        if (puerta != null && !puerta.isEmpty()) {
+            direccionCompleta.append("Puerta ").append(puerta.trim()).append(", ");
         }
 
         direccionCompleta.append(codigoPostal.trim()).append(", ");
@@ -188,12 +189,13 @@ public class UsuarioModelo {
         direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
         direccionCompletaFacturacion.append(direccionDeFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append("Nº ").append(numeroDeFacturacion.trim()).append(", ");
+
+        if (pisoDeFacturacion != null && !pisoDeFacturacion.isEmpty()) {
+            direccionCompletaFacturacion.append("Piso ").append(pisoDeFacturacion.trim()).append(", ");
+        }
         
         if (puertaDeFacturacion != null && !puertaDeFacturacion.isEmpty()) {
             direccionCompletaFacturacion.append("Puerta ").append(puertaDeFacturacion.trim()).append(", ");
-        }
-        if (pisoDeFacturacion != null && !pisoDeFacturacion.isEmpty()) {
-            direccionCompletaFacturacion.append("Piso ").append(pisoDeFacturacion.trim()).append(", ");
         }
 
         direccionCompletaFacturacion.append(codigoPostalDeFacturacion.trim()).append(", ");
@@ -248,12 +250,14 @@ public class UsuarioModelo {
         direccionCompletaFacturacion.append("Cif/Nif: ").append(cifONifFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
         direccionCompletaFacturacion.append(direccionDeFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append(numeroDeFacturacion.trim()).append(", ");
-        if (puertaDeFacturacion != null && !puertaDeFacturacion.isEmpty()) {
-            direccionCompletaFacturacion.append("Puerta: ").append(puertaDeFacturacion.trim()).append(", ");
-        }
+        direccionCompletaFacturacion.append("Nº ").append(numeroDeFacturacion.trim()).append(", ");
+
         if (pisoDeFacturacion != null && !pisoDeFacturacion.isEmpty()) {
             direccionCompletaFacturacion.append("Piso: ").append(pisoDeFacturacion.trim()).append(", ");
+        }
+
+        if (puertaDeFacturacion != null && !puertaDeFacturacion.isEmpty()) {
+            direccionCompletaFacturacion.append("Puerta: ").append(puertaDeFacturacion.trim()).append(", ");
         }
         direccionCompletaFacturacion.append(codigoPostalDeFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append(provinciaDeFacturacion.trim()).append(", ");
