@@ -198,9 +198,19 @@ const envioFormulario = () => {
 
 .container {
     max-width: 90%;
-    // background-color: aqua;
     margin: auto;
     text-align: center;
-    // padding: 20px;
 }
+
+@media (max-width: 600px) {
+    .scrollable-container {
+        max-height: 65vh; /* Ajusta este valor según tus necesidades */
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0 1em; /* Añade un poco de padding si es necesario */
+    }
+}
+
 </style>

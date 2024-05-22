@@ -1,5 +1,7 @@
 <template>
+    <!-- <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" /> -->
     <div class="container">
+        <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
         <div v-if="!loading">
             <div>
                 <div v-if="usuario.direccionesEnvioFacturacion.direccionesEnvio.length > 0">
@@ -70,6 +72,11 @@
 <script setup>
 import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { usuarioComposable } from '~/composables/usuarioComposable';
+import { useRouter } from 'vue-router';
+
+
+
+const router = useRouter()
 
 
 
@@ -111,6 +118,10 @@ const anadirDireccionEnvio = () => {
     }
 };
 
+const regresar = () => {
+    router.push({ path: '/pedido/carritoCompra' })
+};
+
 
 
 
@@ -118,8 +129,14 @@ const anadirDireccionEnvio = () => {
 
 <style lang="scss" scoped>
 .container {
-    max-height: 79vh;
+    max-height: 70vh;
     overflow: auto;
+    // background-color: #3A7;
+}
+@media (max-width: 600px) {
+    .container {
+        max-height: 70vh;
+    }
 }
 
 .no-address-card {
@@ -143,17 +160,33 @@ const anadirDireccionEnvio = () => {
     font-weight: bold;
     color: #005a8b;
     margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    // margin-top: 0.5em;
 }
 
 .boton-anadir-direccion-envio {
-  background-color: #5A9; 
-  color: white; 
-  margin-top: 0; 
-  transition: background-color 0.3s, box-shadow 0.3s; 
+    background-color: #5A9;
+    color: white;
+    margin-top: 0;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .boton-anadir-direccion-envio:hover {
-  background-color: #3A7; /* Slightly darker color on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+    background-color: #3A7;
+    /* Slightly darker color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Shadow effect on hover */
+}
+
+.custom-regresar-button {
+    margin-right: 80em;
+    margin-top: 1em;
+}
+
+@media (max-width: 600px) {
+    .custom-regresar-button {
+        margin-right: 20em; /* Ajusta este valor según tus necesidades */
+        margin-top: 0.5em;  /* Ajusta este valor según tus necesidades */
+    }
 }
 </style>
