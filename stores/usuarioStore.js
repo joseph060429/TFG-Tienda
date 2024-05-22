@@ -10,7 +10,7 @@ export const usuarioStore = defineStore({
     usuario: {
       pedidos: [],
       carrito: [],
-      // datosUsuario:[]
+      direccionesEnvioFacturacion:[],
     },
     loggedIn: true,
   }),
@@ -211,6 +211,57 @@ export const usuarioStore = defineStore({
       return error.response;
     }
 },
+
+// STORE PARA TRAERME LAS DIRECCIONES DEL USUARIO
+
+async eliminarProductoCarrito(_idCarrito) {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await useAxiosInstance().get(
+      "/carrito/eliminarDelCarrito",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          _idCarrito: _idCarrito
+        },
+      }
+    );
+    // this.usuario.carrito = response.data;
+    // console.log("carrito de eliminar store", this.usuario.carrito);
+    return response;
+  } catch (error) {
+    console.log("Error en ELIMINAR CARRITO STORE ==> ", error);
+    return error.response;
+  }
+},
+
+// STORE PARA TRAERME LAS DIRECCIONES DEL USUARIO
+async direccionesUsuario() {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await useAxiosInstance().get(
+      "/usuarios/direccionesUsuarios",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    this.usuario.direccionesEnvioFacturacion = response.data;
+    return response;
+  } catch (error) {
+    console.log("Error en VER DIRECCIONES DE USUARIO STORE ==> ", error);
+    return error.response;
+  }
+},
+
+
+
+
+
+
 
 
 

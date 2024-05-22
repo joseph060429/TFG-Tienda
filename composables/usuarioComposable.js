@@ -47,10 +47,15 @@ export const usuarioComposable = () => {
     return await store.verMiCarrito(productoId, nuevaCantidad);
   };
 
-    // COMPOSABLE PARA QUE EL USUARIO VEA SU CARRITO
-    const eliminarProductoCarrito = async (_idCarrito) => {
-      return await store.eliminarProductoCarrito(_idCarrito);
-    };
+  // COMPOSABLE PARA QUE EL USUARIO VEA SU CARRITO
+  const eliminarProductoCarrito = async (_idCarrito) => {
+    return await store.eliminarProductoCarrito(_idCarrito);
+  };
+
+  //COMPOSABLE PARA TRAER LAS DIRECCIONES DEL USUARIO
+  const direccionesUsuario = async () => {
+    return await store.direccionesUsuario();
+  };
 
   // COMPOSABLE PARA LIMPIAR LOS PEDIDOS DEL USUARIO DE LA STORE
   const limpiarPedidos = () => {
@@ -60,6 +65,10 @@ export const usuarioComposable = () => {
   const limpiarCarrito = () => {
     store.limpiarCarrito();
   };
+
+
+
+
 
 
 
@@ -75,6 +84,7 @@ export const usuarioComposable = () => {
     verMiCarrito,
     eliminarProductoCarrito,
     limpiarCarrito,
-    reset
+    reset,
+    direccionesUsuario
   };
 };
