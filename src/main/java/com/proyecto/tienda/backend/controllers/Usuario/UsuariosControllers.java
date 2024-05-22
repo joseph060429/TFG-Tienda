@@ -1,6 +1,7 @@
 package com.proyecto.tienda.backend.controllers.Usuario;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
@@ -33,6 +34,11 @@ public class UsuariosControllers {
             @RequestHeader("Authorization") String token) {
 
         return usuarioServicio.actualizarUsuario(actualizarUsuarioDTO, token, jwtUtils);
+    }
+
+    @GetMapping("/direccionesUsuarios")
+    public ResponseEntity<?> obtenerDirecciones(@RequestHeader("Authorization") String token) {
+        return usuarioServicio.obtenerDireccionesEnvioFacturacion(token, jwtUtils);
     }
 
 }

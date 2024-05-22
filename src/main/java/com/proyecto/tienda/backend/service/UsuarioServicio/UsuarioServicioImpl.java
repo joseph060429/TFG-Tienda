@@ -1,15 +1,24 @@
 package com.proyecto.tienda.backend.service.UsuarioServicio;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
+import com.proyecto.tienda.backend.DTO.DTOCarrito.ProductoCarrito;
 import com.proyecto.tienda.backend.DTO.DTOUsuario.UsuarioActualizacionDTO;
 import com.proyecto.tienda.backend.models.*;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioServicioImpl implements UsuarioServicio {
@@ -107,5 +116,48 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+
+    @Override
+    public ResponseEntity<?> obtenerDireccionesEnvioFacturacion(String token, JwtUtils jwtUtils) {
+        try {
+            // Elimino el prefijo "Bearer " del token JWT.
+            String jwtToken = token.replace("Bearer ", "");
+
+            // Extraigo el email del token usando JwtUtils.
+            String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
+
+            // Busco al usuario en el repositorio por el email extraído.
+            Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
+
+            // Verifico si el usuario existe.
+            if (usuarioOptional.isPresent()) {
+                // Obtengo el usuario de la opción.
+                UsuarioModelo usuario = usuarioOptional.get();
+
+                 // Obtengo las direcciones de envío y facturación del usuario.
+                List<String> direccionesEnvio = usuario.getDireccionesEnvio();
+                List<String> direccionesFacturacion = usuario.getDirecionesFacturacion();
+
+
+
+                // Creao una respuesta que contenga ambas listas de direcciones.
+                Map<String, Object> response = new HashMap<>();
+                response.put("direccionesEnvio", direccionesEnvio);
+                response.put("direccionesFacturacion", direccionesFacturacion);
+
+                // Devuelvo la respuesta con las direcciones obtenidas.
+                return ResponseEntity.ok(response);
+            } else {
+                // Si el usuario no se encuentra, devolver una respuesta de error.
+                return ResponseEntity.status(404).body("Usuario no encontrado");
+            }
+        } catch (Exception e) {
+            // Manejar cualquier excepción y devolver una respuesta de error.
+            return ResponseEntity.status(401).body("Token inválido o expirado");
+        }
+    }
+
+
+ 
 
 }

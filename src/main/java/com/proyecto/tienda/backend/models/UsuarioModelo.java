@@ -124,17 +124,18 @@ public class UsuarioModelo {
         }
 
         StringBuilder direccionCompleta = new StringBuilder();
-        direccionCompleta.append("Código Postal: ").append(codigoPostal.trim()).append(", ");
-        direccionCompleta.append("Dirección: ").append(direccion.trim()).append(", ");
-        direccionCompleta.append("Provincia: ").append(provincia.trim()).append(", ");
-        direccionCompleta.append("Número: ").append(numero.trim()).append(", ");
+        direccionCompleta.append(direccion.trim()).append(", ");
+        direccionCompleta.append("Nº ").append(numero.trim()).append(", ");
 
         if (puerta != null && !puerta.isEmpty()) {
-            direccionCompleta.append("Puerta: ").append(puerta.trim()).append(", ");
+            direccionCompleta.append("Puerta ").append(puerta.trim()).append(", ");
         }
         if (piso != null && !piso.isEmpty()) {
-            direccionCompleta.append("Piso: ").append(piso.trim()).append(", ");
+            direccionCompleta.append("Piso ").append(piso.trim()).append(", ");
         }
+
+        direccionCompleta.append(codigoPostal.trim()).append(", ");
+        direccionCompleta.append(provincia.trim()).append(", ");
 
         // Eliminar la coma al final
         if (direccionCompleta.length() > 0) {
@@ -185,17 +186,18 @@ public class UsuarioModelo {
         direccionCompletaFacturacion.append("Nombre: ").append(nombreFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append("Apellido: ").append(apellidoFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
-        direccionCompletaFacturacion.append("Direccion: ").append(direccionDeFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Codigo Postal: ").append(codigoPostalDeFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Provincia: ").append(provinciaDeFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Número: ").append(numeroDeFacturacion.trim()).append(", ");
-
+        direccionCompletaFacturacion.append(direccionDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Nº ").append(numeroDeFacturacion.trim()).append(", ");
+        
         if (puertaDeFacturacion != null && !puertaDeFacturacion.isEmpty()) {
-            direccionCompletaFacturacion.append("Puerta: ").append(puertaDeFacturacion.trim()).append(", ");
+            direccionCompletaFacturacion.append("Puerta ").append(puertaDeFacturacion.trim()).append(", ");
         }
         if (pisoDeFacturacion != null && !pisoDeFacturacion.isEmpty()) {
-            direccionCompletaFacturacion.append("Piso: ").append(pisoDeFacturacion.trim()).append(", ");
+            direccionCompletaFacturacion.append("Piso ").append(pisoDeFacturacion.trim()).append(", ");
         }
+
+        direccionCompletaFacturacion.append(codigoPostalDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append(provinciaDeFacturacion.trim()).append(", ");
 
         // Elimino la coma al final
         if (direccionCompletaFacturacion.length() > 0) {
@@ -245,17 +247,16 @@ public class UsuarioModelo {
         direccionCompletaFacturacion.append("Facturacion Empresa/Autonomo: ");
         direccionCompletaFacturacion.append("Cif/Nif: ").append(cifONifFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
-        direccionCompletaFacturacion.append("Direccion: ").append(direccionDeFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Codigo Postal: ").append(codigoPostalDeFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Provincia: ").append(provinciaDeFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Número: ").append(numeroDeFacturacion.trim()).append(", ");
-
+        direccionCompletaFacturacion.append(direccionDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append(numeroDeFacturacion.trim()).append(", ");
         if (puertaDeFacturacion != null && !puertaDeFacturacion.isEmpty()) {
             direccionCompletaFacturacion.append("Puerta: ").append(puertaDeFacturacion.trim()).append(", ");
         }
         if (pisoDeFacturacion != null && !pisoDeFacturacion.isEmpty()) {
             direccionCompletaFacturacion.append("Piso: ").append(pisoDeFacturacion.trim()).append(", ");
         }
+        direccionCompletaFacturacion.append(codigoPostalDeFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append(provinciaDeFacturacion.trim()).append(", ");
 
         // Elimino la coma al final
         if (direccionCompletaFacturacion.length() > 0) {

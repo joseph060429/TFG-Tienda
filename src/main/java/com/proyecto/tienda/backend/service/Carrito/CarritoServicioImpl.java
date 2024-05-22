@@ -31,72 +31,61 @@ public class CarritoServicioImpl implements CarritoServicio {
     private ProductoRepositorio productoRepositorio;
 
     // METODO PARA AGREGAR UN PRODUCTO AL CARRITO
-    @Override
-    public ResponseEntity<String> agregarProductoAlCarrito(String token, JwtUtils jwtUtils, String productoId,
-            int cantidad) {
-        String jwtToken = token.replace("Bearer ", "");
-        String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
-    
-        Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
-    
-        if (!usuarioOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no encontrado");
-        }
-    
-        UsuarioModelo usuario = usuarioOptional.get();
-    
-        // Buscar el producto por su ID
-        Optional<ProductoModelo> productoOptional = productoRepositorio.findById(productoId);
-        // Si no existe el ID del producto devuelvo un mensaje de producto no encontrado
-        if (!productoOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
-        }
-    
-        ProductoModelo producto = productoOptional.get();
-    
-        // Verificar que la cantidad solicitada sea menor o igual a la disponible
-        if (cantidad > producto.getCantidadProducto()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cantidad solicitada mayor que la disponible");
-        }
-    
-        // Busco si el producto ya está en el carrito de ese usuario para no volver a
-        // meterlo
-        Optional<CarritoModelo> carritoOptional = carritoRepositorio.findByIdUsuarioAndIdProducto(usuario.get_id(),
-                productoId);
-        if (carritoOptional.isPresent()) {
-            return ResponseEntity.badRequest().body("El producto ya está en el carrito");
-        }
-    
-        // Calcular el precio total del producto basado en la cantidad
-        double nuevoPrecioTotal = cantidad * producto.getPrecioProducto();
-    
-        // Obtener todos los productos del carrito del usuario
-        List<CarritoModelo> productosCarrito = carritoRepositorio.findByIdUsuario(usuario.get_id());
-    
-        // Calcular el total del carrito sumando los precios de todos los productos en el carrito
-        double totalCarrito = productosCarrito.stream().mapToDouble(CarritoModelo::getPrecioProducto).sum();
-        totalCarrito += nuevoPrecioTotal;
-    
-        // Crear una nueva entrada del carrito
-        CarritoModelo carrito = CarritoModelo.builder()
-                .idUsuario(usuario.get_id())
-                .idProducto(productoId)
-                .precioProducto(nuevoPrecioTotal)
-                .cantidadAnadidaAlCarrito(cantidad)
-                // .totalCarrito(totalCarrito)
-                .build();
-    
-        // Asignar un ID al carrito si no tiene uno
-        if (carrito.get_id() == null) {
-            carrito.set_id(UUID.randomUUID().toString());
-        }
-    
-        // Guardar el carrito en la base de datos
-        carritoRepositorio.save(carrito);
-    
-        return ResponseEntity.ok("Producto agregado al carrito");
+   @Override
+public ResponseEntity<CarritoModelo> agregarProductoAlCarrito(String token, JwtUtils jwtUtils, String productoId, int cantidad) {
+    String jwtToken = token.replace("Bearer ", "");
+    String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
+
+    Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
+
+    if (!usuarioOptional.isPresent()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Usuario no encontrado
     }
-    
+
+    UsuarioModelo usuario = usuarioOptional.get();
+
+    // Buscar el producto por su ID
+    Optional<ProductoModelo> productoOptional = productoRepositorio.findById(productoId);
+    // Si no existe el ID del producto, devuelvo un mensaje de producto no encontrado
+    if (!productoOptional.isPresent()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Producto no encontrado
+    }
+
+    ProductoModelo producto = productoOptional.get();
+
+    // Verificar que la cantidad solicitada sea menor o igual a la disponible
+    if (cantidad > producto.getCantidadProducto()) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Cantidad solicitada mayor que la disponible
+    }
+
+    // Buscar si el producto ya está en el carrito de ese usuario para no volver a agregarlo
+    Optional<CarritoModelo> carritoOptional = carritoRepositorio.findByIdUsuarioAndIdProducto(usuario.get_id(), productoId);
+    if (carritoOptional.isPresent()) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // El producto ya está en el carrito
+    }
+
+    // Calcular el precio total del producto basado en la cantidad
+    double nuevoPrecioTotal = cantidad * producto.getPrecioProducto();
+
+    // Crear una nueva entrada del carrito
+    CarritoModelo carrito = CarritoModelo.builder()
+            .idUsuario(usuario.get_id())
+            .idProducto(productoId)
+            .precioProducto(nuevoPrecioTotal)
+            .cantidadAnadidaAlCarrito(cantidad)
+            .build();
+
+    // Asignar un ID al carrito si no tiene uno
+    if (carrito.get_id() == null) {
+        carrito.set_id(UUID.randomUUID().toString());
+    }
+
+    // Guardar el carrito en la base de datos
+    carritoRepositorio.save(carrito);
+
+    return ResponseEntity.ok().body(carrito);
+}
+
 
     // METODO PARA ELIMINAR PRODUCTOS DEL CARRITO
     @Override
@@ -182,16 +171,16 @@ public class CarritoServicioImpl implements CarritoServicio {
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                         .body("La cantidad solicitada supera la cantidad disponible del producto");
                             }
-                            double precioTotalCarrito = calcularPrecioTotal(carrito);
+                            // double precioTotalCarrito = calcularPrecioTotal(carrito);
 
                             // Actualizo la cantidad añadida al carrito
                             item.setCantidadAnadidaAlCarrito(nuevaCantidad);
                             double nuevoPrecioTotalProducto = nuevaCantidad * producto.getPrecioProducto();
                             item.setPrecioProducto(nuevoPrecioTotalProducto);
 
-                            precioTotalCarrito = calcularPrecioTotal(carrito);
+                            // precioTotalCarrito = calcularPrecioTotal(carrito);
                             // item.setTotalCarrito(precioTotalCarrito);
-                            System.out.println("total carrito" + precioTotalCarrito);
+                            // System.out.println("total carrito" + precioTotalCarrito);
                             carritoRepositorio.save(item); // Guardo los cambios en el carrito
                         } else if (nuevaCantidad <= 0) {
                             // Si la cantidad solicitada es menor o igual a cero, devuelvo un ResponseEntity

@@ -31,7 +31,7 @@ public class CarritoController {
 
     // CONTROLADOR PARA AÑADIR PRODUCTOS AL CARRITO
     @PostMapping("/anadirAlCarrito")
-    public ResponseEntity<String> agregarProductoAlCarrito(
+    public ResponseEntity<?> agregarProductoAlCarrito(
             @RequestHeader("Authorization") String token,
             @RequestParam String productoId,
             @RequestParam int cantidad) {
