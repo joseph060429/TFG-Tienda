@@ -7,8 +7,6 @@ import { ref, defineProps, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 
 
-
-
 definePageMeta({
     role: ['ROLE_USER']
 });
@@ -24,9 +22,7 @@ definePageMeta({
 
 .container {
     max-width: 80%;
-    // background-color: aqua;
     margin: auto;
     text-align: center;
-    // padding: 20px;
 }
 </style>

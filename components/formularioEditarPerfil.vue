@@ -188,25 +188,6 @@ try {
 
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // FUNCION PARA ENVIAR EL FORMULARIO
 const actualizarDatosUsuario = async () => {
 
