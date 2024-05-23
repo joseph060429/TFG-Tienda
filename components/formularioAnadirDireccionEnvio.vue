@@ -6,11 +6,11 @@
                     <q-form @submit.prevent="envioFormulario" @reset="borrar">
                         <h3>Direccion de envío </h3>
                         <!-- CAMPO TIPO PAGO PAYPAL readonly class="readonly" para que no se pueda editar-->
-                        <q-input v-model="datosEnvio.tipoPago" label="Tipo de Pago*" readonly class="readonly">
+                        <!-- <q-input v-model="datosEnvio.tipoPago" label="Tipo de Pago*" readonly class="readonly">
                             <template v-slot:prepend>
                                 <q-icon name="mdi-credit-card" />
                             </template>
-                        </q-input>
+                        </q-input> -->
                         <!--CAMPO  DIRECCION-->
                         <q-input v-model="datosEnvio.direccion" label="Dirección" dense lazy-rules :rules="[
                             val => val && val.length > 0 || 'Por favor, introduce algo',
@@ -79,7 +79,7 @@
                         </q-input>
 
                         <!--CAMPO numero de telefono-->
-                        <q-input v-model="datosEnvio.numTelefono" label="Número de teléfono" dense minlength="9"
+                        <!-- <q-input v-model="datosEnvio.numTelefono" label="Número de teléfono" dense minlength="9"
                             maxlength="9" :rules="[
                                 esNumero,
                                 val => val && val.trim().length > 0 || 'El número de teléfono no puede estar en blanco',
@@ -88,7 +88,7 @@
                             <template v-slot:prepend>
                                 <q-icon name="mdi-phone" />
                             </template>
-                        </q-input>
+                        </q-input> -->
 
                         <!-- <q-select v-model="tipo_facturacion" :options="opcionesFacturacion" dense outlined />
 
@@ -124,8 +124,9 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onBeforeMount } from 'vue';
+import { ref, defineProps, onBeforeMount, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+import { usuarioComposable } from '~/composables/usuarioComposable';
 
 // const tipo_facturacion = ref('');
 
@@ -135,10 +136,13 @@ import { useRouter } from 'vue-router';
 //     { label: 'Empresa-Autónomo', value: 'empresa_autonomo' },
 // ];
 
+const { anadirDireccionEnvio, usuario } = usuarioComposable();
+
+const quasar = useQuasar()
 const router = useRouter()
 
 const datosEnvio = reactive({
-    tipoPago: 'PayPal',
+    // tipoPago: 'PayPal',
     direccion: '',
     numero: '',
     piso: '',
@@ -155,7 +159,7 @@ const borrar = () => {
     datosEnvio.puerta = '',
     datosEnvio.codigoPostal = ''
     datosEnvio.provincia = ''
-    datosEnvio.numTelefono = ''
+    // datosEnvio.numTelefono = ''
 };
 
 
@@ -163,8 +167,8 @@ const borrar = () => {
 const props = defineProps({
     formularioAñadirDireccionEnvio: Boolean,
 })
-const mostrarFormularioAnadirDirecionEnvio = ref(props.formularioAñadirDireccionEnvio)
 
+const emit = defineEmits(['pokemon'])
 const esNumero = (val) => {
     if (!val || isNaN(val)) {
         return 'Por favor, introduce solo números.';
@@ -180,13 +184,23 @@ const esNumeroCampoNoObligatorio = (val) => {
 };
 
 
-const envioFormulario = () => {
-    console.log("formulario enviado");
-};
+const envioFormulario = async () => {
+    try {
+      const response = await anadirDireccionEnvio(datosEnvio);
+    if(response.data === 'Dirección añadida exitosamente'){
+        mostrarAlertaExito('Dirección anadida exitosamente', quasar);
+        emit('pokemon', false)
+        usuario.value.direccionesEnvioFacturacion.direccionesEnvio.push(datosEnvio)
 
-// const regresar = () => {
-//     router.push({ path: '/pedido/carritoCompra'})
-// };
+    }
+      console.log("response " , response);
+    
+    } catch (error) {
+      // Error de red o algo parecido
+      console.error('Error al crear el usuario:', error);
+      mostrarAlertaError('Error al crear el usuario intentelo más tarde', quasar);
+    }
+  }
 
 </script>
 

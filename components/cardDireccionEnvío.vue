@@ -6,7 +6,7 @@
             <div>
                 <div v-if="usuario.direccionesEnvioFacturacion.direccionesEnvio.length > 0">
                     <h6 class="title">Direccion/es de envío</h6>
-                    <formulario-anadir-direccion-envio v-model="mostrarFormularioAnadirDirecionEnvio" />
+                    <formulario-anadir-direccion-envio @pokemon="test($event)" v-model="mostrarFormularioAnadirDirecionEnvio" />
                     <q-btn @click="anadirDireccionEnvio" class="boton-anadir-direccion-envio"
                         label="Añadir nueva dirección de envío">
                         <q-icon name="mdi-map-marker" />
@@ -37,7 +37,7 @@
             <div>
                 <div v-if="usuario.direccionesEnvioFacturacion.direccionesFacturacion.length > 0">
                     <h6 class="title">Direccion/es Facturación</h6>
-                    <formulario-anadir-direccion-envio v-model="mostrarFormularioAnadirDirecionEnvio" />
+                    <!-- <formulario-anadir-direccion-envio v-model="mostrarFormularioAnadirDirecionEnvio" /> -->
                     <q-btn @click="anadirDireccionEnvio" class="boton-anadir-direccion-envio"
                         label="Añadir nueva dirección de facturación">
                         <q-icon name="mdi-map-marker" />
@@ -53,7 +53,7 @@
                     <q-card class="q-ma-md">
                         <q-card-section>
                             <div class="title">No hay direcciones de facturación disponibles</div>
-                            <formulario-anadir-direccion-envio v-model="mostrarFormularioAnadirDirecionEnvio" />
+                            <!-- <formulario-anadir-direccion-envio v-model="mostrarFormularioAnadirDirecionEnvio" /> -->
                             <q-btn @click="anadirDireccionEnvio" class="boton-anadir-direccion-envio"
                                 label="Añadir nueva dirección de facturación">
                                 <q-icon name="mdi-map-marker" />
@@ -75,9 +75,7 @@ import { usuarioComposable } from '~/composables/usuarioComposable';
 import { useRouter } from 'vue-router';
 
 
-
 const router = useRouter()
-
 
 
 
@@ -110,6 +108,11 @@ const direccionesEnvioFacturacion = async () => {
 }
 
 const mostrarFormularioAnadirDirecionEnvio = ref(false);
+
+const test = (e) => {
+    console.log('Me llega el valor?? ==> ', e);
+    mostrarFormularioAnadirDirecionEnvio.value = e;
+}
 
 const anadirDireccionEnvio = () => {
     // Abro el formulario si no esta abierto
