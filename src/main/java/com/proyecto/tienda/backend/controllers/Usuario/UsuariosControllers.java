@@ -61,7 +61,6 @@ public class UsuariosControllers {
             @RequestHeader("Authorization") String token) {
         return usuarioServicio.anadirDireccionFacturacionEmpresaAutonomo(empresaAutonomoDireccionFacturacionDTO, token,
                 jwtUtils);
-
     }
 
     // CONTROLADOR PARA AÑADIR LA DIRECCION DE FACTURACION PARTICULAR AL

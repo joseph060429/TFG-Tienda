@@ -3,7 +3,9 @@ package com.proyecto.tienda.backend.DTO.DTOUsuario;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -30,7 +32,8 @@ public class AnadirDireccionEnvioDTO {
     @Max(value = 9999999999L, message = "El número debe ser menor o igual a 9999999999")
     private Integer piso;
 
-    @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
+    // @NotEmpty(message = "La puerta no puede estar en blanco")
+    // @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String puerta;
 
     @NotNull(message = "El codigo postal no puede estar en blanco")

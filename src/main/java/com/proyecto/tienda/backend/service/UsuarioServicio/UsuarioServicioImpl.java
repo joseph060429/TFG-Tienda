@@ -191,11 +191,15 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 direccionCompleta.append("Nº ").append(anadirDireccionEnvioDTO.getNumero()).append(", ");
 
                 if (anadirDireccionEnvioDTO.getPiso() != null
-                        && !String.valueOf(anadirDireccionEnvioDTO.getPiso()).trim().isEmpty()) {
+                        && !String.valueOf(anadirDireccionEnvioDTO.getPiso()).trim().isEmpty()
+                        && anadirDireccionEnvioDTO.getPiso() >= 0) {
                     direccionCompleta.append("Piso ").append(anadirDireccionEnvioDTO.getPiso()).append(", ");
                 }
 
                 if (anadirDireccionEnvioDTO.getPuerta() != null && !anadirDireccionEnvioDTO.getPuerta().isEmpty()) {
+                    if (!anadirDireccionEnvioDTO.getPuerta().matches("^(?!\\s)(?=\\S).{1,10}(?!\\s)$")) {
+                        return ResponseEntity.status(400).body("La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco");
+                    }
                     direccionCompleta.append("Puerta ").append(anadirDireccionEnvioDTO.getPuerta().trim()).append(", ");
                 }
 
@@ -509,9 +513,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         }
     }
 
-
     // METODO PARA ELIMINAR UNA DIRECCION DE FACTURACION
-    
     @Override
     public ResponseEntity<?> eliminarDireccionFacturacion(Integer index, String token, JwtUtils jwtUtils) {
         try {

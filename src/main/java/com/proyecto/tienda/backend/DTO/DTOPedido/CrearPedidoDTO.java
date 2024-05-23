@@ -75,10 +75,10 @@ public class CrearPedidoDTO {
     @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "El numero debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String numero;
 
-    @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "El piso debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
+    // @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "El piso debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String piso;
 
-    @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
+    // @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String puerta;
     
     private String direccionEnvio;
