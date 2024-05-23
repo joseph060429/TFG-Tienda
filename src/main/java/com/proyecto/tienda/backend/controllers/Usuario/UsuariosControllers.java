@@ -62,7 +62,7 @@ public class UsuariosControllers {
         return usuarioServicio.anadirDireccionFacturacionEmpresaAutonomo(empresaAutonomoDireccionFacturacionDTO, token,
                 jwtUtils);
 
-    }   
+    }
 
     // CONTROLADOR PARA AÑADIR LA DIRECCION DE FACTURACION PARTICULAR AL
     // USUARIO
@@ -73,6 +73,20 @@ public class UsuariosControllers {
         return usuarioServicio.anadirDireccionFacturacionParticular(particularDireccionFacturacionDTO, token,
                 jwtUtils);
 
+    }
+
+    // CONTROLADOR PARA ELIMINAR LA DIRECCION DE ENVIO AL USUARIO
+    @DeleteMapping("/eliminarDireccionesEnvio")
+    public ResponseEntity<?> eliminarDireccionEnvio(@RequestParam Integer index,
+            @RequestHeader("Authorization") String token) {
+        return usuarioServicio.eliminarDireccionEnvio(index, token, jwtUtils);
+    }
+
+    // CONTROLADOR PARA ELIMINAR LA DIRECCION DE FACTURACION PARTICULAR AL USUARIO
+    @DeleteMapping("/eliminarDireccionesFacturacion")
+    public ResponseEntity<?> eliminarDireccionFacturacion(@RequestParam Integer index,
+            @RequestHeader("Authorization") String token) {
+        return usuarioServicio.eliminarDireccionFacturacion(index, token, jwtUtils);
     }
 
 }

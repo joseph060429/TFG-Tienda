@@ -115,6 +115,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
+    // METODO PARA OBTENER LAS DIRECCIONES DE ENVIO Y FACTURACION
     @Override
     public ResponseEntity<?> obtenerDireccionesEnvioFacturacion(String token, JwtUtils jwtUtils) {
         try {
@@ -153,6 +154,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         }
     }
 
+    // METODO PARA AÑADIR UNA DIRECCION DE ENVIO
     @Override
     public ResponseEntity<?> anadirDireccionEnvio(AnadirDireccionEnvioDTO anadirDireccionEnvioDTO, String token,
             JwtUtils jwtUtils) {
@@ -232,6 +234,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         }
     }
 
+    // METODO PARA AÑADIR UNA DIRECCION DE FACTURACION EMPRESA-AUTONOMO
     @Override
     public ResponseEntity<?> anadirDireccionFacturacionEmpresaAutonomo(
             EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDireccionFacturacionDTO, String token,
@@ -344,6 +347,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     }
 
+    // METODO PARA AÑADIR UNA DIRECCION DE FACTURACION PARTICULAR
     @Override
     public ResponseEntity<?> anadirDireccionFacturacionParticular(
             ParticularDireccionFacturacionDTO particularDireccionFacturacionDTO, String token,
@@ -416,8 +420,10 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                             .append(", ");
                 }
 
-                direccionCompletaFacturacion.append(particularDireccionFacturacionDTO.getCodigoPostalDeFacturacion().trim()).append(", ");
-                direccionCompletaFacturacion.append(particularDireccionFacturacionDTO.getProvinciaDeFacturacion().trim()).append(", ");
+                direccionCompletaFacturacion
+                        .append(particularDireccionFacturacionDTO.getCodigoPostalDeFacturacion().trim()).append(", ");
+                direccionCompletaFacturacion
+                        .append(particularDireccionFacturacionDTO.getProvinciaDeFacturacion().trim()).append(", ");
 
                 // Elimino la coma al final
                 if (direccionCompletaFacturacion.length() > 0) {
@@ -454,6 +460,102 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
         }
 
+    }
+
+    // METODO PARA ELIMINAR UNA DIRECCION DE ENVIO
+    @Override
+    public ResponseEntity<?> eliminarDireccionEnvio(Integer index, String token, JwtUtils jwtUtils) {
+        try {
+            // Elimino el prefijo "Bearer " del token JWT.
+            String jwtToken = token.replace("Bearer ", "");
+
+            // Extraigo el email del token usando JwtUtils.
+            String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
+
+            // Busco al usuario en el repositorio por el email extraído.
+            Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
+
+            // Verifico si el usuario existe.
+            if (usuarioOptional.isPresent()) {
+                // Obtengo el usuario de la opción.
+                UsuarioModelo usuario = usuarioOptional.get();
+
+                System.out.println("Usuario" + usuario);
+
+                // Obtengo la lista de direcciones de envío del usuario
+                List<String> direccionesEnvio = usuario.getDireccionesEnvio();
+
+                // Verifico si el índice está dentro de los límites
+                if (index >= 0 && index < direccionesEnvio.size()) {
+                    // Elimino la dirección de envío en el índice especificado
+                    // Elimino la dirección de envío en el índice especificado
+                    direccionesEnvio.remove(direccionesEnvio.get(index));
+
+                    // Guardo el usuario actualizado en el repositorio
+                    usuarioRepositorio.save(usuario);
+
+                    return ResponseEntity.ok("Dirección de envío eliminada exitosamente");
+                } else {
+                    // Si el índice está fuera de los límites, devuelvo una respuesta de error
+                    return ResponseEntity.status(400).body("Índice de dirección de envío inválido");
+                }
+            } else {
+                // Si el usuario no se encuentra, devuelvo una respuesta de error.
+                return ResponseEntity.status(404).body("Usuario no encontrado");
+            }
+        } catch (Exception e) {
+            // Manejo cualquier excepción y devuelvo una respuesta de error.
+            return ResponseEntity.status(401).body("Token inválido o expirado");
+        }
+    }
+
+
+    // METODO PARA ELIMINAR UNA DIRECCION DE FACTURACION
+    
+    @Override
+    public ResponseEntity<?> eliminarDireccionFacturacion(Integer index, String token, JwtUtils jwtUtils) {
+        try {
+            // Elimino el prefijo "Bearer " del token JWT.
+            String jwtToken = token.replace("Bearer ", "");
+
+            // Extraigo el email del token usando JwtUtils.
+            String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
+
+            // Busco al usuario en el repositorio por el email extraído.
+            Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
+
+            // Verifico si el usuario existe.
+            if (usuarioOptional.isPresent()) {
+                // Obtengo el usuario de la opción.
+                UsuarioModelo usuario = usuarioOptional.get();
+
+                System.out.println("Usuario" + usuario);
+
+                // Obtengo la lista de direcciones de envío del usuario
+                List<String> direccionesFacturacion = usuario.getDirecionesFacturacion();
+
+                // Verifico si el índice está dentro de los límites
+                if (index >= 0 && index < direccionesFacturacion.size()) {
+                    // Elimino la dirección de envío en el índice especificado
+                    // Elimino la dirección de envío en el índice especificado
+                    direccionesFacturacion.remove(direccionesFacturacion.get(index));
+
+                    // Guardo el usuario actualizado en el repositorio
+                    usuarioRepositorio.save(usuario);
+
+                    return ResponseEntity.ok("Dirección de facturación eliminada exitosamente");
+                } else {
+                    // Si el índice está fuera de los límites, devuelvo una respuesta de error
+                    return ResponseEntity.status(400).body("Índice de dirección de envío inválido");
+                }
+            } else {
+                // Si el usuario no se encuentra, devuelvo una respuesta de error.
+                return ResponseEntity.status(404).body("Usuario no encontrado");
+            }
+        } catch (Exception e) {
+            // Manejo cualquier excepción y devuelvo una respuesta de error.
+            return ResponseEntity.status(401).body("Token inválido o expirado");
+        }
     }
 
 }

@@ -28,7 +28,15 @@ public interface UsuarioServicio {
             EmpresaAutonomoDireccionFacturacionDTO empresaAutonomoDireccionFacturacionDTO, String token,
             JwtUtils jwtUtils);
 
+    // METODO PARA ANADIR DIRECCIONES DE FACTURACION PARTICULAR AL USUARIO
     ResponseEntity<?> anadirDireccionFacturacionParticular(
             ParticularDireccionFacturacionDTO particularDireccionFacturacionDTO, String token,
             JwtUtils jwtUtils);
+
+    // METODO PARA ELIMINAR DIRECCIONES DE ENVIO AL USUARIO
+    ResponseEntity<?> eliminarDireccionEnvio(Integer index, String token,
+            JwtUtils jwtUtils);
+
+    // METODO PARA ELIMINAR DIRECCIONES DE FACTURACION AL USUARIO
+    ResponseEntity<?> eliminarDireccionFacturacion(Integer index, String token, JwtUtils jwtUtils);
 }
