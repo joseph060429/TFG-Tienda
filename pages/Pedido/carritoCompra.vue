@@ -14,7 +14,7 @@
                     <q-th>Precio</q-th>
                     <q-th>Imagen</q-th>
                     <q-th>Cantidad</q-th>
-                    <q-th>Aciones</q-th>
+                    <q-th>Acciones</q-th>
                 </q-tr>
                 <q-tr v-if="loading">
                     <img src="../../assets/loading.gif"
