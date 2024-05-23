@@ -3,9 +3,7 @@ package com.proyecto.tienda.backend.DTO.DTOUsuario;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -19,13 +17,15 @@ public class AnadirDireccionEnvioDTO {
 
     @NotNull(message = "La direccion no puede estar en blanco")
     @NotBlank(message = "La direccion no puede estar en blanco")
-    @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-Z]+(\\s[a-zA-Z]+)*){2,100}(?!\\s)$", message = "La dirección debe tener entre 2 y 100 caracteres y no puede empezar ni terminar con espacios en blanco")
+    @Pattern(regexp = "^\\S(.*\\S)?$", message = "La dirección no puede contener espacios en blanco al principio ni al final")
+    @Pattern(regexp = "^.{2,100}$", message = "La dirección debe tenmer entre 2 y 100 caracteres")
     private String direccion;
-
+   
     @NotNull(message = "El número no puede estar en blanco")
     @NotBlank(message = "El número no puede estar en blanco")
     @Size(min = 1, max = 10, message = "El número  debe tener entre 1 y 10 caracteres")
-    @Pattern(regexp = "^\\S.*\\S$", message = "El número no puede contener espacios en blanco al principio ni al final")
+    // @Pattern(regexp = "^\\S.*\\S$", message = "El número no puede contener espacios en blanco al principio ni al final")
+    @Pattern(regexp = "^\\S(.*\\S)?$", message = "El número no puede contener espacios en blanco al principio ni al final")
     private String numero;
 
     @Min(value = 0, message = "El piso debe ser al menos 0")
