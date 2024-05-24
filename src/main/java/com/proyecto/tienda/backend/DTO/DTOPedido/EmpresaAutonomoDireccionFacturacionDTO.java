@@ -36,10 +36,14 @@ public class EmpresaAutonomoDireccionFacturacionDTO {
     private String numeroDeFacturacion;
 
 
-    @Min(value = 0, message = "El piso de facturación debe ser min 0, maximo 9999999999 y no contener letras")
-    @Max(value = 9999999999L, message = "El piso de facturación debe ser min 0, maximo 9999999999 y no contener letras")
-    // @Pattern(regexp = "^$|\\d+", message = "El piso de facturación debe ser nulo o contener solo dígitos positivos")
-    private String pisoDeFacturacion;
+    // @Min(value = 0, message = "El piso de facturación debe ser min 0, maximo 9999999999 y no contener letras")
+    // @Max(value = 9999999999L, message = "El piso de facturación debe ser min 0, maximo 9999999999 y no contener letras")
+    // // @Pattern(regexp = "^$|\\d+", message = "El piso de facturación debe ser nulo o contener solo dígitos positivos")
+    // private String pisoDeFacturacion;
+
+    @Min(value = 0, message = "El piso debe ser al menos 0")
+    @Max(value = 9999999999L, message = "El número debe ser menor o igual a 9999999999")
+    private Integer pisoDeFacturacion;
 
     // @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta de facturación debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco")
     private String puertaDeFacturacion;

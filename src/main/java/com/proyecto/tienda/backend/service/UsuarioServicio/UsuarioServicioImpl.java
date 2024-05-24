@@ -296,10 +296,13 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 direccionCompletaFacturacion.append("Nº ")
                         .append(empresaAutonomoDireccionFacturacionDTO.getNumeroDeFacturacion()).append(", ");
 
+                // PISO FACTURACION
                 if (empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion() != null
-                        && !empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion().isEmpty()) {
+                        && !String.valueOf(empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion()).trim()
+                                .isEmpty()
+                        && empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion() >= 0) {
                     direccionCompletaFacturacion.append("Piso ")
-                            .append(empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion().trim()).append(",");
+                            .append(empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion()).append(", ");
                 }
 
                 // PUERTA FACTURACION
@@ -419,13 +422,19 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                         .append(particularDireccionFacturacionDTO.getNumeroDeFacturacion().trim()).append(", ");
 
                 if (particularDireccionFacturacionDTO.getPisoDeFacturacion() != null
-                        && !particularDireccionFacturacionDTO.getPisoDeFacturacion().isEmpty()) {
+                        && !String.valueOf(particularDireccionFacturacionDTO.getPisoDeFacturacion()).trim().isEmpty()
+                        && particularDireccionFacturacionDTO.getPisoDeFacturacion() >= 0) {
                     direccionCompletaFacturacion.append("Piso ")
-                            .append(particularDireccionFacturacionDTO.getPisoDeFacturacion().trim()).append(", ");
+                            .append(particularDireccionFacturacionDTO.getPisoDeFacturacion()).append(", ");
                 }
 
                 if (particularDireccionFacturacionDTO.getPuertaDeFacturacion() != null
                         && !particularDireccionFacturacionDTO.getPuertaDeFacturacion().isEmpty()) {
+                    if (!particularDireccionFacturacionDTO.getPuertaDeFacturacion()
+                            .matches("^(?!\\s)(?=\\S).{1,10}(?!\\s)$")) {
+                        return ResponseEntity.status(400).body(
+                                "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco");
+                    }
                     direccionCompletaFacturacion.append("Puerta ")
                             .append(particularDireccionFacturacionDTO.getPuertaDeFacturacion().trim())
                             .append(", ");

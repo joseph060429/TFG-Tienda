@@ -120,17 +120,16 @@ public class PayPalServicio {
                 // Verifico si es la URL de redireccionamiento para PayPal
                 if (links.getRel().equals("approval_url")) {
                     // Obtengo la URL de redireccionamiento
-                    String href = links.getHref();
                     System.out.println("Location: " + links.getHref());
                     // Creo un encabezado http para la redireccion
                     HttpHeaders headers = new HttpHeaders();
 
                     // Almaceno el pedido en una session http
-                        ses.setAttribute("pedido", pedido);
+                    ses.setAttribute("pedido", pedido);
                     // Agrego la URL de aprobacion al encabezado de redireccion
-                    headers.add("Location", href);
+
                     // Creo una respuesta HTTP con estado "FOUND" para redireccionar al cliente
-                    ResponseEntity<String> response = new ResponseEntity<String>(headers, HttpStatus.FOUND);
+                    ResponseEntity<String> response = new ResponseEntity<String>(links.getHref(), HttpStatus.OK);
                     // Devuelvo la respuesta de direccion
                     return response;
                 }
