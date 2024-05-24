@@ -57,10 +57,34 @@ export const usuarioComposable = () => {
     return await store.direccionesUsuario();
   };
 
-    //COMPOSABLE PARA AÑADIR LAS DIRECCIONES DE ENVIO DEL USUARIO
-    const anadirDireccionEnvio = async (direccionEnvio) => {
-      return await store.anadirDireccionEnvio(direccionEnvio);
-    };
+  //COMPOSABLE PARA AÑADIR LAS DIRECCIONES DE ENVIO DEL USUARIO
+  const anadirDireccionEnvio = async (direccionEnvio) => {
+    return await store.anadirDireccionEnvio(direccionEnvio);
+  };
+
+
+  //COMPOSABLE PARA AÑADIR LAS DIRECCIONES DE FACTURACION EMPRESA-AUTONOMO DEL USUARIO
+  const anadirDireccionFacturacionEmpreAuto = async (direccionFacturacionEmpreAuto) => {
+    return await store.anadirDireccionFacturacionEmpreAuto(direccionFacturacionEmpreAuto);
+  };
+
+
+  //COMPOSABLE PARA AÑADIR LAS DIRECCIONES DE FACTURACION PARTICULAR DEL USUARIO
+  const anadirDireccionFacturacionParticular = async (direccionFacturacionParticular) => {
+    return await store.anadirDireccionFacturacionParticular(direccionFacturacionParticular);
+  };
+
+
+  //COMPOSABLE PARA ELIMINAR LAS DIRECCIONES DE ENVIO DEL USUARIO
+  const eliminarDireccionEnvio = async (index) => {
+    return await store.eliminarDireccionEnvio(index);
+  };
+
+  //COMPOSABLE PARA ELIMINAR LAS DIRECCIONES DE FACTURACION DEL USUARIO
+  const eliminarDireccionFacturacion = async (index) => {
+    return await store.eliminarDireccionFacturacion(index);
+  };
+
 
   // COMPOSABLE PARA LIMPIAR LOS PEDIDOS DEL USUARIO DE LA STORE
   const limpiarPedidos = () => {
@@ -91,6 +115,10 @@ export const usuarioComposable = () => {
     limpiarCarrito,
     reset,
     direccionesUsuario,
-    anadirDireccionEnvio
+    anadirDireccionEnvio,
+    anadirDireccionFacturacionEmpreAuto,
+    anadirDireccionFacturacionParticular,
+    eliminarDireccionEnvio,
+    eliminarDireccionFacturacion
   };
 };

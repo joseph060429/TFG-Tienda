@@ -1,16 +1,10 @@
 <template>
-    <q-dialog v-model="mostrarFormularioAnadirDirecionEnvio"> <q-card>
+    <q-dialog> <q-card>
             <!-- <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" /> -->
             <div class="container">
                 <div class="scrollable-container">
                     <q-form @submit.prevent="envioFormulario" @reset="borrar">
                         <h3>Direccion de envío </h3>
-                        <!-- CAMPO TIPO PAGO PAYPAL readonly class="readonly" para que no se pueda editar-->
-                        <!-- <q-input v-model="datosEnvio.tipoPago" label="Tipo de Pago*" readonly class="readonly">
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-credit-card" />
-                            </template>
-</q-input> -->
                         <!--CAMPO  DIRECCION-->
                         <q-input v-model="datosEnvio.direccion" label="Dirección" dense minlength="2" maxlength="100" lazy-rules :rules="[
                             val => val && val.length > 0 || 'Por favor, introduce algo',
@@ -76,6 +70,7 @@
                             val => val && val.length > 0 || 'Por favor, introduce algo',
                             val => /^.{2,100}$/.test(val) || 'La provincia debe tener entre 2 y 100 caracteres',
                             val => /^\S.*\S$/.test(val) || 'La provincia no puede empezar ni terminar con espacios en blanco',
+                            val => /^[a-zA-Z\s]+$/.test(val) || 'La provincia solo puede contener letras'
                         ]">
                             <template v-slot:prepend>
                                 <q-icon name="mdi-map" />
@@ -137,13 +132,12 @@ const borrar = () => {
         datosEnvio.provincia = ''
 };
 
-
-
 const props = defineProps({
-    formularioAñadirDireccionEnvio: Boolean,
+    formularioAnadirDireccionEnvio: Boolean,
 })
 
 const emit = defineEmits(['pokemon'])
+
 const esNumero = (val) => {
     if (!val || isNaN(val)) {
         return 'Por favor, introduce solo números.';
@@ -165,8 +159,6 @@ const envioFormulario = async () => {
         if (response.data === 'Dirección añadida exitosamente') {
             emit('pokemon', false)
             mostrarAlertaExito('Dirección anadida exitosamente', quasar);
-            // usuario.value.direccionesEnvioFacturacion.direccionesEnvio.push(datosEnvio)
-            // console.log("datos envio", datosEnvio.value);
             const direccionFormateada = formatearDireccion(datosEnvio);
             usuario.value.direccionesEnvioFacturacion.direccionesEnvio.push(direccionFormateada);
         }

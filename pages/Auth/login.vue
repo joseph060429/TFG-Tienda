@@ -10,7 +10,7 @@
       <q-form @submit.prevent="loginUser" @reset="borrar" class="q-gutter-md">
 
         <!-- Campo email -->
-        <q-input filled v-model="datosLogin.email" label="Email *" hint="Tu correo electrónico" lazy-rules :rules="[
+        <q-input filled v-model="datosLogin.email" label="Email *" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^\S.*\S$/.test(val) || 'El email no puede empezar ni terminar con espacios en blanco',
           val => /^\S+@\S+\.\S+$/.test(val) || 'El formato del correo electrónico no es válido',

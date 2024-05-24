@@ -14,7 +14,8 @@
       <q-form  @submit.prevent="registroUsuario" @reset="borrar" class="q-gutter-md">
 
         <!-- Campo nombre -->
-        <q-input filled v-model="datosRegistro.nombre" label="Nombre *" hint="Nombre" lazy-rules :rules="[
+        <q-input filled v-model="datosRegistro.nombre" label="Nombre *" minlength="2"
+                            maxlength="70" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^.{2,70}$/.test(val) || 'El nombre/s debe tener entre 2 y 70 caracteres',
           val => /^\S.*\S$/.test(val) || 'El nombre/s no puede empezar ni terminar con espacios en blanco',
@@ -27,7 +28,8 @@
         </q-input>
 
         <!-- Campo apellido -->
-        <q-input filled v-model="datosRegistro.apellido" label="Apellidos *" hint="Apellidos" lazy-rules :rules="[
+        <q-input filled v-model="datosRegistro.apellido" label="Apellidos *" min  minlength="2"
+                            maxlength="70" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^.{2,70}$/.test(val) || 'Los apellidos debe tener entre 2 y 70 caracteres',
           val => /^\S.*\S$/.test(val) || 'Los apellidos no pueden empezar ni terminar con espacios en blanco',
@@ -40,7 +42,7 @@
         </q-input>
 
         <!-- Campo email -->
-        <q-input filled v-model="datosRegistro.email" label="Email *" hint="Tu correo electrónico" lazy-rules :rules="[
+        <q-input filled v-model="datosRegistro.email" label="Email *" lazy-rules :rules="[
           val => val && val.length > 0 || 'Por favor, introduce algo',
           val => /^\S.*\S$/.test(val) || 'El email no puede empezar ni terminar con espacios en blanco',
           val => /^\S+@\S+\.\S+$/.test(val) || 'El formato del correo electrónico no es válido',
