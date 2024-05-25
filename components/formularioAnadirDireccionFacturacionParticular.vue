@@ -114,7 +114,7 @@
                                 val => val && val.length > 0 || 'Por favor, introduce algo',
                                 val => /^.{2,100}$/.test(val) || 'La provincia debe tener entre 2 y 100 caracteres',
                                 val => /^\S.*\S$/.test(val) || 'La provincia no puede empezar ni terminar con espacios en blanco',
-                                val => /^[a-zA-Z\s]+$/.test(val) || 'La provincia solo puede contener letras'
+                                val => /^[a-zA-ZáéíóúÁÉÍÓÚüÜ\s]+$/.test(val) || 'La provincia solo puede contener letras y tildes'
                             ]">
                             <template v-slot:prepend>
                                 <q-icon name="mdi-map" />
@@ -224,7 +224,7 @@ function formatearDireccion(direccionDeFacturacionParticular) {
     const { nombreFacturacion, apellidoFacturacion, numTelefonoFacturacion, direccionDeFacturacion, numeroDeFacturacion, pisoDeFacturacion, puertaDeFacturacion, codigoPostalDeFacturacion, provinciaDeFacturacion } = direccionDeFacturacionParticular;
 
     // Formatear la dirección base
-    let direccionFormateada = `FACTURACION PARTICULAR: NOMBRE ${nombreFacturacion.toUpperCase()}, APELLIDOS ${apellidoFacturacion.toUpperCase()}, NÚMERO DE TELÉFONO: ${numTelefonoFacturacion.toUpperCase()},  ${direccionDeFacturacion.toUpperCase()}, Nº ${numeroDeFacturacion}`;
+    let direccionFormateada = `FACTURACIÓN: PARTICULAR, NOMBRE: ${nombreFacturacion.toUpperCase()}, APELLIDOS: ${apellidoFacturacion.toUpperCase()}, NÚMERO DE TELÉFONO: ${numTelefonoFacturacion.toUpperCase()},  ${direccionDeFacturacion.toUpperCase()}, Nº ${numeroDeFacturacion}`;
 
     // Agregar piso y puerta si están presentes
     if (pisoDeFacturacion && pisoDeFacturacion.trim() !== '') {

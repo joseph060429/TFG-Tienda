@@ -1,8 +1,9 @@
 <template>
     <!-- <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" /> -->
+    <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="container">
         <eliminar-direcciones v-model="mostrarBorrarDireccion" :indice="indice" :modo="modo" />
-        <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+        <!-- <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" /> -->
         <div v-if="!loading">
             <div>
                 <div v-if="usuario.direccionesEnvioFacturacion.direccionesEnvio.length > 0">
@@ -14,7 +15,7 @@
                         <q-icon name="mdi-map-marker" />
                     </q-btn>
                     <q-card v-for="(direccion, index) in usuario.direccionesEnvioFacturacion.direccionesEnvio"
-                        :key="index" class="address-card">
+                        :key="index" class="address-card-envio">
                         <q-card-section>
 
                             <div class="info-direcciones">{{ direccion }}</div>
@@ -72,7 +73,7 @@
                     </q-card>
                 </div>
                 <div v-else>
-                    <q-card class="q-ma-md">
+                    <q-card class="no-address-card">
                         <q-card-section>
                             <div class="title">No hay direcciones de facturación disponibles</div>
                             <formulario-anadir-direccion-facturacion-empre-auto @pokemon="test($event)"
@@ -95,7 +96,7 @@
             </div>
         </div>
     </div>
-    <q-btn label="crear pedido" @click="crearPedido()"></q-btn>
+    <q-btn class="btn-crearPedido" label="crear pedido" @click="crearPedido()"></q-btn>
 </template>
 
 
@@ -264,19 +265,44 @@ const eliminarDireccionFacturacion = () => {
 
 <style lang="scss" scoped>
 .container {
-    max-height: 70vh;
+    max-width: 100%;
+    max-height: 60vh;
     overflow: auto;
+    text-align: center;
+    // flex-direction: column;
+    // justify-content: center; /* Centrar verticalmente */
+    align-items: center;
+    /* Centrar horizontalmente */
     // background-color: #3A7;
+    // border: 2px solid black;
 }
 
 @media (max-width: 600px) {
     .container {
-        max-height: 70vh;
+        max-width: 99%;
+        height: 85vh;
+        margin-top: 1%;
+        // overflow: auto;
     }
 }
 
 .no-address-card {
-    margin: 10px 0;
+    margin: 1em;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    border: 2px solid gray;
+    text-align: center;
+    height: 20vh;
+}
+
+
+.address-card-envio{
+    margin: 1em;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    border: 2px solid gray;
+    text-align: center;
+    height: 15vh;
 }
 
 .address-card {
@@ -284,6 +310,45 @@ const eliminarDireccionFacturacion = () => {
     background-color: #e0e0e0;
     border-radius: 5px;
     border: 2px solid gray;
+    height: 20vh;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 1em;
+
+
+}
+
+@media (max-width: 600px) {
+    .no-address-card {
+        margin-top: 1%;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        border: 2px solid gray;
+        text-align: center;
+        height: 25vh;
+        width: 90%;
+    }
+
+    .address-card {
+        margin: 1em;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        border: 2px solid gray;
+        height: 25vh;
+        width: 99%;
+        margin-bottom: 1em;
+        margin-top: 1em;
+    }
+    .address-card-envio{
+        margin-top: 1%;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        border: 2px solid gray;
+        text-align: center;
+        height: 15vh;
+        width: 90%;
+
+    }
 }
 
 .info-direcciones {
@@ -297,19 +362,29 @@ const eliminarDireccionFacturacion = () => {
     color: #005a8b;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
-    // margin-top: 0.5em;
 }
 
 .boton-anadir-direccion-envio {
     background-color: #5A9;
     color: white;
-    margin-top: 0;
+    margin-bottom: 1%;
     transition: background-color 0.3s, box-shadow 0.3s;
+    width: 50%;
+    max-height: 5vh;
+
 }
 
 .boton-anadir-direccion-envio:hover {
     background-color: #3A7;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 600px) {
+    .boton-anadir-direccion-envio {
+        max-width: 100%;
+        max-height: 10vh;
+        margin-top: 0.5em;
+    }
 }
 
 .custom-regresar-button {
@@ -327,12 +402,15 @@ const eliminarDireccionFacturacion = () => {
 .boton-anadir-facturacion-particular,
 .boton-anadir-facturacion-empreAuto {
     background-color: #5A9;
-    margin-left: 2em;
+    // margin-left: 2em;
     margin-right: 2em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5%;
     color: white;
     transition: background-color 0.3s, box-shadow 0.3s;
-    margin-top: 0;
-    width: 15%;
+    // margin-top: 0;
+    width: 50%;
+    max-height: 5vh;
 }
 
 .boton-anadir-facturacion-particular:hover,
@@ -345,20 +423,48 @@ const eliminarDireccionFacturacion = () => {
 
     .boton-anadir-facturacion-particular,
     .boton-anadir-facturacion-empreAuto {
+        width: 90%;
+        margin: auto;
+        max-height: 15vh;
         margin-top: 0.5em;
-        width: 75%;
-        height: 5vh;
     }
 }
 
 .boton-borrar {
     background-color: #FF4500;
     border: 1px solid;
-    display: flex
+    margin-left: 90%;
+    // display: flex
 }
 
 .boton-borrar:hover {
     background-color: rgba(255, 69, 0, 0.8);
 
+}
+
+@media (max-width: 600px) {
+
+.boton-borrar {
+    width: 5%;
+    margin: auto;
+    height: 1vh;
+    margin-left: 75%;
+    // margin-top: 0.5em;
+}
+}
+
+
+.btn-crearPedido {
+    margin-top: 1%;
+    margin-left: 84.5%;
+    background-color: #005a8b;
+}
+
+@media (max-width: 600px) {
+    .btn-crearPedido {
+        margin-top: 1%;
+        margin-left: 60%;
+        background-color: #005a8b;
+    }
 }
 </style>

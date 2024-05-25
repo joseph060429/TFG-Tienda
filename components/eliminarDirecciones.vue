@@ -7,7 +7,7 @@
             </q-card-section>
             <q-card-actions align="center" class="q-mt-lg">
                 <q-btn label="Cancelar" color="primary" class="q-mr-md" v-close-popup />
-                <q-btn label="Eliminar usuario" color="negative" @click="loggg()" class="q-ml-md" v-close-popup />
+                <q-btn label="Eliminar Dirección" color="negative" @click="loggg()" class="q-ml-md" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>

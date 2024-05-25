@@ -14,7 +14,7 @@
                                 val => /^\d{9}$/.test(val) || 'El Cif o Nif debe debe contener exactamente 9 dígitos'
                             ]">
                             <template v-slot:prepend>
-                                <q-icon name="mdi-mailbox" />
+                                <q-icon name="mdi-account-card" />
                             </template>
                         </q-input>
 
@@ -99,7 +99,7 @@
                                 val => val && val.length > 0 || 'Por favor, introduce algo',
                                 val => /^.{2,100}$/.test(val) || 'La provincia debe tener entre 2 y 100 caracteres',
                                 val => /^\S.*\S$/.test(val) || 'La provincia no puede empezar ni terminar con espacios en blanco',
-                                val => /^[a-zA-Z\s]+$/.test(val) || 'La provincia solo puede contener letras'
+                                val => /^[a-zA-ZáéíóúÁÉÍÓÚüÜ\s]+$/.test(val) || 'La provincia solo puede contener letras y tildes'
                             ]">
                             <template v-slot:prepend>
                                 <q-icon name="mdi-map" />
@@ -208,7 +208,7 @@ function formatearDireccion(direccionFacturacionEmpreAuto) {
     const { cifONifFacturacion, numTelefonoFacturacion, direccionDeFacturacion, numeroDeFacturacion, pisoDeFacturacion, puertaDeFacturacion, codigoPostalDeFacturacion, provinciaDeFacturacion } = direccionFacturacionEmpreAuto;
 
     // Formatear la dirección base
-    let direccionFormateada = `FACTURACION EMPRESA/AUTÓNOMO: CIF/NIF ${cifONifFacturacion.toUpperCase()}, NÚMERO DE TELÉFONO: ${numTelefonoFacturacion.toUpperCase()},  ${direccionDeFacturacion.toUpperCase()}, Nº ${numeroDeFacturacion}`;
+    let direccionFormateada = `FACTURACIÓN: EMPRESA/AUTÓNOMO, CIF/NIF: ${cifONifFacturacion.toUpperCase()}, NÚMERO DE TELÉFONO: ${numTelefonoFacturacion.toUpperCase()},  ${direccionDeFacturacion.toUpperCase()}, Nº ${numeroDeFacturacion}`;
 
     // Agregar piso y puerta si están presentes
     if (pisoDeFacturacion && pisoDeFacturacion.trim() !== '') {
