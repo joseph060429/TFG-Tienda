@@ -168,8 +168,8 @@ const direccionDeFacturacionParticular = reactive({
 
 const borrar = () => {
 
-    direccionDeFacturacionParticular.cifONifFacturacion = '',
-        direccionDeFacturacionParticular.numTelefonoFacturacion = '',
+    direccionDeFacturacionParticular.nombreFacturacion = '',
+        direccionDeFacturacionParticular.apellidoFacturacion = '',
         direccionDeFacturacionParticular.direccionDeFacturacion = '',
         direccionDeFacturacionParticular.numeroDeFacturacion = '',
         direccionDeFacturacionParticular.pisoDeFacturacion = '',
