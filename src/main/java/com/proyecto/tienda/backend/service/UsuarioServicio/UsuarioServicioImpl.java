@@ -284,10 +284,10 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 }
 
                 StringBuilder direccionCompletaFacturacion = new StringBuilder();
-                direccionCompletaFacturacion.append("Facturacion Empresa/Autonomo: ");
+                direccionCompletaFacturacion.append("Facturación: Empresa/Autónomo, ");
                 direccionCompletaFacturacion.append("Cif/Nif: ")
                         .append(empresaAutonomoDireccionFacturacionDTO.getCifONifFacturacion().trim()).append(", ");
-                direccionCompletaFacturacion.append("Numero de telefono: ")
+                direccionCompletaFacturacion.append("Número de teléfono: ")
                         .append(empresaAutonomoDireccionFacturacionDTO.getNumTelefonoFacturacion()).append(", ");
 
                 direccionCompletaFacturacion
@@ -396,7 +396,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                         || particularDireccionFacturacionDTO.getNumeroDeFacturacion() == null
                         || particularDireccionFacturacionDTO.getNumeroDeFacturacion().isEmpty()) {
                     throw new IllegalArgumentException(
-                            "El nombre, el apellido, el número de telefono, la dirección, el código postal, la provincia y el número son obligatorios.");
+                            "El nombre, el apellido, el número de teléfono, la dirección, el código postal, la provincia y el número son obligatorios.");
                 }
 
                 // Convierto el Long a String
@@ -409,15 +409,14 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 }
 
                 StringBuilder direccionCompletaFacturacion = new StringBuilder();
-                direccionCompletaFacturacion.append("Facturacion Particular: ");
+                direccionCompletaFacturacion.append("Facturación: Particular, ");
                 direccionCompletaFacturacion.append("Nombre: ")
                         .append(particularDireccionFacturacionDTO.getNombreFacturacion().trim()).append(", ");
-                direccionCompletaFacturacion.append("Apellido: ")
+                direccionCompletaFacturacion.append("Apellidos: ")
                         .append(particularDireccionFacturacionDTO.getApellidoFacturacion().trim()).append(", ");
-                direccionCompletaFacturacion.append("Numero de telefono: ")
+                direccionCompletaFacturacion.append("Número de teléfono: ")
                         .append(particularDireccionFacturacionDTO.getNumTelefonoFacturacion()).append(", ");
-                direccionCompletaFacturacion.append("Dirección: ")
-                        .append(particularDireccionFacturacionDTO.getDireccionDeFacturacion().trim()).append(", ");
+                direccionCompletaFacturacion.append(particularDireccionFacturacionDTO.getDireccionDeFacturacion().trim()).append(", ");
                 direccionCompletaFacturacion.append("Nº ")
                         .append(particularDireccionFacturacionDTO.getNumeroDeFacturacion().trim()).append(", ");
 

@@ -171,7 +171,7 @@ public class UsuarioModelo {
                 || provinciaDeFacturacion == null || provinciaDeFacturacion.isEmpty()
                 || numeroDeFacturacion == null || numeroDeFacturacion.isEmpty()) {
             throw new IllegalArgumentException(
-                    "El nombre, el apellido, el número de telefono, la dirección, el código postal, la provincia y el número son obligatorios.");
+                    "El nombre, el apellido, el número de teléfono, la dirección, el código postal, la provincia y el número son obligatorios.");
         }
 
         // Convertir el Long a String
@@ -183,10 +183,10 @@ public class UsuarioModelo {
         }
 
         StringBuilder direccionCompletaFacturacion = new StringBuilder();
-        direccionCompletaFacturacion.append("Facturacion Particular: ");
+        direccionCompletaFacturacion.append("Facturación Particular: ");
         direccionCompletaFacturacion.append("Nombre: ").append(nombreFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Apellido: ").append(apellidoFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
+        direccionCompletaFacturacion.append("Apellidos: ").append(apellidoFacturacion.trim()).append(", ");
+        direccionCompletaFacturacion.append("Número de teléfono: ").append(numTelefonoFacturacion).append(", ");
         direccionCompletaFacturacion.append(direccionDeFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append("Nº ").append(numeroDeFacturacion.trim()).append(", ");
 
@@ -246,9 +246,9 @@ public class UsuarioModelo {
         }
 
         StringBuilder direccionCompletaFacturacion = new StringBuilder();
-        direccionCompletaFacturacion.append("Facturacion Empresa/Autonomo: ");
+        direccionCompletaFacturacion.append("Facturación: Empresa/Autónomo, ");
         direccionCompletaFacturacion.append("Cif/Nif: ").append(cifONifFacturacion.trim()).append(", ");
-        direccionCompletaFacturacion.append("Numero de telefono: ").append(numTelefonoFacturacion).append(", ");
+        direccionCompletaFacturacion.append("Número de teléfono: ").append(numTelefonoFacturacion).append(", ");
         direccionCompletaFacturacion.append(direccionDeFacturacion.trim()).append(", ");
         direccionCompletaFacturacion.append("Nº ").append(numeroDeFacturacion.trim()).append(", ");
 
