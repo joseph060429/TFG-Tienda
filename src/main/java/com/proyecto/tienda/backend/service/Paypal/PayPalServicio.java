@@ -1,5 +1,6 @@
 package com.proyecto.tienda.backend.service.Paypal;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +22,7 @@ import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -97,47 +99,100 @@ public class PayPalServicio {
     }
 
     // METODO PARA HACER EL PAGO
+    // public ResponseEntity<String> hacerPago(PedidosModelo pedido, HttpSession ses) {
+    //     try {
+    //         // Traigo todos los productos que ha pedido ese usuario
+    //         List<ProductoPedidoDTO> productos = pedido.getProductos();
+
+    //         // Calculo el precio total sumando todos los productos de ese pedido
+    //         double total = 0.0;
+    //         for (ProductoPedidoDTO producto : productos) {
+    //             total += producto.getPrecioProducto() * producto.getCantidadPedida();
+    //         }
+
+    //         // Total es el precio total del pedido
+    //         System.out.println("Precio total del pedido: " + total);
+
+    //         // Uso el total para el pago
+    //         Payment pago = createPayment(total, "EUR", "paypal", "sale", "Pedido Pagado",
+    //                 cancelUrl, successUrl);
+
+    //         // Recorro las URLs de redireccionamiento
+    //         for (Links links : pago.getLinks()) {
+    //             // Verifico si es la URL de redireccionamiento para PayPal
+    //             if (links.getRel().equals("approval_url")) {
+    //                 // Obtengo la URL de redireccionamiento
+    //                 System.out.println("Location: " + links.getHref());
+    //                 // Creo un encabezado http para la redireccion
+    //                 HttpHeaders headers = new HttpHeaders();
+
+    //                 // Almaceno el pedido en una session http
+    //                 ses.setAttribute("pedido", pedido);
+    //                 // Agrego la URL de aprobacion al encabezado de redireccion
+
+    //                 System.out.println("Sesión ID en hacerPago: " + ses.getId());
+    //                 System.out.println("Pedido almacenado en sesión en hacerPago: " + ses.getAttribute("pedido"));
+
+    //                 // Creo una respuesta HTTP con estado "FOUND" para redireccionar al cliente
+    //                 ResponseEntity<String> response = new ResponseEntity<String>(links.getHref(), HttpStatus.OK);
+    //                 // Devuelvo la respuesta de direccion
+    //                 return response;
+    //             }
+    //         }
+
+    //     } catch (PayPalRESTException e) {
+    //         System.out.println("Error ocurrido:: " + e);
+    //     }
+    //     return ResponseEntity.status(500).body("Algo ha fallado");
+    // }
+
     public ResponseEntity<String> hacerPago(PedidosModelo pedido, HttpSession ses) {
         try {
             // Traigo todos los productos que ha pedido ese usuario
             List<ProductoPedidoDTO> productos = pedido.getProductos();
-
+    
             // Calculo el precio total sumando todos los productos de ese pedido
             double total = 0.0;
             for (ProductoPedidoDTO producto : productos) {
                 total += producto.getPrecioProducto() * producto.getCantidadPedida();
             }
-
+    
             // Total es el precio total del pedido
             System.out.println("Precio total del pedido: " + total);
-
+    
             // Uso el total para el pago
             Payment pago = createPayment(total, "EUR", "paypal", "sale", "Pedido Pagado",
                     cancelUrl, successUrl);
-
+    
             // Recorro las URLs de redireccionamiento
             for (Links links : pago.getLinks()) {
-                // Verifico si es la URL de redireccionamiento para PayPal
+                // Verificar si es la URL de redireccionamiento para PayPal
                 if (links.getRel().equals("approval_url")) {
-                    // Obtengo la URL de redireccionamiento
-                    System.out.println("Location: " + links.getHref());
-                    // Creo un encabezado http para la redireccion
-                    HttpHeaders headers = new HttpHeaders();
-
-                    // Almaceno el pedido en una session http
-                    ses.setAttribute("pedido", pedido);
-                    // Agrego la URL de aprobacion al encabezado de redireccion
-
-                    // Creo una respuesta HTTP con estado "FOUND" para redireccionar al cliente
-                    ResponseEntity<String> response = new ResponseEntity<String>(links.getHref(), HttpStatus.OK);
-                    // Devuelvo la respuesta de direccion
-                    return response;
+                    // Generar una clave única para el pedido y almacenarlo en la sesión
+                    String clavePedido = "pedido_" + pago.getId(); 
+                    ses.setAttribute(clavePedido, pedido);
+            
+                    // Obtener el ID de sesión
+                    String sessionId = ses.getId();
+                    
+                    // Construir la URL de redireccionamiento con el ID de sesión como parámetro
+                    String redirectUrl = links.getHref() + "?sessionId=" + sessionId;
+            
+                    System.out.println("Sesión ID en servicio hacer pago: " + sessionId);
+                    System.out.println("pedido desde hacer pago " + ses.getAttribute(clavePedido));
+                    System.out.println("URL de redireccionamiento " + redirectUrl);
+            
+                    // Devolver la URL de redireccionamiento al cliente
+                    return ResponseEntity.ok().body(redirectUrl);
                 }
             }
+
 
         } catch (PayPalRESTException e) {
             System.out.println("Error ocurrido:: " + e);
         }
-        return ResponseEntity.status(500).body("Algo ha fallado");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Algo ha fallado");
     }
+    
+
 }

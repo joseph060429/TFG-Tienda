@@ -57,9 +57,92 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     // IMPLEMENTACION DEL METODO PARA CREAR EL PEDIDO
     @Transactional
     @Override
+    // public ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String
+    // token, JwtUtils jwtUtils,
+    // List<ProductoModelo> productosModelo, HttpSession ses) {
+
+    // try {
+    // String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
+    // Optional<UsuarioModelo> usuarioModelo =
+    // buscarUsuarioPorEmail(emailFromToken);
+
+    // if (!usuarioModelo.isPresent()) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body("Error al crear el pedido: Usuario no encontrado");
+    // }
+
+    // UsuarioModelo usuario = usuarioModelo.get();
+
+    // PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
+
+    // // Establezco el numero de telefono, lo hice para evitar que el repartidor
+    // vaya
+    // // a casa y si la persona no esta, tenga un sitio donde dejarlo
+    // Long numTele = crearPedidoDTO.getNumTelefono();
+    // pedido.setNumTelefono(numTele);
+
+    // // Añado la direccion de envio
+    // String direccionEnvio =
+    // anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
+    // crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(),
+    // crearPedidoDTO.getNumero(),
+    // crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
+
+    // String nueva = convertirEstiloTitulo(direccionEnvio);
+    // pedido.setDireccionCompletaEnvio(nueva);
+
+    // ResponseEntity<?> resultadoPagoValidacion =
+    // validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
+
+    // if (resultadoPagoValidacion != null) {
+    // return resultadoPagoValidacion;
+    // }
+
+    // // Genero una nueva lista con los productos pedidos
+    // List<ProductoPedidoDTO> listaNueva =
+    // generarListaProductosPedido(productosModelo);
+    // pedido.setProductos(listaNueva);
+
+    // // Calculo el precio total sumando todos los productos de ese pedido
+    // double total = 0.0;
+    // for (ProductoPedidoDTO productoPedido : listaNueva) {
+    // total += productoPedido.getPrecioProducto() *
+    // productoPedido.getCantidadPedida();
+    // }
+
+    // // Establecezco la fecha del pedido
+    // crearPedidoDTO.setFechaPedido();
+    // pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
+
+    // // Veo cual ha sido el resultado de la facturacion, si ha sido particular o
+    // // autonomo/empresa
+    // ResponseEntity<?> resultadoDireccionFacturacion =
+    // procesarDireccionFacturacion(usuario, crearPedidoDTO,
+    // pedido);
+    // if (resultadoDireccionFacturacion != null) {
+    // return resultadoDireccionFacturacion;
+    // }
+
+    // // Genero la factura PDF
+    // FacturaDTO facturaDTO = new FacturaDTO(usuario, pedido, listaNueva, total);
+
+    // // Mando la factura en una sesion junto al pedido
+    // ses.setAttribute("pedido", pedido);
+    // ses.setAttribute("factura", facturaDTO);
+
+    // System.out.println("pedido desde crear pedido " + pedido);
+    // // Mando a la pagina del pago del Pay-Pal antes de crear el pedido
+    // return paypalServicio.hacerPago(pedido, ses);
+
+    // } catch (RuntimeException e) {
+    // e.getMessage();
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el
+    // pedido: " + e.getMessage());
+    // }
+    // }
+
     public ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
             List<ProductoModelo> productosModelo, HttpSession ses) {
-
         try {
             String emailFromToken = obtenerEmailDelToken(token, jwtUtils);
             Optional<UsuarioModelo> usuarioModelo = buscarUsuarioPorEmail(emailFromToken);
@@ -70,62 +153,61 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             }
 
             UsuarioModelo usuario = usuarioModelo.get();
-
             PedidosModelo pedido = crearNuevoPedido(crearPedidoDTO, usuario);
 
-            // Establezco el numero de telefono, lo hice para evitar que el repartidor vaya
-            // a casa y si la persona no esta, tenga un sitio donde dejarlo
+            // Establecer el número de teléfono
             Long numTele = crearPedidoDTO.getNumTelefono();
             pedido.setNumTelefono(numTele);
 
-            // Añado la direccion de envio
+            // Añadir la dirección de envío
             String direccionEnvio = anadirDireccionEnvio(crearPedidoDTO.getCodigoPostal(),
                     crearPedidoDTO.getDireccion(), crearPedidoDTO.getProvincia(), crearPedidoDTO.getNumero(),
                     crearPedidoDTO.getPiso(), crearPedidoDTO.getPuerta(), usuario);
-
             String nueva = convertirEstiloTitulo(direccionEnvio);
             pedido.setDireccionCompletaEnvio(nueva);
 
             ResponseEntity<?> resultadoPagoValidacion = validarTipoPagoYSetearlo(crearPedidoDTO.getTipoPago(), pedido);
-
             if (resultadoPagoValidacion != null) {
                 return resultadoPagoValidacion;
             }
 
-            // Genero una nueva lista con los productos pedidos
+            // Generar nueva lista de productos pedidos
             List<ProductoPedidoDTO> listaNueva = generarListaProductosPedido(productosModelo);
             pedido.setProductos(listaNueva);
 
-            // Calculo el precio total sumando todos los productos de ese pedido
+            // Calcular el precio total
             double total = 0.0;
             for (ProductoPedidoDTO productoPedido : listaNueva) {
                 total += productoPedido.getPrecioProducto() * productoPedido.getCantidadPedida();
             }
 
-            // Establecezco la fecha del pedido
+            // Establecer la fecha del pedido
             crearPedidoDTO.setFechaPedido();
             pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
 
-            // Veo cual ha sido el resultado de la facturacion, si ha sido particular o
-            // autonomo/empresa
+            // Procesar dirección de facturación
             ResponseEntity<?> resultadoDireccionFacturacion = procesarDireccionFacturacion(usuario, crearPedidoDTO,
                     pedido);
             if (resultadoDireccionFacturacion != null) {
                 return resultadoDireccionFacturacion;
             }
 
-            // Genero la factura PDF
+            // Generar la factura PDF
             FacturaDTO facturaDTO = new FacturaDTO(usuario, pedido, listaNueva, total);
 
-            // Mando la factura en una sesion junto al pedido
+            // Almacenar el pedido y la factura en la sesión
             ses.setAttribute("pedido", pedido);
             ses.setAttribute("factura", facturaDTO);
 
-            // Mando a la pagina del pago del Pay-Pal antes de crear el pedido
+            System.out.println("Sesión ID en servicio crearPedido: " + ses.getId());
+            System.out.println("Pedido almacenado en sesión: " + ses.getAttribute("pedido"));
+            System.out.println("Factura almacenada en sesión: " + ses.getAttribute("factura"));
+
+
+            // Realizar el pago a través de PayPal
             return paypalServicio.hacerPago(pedido, ses);
 
         } catch (RuntimeException e) {
-            e.getMessage();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el pedido: " + e.getMessage());
         }
     }

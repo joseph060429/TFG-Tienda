@@ -224,13 +224,5 @@ public class CarritoServicioImpl implements CarritoServicio {
         }
     }
 
-    private double calcularPrecioTotal(List<CarritoModelo> carrito) {
-        // Precio total del carrito
-        double precioTotal = carrito.stream()
-                .mapToDouble(CarritoModelo::getPrecioProducto)
-                .sum();
-
-        return precioTotal;
-    }
 
 }
