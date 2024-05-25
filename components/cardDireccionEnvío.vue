@@ -296,7 +296,7 @@ const eliminarDireccionFacturacion = () => {
 }
 
 
-.address-card-envio{
+.address-card-envio {
     margin: 1em;
     background-color: #e0e0e0;
     border-radius: 5px;
@@ -334,12 +334,13 @@ const eliminarDireccionFacturacion = () => {
         background-color: #e0e0e0;
         border-radius: 5px;
         border: 2px solid gray;
-        height: 25vh;
-        width: 99%;
+        height: 27vh;
+        width: 98%;
         margin-bottom: 1em;
         margin-top: 1em;
     }
-    .address-card-envio{
+
+    .address-card-envio {
         margin-top: 1%;
         background-color: #e0e0e0;
         border-radius: 5px;
@@ -444,13 +445,12 @@ const eliminarDireccionFacturacion = () => {
 
 @media (max-width: 600px) {
 
-.boton-borrar {
-    width: 5%;
-    margin: auto;
-    height: 1vh;
-    margin-left: 75%;
-    // margin-top: 0.5em;
-}
+    .boton-borrar {
+        width: 5%;
+        margin: auto;
+        height: 1vh;
+        margin-left: 75%;
+    }
 }
 
 
