@@ -176,7 +176,7 @@ public class PayPalServicio {
                     String sessionId = ses.getId();
                     
                     // Construir la URL de redireccionamiento con el ID de sesión como parámetro
-                    String redirectUrl = links.getHref() + "?sessionId=" + sessionId;
+                    String redirectUrl = links.getHref() + "&sessionId=" + sessionId;
             
                     System.out.println("Sesión ID en servicio hacer pago: " + sessionId);
                     System.out.println("pedido desde hacer pago " + ses.getAttribute(clavePedido));

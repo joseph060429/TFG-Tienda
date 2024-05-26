@@ -21,6 +21,7 @@ import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.service.PedidoServicio.UsuarioPedidoServicio;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,23 +50,24 @@ public class UsuarioPedidosController {
      * copiando HTTP, y no otra cosa
      */
 
-    // @PostMapping("/crearPedido")
-    // public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO
-    // crearPedidoDTO,
-    // @RequestHeader("Authorization") String token, HttpSession ses) {
-    // return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
-    // crearPedidoDTO.getProductos(), ses);
-    // }
-
     @PostMapping("/crearPedido")
-    public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
-            @RequestHeader("Authorization") String token,
-            HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        System.out.println("Sesión ID en crearPedido controller: " + session.getId());
-        return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
-                crearPedidoDTO.getProductos(), session);
+    public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO
+    crearPedidoDTO,
+    @RequestHeader("Authorization") String token, HttpSession ses) {
+    return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
+    crearPedidoDTO.getProductos(), ses);
     }
+
+//    @PostMapping("/crearPedido")
+//     public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
+//                                          @RequestHeader("Authorization") String token,
+//                                          HttpServletRequest request,
+//                                          HttpServletResponse response) {
+//         HttpSession session = request.getSession();
+//         System.out.println("Sesión ID en crearPedido controller: " + session.getId());
+//         return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
+//                 crearPedidoDTO.getProductos(), session, response);
+//     }
 
     // CONTROLADOR PARA ELIMINAR UN PEDIDO
     @DeleteMapping("/eliminarPedido")

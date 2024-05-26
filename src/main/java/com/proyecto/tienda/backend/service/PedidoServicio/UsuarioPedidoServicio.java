@@ -8,6 +8,7 @@ import com.proyecto.tienda.backend.models.ProductoModelo;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 
 import io.jsonwebtoken.io.IOException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 public interface UsuarioPedidoServicio {
@@ -15,6 +16,10 @@ public interface UsuarioPedidoServicio {
     // METODO PARA CREAR UN PEDIDO
     ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
             List<ProductoModelo> productosModelo, HttpSession ses) throws IOException;
+
+
+    // ResponseEntity<?> crearPedido(CrearPedidoDTO crearPedidoDTO, String token, JwtUtils jwtUtils,
+    //         List<ProductoModelo> productosModelo, HttpSession ses, HttpServletResponse response);
 
     // METODO PARA ELIMINAR UN PEDIDO
     ResponseEntity<?> eliminarPedido(Long numeroPedido, String token, JwtUtils jwtUtils);
