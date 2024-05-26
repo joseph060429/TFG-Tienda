@@ -11,7 +11,7 @@
                     <formulario-anadir-direccion-envio @pokemon="test($event)"
                         v-model="mostrarFormularioAnadirDirecionEnvio" />
                     <q-btn @click="anadirDireccionEnvio" class="boton-anadir-direccion-envio"
-                        label="Añadir nueva dirección de envío">
+                        label="Nueva dirección de envío">
                         <q-icon name="mdi-map-marker" />
                     </q-btn>
                     <q-card v-for="(direccion, index) in usuario.direccionesEnvioFacturacion.direccionesEnvio"
@@ -33,7 +33,7 @@
                             <formulario-anadir-direccion-envio @pokemon="test($event)"
                                 v-model="mostrarFormularioAnadirDirecionEnvio" />
                             <q-btn @click="anadirDireccionEnvio" class="boton-anadir-direccion-envio"
-                                label="Añadir nueva dirección de envío">
+                                label="Nueva dirección de envío">
                                 <q-icon name="mdi-map-marker" />
                             </q-btn>
                         </q-card-section>
@@ -292,7 +292,7 @@ const eliminarDireccionFacturacion = () => {
     border-radius: 5px;
     border: 2px solid gray;
     text-align: center;
-    height: 20vh;
+    height: 22vh;
 }
 
 
@@ -382,8 +382,9 @@ const eliminarDireccionFacturacion = () => {
 
 @media (max-width: 600px) {
     .boton-anadir-direccion-envio {
-        max-width: 100%;
-        max-height: 10vh;
+        width: 90%;
+        margin: auto;
+        max-height: 15vh;
         margin-top: 0.5em;
     }
 }
