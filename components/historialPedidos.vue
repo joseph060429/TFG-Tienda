@@ -14,8 +14,8 @@
               @click="abrirDialogoEliminar" />
 
             <!-- Botón para abrir el diálogo de devolución de pedidos -->
-            <q-btn color="negative" icon="mdi-undo" label="Devolución de pedidos" class="q-mb-md boton-devolucion"
-              @click="abrirFormularioDevolverPedido" />
+            <!-- <q-btn color="negative" icon="mdi-undo" label="Devolución de pedidos" class="q-mb-md boton-devolucion"
+              @click="abrirFormularioDevolverPedido" /> -->
           </div>
         </template>
 
