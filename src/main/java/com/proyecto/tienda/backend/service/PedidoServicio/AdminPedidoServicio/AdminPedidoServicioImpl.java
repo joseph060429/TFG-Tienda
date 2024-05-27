@@ -92,10 +92,10 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // lanzare la exception que no un estado valido para esta operacion
             String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
             System.out.println("ESTADO PEDIDO: " + estadoPedido);
-            if (!EPedido.ENVIADO.toString().equalsIgnoreCase(estadoPedido)) {
-                System.out.println("ESTADO: " + estadoPedido);
-                return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
-            }
+            // if (!EPedido.ENVIADO.toString().equalsIgnoreCase(estadoPedido)) {
+            //     System.out.println("ESTADO: " + estadoPedido);
+            //     return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
+            // }
 
             // Si el pedido ya tiene un estado valido que no sea ENVIADO, devuelvo un error
             if (EPedido.ENVIADO.toString().equals(pedido.getEstado().trim())) {
@@ -126,7 +126,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // Guardo el pedido
             pedidoRepositorio.save(pedido);
 
-            return ResponseEntity.ok("Se actualizo correctamente el pedido");
+            return ResponseEntity.ok("Se actualizo correctamente el pedido a enviado");
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");
@@ -210,10 +210,10 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // Verifico que el estado que ponga en el postman sea ENTREGADO O entregado,
             String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
             System.out.println("ESTADO PEDIDO: " + estadoPedido);
-            if (!EPedido.ENTREGADO.toString().equalsIgnoreCase(estadoPedido)) {
-                System.out.println("ESTADO: " + estadoPedido);
-                return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
-            }
+            // if (!EPedido.ENTREGADO.toString().equalsIgnoreCase(estadoPedido)) {
+            //     System.out.println("ESTADO: " + estadoPedido);
+            //     return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
+            // }
 
             if (EPedido.ENTREGADO.toString().equals(pedido.getEstado().trim())) {
                 return ResponseEntity.status(400).body("El pedido ya ha sido marcado como entregado");
@@ -289,10 +289,10 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // lanzare la exception que no un estado valido para esta operacion
             String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
 
-            if (!EPedido.PENDIENTE_CONFIRMACION_DIRECCION.toString().equalsIgnoreCase(estadoPedido)) {
-                System.out.println("ESTADO: " + estadoPedido);
-                return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
-            }
+            // if (!EPedido.PENDIENTE_CONFIRMACION_DIRECCION.toString().equalsIgnoreCase(estadoPedido)) {
+            //     System.out.println("ESTADO: " + estadoPedido);
+            //     return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
+            // }
 
             if (EPedido.PENDIENTE_CONFIRMACION_DIRECCION.toString().equals(pedido.getEstado().trim())) {
                 return ResponseEntity.status(400)
@@ -312,7 +312,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // Envio el email al usuario
             resend.enviarEmailDireccionErronea(email, id_pedido);
 
-            return ResponseEntity.ok("Se actualizó correctamente el pedido");
+            return ResponseEntity.ok("Se actualizó correctamente el pedido a pendiente de confirmación de dirección");
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");
@@ -405,10 +405,10 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // lanzare la exception que no un estado valido para esta operacion
             String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
 
-            if (!EPedido.REPROGRAMADO_PARA_ENTREGA.toString().equalsIgnoreCase(estadoPedido)) {
-                System.out.println("ESTADO: " + estadoPedido);
-                return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
-            }
+            // if (!EPedido.REPROGRAMADO_PARA_ENTREGA.toString().equalsIgnoreCase(estadoPedido)) {
+            //     System.out.println("ESTADO: " + estadoPedido);
+            //     return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
+            // }
 
             if (EPedido.REPROGRAMADO_PARA_ENTREGA.toString().equals(pedido.getEstado().trim())) {
                 return ResponseEntity.status(400)
@@ -424,7 +424,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // Envio el email al usuario
             resend.enviarEmailNadieEnCasa(email);
 
-            return ResponseEntity.ok("Se actualizó correctamente el pedido");
+            return ResponseEntity.ok("Se actualizó correctamente el pedido a reprogramado para entrega");
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");

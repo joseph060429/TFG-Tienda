@@ -43,9 +43,8 @@ public class AdminPedidosController {
     @Autowired
     private ResendUtil resend;
 
-
     @GetMapping("/listarPedidos")
-  public ResponseEntity<List<PedidoInfoDTO>> listarPedidos() {
+    public ResponseEntity<List<PedidoInfoDTO>> listarPedidos() {
         List<PedidoInfoDTO> pedidos = adminPedidoServicio.listarPedidos();
         return ResponseEntity.ok(pedidos);
     }
@@ -127,8 +126,8 @@ public class AdminPedidosController {
         return adminPedidoServicio.actualizarDireccionEnvioAdmin(pedidoId, actualizarDireccionEnvioDTO, usuario);
     }
 
-
-    // CONTRLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO A REPROGRAMADO_PARA_ENTREGA CUANDO EL REPARTIDOR LLEGA Y NO HAY NADIE EN CASA O NO RESPONDEN AL MÓVIL
+    // CONTRLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO A REPROGRAMADO_PARA_ENTREGA
+    // CUANDO EL REPARTIDOR LLEGA Y NO HAY NADIE EN CASA O NO RESPONDEN AL MÓVIL
     @PatchMapping("/envioEmailReprogramadoEntrega")
     public ResponseEntity<?> actualizarEstadoReprogramadoParaEntrega(
             @Valid @RequestBody ActualizarPedidoDTO actualizarPedidoDTO) {
