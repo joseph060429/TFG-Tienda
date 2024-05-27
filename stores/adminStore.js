@@ -8,6 +8,7 @@ export const adminStore = defineStore({
   state: () => ({
     // Defino el estado inicial de la store, es este el nombre que le pongo para luego llamarlo en el composable
     usuarios: [],
+    pedidos: [],
     loggedIn: true,
   }),
 
@@ -34,7 +35,6 @@ export const adminStore = defineStore({
         return error.response;
       }
     },
-
 
     // STORE PARA ACTUALIZARLE EL ROL A UN USUARIO
     async actualizarRol(id, nombreRol) {
@@ -76,7 +76,7 @@ export const adminStore = defineStore({
             },
             params: {
               email: email,
-            }
+            },
           }
         );
         console.log("NOMBRE EMAIL STOREAA", email);
@@ -88,8 +88,6 @@ export const adminStore = defineStore({
         return error.response;
       }
     },
-
-
 
     async actualizacionUsuarioAdmin(id, datosActualizar) {
       try {
@@ -108,7 +106,7 @@ export const adminStore = defineStore({
             },
             params: {
               id: id,
-            }
+            },
           }
         );
         console.log("id del usuario a actualizar desde store", id);
@@ -118,6 +116,83 @@ export const adminStore = defineStore({
         return error.response;
       }
     },
+
+    // STORE PARA LISTAR TODOS LOS PEDIDOS
+    async listarPedidos() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await useAxiosInstance().get(
+          "/admin/pedidos/listarPedidos",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Agrego los datos de los usuarios recibidos en la respuesta al array de usuarios
+        this.pedidos = response.data;
+        return response;
+      } catch (error) {
+        console.log("Error en LISTAR PEDIDOS ADMIN STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+    //STORE PARA ACTUALIZAR EL ESTADO DE PEDIDO A ENVIADO
+    async actualizarEstadoEnviado(pedidoId, estado) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("NOMBRE ESTADO STORE", estado);
+        const response = await useAxiosInstance().patch(
+          "/admin/pedidos/actualizarEstadoPedidoEnviado",
+          { pedidoId: pedidoId, estado: estado },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("NOMBRE ESTADO ENVIADO STORE", estado);
+        this.pedidos = response.data;
+
+        return response;
+      } catch (error) {
+        console.log("Error en ACTUALIZAR ROL  STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+    // STORE PARA ACTUALIZAR EL ESTADO DEL ENVIO A DIRECCION ERRONEA
+    async actualizarEstadoDireccionErronea(pedidoId, estado) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("NOMBRE ESTADO STORE", estado);
+        const response = await useAxiosInstance().patch(
+          "/admin/pedidos/envioEmailDireccionErronea",
+          { pedidoId: pedidoId, estado: estado },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("NOMBRE ESTADO ENVIADO STORE", estado);
+        this.pedidos = response.data;
+
+        return response;
+      } catch (error) {
+        console.log("Error en DIRECCION ERRONEA ROL  STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+
+
+
+
+
+
+
 
 
 
