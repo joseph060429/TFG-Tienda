@@ -153,7 +153,7 @@ function crearPedido() {
     }
 
     console.log(form)
-    useAxiosInstance().post('http://localhost:8080/usuarios/pedidos/crearPedido', form, {
+    useAxiosInstance().post('/usuarios/pedidos/crearPedido', form, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -163,10 +163,8 @@ function crearPedido() {
         emergente = window.open(response.data, "_blank", "popup")
         if (emergente) {
 
-            // if()
-
             if (emergente.opener) {
-                
+
                 emergente.opener.console.log('aaaaaaaaaaaaaaaaaaa')
             }
         }
