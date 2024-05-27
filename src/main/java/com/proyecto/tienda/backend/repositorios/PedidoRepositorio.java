@@ -31,7 +31,9 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
   List<PedidosModelo> findByUsuario(UsuarioModelo usuario);
 
 
-  Optional<PedidosModelo> findById(String id);
+  // Optional<PedidosModelo> findById(String id);
+
+  // Optional<PedidosModelo> findByPaymentId(String paymentId);
 
   // // CONSULTA PERSONALIZADA PARA DEVOLVER SOLO CAMPOS ESPECIFICOS
   // @Query(value = "{'usuario._id': ?0}", fields = "{'usuario.nombre': 1, 'usuario.apellido': 1, 'usuario.email': 1}")

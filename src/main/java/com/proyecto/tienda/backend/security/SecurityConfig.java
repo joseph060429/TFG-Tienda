@@ -81,6 +81,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/buscarPorCamposImportantes").permitAll();
                     auth.requestMatchers("/buscarPorEspecificacion").permitAll();
                     auth.requestMatchers("/buscarPorRangoDePrecio").permitAll();
+                    auth.requestMatchers("/payment/*/*").permitAll();
                     auth.requestMatchers("/payment/*").permitAll();
                     auth.requestMatchers("/usuarios/pedidos/paypal/*").permitAll();
                     auth.requestMatchers("/cambiarContrasenia").permitAll();
