@@ -115,7 +115,7 @@ const mostrarFormularioAnadirDirecionFacturacionParticular = ref(false);
 const mostrarBorrarDireccion = ref(false);
 const indice = ref(null);
 const modo = ref('');
-
+const paypalUrl = ref('');
 
 function crearPedido() {
 
@@ -142,13 +142,13 @@ function crearPedido() {
         particularDireccionFacturacionDTO: {
             nombreFacturacion: factSplit[1][1].trim(),
             apellidoFacturacion: factSplit[2][1].trim(),
-            direccionDeFacturacion: factSplit[4][1].trim(),
+            direccionDeFacturacion: factSplit[4][0].trim(),
             numeroDeFacturacion: factSplit[5][0].split(' ')[2].trim(),
             pisoDeFacturacion: factSplit[6][0].split(' ')[2].trim(),
             numTelefonoFacturacion: 123456789,
-            puertaDeFacturacion: factSplit[7][0].split(' ')[2].trim(),
-            codigoPostalDeFacturacion: factSplit[8][0].trim(),
-            provinciaDeFacturacion: factSplit[9][0].split(' ')[1].trim()
+            puertaDeFacturacion: 'D',
+            codigoPostalDeFacturacion: factSplit[7][0].trim(),
+            provinciaDeFacturacion: factSplit[8][0].trim()
         }
     }
 
@@ -159,10 +159,9 @@ function crearPedido() {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
     }).then((response) => {
-        console.log(response.data, ' al fin')
-        emergente = window.open(`${response.data}`, '_blank', 'popup')
-        emergente.window.pedido = 'probando'
-        emergente.focus()
+        
+        emergente = window.open(response.data, "_blank", "popup")
+        
     })
 
 
