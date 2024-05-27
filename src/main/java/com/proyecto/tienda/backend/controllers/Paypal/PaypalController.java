@@ -55,6 +55,11 @@ public class PaypalController {
             Optional<PedidosModelo> pedido = pedidoRepositorio
                     .findBy_id(payment.getTransactions().get(0).getDescription());
 
+            // Actualizo el estado del pedido
+            PedidosModelo pedidoActualizado = pedido.get();
+            pedidoActualizado.setEstado("PENDIENTE_ENVÍO");
+            pedidoRepositorio.save(pedidoActualizado);
+
             // Resto la cantidad de cada producto del stock
             List<ProductoPedidoDTO> productosPedido = pedido.get().getProductos();
             for (ProductoPedidoDTO productoPedido : productosPedido) {

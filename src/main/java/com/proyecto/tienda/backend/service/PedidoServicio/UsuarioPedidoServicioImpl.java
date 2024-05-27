@@ -319,7 +319,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
         pedido.setUsuario(usuario);
         pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
         asignarNumeroPedido(pedido);
-        pedido.setEstado(EPedido.PENDIENTE.toString());
+        pedido.setEstado(EPedido.PENDIENTE_PAGO.toString());
         pedido.setTrackingNumber("");
         return pedido;
     }
@@ -530,7 +530,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     // Verifico si el pedido pertenece al usuario actual
                     if (pedido.getUsuario().equals(usuario)) {
                         // Verifico si el pedido está en estado "PENDIENTE"
-                        if (pedido.getEstado().equals(EPedido.PENDIENTE.toString())) {
+                        if (pedido.getEstado().equals(EPedido.PENDIENTE_PAGO.toString())) {
                             // Obtengo la lista de productos pedidos del pedido
                             List<ProductoPedidoDTO> productosPedidos = pedido.getProductos();
 

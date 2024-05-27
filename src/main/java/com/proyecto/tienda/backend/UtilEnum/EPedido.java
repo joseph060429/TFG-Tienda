@@ -1,8 +1,8 @@
 package com.proyecto.tienda.backend.UtilEnum;
 
 public enum EPedido {
-
-    PENDIENTE, // Por defeceto cuando se envia el pedido
+    PENDIENTE_PAGO, // Cuando se crea un pedido 
+    PENDIENTE_ENVÍO, // Cuando el pedido ha sido cancelado
     CANCELADO, // Por si el usuario elimina su pedido antes de enviarlo
     ENVIADO,  // Cuando yo como admin envio el pedido
     PENDIENTE_CONFIRMACION_DIRECCION, // Cuando el repartidor llega a casa y la direccion no existe
