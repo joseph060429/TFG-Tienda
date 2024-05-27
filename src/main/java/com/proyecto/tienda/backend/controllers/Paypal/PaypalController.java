@@ -92,7 +92,6 @@ public class PaypalController {
     @GetMapping("/payment/cancel/{id}")
     public ResponseEntity<String> paymentCancel(@PathVariable("id") String id) {
 
-        System.out.println("cago en l aputa ya" + id);
         Optional<PedidosModelo> pedidoOptional = pedidoRepositorio
                 .findBy_id(id);
 
@@ -100,7 +99,7 @@ public class PaypalController {
             pedidoRepositorio.deleteById(id);
         }
 
-        return ResponseEntity.status(400).body("idiota: " + id);
+        return ResponseEntity.status(400).body("El pago ha sido cancelado");
     }
 
     // CONTROLADOR POR SI HUBO UN ERROR EN EL PAGO
