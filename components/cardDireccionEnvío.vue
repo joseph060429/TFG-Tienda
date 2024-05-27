@@ -122,7 +122,7 @@ function crearPedido() {
     // let emergente = window.open('https://google.com', '_blank', 'popup')
     let emergente;
     let partesEnvio = usuario.value.direccionesEnvioFacturacion.direccionesEnvio[1].split(",");
-    let partesFact = usuario.value.direccionesEnvioFacturacion.direccionesFacturacion[1].split(",");
+    let partesFact = usuario.value.direccionesEnvioFacturacion.direccionesFacturacion[0].split(",");
     let factSplit = []
     for (let dato of partesFact) {
         factSplit.push(dato.split(':'))
@@ -144,11 +144,11 @@ function crearPedido() {
             apellidoFacturacion: factSplit[2][1].trim(),
             direccionDeFacturacion: factSplit[4][0].trim(),
             numeroDeFacturacion: factSplit[5][0].split(' ')[2].trim(),
-            pisoDeFacturacion: factSplit[6][0].split(' ')[2].trim(),
+            pisoDeFacturacion: '5',
             numTelefonoFacturacion: 123456789,
             puertaDeFacturacion: 'D',
-            codigoPostalDeFacturacion: factSplit[7][0].trim(),
-            provinciaDeFacturacion: factSplit[8][0].trim()
+            codigoPostalDeFacturacion: '41231',
+            provinciaDeFacturacion: 'mi casa'
         }
     }
 
@@ -159,9 +159,18 @@ function crearPedido() {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
     }).then((response) => {
-        
+
         emergente = window.open(response.data, "_blank", "popup")
-        
+        if (emergente) {
+
+            // if()
+
+            if (emergente.opener) {
+                
+                emergente.opener.console.log('aaaaaaaaaaaaaaaaaaa')
+            }
+        }
+
     })
 
 
