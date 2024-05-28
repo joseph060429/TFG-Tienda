@@ -255,47 +255,6 @@ const editarPerfil = (id) => {
 
 .tabla td {
     text-align: center;
-
-    // &:nth-child(1) {
-    //     width: 10%;
-    //     background-color: #FF4500;
-    // }
-
-    // &:nth-child(2) {
-    //     width: 10%;
-    //     background-color: #4169E1;
-    // }
-
-    // &:nth-child(3) {
-    //     width: 10%;
-    //     background-color: #546e7a;
-    // }
-
-    // &:nth-child(4) {
-    //     width: 20%;
-    //     background-color: yellow;
-    // }
-
-    // &:nth-child(5) {
-    //     width: 15%;
-    //     background-color: green;
-    // }
-
-    // &:nth-child(6) {
-    //     width: 20%;
-    //     background-color: red;
-    // }
-
-    // &:nth-child(7) {
-    //     width: 20%;
-    //     background-color: orange;
-    // }
-
-    // &:nth-child(8) {
-    //     width: 5%;
-    //     background-color:purple;
-    // }
-
 }
 
 .titulo {
