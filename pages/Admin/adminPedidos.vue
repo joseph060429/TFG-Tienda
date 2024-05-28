@@ -158,26 +158,66 @@ const listarTodosLosPedidos = async () => {
 
 .tabla td {
     text-align: center;
+
     &:nth-child(1) {
         width: 10%;
-      }
-      &:nth-child(2) {
+    }
+
+    &:nth-child(2) {
         width: 10%;
-      }
-      &:nth-child(3) {
+    }
+
+    &:nth-child(3) {
         width: 10%;
-      }
-      &:nth-child(4) {
+    }
+
+    &:nth-child(4) {
         width: 20%;
-      }
-      &:nth-child(5) {
+    }
+
+    &:nth-child(5) {
         width: 15%;
-      }
-      &:nth-child(6) {
+    }
+
+    &:nth-child(6) {
         width: 20%;
-      }
+    }
 
 }
+
+@media (max-width: 600px) {
+    .tabla td {
+
+        &:nth-child(1) {
+            height: 4px;
+            // background-color: red;
+        }
+
+
+        &:nth-child(2) {
+            width: 10%;
+        }
+
+        &:nth-child(3) {
+            width: 10%;
+        }
+
+        &:nth-child(4) {
+            width: 20%;
+        }
+
+        &:nth-child(5) {
+            width: 15%;
+        }
+
+        &:nth-child(6) {
+            width: 20%;
+        }
+
+    }
+}
+
+
 
 .titulo {
     font-size: 2em;
@@ -234,8 +274,6 @@ const listarTodosLosPedidos = async () => {
     overflow: hidden;
     font-size: 1em;
     text-align: center;
-    
+
 }
-
-
 </style>

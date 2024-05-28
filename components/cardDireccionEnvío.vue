@@ -16,11 +16,13 @@
                     </q-btn>
                     <q-card v-for="(direccion, index) in usuario.direccionesEnvioFacturacion.direccionesEnvio"
                         :key="index" class="address-card-envio">
+
                         <div class="checked" @click="selectDireccion(direccion, 'envio')">
                             <q-icon size=" 35px" name="mdi-checkbox-marked"
                                 v-if="seleccionDireciones.envio === direccion" /> <q-icon size="35px"
                                 name="mdi-checkbox-blank-outline" v-else />
                         </div>
+
                         <q-card-section>
 
                             <div class="info-direcciones">{{ direccion }}</div>
@@ -339,9 +341,10 @@ const eliminarDireccionFacturacion = () => {
     margin: 1em;
     background-color: #e0e0e0;
     border-radius: 5px;
+    width: 99%;
     border: 2px solid gray;
     text-align: center;
-    height: 15vh;
+    height: 20vh;
 }
 
 .address-card {
@@ -373,19 +376,20 @@ const eliminarDireccionFacturacion = () => {
         border-radius: 5px;
         border: 2px solid gray;
         height: 27vh;
-        width: 98%;
+        width: 97%;
         margin-bottom: 1em;
         margin-top: 1em;
     }
 
     .address-card-envio {
-        margin-top: 1%;
+        margin-top: 1em;
         background-color: #e0e0e0;
         border-radius: 5px;
         // border: 2px solid gray;
         text-align: center;
-        height: 15vh;
-        width: 90%;
+        height: 18vh;
+        width: 97%;
+
 
     }
 }
@@ -508,13 +512,25 @@ const eliminarDireccionFacturacion = () => {
 }
 
 .checked {
-    // border: 1px solid cyan;
-    position: absolute;
-    top: 49%;
-    width: 50px;
-    height: 50px;
-    .q-icon {
-        cursor: pointer;
+    width: 2%;
+    height: 2.8em;
+    margin-top: 1%;
+    margin-left: 2%;
+    cursor: pointer;
+}
+
+.checked .q-icon {
+    pointer-events: none; 
+}
+
+@media (max-width: 600px) {
+    .checked {
+        width: 5%;
+        height: 2.8em; 
+        margin-top: 1%; 
+        margin-left: 2%; 
+        cursor: pointer; 
     }
 }
+
 </style>

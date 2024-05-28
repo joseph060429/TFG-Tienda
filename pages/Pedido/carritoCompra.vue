@@ -47,7 +47,7 @@
                 <!-- {{ props.row.totalCarrito }}  -->
             </template>
         </q-table>
-        <q-btn @click="seguirComprando" label="Comprar" class="boton-seguir-comprando">
+        <q-btn @click="seguirComprando" :disabled label="Comprar" class="boton-seguir-comprando">
             <q-icon name="mdi-cart-plus" />
         </q-btn>
     </div>
@@ -73,6 +73,8 @@ const productoAEliminar = ref(null)
 const { verMiCarrito, usuario } = usuarioComposable();
 
 const loading = ref(true)
+
+const tieneErrores = ref(false);
 
 onBeforeMount(() => {
     obtenerProductosDelCarrito()
@@ -112,9 +114,11 @@ const anadirCantidadProducto = async (item) => {
         console.log("RESPONSE: ", response.data);
         if (response.data === 'La cantidad solicitada debe ser mayor que cero') {
             mostrarAlertaError('La cantidad solicitada debe ser mayor que cero', quasar);
+            tieneErrores.value = true;
         }
         if (response.data === 'La cantidad solicitada supera la cantidad disponible del producto') {
             mostrarAlertaError(' La cantidad solicitada supera la cantidad disponible del producto', quasar);
+            tieneErrores.value = true;
         }
 
     } catch (error) {

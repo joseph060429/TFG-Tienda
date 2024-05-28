@@ -30,9 +30,8 @@
 
 
                     <q-td>
-                        <q-select v-model="props.row.roles[0].name" :options="optionesParaRoles"
-                            @update:model-value="seleccionarRoles(props.row)"
-                            style="position: absolute; right: 0; top: 0%; border: none;" />
+                        <q-select class="select-rol" v-model="props.row.roles[0].name" :options="optionesParaRoles"
+                            @update:model-value="seleccionarRoles(props.row)" />
                     </q-td>
 
 
@@ -256,6 +255,47 @@ const editarPerfil = (id) => {
 
 .tabla td {
     text-align: center;
+
+    // &:nth-child(1) {
+    //     width: 10%;
+    //     background-color: #FF4500;
+    // }
+
+    // &:nth-child(2) {
+    //     width: 10%;
+    //     background-color: #4169E1;
+    // }
+
+    // &:nth-child(3) {
+    //     width: 10%;
+    //     background-color: #546e7a;
+    // }
+
+    // &:nth-child(4) {
+    //     width: 20%;
+    //     background-color: yellow;
+    // }
+
+    // &:nth-child(5) {
+    //     width: 15%;
+    //     background-color: green;
+    // }
+
+    // &:nth-child(6) {
+    //     width: 20%;
+    //     background-color: red;
+    // }
+
+    // &:nth-child(7) {
+    //     width: 20%;
+    //     background-color: orange;
+    // }
+
+    // &:nth-child(8) {
+    //     width: 5%;
+    //     background-color:purple;
+    // }
+
 }
 
 .titulo {
@@ -312,6 +352,16 @@ const editarPerfil = (id) => {
     }
 }
 
+.select-rol{
+    position: absolute;
+    right: 0;
+    top: 0%;
+    border: none;
+    width: 100%;
+    overflow: hidden;
+    font-size: 1em;
+    text-align: center;
+}
 
 
 
