@@ -99,19 +99,7 @@ public class CrearPedidoDTO {
     @Max(value = 999999999L, message = "El número de teléfono debe tener como máximo 9 dígitos")
     private Long numTelefono;
 
-        // // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
-        // public void setFechaPedido() {
-        //     // Obtengo la fecha actual
-        //     LocalDateTime fechaActual = LocalDateTime.now();
-
-        //     // Defino el formato para la fecha
-        //     DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
-        //     // Formateo la fecha y la guardo en la propiedad fechaCreacion
-        //     this.fechaPedido = fechaActual.format(formatearFecha);
-
-        // }
-
+        // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
         public void setFechaPedido() {
             // Obtengo la zona horaria específica
             ZoneId zoneId = ZoneId.of("Europe/Madrid");

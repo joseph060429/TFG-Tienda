@@ -14,6 +14,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -53,14 +55,17 @@ public class CrearUsuarioDTO {
 
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL USUARIO
     public void setFechaCreacion() {
-        // Obtengo la fecha actual
-        LocalDateTime fechaActual = LocalDateTime.now();
+       // Obtengo la zona horaria específica
+    ZoneId zoneId = ZoneId.of("Europe/Madrid");
 
-        // Defino el formato para la fecha
-        DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    // Obtengo la fecha y hora actuales con la zona horaria especificada
+    ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
 
-        // Formateo la fecha y la guardo en la propiedad fechaCreacion
-        this.fechaCreacion = fechaActual.format(formatearFecha);
+    // Defino el formato para la fecha
+    DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+    // Formateo la fecha y la guardo en la propiedad fechaCreacion
+    this.fechaCreacion = fechaActual.format(formatearFecha);
     }
 
 }
