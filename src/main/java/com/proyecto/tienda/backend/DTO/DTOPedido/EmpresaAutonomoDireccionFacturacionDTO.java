@@ -25,8 +25,9 @@ public class EmpresaAutonomoDireccionFacturacionDTO {
 
     @NotNull(message = "La direccion de facturación no puede estar en blanco")
     @NotBlank(message = "La direccion de facturación no puede estar en blanco")
-    @Pattern(regexp = "^\\S(.*\\S)?$", message = "La dirección de facturación no puede contener espacios en blanco al principio ni al final")
-    @Pattern(regexp = "^.{2,100}$", message = "La dirección de facturación debe tener entre 2 y 100 caracteres")
+    @Pattern(regexp = "^\\S(.*\\S)?$", message = "La direccion de facturación no puede contener espacios en blanco al principio ni al final")
+    @Pattern(regexp = "^.{2,100}$", message = "La direccion de facturacióndebe tener entre 2 y 100 caracteres")
+    @Pattern(regexp = "^\\D*$", message = "La direccion de facturación no puede contener números")
     private String direccionDeFacturacion;
 
     @NotNull(message = "El número de facturación no puede estar en blanco")
@@ -34,14 +35,6 @@ public class EmpresaAutonomoDireccionFacturacionDTO {
     @Size(min = 1, max = 10, message = "El número de facturación debe tener entre 1 y 10 caracteres")
     @Pattern(regexp = "^\\S(.*\\S)?$", message = "El número de facturación no puede contener espacios en blanco al principio ni al final")
     private String numeroDeFacturacion;
-
-    // @Min(value = 0, message = "El piso de facturación debe ser min 0, maximo
-    // 9999999999 y no contener letras")
-    // @Max(value = 9999999999L, message = "El piso de facturación debe ser min 0,
-    // maximo 9999999999 y no contener letras")
-    // // @Pattern(regexp = "^$|\\d+", message = "El piso de facturación debe ser
-    // nulo o contener solo dígitos positivos")
-    // private String pisoDeFacturacion;
 
     @Min(value = 0, message = "El piso debe ser al menos 0")
     @Max(value = 9999999999L, message = "El número debe ser menor o igual a 9999999999")

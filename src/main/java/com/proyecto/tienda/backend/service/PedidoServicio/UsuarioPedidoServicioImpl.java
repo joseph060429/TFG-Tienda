@@ -154,6 +154,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     private ResponseEntity<?> procesarDireccionFacturacion(UsuarioModelo usuario, CrearPedidoDTO crearPedidoDTO,
             PedidosModelo pedido) {
         try {
+
             ParticularDireccionFacturacionDTO particular = crearPedidoDTO.getParticularDireccionFacturacionDTO();
             EmpresaAutonomoDireccionFacturacionDTO empresaAutonomo = crearPedidoDTO
                     .getEmpresaAutonomoDireccionFacturacionDTO();
@@ -250,7 +251,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     provinciaDeFacturacion, numeroDeFacturacion, pisoDeFacturacion.toString(0), puertaDeFacturacion);
 
             // Guardo el usuario con la nueva dirección de facturacion
-            usuarioRepositorio.save(usuario);
+            // usuarioRepositorio.save(usuario);
 
             return direccionFacturacionParticular;
         } catch (IllegalArgumentException e) {
@@ -271,7 +272,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     provinciaDeFacturacion, numeroFacturacion, pisoDeFacturacion.toString(0), puertaDeFacturacion);
 
             // Guardo el usuario con la nueva dirección de facturacion
-            usuarioRepositorio.save(usuario);
+            // usuarioRepositorio.save(usuario);
 
             return direccionFacturacionParticular;
         } catch (IllegalArgumentException e) {

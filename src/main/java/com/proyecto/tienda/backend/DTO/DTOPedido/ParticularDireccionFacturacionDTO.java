@@ -34,8 +34,9 @@ public class ParticularDireccionFacturacionDTO {
    
     @NotNull(message = "La direccion de facturación no puede estar en blanco")
     @NotBlank(message = "La direccion de facturación no puede estar en blanco")
-    @Pattern(regexp = "^\\S(.*\\S)?$", message = "La dirección de facturación no puede contener espacios en blanco al principio ni al final")
-    @Pattern(regexp = "^.{2,100}$", message = "La dirección de facturación debe tener entre 2 y 100 caracteres")
+    @Pattern(regexp = "^\\S(.*\\S)?$", message = "La direccion de facturación no puede contener espacios en blanco al principio ni al final")
+    @Pattern(regexp = "^.{2,100}$", message = "La direccion de facturacióndebe tener entre 2 y 100 caracteres")
+    @Pattern(regexp = "^\\D*$", message = "La direccion de facturación no puede contener números")
     private String direccionDeFacturacion;
 
     @NotNull(message = "El número de facturación no puede estar en blanco")

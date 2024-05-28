@@ -18,7 +18,8 @@ public class AnadirDireccionEnvioDTO {
     @NotNull(message = "La direccion no puede estar en blanco")
     @NotBlank(message = "La direccion no puede estar en blanco")
     @Pattern(regexp = "^\\S(.*\\S)?$", message = "La dirección no puede contener espacios en blanco al principio ni al final")
-    @Pattern(regexp = "^.{2,100}$", message = "La dirección debe tenmer entre 2 y 100 caracteres")
+    @Pattern(regexp = "^.{2,100}$", message = "La dirección debe tener entre 2 y 100 caracteres")
+    @Pattern(regexp = "^\\D*$", message = "La dirección no puede contener números")
     private String direccion;
    
     @NotNull(message = "El número no puede estar en blanco")
