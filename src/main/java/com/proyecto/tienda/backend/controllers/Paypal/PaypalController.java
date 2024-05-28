@@ -85,7 +85,7 @@ public class PaypalController {
             carritoRepositorio.deleteByIdUsuario(pedido.get().getUsuario().get_id());
 
             // return ResponseEntity.ok().body(pedidoFound.toString());
-            return ResponseEntity.ok().body("Pedido creado exitosamente");
+            return ResponseEntity.ok().body("Pedido creado exitosamente, ya puede cerrar esta ventana");
         } catch (Exception e) {
             log.error("Error ocurrido", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error durante el pago.");
