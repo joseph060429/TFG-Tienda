@@ -8,7 +8,7 @@
                         <!--CAMPO  DIRECCION-->
                         <q-input v-model="datosEnvio.direccion" label="Dirección" dense minlength="2" maxlength="100" lazy-rules :rules="[
                             val => val && val.length > 0 || 'Por favor, introduce algo',
-                            val => /^.{2,100}$/.test(val) || 'La dirección debe tener entre 2 y 100 caracteres',
+                            val => /^[^\d]{2,100}$/.test(val) || 'La dirección debe tener entre 2 y 100 letras ',
                             val => /^\S.*\S$/.test(val) || 'La dirección no puede empezar ni terminar con espacios en blanco',
                         ]">
                             <template v-slot:prepend>

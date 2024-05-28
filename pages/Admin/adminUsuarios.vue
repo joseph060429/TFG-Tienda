@@ -16,6 +16,7 @@
                     <q-th key="fechaCreacion">Fecha de Creación</q-th>
                     <q-th key="fechaModificacion">Fecha de Modificación</q-th>
                     <q-th key="direccionEnvio">Direccion/es de envío</q-th>
+                    <q-th key="direccionEnvio">Acciones</q-th>
                     <!-- <q-th key="direccionFacturacion">Direccion/es de facturación</q-th> -->
                 </q-tr>
             </template>
@@ -29,13 +30,10 @@
 
 
                     <q-td>
-                        {{ obtenerRoles(props.row.roles) }}
-                        <q-select v-model="rolSeleccionado" :options="optionesParaRoles"
-                            @update:model-value="seleccionarRoles(props.row._id)"
-                            style="position: absolute; right: 0; top: 30%; border: none;" append-to-body />
+                        <q-select v-model="props.row.roles[0].name" :options="optionesParaRoles"
+                            @update:model-value="seleccionarRoles(props.row)"
+                            style="position: absolute; right: 0; top: 0%; border: none;" />
                     </q-td>
-
-
 
 
                     <q-td>{{ props.row.fechaCreacion }}</q-td>
@@ -89,30 +87,32 @@ const regresar = () => {
 };
 
 // FUNCIONES
+// const optionesParaRoles = [
+//     { label: 'ADMINISTRADOR', value: 'ADMIN' },
+//     { label: 'USUARIO', value: 'USER' },
+// ];
+
+
 const optionesParaRoles = [
-    { label: 'ADMINISTRADOR', value: 'ADMIN' },
-    { label: 'USUARIO', value: 'USER' },
+   'ADMIN',
+   'USER'
 ];
-
-
-
-const rolSeleccionado = ref('');
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
 const seleccionarRoles = async (idUsuario) => {
 
 
+    console.log("idUsuario: ", idUsuario);
+
     try {
-        const response = await actualizarRol(idUsuario, rolSeleccionado.value.value);
+        const response = await actualizarRol(idUsuario._id, idUsuario.roles[0].name);
         console.log("RESPONSE de actualizarRol: ", response.data);
 
         if (response.data === 'Rol actualizado correctamente') {
             mostrarAlertaExito('Rol actualizado exitosamente', quasar)
-            setTimeout(actualizarVentana, 1000);
         }
         if (response.data === 'El usuario ya tiene ese rol') {
             mostrarAlertaError('El usuario ya tiene ese rol', quasar)
-            setTimeout(actualizarVentana, 800);
         }
 
     } catch (error) {
@@ -130,6 +130,7 @@ const actualizarVentana = () => {
 const listarTodosLosUsuarios = async () => {
     try {
         const response = await listarUsuarios();
+        adminComposable().usuarios.value = response.data;
         console.log("RESPONSE de listarUsuarios: ", response.data);
     } catch (error) {
         // Error de red u otro error

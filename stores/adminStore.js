@@ -54,8 +54,6 @@ export const adminStore = defineStore({
           }
         );
         console.log("NOMBRE ROL STOREaaa", nombreRol);
-        this.usuarios = response.data;
-
         return response;
       } catch (error) {
         console.log("Error en ACTUALIZAR ROL  STORE ==> ", error);
@@ -153,9 +151,6 @@ export const adminStore = defineStore({
           }
         );
         console.log("NOMBRE ESTADO ENVIADO STORE", estado);
-        // this.pedidos = 
-        // this.pedidos = response.data;
-
         return response;
       } catch (error) {
         console.log("Error en ACTUALIZAR ROL  STORE ==> ", error);
@@ -177,9 +172,6 @@ export const adminStore = defineStore({
             },
           }
         );
-        console.log("NOMBRE ESTADO ENVIADO STORE", estado);
-        this.pedidos = response.data;
-
         return response;
       } catch (error) {
         console.log("Error en DIRECCION ERRONEA ROL  STORE ==> ", error);

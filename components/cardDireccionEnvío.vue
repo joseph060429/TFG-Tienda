@@ -16,6 +16,11 @@
                     </q-btn>
                     <q-card v-for="(direccion, index) in usuario.direccionesEnvioFacturacion.direccionesEnvio"
                         :key="index" class="address-card-envio">
+                        <div class="checked" @click="selectDireccion(direccion, 'envio')">
+                            <q-icon size=" 35px" name="mdi-checkbox-marked"
+                                v-if="seleccionDireciones.envio === direccion" /> <q-icon size="35px"
+                                name="mdi-checkbox-blank-outline" v-else />
+                        </div>
                         <q-card-section>
 
                             <div class="info-direcciones">{{ direccion }}</div>
@@ -62,6 +67,11 @@
                     </q-btn>
                     <q-card v-for="(direccion, index) in usuario.direccionesEnvioFacturacion.direccionesFacturacion"
                         :key="index" class="address-card">
+                        <div class="checked" @click="selectDireccion(direccion, 'facturacion')">
+                            <q-icon size=" 35px" name="mdi-checkbox-marked"
+                                v-if="seleccionDireciones.facturacion === direccion" /> <q-icon size="35px"
+                                name="mdi-checkbox-blank-outline" v-else />
+                        </div>
                         <q-card-section>
                             <div class="info-direcciones">{{ direccion }}</div>
                         </q-card-section>
@@ -96,7 +106,9 @@
             </div>
         </div>
     </div>
-    <q-btn class="btn-crearPedido" label="crear pedido" @click="crearPedido()"></q-btn>
+    <q-btn class="btn-crearPedido" label="crear pedido"
+        :disable="(seleccionDireciones.envio == '' || seleccionDireciones.facturacion == '')"
+        @click="crearPedido()"></q-btn>
 </template>
 
 
@@ -112,43 +124,70 @@ const mostrarFormularioAnadirDirecionEnvio = ref(false);
 const mostrarFormularioAnadirDirecionFacturacionEmpreAuto = ref(false);
 const mostrarFormularioAnadirDirecionFacturacionParticular = ref(false);
 
+const seleccionDireciones = ref({
+    envio: '',
+    facturacion: ''
+})
+
 const mostrarBorrarDireccion = ref(false);
 const indice = ref(null);
 const modo = ref('');
 const paypalUrl = ref('');
 
-function crearPedido() {
+function selectDireccion(direccion, tipo) {
+    seleccionDireciones.value[tipo] = direccion
+    console.log(seleccionDireciones.value)
+}
 
-    // let emergente = window.open('https://google.com', '_blank', 'popup')
+function crearPedido() {
+    if (seleccionDireciones.value.envio == '' || seleccionDireciones.value.facturacion == '') {
+        return;
+    }
     let emergente;
-    let partesEnvio = usuario.value.direccionesEnvioFacturacion.direccionesEnvio[1].split(",");
-    let partesFact = usuario.value.direccionesEnvioFacturacion.direccionesFacturacion[0].split(",");
+    let partesEnvio = seleccionDireciones.value.envio.split(",");
+    let partesFact = seleccionDireciones.value.facturacion.split(",");
     let factSplit = []
     for (let dato of partesFact) {
         factSplit.push(dato.split(':'))
     }
-    console.log(factSplit)
+    console.log(factSplit, partesEnvio, 'por favor')
     let form = {
         productos: usuario.value.carrito.map((obj) => ({ _id: obj.productoId, cantidadProducto: obj.cantidadAnadidaAlCarrito })),
         tipoPago: "Paypal",
         numero: partesEnvio[1].split(' ')[2],
-        numTelefono: 123456789,
-        codigoPostal: partesEnvio[4].trim(),
-        provincia: partesEnvio[5].trim(),
+
+        codigoPostal: partesEnvio[2].split(' ')[1].toLowerCase().includes('piso') ? partesEnvio[4].trim() : partesEnvio[2].trim(),
+        provincia: partesEnvio[2].split(' ')[1].toLowerCase().includes('piso') ? partesEnvio[5].trim() : partesEnvio[3].trim(),
         direccion: partesEnvio[0],
-        piso: partesEnvio[2].split(' ')[2],
-        puerta: partesEnvio[3].trim(),
-        tipoFacturacion: factSplit[0][1].toLowerCase().trim(),
-        particularDireccionFacturacionDTO: {
+        piso: partesEnvio[2].split(' ')[1].toLowerCase().includes('piso') ? partesEnvio[2].split(' ')[2] : '',
+        puerta: partesEnvio[3].split(' ')[1].toLowerCase().includes('puerta') ? partesEnvio[3].split(' ')[2] : '',
+        tipoFacturacion: factSplit[0][1].toLowerCase().trim().includes('particular') ? factSplit[0][1].toLowerCase().trim() : factSplit[0][1].toLowerCase().trim().split('/')[0] + '_' + factSplit[0][1].toLowerCase().trim().split('/')[1].normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+    }
+
+    if (form.tipoFacturacion.includes('particular')) {
+        form.numTelefono = parseInt(factSplit[3][1])
+        form.particularDireccionFacturacionDTO = {
             nombreFacturacion: factSplit[1][1].trim(),
             apellidoFacturacion: factSplit[2][1].trim(),
             direccionDeFacturacion: factSplit[4][0].trim(),
             numeroDeFacturacion: factSplit[5][0].split(' ')[2].trim(),
-            pisoDeFacturacion: '5',
-            numTelefonoFacturacion: 123456789,
-            puertaDeFacturacion: 'D',
-            codigoPostalDeFacturacion: '41231',
-            provinciaDeFacturacion: 'mi casa'
+            pisoDeFacturacion: factSplit[6][0].split(' ')[1].trim().toLowerCase().includes('piso') ? factSplit[6][0].split(' ')[2] : '',
+            numTelefonoFacturacion: form.numTelefono = parseInt(factSplit[3][1]),
+            puertaDeFacturacion: factSplit[7][0].split(' ')[1].trim().toLowerCase().includes('puerta') ? factSplit[7][0].split(' ')[2] : '',
+            codigoPostalDeFacturacion: factSplit[6][0].split(' ')[1].trim().toLowerCase().includes('piso') ? factSplit[8][0].trim() : factSplit[6][0].trim(),
+            provinciaDeFacturacion: factSplit[6][0].split(' ')[1].trim().toLowerCase().includes('piso') ? factSplit[9][0].trim() : factSplit[7][0].trim()
+        }
+    } else {
+        form.numTelefono = parseInt(factSplit[2][1])
+        form.empresaAutonomoDireccionFacturacionDTO = {
+            cifONifFacturacion: factSplit[1][1].trim(),
+            numTelefonoFacturacion: form.numTelefono = parseInt(factSplit[2][1]),
+            direccionDeFacturacion: factSplit[3][0].trim(),
+            numeroDeFacturacion: factSplit[4][0].split(' ')[2].trim(),
+            pisoDeFacturacion: factSplit[5][0].split(' ')[1].trim().toLowerCase().includes('piso') ? factSplit[5][0].split(' ')[2] : '',
+            puertaDeFacturacion: factSplit[6][0].split(' ')[1].trim().toLowerCase().includes('puerta') ? factSplit[6][0].split(' ')[2] : '',
+            codigoPostalDeFacturacion: factSplit[5][0].split(' ')[1].trim().toLowerCase().includes('piso') ? factSplit[7][0].trim() : factSplit[5][0].trim(),
+            provinciaDeFacturacion: factSplit[5][0].split(' ')[1].trim().toLowerCase().includes('piso') ? factSplit[8][0].trim() : factSplit[6][0].trim()
         }
     }
 
@@ -160,14 +199,8 @@ function crearPedido() {
         }
     }).then((response) => {
 
-        emergente = window.open(response.data, "_blank", "popup")
-        if (emergente) {
+        emergente = window.open(response.data)
 
-            if (emergente.opener) {
-
-                emergente.opener.console.log('aaaaaaaaaaaaaaaaaaa')
-            }
-        }
 
     })
 
@@ -317,8 +350,7 @@ const eliminarDireccionFacturacion = () => {
     border-radius: 5px;
     border: 2px solid gray;
     height: 20vh;
-    width: 90%;
-    margin: auto;
+    width: 99%;
     margin-bottom: 1em;
 
 
@@ -350,7 +382,7 @@ const eliminarDireccionFacturacion = () => {
         margin-top: 1%;
         background-color: #e0e0e0;
         border-radius: 5px;
-        border: 2px solid gray;
+        // border: 2px solid gray;
         text-align: center;
         height: 15vh;
         width: 90%;
@@ -472,6 +504,17 @@ const eliminarDireccionFacturacion = () => {
         margin-top: 1%;
         margin-left: 60%;
         background-color: #005a8b;
+    }
+}
+
+.checked {
+    // border: 1px solid cyan;
+    position: absolute;
+    top: 49%;
+    width: 50px;
+    height: 50px;
+    .q-icon {
+        cursor: pointer;
     }
 }
 </style>

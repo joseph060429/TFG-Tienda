@@ -24,6 +24,9 @@
             <q-icon name="mdi-logout"></q-icon>
             Cerrar sesion
           </q-btn>
+          <!-- <q-btn @click="probando">
+            prueba
+          </q-btn> -->
         </q-toolbar>
       </q-header>
     </q-layout>
@@ -32,6 +35,15 @@
 
 
 <script setup>
+function probando(){
+  let guay = window.open('http://localhost:3000/', '_blank', 'popup')
+  guay.onload  = () => {
+    guay.opener.alert('FUNCIONA')
+  }
+  guay.addEventListener('load', () => {
+    guay.opener.console.log('FUNCIONAAAAAAAAAAAAAAA')
+  })
+}
 // Importaciones
 import { useRouter } from 'vue-router'
 import useAuthStore from '~/stores/authStore.js'
