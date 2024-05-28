@@ -135,7 +135,7 @@ const agregarAlCarrito = async () => {
     mostrarAlertaError('El producto ya está en el carrito', quasar);
   }
 
-  if(response.status === 403){
+  if (response.status === 403) {
     mostrarAlertaError('No tienes permiso para realizar esta operación, por favor inicia sesión o regístrate', quasar);
     router.push({ path: '/' })
   }

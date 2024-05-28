@@ -1,5 +1,5 @@
 <template>
-    <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" />
+    <!-- <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" /> -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="q-pa-md">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 pedidos -->
@@ -13,11 +13,8 @@
                     <q-th key="fechaPedido">Fecha del pedido</q-th>
                     <q-th key="numTelefono">Número de teléfono</q-th>
                     <q-th key="direccionEnvio">Dirección de Envío</q-th>
+                    <q-th key="email">Email</q-th>
                     <q-th key="estado">Estado</q-th>
-                    <!-- <q-th key="fechaCreacion">Fecha de Creación</q-th>
-                    <q-th key="fechaModificacion">Fecha de Modificación</q-th>
-                    <q-th key="direccionEnvio">Direccion/es de envío</q-th> -->
-                    <!-- <q-th key="direccionFacturacion">Direccion/es de facturación</q-th> -->
                 </q-tr>
             </template>
 
@@ -28,16 +25,12 @@
                     <q-td>{{ props.row.fechaPedido }}</q-td>
                     <q-td>{{ props.row.numTelefono }}</q-td>
                     <q-td>{{ props.row.direccionEnvio }}</q-td>
-
-
-
+                    <q-td> {{ props.row.datosUsuarioPedidoDTO.email }}</q-td>
                     <q-td>
-                        {{ (props.row.estado) }}
-                        <q-select v-model="estadoPedidoSeleccionado" :options="opcionesParaEstado"
-                            @update:model-value="seleccionarEstado(props.row._id)"
-                            style="position: absolute; right: 0; top: 30%; border: none;" append-to-body />
+                        <q-select v-model="props.row.estado" :options="opcionesParaEstado"
+                            @update:model-value="seleccionarEstado(props.row)"
+                            style="position: absolute; right: 0; top: 0%; border: none;" />
                     </q-td>
-
                 </q-tr>
             </template>
         </q-table>
@@ -54,13 +47,21 @@ definePageMeta({
     role: ['ROLE_ADMIN']
 });
 
+
+const estadoPedidoSeleccionado = ref('');
+
 // FUNCION PARA CARGAR LOS pedidos  ANTES DE QUE SE MONTE EL COMPONENTE
 onBeforeMount(async () => {
+
+    console.log("ESTADO PEDIDO SELECCIONADO ", estadoPedidoSeleccionado.value);
+
+
     await listarTodosLosPedidos();
 })
 
 // El usuario es el de las stores
 const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea } = adminComposable();
+
 
 //USAR QUASAR
 const quasar = useQuasar()
@@ -74,97 +75,41 @@ const regresar = () => {
 
 // FUNCIONES
 const opcionesParaEstado = [
-    // { label: 'PENDIENTE_PAGO', value: 'PENDIENTE_PAGO' }, // CUANDO SE HACE EL PEDIDO PERO AUN NO HA PAGADO
-    // { label: 'PENDIENTE_ENVÍO', value: 'PENDIENTE_ENVÍO' }, // CUANDO YA HA PAGADO
-    { label: 'ENVIADO', value: 'ENVIADO' }, // CUANDO YA HA SIDO ENVIADO, hecho
-    { label: 'PENDIENTE_CONFIRMACION_DIRECCION', value: 'PENDIENTE_CONFIRMACION_DIRECCION' }, // CUANDO EL REPARTIDOR A IDO A CASA Y LA DIRECCIÓN NO EXISTE
-    // { label: 'REPROGRAMADO_PARA_ENTREGA', value: 'REPROGRAMADO_PARA_ENTREGA' }, // CUANDO EL REPARTIDOR HA IDO Y NO HUBO NADIE EN CASA
-    // { label: 'ENTREGADO', value: 'ENTREGADO' },
-    // { label: 'PENDIENTE_ENVÍO', value: 'PENDIENTE_ENVÍO' },
+    'ENVIADO',
+    'PENDIENTE_CONFIRMACION_DIRECCION'
+
 ];
 
-const estadoPedidoSeleccionado = ref('');
+
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
-// const seleccionarEstado = async (idPedido) => {
-//     try {
-//         const response1 = await actualizarEstadoEnviado(idPedido, estadoPedidoSeleccionado.value.value);
-//         console.log("estado pedido ", estadoPedidoSeleccionado.value.value);
-//         console.log("RESPONSE de actualizarEstadoEnviado: ", response1.data);
-
-//         switch (response1.data) {
-//             case 'Se actualizo correctamente el pedido a enviado':
-//                 mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
-//                 // setTimeout(actualizarVentana, 1600);
-//                 break;
-//             // case 'El pedido no tiene un estado válido para esta operación':
-//                 // mostrarAlertaError('El pedido no tiene un estado válido para esta operación', quasar);
-//                 // setTimeout(actualizarVentana, 1600);
-//                 break;
-//             case 'El pedido ya ha sido enviado':
-//                 mostrarAlertaError('El pedido ya ha sido enviado', quasar);
-//                 // setTimeout(actualizarVentana, 1600);
-//                 break;
-//             default:
-//                 // Manejar otros casos si es necesario
-//                 break;
-//         }
-
-//         // const response2 = await actualizarEstadoDireccionErronea(idPedido, estadoPedidoSeleccionado.value.value);
-//         // console.log("estado pedido direccion erronea ", response2);
-
-//         // switch (response2.data) {
-//         //     // case 'Se actualizó correctamente el pedido a reprogramado para entrega':
-//         //     //     mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
-//         //         // setTimeout(actualizarVentana, 1600);
-//         //         break;
-//         //     // case 'El pedido no tiene un estado válido para esta operación':
-//         //         // mostrarAlertaError('El pedido no tiene un estado válido para esta operaciónNNNN', quasar);
-//         //         // setTimeout(actualizarVentana, 1600);
-//         //         break;
-//         //     case 'El pedido ya ha sido marcado como pendiente de confirmación de dirección':
-//         //          mostrarAlertaError('El pedido ya ha sido marcado como pendiente de confirmación de dirección', quasar);
-//         //         // setTimeout(actualizarVentana, 1600);
-//         //         break;
-//         //     default:
-//         //         // Manejar otros casos si es necesario
-//         //         break;
-//         // }
-
-//     } catch (error) {
-//         // Error de red u otro error
-//         console.error("Error al actualizar rol: ", error);
-//     }
-
-// }
 const seleccionarEstado = async (idPedido) => {
     try {
-        // const response1 = await actualizarEstadoEnviado(idPedido, estadoPedidoSeleccionado.value.value);
-        // console.log("estado pedido ", estadoPedidoSeleccionado.value.value);
-        // console.log("RESPONSE de actualizarEstadoEnviado: ", response1.data);
 
-        // if (response1.data === 'Se actualizo correctamente el pedido a enviado') {
+        console.log('Esto es idPedido ==> ', idPedido._id);
+        const response1 = await actualizarEstadoEnviado(idPedido._id, idPedido.estado);
+        console.log("RESPONSE de actualizarEstadoEnviado: ", response1.data);
+
+        if (response1.data === 'Se actualizo correctamente el pedido a enviado') {
+            mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
+
+        }if (response1.data === 'El pedido ya ha sido enviado') {
+            mostrarAlertaError('El pedido ya ha sido enviado', quasar);
+           
+        } 
+
+        // const response2 = await actualizarEstadoDireccionErronea(idPedido, estadoPedidoSeleccionado.value.value);
+        // console.log("estado pedido direccion erronea ", response2);
+
+        // if (response2.data === 'Se actualizó correctamente el pedido a pendiente de confirmación de dirección') {
         //     mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
         //     // setTimeout(actualizarVentana, 1600);
-        // } else if (response1.data === 'El pedido ya ha sido enviado') {
-        //     mostrarAlertaError('El pedido ya ha sido enviado', quasar);
+        // } else if (response2.data === 'El pedido ya ha sido marcado como pendiente de confirmación de dirección') {
+        //     mostrarAlertaError('El pedido ya ha sido marcado como pendiente de confirmación de dirección', quasar);
         //     // setTimeout(actualizarVentana, 1600);
         // } else {
         //     // Manejar otros casos si es necesario
         // }
-
-        const response2 = await actualizarEstadoDireccionErronea(idPedido, estadoPedidoSeleccionado.value.value);
-        console.log("estado pedido direccion erronea ", response2);
-
-        if (response2.data === 'Se actualizó correctamente el pedido a pendiente de confirmación de dirección') {
-            mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
-            // setTimeout(actualizarVentana, 1600);
-        } else if (response2.data === 'El pedido ya ha sido marcado como pendiente de confirmación de dirección') {
-            mostrarAlertaError('El pedido ya ha sido marcado como pendiente de confirmación de dirección', quasar);
-            // setTimeout(actualizarVentana, 1600);
-        } else {
-            // Manejar otros casos si es necesario
-        }
 
     } catch (error) {
         // Error de red u otro error
@@ -188,22 +133,6 @@ const listarTodosLosPedidos = async () => {
         mostrarAlertaError('Error al ver todos los pedidos', quasar);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
 

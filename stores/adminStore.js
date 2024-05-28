@@ -153,7 +153,8 @@ export const adminStore = defineStore({
           }
         );
         console.log("NOMBRE ESTADO ENVIADO STORE", estado);
-        this.pedidos = response.data;
+        // this.pedidos = 
+        // this.pedidos = response.data;
 
         return response;
       } catch (error) {
