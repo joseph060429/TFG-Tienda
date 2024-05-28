@@ -20,6 +20,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -96,17 +99,32 @@ public class CrearPedidoDTO {
     @Max(value = 999999999L, message = "El número de teléfono debe tener como máximo 9 dígitos")
     private Long numTelefono;
 
-    // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
-    public void setFechaPedido() {
-        // Obtengo la fecha actual
-        LocalDateTime fechaActual = LocalDateTime.now();
+        // // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL PEDIDO
+        // public void setFechaPedido() {
+        //     // Obtengo la fecha actual
+        //     LocalDateTime fechaActual = LocalDateTime.now();
 
-        // Defino el formato para la fecha
-        DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        //     // Defino el formato para la fecha
+        //     DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-        // Formateo la fecha y la guardo en la propiedad fechaCreacion
-        this.fechaPedido = fechaActual.format(formatearFecha);
+        //     // Formateo la fecha y la guardo en la propiedad fechaCreacion
+        //     this.fechaPedido = fechaActual.format(formatearFecha);
 
-    }
+        // }
+
+        public void setFechaPedido() {
+            // Obtengo la zona horaria específica
+            ZoneId zoneId = ZoneId.of("Europe/Madrid");
+        
+            // Obtengo la fecha y hora actuales con la zona horaria especificada
+            ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
+        
+            // Defino el formato para la fecha
+            DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        
+            // Formateo la fecha y la guardo en la propiedad fechaCreacion
+            this.fechaPedido = fechaActual.format(formatearFecha);
+        }
+        
 
 }
