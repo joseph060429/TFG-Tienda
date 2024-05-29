@@ -1,16 +1,20 @@
 <template>
-    <CardDireccionEnvío />
+    <CardDireccionEnvío @error="showError($event)" />
 </template>
 
 <script setup>
 import { ref, defineProps, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 
-
+const quasar = useQuasar()
 definePageMeta({
     role: ['ROLE_USER']
 });
 
+function showError(error) {
+    console.log(error)
+    mostrarAlertaError(error, quasar)
+}
 
 </script>
 

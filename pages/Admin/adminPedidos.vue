@@ -28,7 +28,7 @@
                     <q-td> {{ props.row.datosUsuarioPedidoDTO.email }}</q-td>
                     <q-td>
                         <q-select class="select-estado" v-model="props.row.estado" :options="opcionesParaEstado"
-                            @update:model-value="seleccionarEstado(props.row)" />
+                            @update:model-value="seleccionarEstado(props.row, props.row.estado)" />
                     </q-td>
                 </q-tr>
             </template>
@@ -77,35 +77,45 @@ const opcionesParaEstado = [
 
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
-const seleccionarEstado = async (idPedido) => {
+const seleccionarEstado = async (idPedido, estado) => {
     try {
-        const response1 = await actualizarEstadoEnviado(idPedido._id, idPedido.estado);
-        console.log("RESPONSE de actualizarEstadoEnviado: ", response1.data);
+        switch (estado) {
+            case 'ENVIADO':
+                const response1 = await actualizarEstadoEnviado(idPedido._id, idPedido.estado);
+                console.log("RESPONSE de actualizarEstadoEnviado: ", response1.data);
 
-        switch (response1.data) {
-            case 'Se actualizo correctamente el pedido a enviado':
-                mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
+                switch (response1.data) {
+                    case 'Se actualizo correctamente el pedido a enviado':
+                        mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
+                        break;
+                    case 'El pedido ya ha sido enviado':
+                        mostrarAlertaError('El pedido ya ha sido enviado', quasar);
+                        break;
+                    default:
+                        console.warn('Respuesta desconocida de actualizarEstadoEnviado:', response1.data);
+                }
                 break;
-            case 'El pedido ya ha sido enviado':
-                mostrarAlertaError('El pedido ya ha sido enviado', quasar);
+            case 'PENDIENTE_CONFIRMACION_DIRECCION':
+                const response2 = await actualizarEstadoDireccionErronea(idPedido._id, idPedido.estado);
+                console.log("estado pedido direccion erronea ", response2.data);
+
+                switch (response2.data) {
+                    case 'Se actualizó correctamente el pedido a pendiente de confirmación de dirección':
+                        mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
+                        break;
+                    case 'El pedido ya ha sido marcado como pendiente de confirmación de dirección':
+                        mostrarAlertaError('El pedido ya ha sido marcado como pendiente de confirmación de dirección', quasar);
+                        break;
+                    default:
+                        console.warn('Respuesta desconocida de actualizarEstadoDireccionErronea:', response2.data);
+                }
                 break;
             default:
-                console.warn('Respuesta desconocida de actualizarEstadoEnviado:', response1.data);
+                break;
         }
 
-        const response2 = await actualizarEstadoDireccionErronea(idPedido._id, idPedido.estado);
-        console.log("estado pedido direccion erronea ", response2.data);
 
-        switch (response2.data) {
-            case 'Se actualizó correctamente el pedido a pendiente de confirmación de dirección':
-                mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
-                break;
-            case 'El pedido ya ha sido marcado como pendiente de confirmación de dirección':
-                mostrarAlertaError('El pedido ya ha sido marcado como pendiente de confirmación de dirección', quasar);
-                break;
-            default:
-                console.warn('Respuesta desconocida de actualizarEstadoDireccionErronea:', response2.data);
-        }
+
     } catch (error) {
         console.error("Error al actualizar rol: ", error);
         mostrarAlertaError('Hubo un error al actualizar el pedido', quasar);
