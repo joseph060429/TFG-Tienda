@@ -193,7 +193,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
     // LO HARÉ MANUALMENTE CUANDO EL SUPUESTO REPARTIDOR ME ENTRGUE TODOS LOS
     // PRODUCTOS (TANTO ENTREGADOS COMO NO ENTREGADOS)
     @Override
-    public ResponseEntity<?> actualizarEstadoPedidoEntregado(String _id, ActualizarPedidoDTO actualizarPedidoDTO) {
+    public ResponseEntity<?> actualizarEstadoPedidoEntregado(String _id, String estado, ActualizarPedidoDTO actualizarPedidoDTO) {
         // Busco el pedido por el Id
         Optional<PedidosModelo> pedidoOptional = pedidoRepositorio.findBy_id(_id);
 
@@ -434,4 +434,4 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
 
 }
 
-// IMPLEMENTACION DEL METODO PARA PONER EL ESTADO DEL PEDIDO SWITCH CASE
+

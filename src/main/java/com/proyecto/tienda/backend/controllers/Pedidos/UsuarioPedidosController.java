@@ -50,24 +50,13 @@ public class UsuarioPedidosController {
      * copiando HTTP, y no otra cosa
      */
 
+    // CONTROLADOR PARA CREAR UN PEDIDO
     @PostMapping("/crearPedido")
-    public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO
-    crearPedidoDTO,
-    @RequestHeader("Authorization") String token, HttpSession ses) {
-    return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
-    crearPedidoDTO.getProductos(), ses);
+    public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
+            @RequestHeader("Authorization") String token, HttpSession ses) {
+        return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
+                crearPedidoDTO.getProductos(), ses);
     }
-
-//    @PostMapping("/crearPedido")
-//     public ResponseEntity<?> crearPedido(@RequestBody @Valid CrearPedidoDTO crearPedidoDTO,
-//                                          @RequestHeader("Authorization") String token,
-//                                          HttpServletRequest request,
-//                                          HttpServletResponse response) {
-//         HttpSession session = request.getSession();
-//         System.out.println("Sesión ID en crearPedido controller: " + session.getId());
-//         return usuarioPedidoServicio.crearPedido(crearPedidoDTO, token, jwtUtils,
-//                 crearPedidoDTO.getProductos(), session, response);
-//     }
 
     // CONTROLADOR PARA ELIMINAR UN PEDIDO
     @DeleteMapping("/eliminarPedido")

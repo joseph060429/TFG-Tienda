@@ -81,15 +81,6 @@ public class AdminPedidosController {
         return estadoPedido;
     }
 
-    // CONTROLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENTREGADO
-    @PatchMapping("/actualizarEstadoPedidoEntregado")
-    public ResponseEntity<?> actualizarEstadoPedidoEntrEGADO(@RequestParam("id") String pedidoId,
-            @RequestBody @Valid ActualizarPedidoDTO actualizarPedidoDTO) {
-        return adminPedidoServicio.actualizarEstadoPedidoEntregado(pedidoId,
-                actualizarPedidoDTO);
-
-    }
-
     // CONTROLADOR PARA BUSCAR UN PEDIDO POR ID
     @GetMapping("/listarUnPedido")
     public ResponseEntity<?> listarUnPedido(@RequestParam("id") String usuarioId) {
@@ -116,6 +107,18 @@ public class AdminPedidosController {
         // Llamar al servicio para actualizar el estado del pedido
         return adminPedidoServicio.actualizarEstadoPedidoPendienteConfirmacionDireccion(pedidoId, estado,
                 actualizarPedidoDTO);
+    }
+
+    // CONTROLADOR PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENTREGADO
+    @PatchMapping("/actualizarEstadoPedidoEntregado")
+    public ResponseEntity<?> actualizarEstadoPedidoEntregado(
+            @RequestBody @Valid ActualizarPedidoDTO actualizarPedidoDTO) {
+        String pedidoId = actualizarPedidoDTO.getPedidoId().trim();
+        String estado = actualizarPedidoDTO.getEstado().trim();
+
+        return adminPedidoServicio.actualizarEstadoPedidoEntregado(pedidoId, estado,
+                actualizarPedidoDTO);
+
     }
 
     // CONTROLADOR PARA ACTUALIZARLE LA DIRECCION DE ENVIO AL USUARIO

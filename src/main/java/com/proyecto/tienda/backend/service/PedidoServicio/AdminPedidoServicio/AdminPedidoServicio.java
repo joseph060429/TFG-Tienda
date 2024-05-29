@@ -22,7 +22,7 @@ public interface AdminPedidoServicio {
                         ActualizarPedidoDTO actualizarPedidoDTO);
 
         // METODO PARA ACTUALIZAR EL ESTADO DEL PEDIDO A ENTREGADO
-        ResponseEntity<?> actualizarEstadoPedidoEntregado(String _id, ActualizarPedidoDTO actualizarPedidoDTO);
+        ResponseEntity<?> actualizarEstadoPedidoEntregado(String _id, String estado, ActualizarPedidoDTO actualizarPedidoDTO);
 
         // METODO PARA BUSCAR EL PEDIDO POR ID
         PedidosModelo listarUnPedido(String _id);
