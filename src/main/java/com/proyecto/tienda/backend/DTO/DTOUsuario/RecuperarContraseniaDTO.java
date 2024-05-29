@@ -28,22 +28,6 @@ public class RecuperarContraseniaDTO {
 
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE TERMINA LA VALIDEZ DEL CODIGO
     // QUE SE LE ENVIA AL USUARIO PARA RECUPERAR CONTRASEÑA
-    // public void setFechaExpiracion() {
-    // // Obtengo la fecha actual
-    // LocalDateTime fechaActual = LocalDateTime.now();
-
-    // // Añado 10 minutos a la fecha actual para obtener la fecha de expiración
-    // LocalDateTime fechaExpiracion = fechaActual.plusMinutes(10);
-
-    // // Defino el formato para la fecha
-    // DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy
-    // HH:mm:ss");
-
-    // // Formateo la fecha de expiración y la guardo en la propiedad
-    // // expiracionRecuperarContrasenia
-    // this.expiracionRecuperarContrasenia = fechaExpiracion.format(formatearFecha);
-    // }
-
     public void setFechaExpiracion() {
         // Especifico la zona horaria
         ZoneId zoneId = ZoneId.of("Europe/Madrid");

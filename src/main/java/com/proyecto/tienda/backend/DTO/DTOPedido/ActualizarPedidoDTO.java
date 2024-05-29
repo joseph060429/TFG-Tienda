@@ -39,7 +39,7 @@ public class ActualizarPedidoDTO {
         ZoneId zoneId = ZoneId.of("Europe/Madrid");
 
         // Obtengo la fecha actual
-        LocalDateTime fechaActual = LocalDateTime.now();
+        ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
 
         // Defino el formato para la fecha
         DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
