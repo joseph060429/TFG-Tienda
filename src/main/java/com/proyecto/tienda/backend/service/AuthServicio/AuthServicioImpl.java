@@ -71,6 +71,7 @@ public class AuthServicioImpl implements AuthServicio {
                 .email(crearUsuarioDTO.getEmail().trim())
                 .password(passwordEncoder.encode(crearUsuarioDTO.getPassword()))
                 .direccionesEnvio(Collections.emptyList()) // Inicio las direcciones en una lista vacia
+                .direcionesFacturacion(Collections.emptyList()) // Inicio las direcciones en una lista vacia
                 .fechaModificacion("".trim())
                 .roles(roles)
                 .build();
