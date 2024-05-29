@@ -83,6 +83,7 @@ export const usuarioStore = defineStore({
         // For each para iterar sobre cada pedido en la respuesta
         response.data.forEach((pedido) => {
           const pedidoFormateado = {
+            _id: pedido._id,
             direccionEnvio: pedido.direccionEnvio,
             tipoPago: pedido.tipoPago,
             estado: pedido.estado,

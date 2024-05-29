@@ -95,7 +95,7 @@ const pedidos = ref([]);
 const historialDePedidos = async () => {
   try {
     const response = await historialPedidos();
-    console.log("RESPONSE: ", response.data);
+    console.log("RESPONSE de historialPedidos: ", response.data);
     pedidos.value = response.data;
   } catch (error) {
     // Error de red u otro error

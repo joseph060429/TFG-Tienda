@@ -201,7 +201,7 @@ function crearPedido() {
         }
     }).then((response) => {
 
-        emergente = window.open(response.data)
+        emergente = window.open(response.data, '_self')
 
 
     })
@@ -520,17 +520,16 @@ const eliminarDireccionFacturacion = () => {
 }
 
 .checked .q-icon {
-    pointer-events: none; 
+    pointer-events: none;
 }
 
 @media (max-width: 600px) {
     .checked {
         width: 5%;
-        height: 2.8em; 
-        margin-top: 1%; 
-        margin-left: 2%; 
-        cursor: pointer; 
+        height: 2.8em;
+        margin-top: 1%;
+        margin-left: 2%;
+        cursor: pointer;
     }
 }
-
 </style>
