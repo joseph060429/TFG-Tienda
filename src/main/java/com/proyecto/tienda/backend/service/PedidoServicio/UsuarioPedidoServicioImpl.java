@@ -101,6 +101,10 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             crearPedidoDTO.setFechaPedido();
             pedido.setFechaPedido(crearPedidoDTO.getFechaPedido());
 
+            // crearPedidoDTO.setFechaEntregaEstimada();
+            // pedido.setFechaEntregaEstimada(crearPedidoDTO.getFechaEntregaEstimada());
+
+
             // Procesar dirección de facturación
             ResponseEntity<?> resultadoDireccionFacturacion = procesarDireccionFacturacion(usuario, crearPedidoDTO,
                     pedido);

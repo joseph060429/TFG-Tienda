@@ -650,10 +650,10 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 if (usuario.getDireccionesEnvio() == null) {
                     usuario.setDireccionesEnvio(new ArrayList<>());
                 }
-                usuario.getDireccionesEnvio().add(usuario.convertirEstiloTitulo(direccionCompleta.toString()));
+                // usuario.getDireccionesEnvio().add(usuario.convertirEstiloTitulo(direccionCompleta.toString()));
 
-                // Guardar el usuario actualizado en el repositorio
-                usuarioRepositorio.save(usuario);
+                // // Guardar el usuario actualizado en el repositorio
+                // usuarioRepositorio.save(usuario);
 
                 // Actualizar la dirección en los pedidos del usuario
                 List<PedidosModelo> pedidos = pedidoRepositorio.findByUsuario_Id(usuario.get_id());
@@ -661,10 +661,21 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 for (PedidosModelo pedido : pedidos) {
                     if (pedido.getEstado().equals("PENDIENTE_CONFIRMACION_DIRECCION")) {
                         pedido.setEstado("DIRECCION_ACTUALIZADA");
-                        pedido.setDireccionCompletaEnvio(direccionCompleta.toString());
+                
+                        // Uso el metodo convertirEstiloTitulo para formatear la dirección completa
+                        String direccionFormateada = pedido.convertirEstiloTitulo(direccionCompleta.toString());
+                        pedido.setDireccionCompletaEnvio(direccionFormateada);
+                        
                         pedidoRepositorio.save(pedido);
                     }
                 }
+
+                usuario.getDireccionesEnvio().add(usuario.convertirEstiloTitulo(direccionCompleta.toString()));
+                
+                // Guardo el usuario actualizado en el repositorio
+                usuarioRepositorio.save(usuario);
+
+                
 
                 return ResponseEntity.ok("Dirección añadida y actualizada exitosamente en los pedidos");
             } else {

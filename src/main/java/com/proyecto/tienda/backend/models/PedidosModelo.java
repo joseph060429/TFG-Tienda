@@ -1,16 +1,25 @@
 package com.proyecto.tienda.backend.models;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
+import org.springframework.scheduling.annotation.Scheduled;
+
 // import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.proyecto.tienda.backend.DTO.DTOPedido.EmpresaAutonomoDireccionFacturacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ParticularDireccionFacturacionDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.UsuarioPedidoDTO;
+import com.proyecto.tienda.backend.UtilEnum.EPedido;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -87,6 +96,60 @@ public class PedidosModelo {
         usuarioPedidoDTO.setEmail(usuarioModelo.getEmail());
         return usuarioPedidoDTO;
     }
+
+
+
+    public String convertirEstiloTitulo(String campo) {
+        if (campo == null || campo.isEmpty()) {
+            return "";
+        }
+    
+        StringBuilder resultado = new StringBuilder();
+        String[] palabras = campo.split(" ");
+    
+        for (int i = 0; i < palabras.length; i++) {
+            String p = palabras[i].toUpperCase(); // Convertir a mayúsculas
+            resultado.append(p);
+    
+            // Agregar un espacio si no es la última palabra
+            if (i < palabras.length - 1) {
+                resultado.append(" ");
+            }
+        }
+    
+        return resultado.toString();
+    }
+
+    @Scheduled(fixedRate = 2000)
+    public void setFechaEntregaEstimada() {
+        // Especifico la zona horaria
+        ZoneId zoneId = ZoneId.of("Europe/Madrid");
+    
+        // Obtengo la fecha y hora actual en la zona especificada
+        ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
+    
+        // Añado 2 minutos a la fecha y hora actual para obtener la fecha de entrega estimada
+        ZonedDateTime fechaEntrega = fechaActual.plusMinutes(2);
+    
+        // Defino el formato para la fecha
+        DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    
+        // Formateo la fecha de entrega y la guardo en la propiedad fechaEntregaEstimada
+        this.fechaEntregaEstimada = fechaEntrega.format(formatearFecha);
+    
+        // Obtengo la fecha de entrega estimada en formato LocalDateTime
+        LocalDateTime fechaEntregaEstimadaLocalDateTime = fechaEntrega.toLocalDateTime();
+    
+        // Obtengo la fecha actual en formato LocalDateTime
+        LocalDateTime fechaActualLocalDateTime = LocalDateTime.now();
+    
+        // Verifico si la fecha actual coincide con la fecha de entrega estimada
+        if (fechaActualLocalDateTime.equals(fechaEntregaEstimadaLocalDateTime)) {
+            // Si coinciden, marco el estado del pedido como ENTREGADO
+            this.estado = EPedido.ENTREGADO.toString();
+        }
+    }
+    
 
 
    

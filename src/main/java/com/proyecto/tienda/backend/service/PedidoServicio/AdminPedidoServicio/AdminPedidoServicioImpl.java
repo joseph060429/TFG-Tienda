@@ -210,10 +210,6 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             // Verifico que el estado que ponga en el postman sea ENTREGADO O entregado,
             String estadoPedido = actualizarPedidoDTO.getEstado().toUpperCase().trim();
             System.out.println("ESTADO PEDIDO: " + estadoPedido);
-            // if (!EPedido.ENTREGADO.toString().equalsIgnoreCase(estadoPedido)) {
-            //     System.out.println("ESTADO: " + estadoPedido);
-            //     return ResponseEntity.status(400).body("El pedido no tiene un estado válido para esta operación");
-            // }
 
             if (EPedido.ENTREGADO.toString().equals(pedido.getEstado().trim())) {
                 return ResponseEntity.status(400).body("El pedido ya ha sido marcado como entregado");
