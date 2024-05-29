@@ -52,8 +52,8 @@ public class PaypalController {
     private String paypalSucces;
 
 
-    @Value("${paypal.cancel.redirect}")
-    private String paypalCancel;
+    // @Value("${paypal.cancel.redirect}")
+    // private String paypalCancel;
 
     // CONTROLADOR DEL PAYPAL PARA CUANDO HA IDO BIEN LO DEL PAYPAL
     @GetMapping("/payment/success")
