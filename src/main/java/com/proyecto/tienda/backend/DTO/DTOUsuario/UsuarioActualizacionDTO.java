@@ -1,6 +1,8 @@
 package com.proyecto.tienda.backend.DTO.DTOUsuario;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.data.mongodb.core.index.Indexed;
 import jakarta.validation.constraints.Email;
@@ -10,12 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-@Data //Genera los Getters y Setters
-@AllArgsConstructor //Genera el constructor
-@NoArgsConstructor //Genera el constructor vacío
+@Data // Genera los Getters y Setters
+@AllArgsConstructor // Genera el constructor
+@NoArgsConstructor // Genera el constructor vacío
 public class UsuarioActualizacionDTO {
-    
+
     @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-ZáéíóúÁÉÍÓÚ]+(\\s[a-zA-ZáéíóúÁÉÍÓÚ]+)*){2,70}(?!\\s)$", message = "El nombre/s solo puede contener letras y no puede empezar ni terminar con espacios en blanco. No se permiten números ni caracteres especiales, excepto la tilde.")
     private String nombre;
 
@@ -33,8 +34,15 @@ public class UsuarioActualizacionDTO {
     // private String direccionEnvio;
 
     public void setFechaModificacion() {
-        LocalDateTime fechaActual = LocalDateTime.now();
+
+        ZoneId zoneId = ZoneId.of("Europe/Madrid");
+
+        ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
+
+        // Defino el formato para la fecha
         DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+        // Formateo la fecha y la guardo en la propiedad fechaCreacion
         this.fechaModificacion = fechaActual.format(formatearFecha);
 
     }

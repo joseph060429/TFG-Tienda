@@ -1,6 +1,8 @@
 package com.proyecto.tienda.backend.DTO.DTOPedido;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import jakarta.validation.constraints.NotBlank;
@@ -19,8 +21,8 @@ public class ActualizarPedidoDTO {
     private String pedidoId;
 
     // Actualizar estado del pedido
-     @NotNull(message = "El campo 'estado' es obligatorio")
-     private String estado;
+    @NotNull(message = "El campo 'estado' es obligatorio")
+    private String estado;
 
     // Actualizar fecha de entrega estimada
     private String fechaEntregaEstimada = "";
@@ -33,6 +35,9 @@ public class ActualizarPedidoDTO {
 
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE ENVIA EL PEDIDO
     public void setFechaEnvioPedido() {
+
+        ZoneId zoneId = ZoneId.of("Europe/Madrid");
+
         // Obtengo la fecha actual
         LocalDateTime fechaActual = LocalDateTime.now();
 
@@ -41,21 +46,25 @@ public class ActualizarPedidoDTO {
 
         // Formateo la fecha y la guardo en la propiedad fechaCreacion
         this.fechaEnvio = fechaActual.format(formatearFecha);
+
     }
 
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE ESTIMA LA ENTREGA DEL PEDIDO
     public void setFechaEntregaEstimada() {
-        // Obtengo la fecha actual
-        LocalDateTime fechaActual = LocalDateTime.now();
+        // Especifico la zona horaria
+        ZoneId zoneId = ZoneId.of("Europe/Madrid");
 
-        // Añado 4 dias a la fecha actual para obtener la fecha de entregaEstimada
-        LocalDateTime fechaEntrega = fechaActual.plusDays(4);
+        // Obtengo la fecha y hora actual en la zona especificada
+        ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
+
+        // Añado 4 días a la fecha y hora actual para obtener la fecha de entrega
+        // estimada
+        ZonedDateTime fechaEntrega = fechaActual.plusDays(4);
 
         // Defino el formato para la fecha
         DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-        // Formateo la fecha de entrega y la guardo en la propiedad
-        // fechaEntregaEstimada
+        // Formateo la fecha de entrega y la guardo en la propiedad fechaEntregaEstimada
         this.fechaEntregaEstimada = fechaEntrega.format(formatearFecha);
     }
 

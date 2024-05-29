@@ -22,12 +22,12 @@ import java.time.ZoneId;
 @NoArgsConstructor
 public class CrearUsuarioDTO {
 
-    // @Size(min = 2, max = 70, message = "El nombre no puede tener menos de 2 y más de 70 caracteres USUARIODTO")
+    // @Size(min = 2, max = 70, message = "El nombre no puede tener menos de 2 y más
+    // de 70 caracteres USUARIODTO")
     @NotBlank(message = "El nombre no puede estar en blanco")
     @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-ZáéíóúÁÉÍÓÚ]+(\\s[a-zA-ZáéíóúÁÉÍÓÚ]+)*){2,70}(?!\\s)$", message = "El nombre/s solo puede contener letras y no puede empezar ni terminar con espacios en blanco. No se permiten números ni caracteres especiales, excepto la tilde.")
     private String nombre;
 
-    
     @Pattern(regexp = "^(?!\\s)(?=\\S)([a-zA-ZáéíóúÁÉÍÓÚ]+(\\s[a-zA-ZáéíóúÁÉÍÓÚ]+)*){2,70}(?!\\s)$", message = "Los apellidos solo pueden contener letras y no puede empezar ni terminar con espacios en blanco. No se permiten números ni caracteres especiales, excepto la tilde.")
     @NotBlank(message = "El apellido no puede estar en blanco")
     private String apellido;
@@ -37,7 +37,6 @@ public class CrearUsuarioDTO {
     @NotBlank(message = "El email no puede estar en blanco")
     private String email;
 
-    
     @NotBlank(message = "La contraseña no puede estar en blanco")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
@@ -47,7 +46,7 @@ public class CrearUsuarioDTO {
     private String fechaCreacion;
 
     private String fechaModificacion;
-    
+
     // private String direccionEnvio;
     private List<String> direccionesEnvio;
 
@@ -55,17 +54,17 @@ public class CrearUsuarioDTO {
 
     // METODO PARA CREAR LA FECHA EXACTA EN LA QUE SE REGISTRA EL USUARIO
     public void setFechaCreacion() {
-       // Obtengo la zona horaria específica
-    ZoneId zoneId = ZoneId.of("Europe/Madrid");
+        // Obtengo la zona horaria específica
+        ZoneId zoneId = ZoneId.of("Europe/Madrid");
 
-    // Obtengo la fecha y hora actuales con la zona horaria especificada
-    ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
+        // Obtengo la fecha y hora actuales con la zona horaria especificada
+        ZonedDateTime fechaActual = ZonedDateTime.now(zoneId);
 
-    // Defino el formato para la fecha
-    DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        // Defino el formato para la fecha
+        DateTimeFormatter formatearFecha = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-    // Formateo la fecha y la guardo en la propiedad fechaCreacion
-    this.fechaCreacion = fechaActual.format(formatearFecha);
+        // Formateo la fecha y la guardo en la propiedad fechaCreacion
+        this.fechaCreacion = fechaActual.format(formatearFecha);
     }
 
 }
