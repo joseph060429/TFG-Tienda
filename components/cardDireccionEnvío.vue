@@ -122,6 +122,8 @@ import { useRouter } from 'vue-router';
 
 const { usuario } = usuarioComposable()
 
+const quasar = useQuasar()
+
 const mostrarFormularioAnadirDirecionEnvio = ref(false);
 const mostrarFormularioAnadirDirecionFacturacionEmpreAuto = ref(false);
 const mostrarFormularioAnadirDirecionFacturacionParticular = ref(false);
@@ -201,9 +203,17 @@ function crearPedido() {
         }
     }).then((response) => {
 
+
+        if (response.status == 400) {
+            emits('error', response.data)
+        }
+
         emergente = window.open(response.data, '_self')
 
 
+    }).catch((error) => {
+        console.log(error, ' error desde axios meter ñedodo retdx')
+        emits('error', error.response.data)
     })
 
 
@@ -218,9 +228,8 @@ function borrar(index, mode) {
 const router = useRouter()
 
 
+const emits = defineEmits(['error', 'loading'])
 
-//USAR QUASAR
-const quasar = useQuasar()
 
 
 const { direccionesUsuario } = usuarioComposable();

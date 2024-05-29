@@ -17,8 +17,7 @@
                     <q-th>Acciones</q-th>
                 </q-tr>
                 <q-tr v-if="loading">
-                    <img src="../../assets/loading.gif"
-                        class="loading" />
+                    <img src="../../assets/loading.gif" class="loading" />
                 </q-tr>
 
             </template>
@@ -47,7 +46,7 @@
                 <!-- {{ props.row.totalCarrito }}  -->
             </template>
         </q-table>
-        <q-btn @click="seguirComprando" :disabled label="Comprar" class="boton-seguir-comprando">
+        <q-btn @click="seguirComprando" :disable="tieneErrores" label="Comprar" class="boton-seguir-comprando">
             <q-icon name="mdi-cart-plus" />
         </q-btn>
     </div>
@@ -114,13 +113,16 @@ const anadirCantidadProducto = async (item) => {
         console.log("RESPONSE: ", response.data);
         if (response.data === 'La cantidad solicitada debe ser mayor que cero') {
             mostrarAlertaError('La cantidad solicitada debe ser mayor que cero', quasar);
-            tieneErrores.value = true;
+            return tieneErrores.value = true;
         }
         if (response.data === 'La cantidad solicitada supera la cantidad disponible del producto') {
             mostrarAlertaError(' La cantidad solicitada supera la cantidad disponible del producto', quasar);
-            tieneErrores.value = true;
+            return tieneErrores.value = true;
         }
-
+        if (response.status == 403) {
+            return tieneErrores.value = true;
+        }
+        tieneErrores.value = false
     } catch (error) {
         // Error de red u otro error
         console.error('Error al ver el carrito de compra', error);
@@ -150,7 +152,10 @@ const esNumero = (val) => {
     if (!val || isNaN(val)) {
         // return 'Por favor, introduce solo números.';
         mostrarAlertaError('Por favor, introduce solo números', quasar);
+        tieneErrores.value = true;
+        return false;
     }
+    tieneErrores.value = false
     return true;
 };
 
@@ -263,12 +268,12 @@ const esNumero = (val) => {
 
 
 .loading {
-    display:flex;
+    display: flex;
     margin: auto;
     width: 30vh;
     padding-top: 2em;
-    justify-content: center; 
-    align-items: center; 
+    justify-content: center;
+    align-items: center;
     height: auto;
 }
 </style>
