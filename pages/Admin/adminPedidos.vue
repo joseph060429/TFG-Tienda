@@ -1,19 +1,20 @@
 <template>
     <!-- <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" /> -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-    <div class="q-pa-md">
+    <div class="tabla-container">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 pedidos -->
         <h5 class="titulo">PEDIDOS DE LOS USUARIOS</h5>
         <q-table class="tabla" flat :rows="pedidos" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
-            :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]">
+            :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]" style="overflow-x: auto;">
             <!-- Cabeceras de la tabla -->
             <template v-slot:header="props">
                 <q-tr :props="props">
                     <q-th key="numPedido">Número de pedido</q-th>
-                    <q-th key="fechaPedido">Fecha del pedido</q-th>
+                    <!-- <q-th key="fechaPedido">Fecha de envío</q-th> -->
                     <q-th key="numTelefono">Número de teléfono</q-th>
                     <q-th key="direccionEnvio">Dirección de Envío</q-th>
                     <q-th key="email">Email</q-th>
+                    <q-th key="productos">Productos</q-th>
                     <q-th key="estado">Estado</q-th>
                 </q-tr>
             </template>
@@ -22,17 +23,26 @@
             <template v-slot:body="props">
                 <q-tr :props="props">
                     <q-td>{{ props.row.numPedido }}</q-td>
-                    <q-td>{{ props.row.fechaPedido }}</q-td>
+                    <!-- <q-td>{{ props.row.fechaEnvio}}</q-td> -->
                     <q-td>{{ props.row.numTelefono }}</q-td>
                     <q-td>{{ props.row.direccionEnvio }}</q-td>
                     <q-td> {{ props.row.datosUsuarioPedidoDTO.email }}</q-td>
                     <q-td>
+                        <div v-for="(producto, index) in props.row.productos" :key="index" style="text-align: left;">
+                            &bull; {{ producto.categoria }}
+                            {{ producto.nombre }}
+                        </div>
+                    </q-td>
+                    <q-td>
+
                         <q-select class="select-estado" v-model="props.row.estado" :options="opcionesParaEstado"
                             @update:model-value="seleccionarEstado(props.row, props.row.estado)" />
+
                     </q-td>
                 </q-tr>
             </template>
         </q-table>
+
     </div>
 </template>
 <!-- SCRIPT -->
@@ -73,8 +83,6 @@ const opcionesParaEstado = [
     'ENVIADO',
     'PENDIENTE_CONFIRMACION_DIRECCION'
 ];
-
-
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
 const seleccionarEstado = async (idPedido, estado) => {
@@ -142,21 +150,34 @@ const listarTodosLosPedidos = async () => {
 
 <!-- STYLE -->
 <style lang="scss" scoped>
+.tabla-container {
+    width: 99%;
+    overflow-x: auto;
+    margin: auto;
+}
+
+
+
 .tabla {
     height: 55vh;
-    width: 100%;
     background-color: #A9A9A9;
     font-family: Arial, sans-serif;
     border: 3px solid black;
-    border-collapse: collapse;
 }
 
 @media (max-width: 600px) {
+    .tabla-container {
+        width: 99%;
+        overflow-x: auto;
+        margin: auto;
+    }
+
+
     .tabla {
-        width: 100%;
-        margin: 0 auto;
-        height: 50vh;
-        font-size: 0.8em;
+        height: 55vh;
+        background-color: #A9A9A9;
+        font-family: Arial, sans-serif;
+        border: 3px solid black;
     }
 }
 
@@ -168,57 +189,63 @@ const listarTodosLosPedidos = async () => {
 
 .tabla td {
     text-align: center;
+    height: 20vh;
 
     &:nth-child(1) {
-        width: 10%;
+        width: 5%;
     }
 
     &:nth-child(2) {
-        width: 10%;
+        width: 5%;
     }
 
     &:nth-child(3) {
-        width: 10%;
+        width: 5%;
     }
 
     &:nth-child(4) {
-        width: 20%;
+        width: 25%;
     }
 
     &:nth-child(5) {
         width: 15%;
+        height: 60%;
     }
 
     &:nth-child(6) {
-        width: 20%;
+        width: 10%;
+        height: 0%;
     }
+
 
 }
 
 @media (max-width: 600px) {
     .tabla td {
 
-        &:nth-child(1) {
-            height: 4px;
-            // background-color: red;
-        }
+        text-align: center;
+        height: 20vh;
 
+        &:nth-child(1) {
+            width: 10%;
+        }
 
         &:nth-child(2) {
-            width: 10%;
-        }
-
-        &:nth-child(3) {
-            width: 10%;
-        }
-
-        &:nth-child(4) {
             width: 20%;
         }
 
-        &:nth-child(5) {
-            width: 15%;
+        &:nth-child(3) {
+            width: 5%;
         }
+
+        &:nth-child(4) {
+            width: 10%;
+        }
+
+        &:nth-child(5) {
+            width: 25%;
+        }
+
 
         &:nth-child(6) {
             width: 20%;
@@ -226,8 +253,6 @@ const listarTodosLosPedidos = async () => {
 
     }
 }
-
-
 
 .titulo {
     font-size: 2em;
@@ -276,14 +301,22 @@ const listarTodosLosPedidos = async () => {
 }
 
 .select-estado {
-    position: absolute;
+    // position: absolute;
     right: 0;
     top: 0%;
     border: none;
     width: 100%;
-    overflow: hidden;
+    // overflow: hidden;
     font-size: 1em;
-    text-align: center;
+    margin-top: 1em;
+    // margin-left: 50%;
+    // text-align: center;
 
 }
+
+.celda{
+    background-color: #FF4500;
+}
+
+
 </style>

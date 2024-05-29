@@ -361,7 +361,7 @@ const eliminarDireccionFacturacion = () => {
     background-color: #e0e0e0;
     border-radius: 5px;
     border: 2px solid gray;
-    height: 20vh;
+    height: 24vh;
     width: 99%;
     margin-bottom: 1em;
 

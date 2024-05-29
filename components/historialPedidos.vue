@@ -27,7 +27,6 @@
             <q-th key="productos">Productos pedidos</q-th>
             <q-th key="estado">Estado del pedido</q-th>
             <q-th key="direccionEnvio">Direccion/es de envío</q-th>
-
           </q-tr>
         </template>
         <template v-slot:body="props">
