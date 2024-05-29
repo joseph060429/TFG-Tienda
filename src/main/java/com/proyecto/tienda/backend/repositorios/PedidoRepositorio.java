@@ -30,6 +30,10 @@ public interface PedidoRepositorio extends MongoRepository<PedidosModelo, String
   // CONSULTA DE BUSQUEDA PARA UN PEDIDO POR USUARIO
   List<PedidosModelo> findByUsuario(UsuarioModelo usuario);
 
+  //CONSULTA DE BUSQUEDA POR USUARIO
+  @Query("{ 'usuario._id' : ?0 }")
+  List<PedidosModelo> findByUsuario_Id(String usuarioId);
+
 
   // Optional<PedidosModelo> findById(String id);
 

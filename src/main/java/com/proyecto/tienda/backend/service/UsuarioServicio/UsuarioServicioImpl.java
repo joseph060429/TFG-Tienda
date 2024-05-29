@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
 import com.proyecto.tienda.backend.DTO.DTOPedido.EmpresaAutonomoDireccionFacturacionDTO;
@@ -26,6 +28,9 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PedidoRepositorio pedidoRepositorio;
 
     // IMPLEMENTACION DEL METODO PARA ELIMINAR EL USUARIO SIENDO USUARIO
     @Override
@@ -416,7 +421,8 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                         .append(particularDireccionFacturacionDTO.getApellidoFacturacion().trim()).append(", ");
                 direccionCompletaFacturacion.append("Número de teléfono: ")
                         .append(particularDireccionFacturacionDTO.getNumTelefonoFacturacion()).append(", ");
-                direccionCompletaFacturacion.append(particularDireccionFacturacionDTO.getDireccionDeFacturacion().trim()).append(", ");
+                direccionCompletaFacturacion
+                        .append(particularDireccionFacturacionDTO.getDireccionDeFacturacion().trim()).append(", ");
                 direccionCompletaFacturacion.append("Nº ")
                         .append(particularDireccionFacturacionDTO.getNumeroDeFacturacion().trim()).append(", ");
 
@@ -571,6 +577,102 @@ public class UsuarioServicioImpl implements UsuarioServicio {
             }
         } catch (Exception e) {
             // Manejo cualquier excepción y devuelvo una respuesta de error.
+            return ResponseEntity.status(401).body("Token inválido o expirado");
+        }
+    }
+
+    // METODO PARA ACTUALIZAR LA DIRECCIÓN DE ENVÍO
+    @Override
+    public ResponseEntity<?> actualizarDireccionEnvio(AnadirDireccionEnvioDTO anadirDireccionEnvioDTO, String token,
+            JwtUtils jwtUtils) {
+        try {
+            // Elimino el prefijo "Bearer " del token JWT.
+            String jwtToken = token.replace("Bearer ", "");
+
+            // Extraigo el email del token usando JwtUtils.
+            String emailFromToken = jwtUtils.getEmailFromToken(jwtToken);
+
+            // Busco al usuario en el repositorio por el email extraído.
+            Optional<UsuarioModelo> usuarioOptional = usuarioRepositorio.findByEmail(emailFromToken);
+
+            // Verifico si el usuario existe.
+            if (usuarioOptional.isPresent()) {
+                // Obtengo el usuario de la opción.
+                UsuarioModelo usuario = usuarioOptional.get();
+
+                // Construyo la dirección completa.
+                if (anadirDireccionEnvioDTO.getCodigoPostal() == null
+                        || anadirDireccionEnvioDTO.getCodigoPostal().isEmpty()
+                        || anadirDireccionEnvioDTO.getDireccion() == null
+                        || anadirDireccionEnvioDTO.getDireccion().isEmpty()
+                        || anadirDireccionEnvioDTO.getProvincia() == null
+                        || anadirDireccionEnvioDTO.getProvincia().isEmpty()
+                        || anadirDireccionEnvioDTO.getNumero() == null
+                        || String.valueOf(anadirDireccionEnvioDTO.getNumero()).trim().isEmpty()) {
+                    return ResponseEntity.status(400)
+                            .body("El código postal, la dirección, la provincia y el número son obligatorios.");
+                }
+
+                StringBuilder direccionCompleta = new StringBuilder();
+                direccionCompleta.append(anadirDireccionEnvioDTO.getDireccion().trim()).append(", ");
+                direccionCompleta.append("Nº ").append(anadirDireccionEnvioDTO.getNumero()).append(", ");
+
+                if (anadirDireccionEnvioDTO.getPiso() != null
+                        && !String.valueOf(anadirDireccionEnvioDTO.getPiso()).trim().isEmpty()
+                        && anadirDireccionEnvioDTO.getPiso() >= 0) {
+                    direccionCompleta.append("Piso ").append(anadirDireccionEnvioDTO.getPiso()).append(", ");
+                }
+
+                if (anadirDireccionEnvioDTO.getPuerta() != null && !anadirDireccionEnvioDTO.getPuerta().isEmpty()) {
+                    if (!anadirDireccionEnvioDTO.getPuerta().matches("^(?!\\s)(?=\\S).{1,10}(?!\\s)$")) {
+                        return ResponseEntity.status(400).body(
+                                "La puerta debe tener entre 1 y 10 caracteres y no puede empezar ni terminar con espacios en blanco");
+                    }
+                    direccionCompleta.append("Puerta ").append(anadirDireccionEnvioDTO.getPuerta().trim()).append(", ");
+                }
+
+                direccionCompleta.append(anadirDireccionEnvioDTO.getCodigoPostal()).append(", ");
+                direccionCompleta.append(anadirDireccionEnvioDTO.getProvincia().trim()).append(", ");
+
+                // Eliminar la coma al final
+                if (direccionCompleta.length() > 0) {
+                    direccionCompleta.delete(direccionCompleta.length() - 2, direccionCompleta.length());
+                }
+
+                // Verifico si la dirección ya existe.
+                if (usuario.getDireccionesEnvio() != null
+                        && usuario.getDireccionesEnvio()
+                                .contains(usuario.convertirEstiloTitulo(direccionCompleta.toString()))) {
+                    return ResponseEntity.status(409).body("La dirección ya existe");
+                }
+
+                // Agregar la nueva dirección a la lista del usuario
+                if (usuario.getDireccionesEnvio() == null) {
+                    usuario.setDireccionesEnvio(new ArrayList<>());
+                }
+                usuario.getDireccionesEnvio().add(usuario.convertirEstiloTitulo(direccionCompleta.toString()));
+
+                // Guardar el usuario actualizado en el repositorio
+                usuarioRepositorio.save(usuario);
+
+                // Actualizar la dirección en los pedidos del usuario
+                List<PedidosModelo> pedidos = pedidoRepositorio.findByUsuario_Id(usuario.get_id());
+
+                for (PedidosModelo pedido : pedidos) {
+                    if (pedido.getEstado().equals("PENDIENTE_CONFIRMACION_DIRECCION")) {
+                        pedido.setEstado("DIRECCION_ACTUALIZADA");
+                        pedido.setDireccionCompletaEnvio(direccionCompleta.toString());
+                        pedidoRepositorio.save(pedido);
+                    }
+                }
+
+                return ResponseEntity.ok("Dirección añadida y actualizada exitosamente en los pedidos");
+            } else {
+                // Si el usuario no se encuentra, devolver una respuesta de error.
+                return ResponseEntity.status(404).body("Usuario no encontrado");
+            }
+        } catch (Exception e) {
+            // Manejar cualquier excepción y devolver una respuesta de error.
             return ResponseEntity.status(401).body("Token inválido o expirado");
         }
     }

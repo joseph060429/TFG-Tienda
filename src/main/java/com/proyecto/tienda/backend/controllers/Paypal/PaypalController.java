@@ -9,7 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.paypal.api.payments.Payment;
+import org.springframework.beans.factory.annotation.Value;
+
 import com.proyecto.tienda.backend.DTO.DTOPedido.FacturaDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
@@ -19,6 +23,7 @@ import com.proyecto.tienda.backend.service.Paypal.PayPalServicio;
 import com.proyecto.tienda.backend.service.PedidoServicio.UsuarioPedidoServicioImpl;
 import com.proyecto.tienda.backend.util.ResendUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,10 +48,14 @@ public class PaypalController {
     @Autowired
     private ResendUtil resend;
 
+    @Value("${paypal.success.redirect}")
+    private String paypalSucces;
+
     // CONTROLADOR DEL PAYPAL PARA CUANDO HA IDO BIEN LO DEL PAYPAL
     @GetMapping("/payment/success")
-    public ResponseEntity<String> paymentSuccess(@RequestParam("paymentId") String paymentId,
-            @RequestParam("PayerID") String payerId, HttpSession ses, HttpServletRequest request) {
+    public void paymentSuccess(@RequestParam("paymentId") String paymentId,
+            @RequestParam("PayerID") String payerId, HttpSession ses, HttpServletRequest request,
+            HttpServletResponse res) {
 
         try {
 
@@ -69,8 +78,9 @@ public class PaypalController {
 
                 // Verifico el resultado de la resta
                 if (resultadoResta != 0) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body("No se pudo restar la cantidad del producto del stock.");
+                    res.setStatus(400);
+                    // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    // .body("No se pudo restar la cantidad del producto del stock.");
                 }
             }
 
@@ -83,12 +93,14 @@ public class PaypalController {
 
             // Elimino todos los productos del carrito del usuario
             carritoRepositorio.deleteByIdUsuario(pedido.get().getUsuario().get_id());
+            res.setHeader("Location", paypalSucces);
+            res.setStatus(302);
+            return;
 
-            // return ResponseEntity.ok().body(pedidoFound.toString());
-            return ResponseEntity.ok().body("Pedido creado exitosamente, ya puede cerrar esta ventana");
         } catch (Exception e) {
             log.error("Error ocurrido", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error durante el pago.");
+            res.setStatus(400);
+
         }
     }
 

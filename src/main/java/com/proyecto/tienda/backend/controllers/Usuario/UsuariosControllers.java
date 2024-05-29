@@ -53,6 +53,13 @@ public class UsuariosControllers {
         return usuarioServicio.anadirDireccionEnvio(anadirDireccionEnvioDTO, token, jwtUtils);
     }
 
+    //CONTROLADOR PARA ACTUALIZAR LA DIRECCION DE ENVIO
+    @PatchMapping("/actualizarDireccionEnvio")
+    public ResponseEntity<?> actualizarDireccionEnvio(@RequestBody @Valid AnadirDireccionEnvioDTO anadirDireccionEnvioDTO,
+                                                       @RequestHeader("Authorization") String token) {
+        return usuarioServicio.actualizarDireccionEnvio(anadirDireccionEnvioDTO, token, jwtUtils);
+    }
+
     // CONTROLADOR PARA AÑADIR LA DIRECCION DE FACTURACION EMPRESA-AUTONOMO AL
     // USUARIO
     @PostMapping("/anadirDireccionFacturacionEmpresaAutonomo")

@@ -222,7 +222,7 @@ public class AdminPedidoServicioImpl implements AdminPedidoServicio {
             pedido.setEstado(EPedido.ENTREGADO.toString());
             pedidoRepositorio.save(pedido);
 
-            return ResponseEntity.ok("Se actualizo correctamente el pedido");
+            return ResponseEntity.ok("Se actualizo correctamente el pedido a entregado");
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al actualizar el pedido: has puesto un estado que no existe");

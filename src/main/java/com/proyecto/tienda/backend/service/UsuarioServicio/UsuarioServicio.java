@@ -39,4 +39,8 @@ public interface UsuarioServicio {
 
     // METODO PARA ELIMINAR DIRECCIONES DE FACTURACION AL USUARIO
     ResponseEntity<?> eliminarDireccionFacturacion(Integer index, String token, JwtUtils jwtUtils);
+
+    // METODO PARA ACTUALIZAR DIRECCIONES DE ENVIO AL USUARIO
+    ResponseEntity<?> actualizarDireccionEnvio(AnadirDireccionEnvioDTO anadirDireccionEnvioDTO, String token,
+    JwtUtils jwtUtils);
 }
