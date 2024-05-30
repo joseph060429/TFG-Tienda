@@ -247,12 +247,12 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     public String anadirDireccionDeFacturacionParticular(String nombreFacturacion, String apellidoFacturacion,
             Long numTelefonoFacturacion,
             String direccionDeFacturacion, String codigoPostalDeFacturacion, String provinciaDeFacturacion,
-            String numeroDeFacturacion, Integer pisoDeFacturacion, String puertaDeFacturacion, UsuarioModelo usuario) {
+            String numeroDeFacturacion, String pisoDeFacturacion, String puertaDeFacturacion, UsuarioModelo usuario) {
         try {
             // Agrego la dirección de envío al usuario
             String direccionFacturacionParticular = usuario.construirDireccionFacturacionParticular(nombreFacturacion,
                     apellidoFacturacion, numTelefonoFacturacion, direccionDeFacturacion, codigoPostalDeFacturacion,
-                    provinciaDeFacturacion, numeroDeFacturacion, pisoDeFacturacion.toString(0), puertaDeFacturacion);
+                    provinciaDeFacturacion, numeroDeFacturacion, pisoDeFacturacion, puertaDeFacturacion);
 
             // Guardo el usuario con la nueva dirección de facturacion
             // usuarioRepositorio.save(usuario);
@@ -268,12 +268,12 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
     // AUTONO_EMPRESA
     public String anadirDireccionDeFacturacionAutoEmpresa(String cifONifFacturacion, Long numTelefonoFacturacion,
             String direccionDeFacturacion, String codigoPostalDeFacturacion, String provinciaDeFacturacion,
-            String numeroFacturacion, Integer pisoDeFacturacion, String puertaDeFacturacion, UsuarioModelo usuario) {
+            String numeroFacturacion, String pisoDeFacturacion, String puertaDeFacturacion, UsuarioModelo usuario) {
         try {
             // Agrego la dirección de envío al usuario
             String direccionFacturacionParticular = usuario.construirDireccionFacturacionAutoEmpresa(cifONifFacturacion,
                     numTelefonoFacturacion, direccionDeFacturacion, codigoPostalDeFacturacion,
-                    provinciaDeFacturacion, numeroFacturacion, pisoDeFacturacion.toString(0), puertaDeFacturacion);
+                    provinciaDeFacturacion, numeroFacturacion, pisoDeFacturacion, puertaDeFacturacion);
 
             // Guardo el usuario con la nueva dirección de facturacion
             // usuarioRepositorio.save(usuario);

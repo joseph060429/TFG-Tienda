@@ -15,7 +15,7 @@ public class EmpresaAutonomoDireccionFacturacionDTO {
 
     @NotNull(message = "El campo 'C.I.F/N.I.F' es obligatorio")
     @NotBlank(message = "El campo 'C.I.F/N.I.F' no puede estar en blanco")
-    @Pattern(regexp = "^\\S{9}$", message = "El campo 'C.I.F/N.I.F' debe tener exactamente 9 caracteres y no puede contener espacios en blanco")
+    @Pattern(regexp = "^[a-zA-Z0-9]{9}$", message = "El campo 'C.I.F/N.I.F' debe tener exactamente 9 caracteres alfanuméricos y no puede contener espacios en blanco")
     private String cifONifFacturacion;
 
     @NotNull(message = "El número de teléfono de facturación, no puede estar en blanco")
@@ -36,9 +36,10 @@ public class EmpresaAutonomoDireccionFacturacionDTO {
     @Pattern(regexp = "^\\S(.*\\S)?$", message = "El número de facturación no puede contener espacios en blanco al principio ni al final")
     private String numeroDeFacturacion;
 
-    @Min(value = 0, message = "El piso debe ser al menos 0")
-    @Max(value = 9999999999L, message = "El número debe ser menor o igual a 9999999999")
-    private Integer pisoDeFacturacion;
+    // @Min(value = 0, message = "El piso debe ser al menos 0")
+    // @Max(value = 9999999999L, message = "El número debe ser menor o igual a 9999999999")
+    @Pattern(regexp = "^\\d{1,10}$", message = "El número debe ser un valor entre 0 y 9999999999")
+    private String pisoDeFacturacion;
 
     // @Pattern(regexp = "^(?!\\s)(?=\\S).{1,10}(?!\\s)$", message = "La puerta de
     // facturación debe tener entre 1 y 10 caracteres y no puede empezar ni terminar

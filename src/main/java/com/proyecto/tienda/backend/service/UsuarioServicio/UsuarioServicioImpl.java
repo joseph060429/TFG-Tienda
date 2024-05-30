@@ -305,7 +305,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 if (empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion() != null
                         && !String.valueOf(empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion()).trim()
                                 .isEmpty()
-                        && empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion() >= 0) {
+                        && empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion() != null) {
                     direccionCompletaFacturacion.append("Piso ")
                             .append(empresaAutonomoDireccionFacturacionDTO.getPisoDeFacturacion()).append(", ");
                 }
@@ -428,7 +428,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
                 if (particularDireccionFacturacionDTO.getPisoDeFacturacion() != null
                         && !String.valueOf(particularDireccionFacturacionDTO.getPisoDeFacturacion()).trim().isEmpty()
-                        && particularDireccionFacturacionDTO.getPisoDeFacturacion() >= 0) {
+                        && particularDireccionFacturacionDTO.getPisoDeFacturacion() != null) {
                     direccionCompletaFacturacion.append("Piso ")
                             .append(particularDireccionFacturacionDTO.getPisoDeFacturacion()).append(", ");
                 }
