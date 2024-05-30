@@ -8,10 +8,10 @@
                         <!-- Campo cif o nif -->
                         <q-input v-model="direccionFacturacionEmpreAuto.cifONifFacturacion" label="Cif o Nif" dense
                             lazy-rules maxlength="9" minlength="9" :rules="[
-                                esNumero,
+                                // esNumero,
                                 val => val && val.length > 0 || 'Por favor, introduce algo',
-                                val => /^\S.*\S$/.test(val) || 'El Cif o Nif no puede empezar ni terminar con espacios en blanco y debe contener exactamente 9 dígitos',
-                                val => /^\d{9}$/.test(val) || 'El Cif o Nif debe debe contener exactamente 9 dígitos'
+                                val => /^\S.*\S$/.test(val) || 'El Cif o Nif no puede empezar ni terminar con espacios en blanco y debe contener exactamente 9 caracteres alfanuméricos',
+                                val => /^[a-zA-Z0-9]{9}$/.test(val) || 'El Cif o Nif debe contener exactamente 9 caracteres alfanuméricos y no puede tener espacios en blanco'
                             ]">
                             <template v-slot:prepend>
                                 <q-icon name="mdi-account-card" />

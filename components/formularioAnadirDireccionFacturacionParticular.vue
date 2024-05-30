@@ -43,7 +43,7 @@
                                 val => /^\d{9}$/.test(val) || 'El número de telfono debe contener exactamente 9 dígitos'
                             ]">
                             <template v-slot:prepend>
-                                <q-icon name="mdi-mailbox" />
+                                <q-icon name="mdi-phone-outline" />
                             </template>
                         </q-input>
 

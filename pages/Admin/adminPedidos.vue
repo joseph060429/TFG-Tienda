@@ -26,7 +26,11 @@
                     <!-- <q-td>{{ props.row.fechaEnvio}}</q-td> -->
                     <q-td>{{ props.row.numTelefono }}</q-td>
                     <q-td>{{ props.row.direccionEnvio }}</q-td>
-                    <q-td> {{ props.row.datosUsuarioPedidoDTO.email }}</q-td>
+                    <q-td> {{ props.row.datosUsuarioPedidoDTO.email }}
+                        <q-btn @click="enviarEmailRetraso(props.row.datosUsuarioPedidoDTO.email)">
+                            <q-icon name="mdi-email-alert" />
+                        </q-btn>
+                    </q-td>
                     <q-td>
                         <div v-for="(producto, index) in props.row.productos" :key="index" style="text-align: left;">
                             &bull; {{ producto.categoria }}
@@ -65,7 +69,7 @@ onBeforeMount(async () => {
 })
 
 // El usuario es el de las stores
-const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea, actualizarEstadoEntregado } = adminComposable();
+const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea, actualizarEstadoEntregado, actualizarEstadoReproParaEntrega, enviarCorreoRetraso } = adminComposable();
 
 
 //USAR QUASAR
@@ -82,7 +86,8 @@ const regresar = () => {
 const opcionesParaEstado = [
     'ENVIADO',
     'PENDIENTE_CONFIRMACION_DIRECCION',
-    'ENTREGADO'
+    'ENTREGADO',
+    "REPROGRAMADO_PARA_ENTREGA"
 ];
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
@@ -136,8 +141,19 @@ const seleccionarEstado = async (idPedido, estado) => {
                 }
                 break;
 
-
-
+            case 'REPROGRAMADO_PARA_ENTREGA':
+                const response4 = await actualizarEstadoReproParaEntrega(idPedido._id, idPedido.estado);
+                console.log("estado pedido reprogramado para entrega ", response4.data);
+                switch (response4.data) {
+                    case 'Se actualizó correctamente el pedido a reprogramado para entrega':
+                        mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
+                        break;
+                    case 'El pedido ya ha sido marcado como reprogramado para entrega':
+                        mostrarAlertaError('El pedido ya ha sido marcado como reprogramado para entrega', quasar);
+                        break;
+                    default:
+                        console.warn('Respuesta desconocida de actualizarEstadoReproParaEntrega:', response3.data);
+                }
             default:
                 break;
         }
@@ -150,6 +166,20 @@ const seleccionarEstado = async (idPedido, estado) => {
     }
 }
 
+
+// FUNCIÓN PARA ENVIAR UN EMAIL CUANDO HUBO UN RETRASO EN SU PEDIDO
+const enviarEmailRetraso = async (email) => {
+    try {
+        const response = await enviarCorreoRetraso(email);
+        console.log("RESPONSE de enviarEmailRetraso ", response.data);
+        if (response.data === 'Correo de retraso enviado con éxito.')
+            mostrarAlertaExito(response.data, quasar);
+    } catch (error) {
+        // Error de red u otro error
+        console.error('Error al enviar email de retraso', error);
+        // mostrarAlertaError('Error al ver todos los pedidos', quasar);
+    }
+}
 
 
 

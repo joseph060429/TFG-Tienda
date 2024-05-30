@@ -46,6 +46,16 @@ export const adminComposable = () => {
   };
 
 
+  const actualizarEstadoReproParaEntrega = async (pedidoId, estado) => {
+    return await store.actualizarEstadoReproParaEntrega(pedidoId, estado);
+  };
+
+
+  const enviarCorreoRetraso = async (email) => {
+    return await store.enviarCorreoRetraso(email);
+  };
+
+  
 
 
 
@@ -60,6 +70,8 @@ export const adminComposable = () => {
     pedidos,
     actualizarEstadoEnviado,
     actualizarEstadoDireccionErronea,
-    actualizarEstadoEntregado
+    actualizarEstadoEntregado,
+    actualizarEstadoReproParaEntrega,
+    enviarCorreoRetraso
   };
 };

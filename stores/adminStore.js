@@ -179,8 +179,6 @@ export const adminStore = defineStore({
       }
     },
 
-
-
     //STORE PARA ACTUALIZAR PEDIDO A ENTREGADO, LO PONDRÉ CUANDO EL REPARTIDOR VENGA CON TODS LOS PEDIDOS
     async actualizarEstadoEntregado(pedidoId, estado) {
       try {
@@ -198,13 +196,54 @@ export const adminStore = defineStore({
         console.log("NOMBRE ESTADO ENTREGADO STORE", estado);
         return response;
       } catch (error) {
-        console.log("Error en ENTREGADO ROL  STORE ==> ", error);
+        console.log("Error en ENTREGADO STORE ==> ", error);
         return error.response;
       }
     },
 
+    //STORE PARA ACTUALIZAR PEDIDO A REPROGRAMADO_PARA_ENTREGA
+    async actualizarEstadoReproParaEntrega(pedidoId, estado) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("NOMBRE ESTADO STORE", estado);
+        const response = await useAxiosInstance().patch(
+          "/admin/pedidos/envioEmailReprogramadoEntrega",
+          { pedidoId: pedidoId, estado: estado },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("NOMBRE ESTADO REPROGRAMADO_PARA_ENTREGA STORE", estado);
+        return response;
+      } catch (error) {
+        console.log("Error en REPROGRAMADO_PARA_ENTREGA STORE ==> ", error);
+        return error.response;
+      }
+    },
 
-
+    //STORE PARA ENVIAR UN EMAIL CUANDO UN PEDIDO SE HA RETRASADO
+    async enviarCorreoRetraso(email) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("NOMBRE EMAIL STORE", email);
+        const response = await useAxiosInstance().post(
+          "/admin/pedidos/envioEmailRetraso",
+          { email: email },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("NOMBRE EMAIL STORE", email);
+        return response;
+      } catch (error) {
+        console.log("Error en enviarCorreoRetraso STORE ==> ", error);
+        return error.response;
+      }
+    },
 
 
 
