@@ -40,15 +40,15 @@
 
 
                     <q-td>
-                        <span v-html="obtenerDireccionesEnvio(props.row.direccionesEnvio)"></span>
+                        <span v-html="obtenerDireccionesEnvio(props.row.direccionesEnvio)" ></span>
                     </q-td>
 
 
                     <q-td class="text-center">
-                            <!-- Botón para eliminar el perfil del usuario-->
-                            <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar">
-                                <q-icon name="mdi-delete" />
-                            </q-btn>
+                        <!-- Botón para eliminar el perfil del usuario-->
+                        <q-btn @click="eliminarUsuarioAdmin(props.row.email)" class="boton-borrar">
+                            <q-icon name="mdi-delete" />
+                        </q-btn>
                     </q-td>
 
                 </q-tr>
@@ -86,15 +86,9 @@ const regresar = () => {
 };
 
 // FUNCIONES
-// const optionesParaRoles = [
-//     { label: 'ADMINISTRADOR', value: 'ADMIN' },
-//     { label: 'USUARIO', value: 'USER' },
-// ];
-
-
 const optionesParaRoles = [
-   'ADMIN',
-   'USER'
+    'ADMIN',
+    'USER'
 ];
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
@@ -279,31 +273,32 @@ const editarPerfil = (id) => {
 .boton-borrar {
     background-color: #FF4500;
     border: 1px solid;
-    
+
 }
 
 .boton-perfil:hover {
-    background-color: rgba(65, 105, 225, 0.8); 
-   
+    background-color: rgba(65, 105, 225, 0.8);
+
 }
 
 .boton-borrar:hover {
-    background-color: rgba(255, 69, 0, 0.8); 
-    
+    background-color: rgba(255, 69, 0, 0.8);
+
 }
 
 
 
 .boton-perfil,
 .boton-borrar {
-    font-size: 0.8em; 
-    padding: 5px 10px; 
-    margin: 0 5px; 
+    font-size: 0.8em;
+    padding: 5px 10px;
+    margin: 0 5px;
 }
 
 
 
 @media only screen and (max-width: 600px) {
+
     .boton-perfil,
     .boton-borrar {
         font-size: 14px;
@@ -311,27 +306,25 @@ const editarPerfil = (id) => {
     }
 }
 
-.select-rol{
-    position: absolute;
+
+
+.select-rol {
     right: 0;
     top: 0%;
     border: none;
     width: 100%;
-    overflow: hidden;
     font-size: 1em;
     text-align: center;
 }
 
-
-
+@media (max-width: 600px) {
+    .select-rol {
+        right: 0;
+        top: 0%;
+        border: none;
+        width: 100%;
+        font-size: 1em;
+        text-align: center;
+    }
+}
 </style>
-
-
-
-
-
-
-
-
-
-

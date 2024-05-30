@@ -166,18 +166,23 @@ const listarTodosLosPedidos = async () => {
 }
 
 @media (max-width: 600px) {
-    .tabla-container {
-        width: 99%;
-        overflow-x: auto;
-        margin: auto;
-    }
+
+    // .tabla-container {
+    //     width: 98%;
+    //     overflow-x: auto;
+    //     margin: auto;
+    //     height: 50vh;
+    //     font-family: Arial, sans-serif;
+    //     // border: 3px solid black;
+    // }
 
 
     .tabla {
-        height: 55vh;
+        width: 98%;
+        height: 45vh;
+        margin: auto;
         background-color: #A9A9A9;
         font-family: Arial, sans-serif;
-        border: 3px solid black;
     }
 }
 
@@ -301,22 +306,12 @@ const listarTodosLosPedidos = async () => {
 }
 
 .select-estado {
-    // position: absolute;
     right: 0;
     top: 0%;
     border: none;
     width: 100%;
-    // overflow: hidden;
     font-size: 1em;
     margin-top: 1em;
-    // margin-left: 50%;
-    // text-align: center;
 
 }
-
-.celda{
-    background-color: #FF4500;
-}
-
-
 </style>
