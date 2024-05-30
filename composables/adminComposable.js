@@ -41,6 +41,14 @@ export const adminComposable = () => {
   };
 
 
+  const actualizarEstadoEntregado = async (pedidoId, estado) => {
+    return await store.actualizarEstadoEntregado(pedidoId, estado);
+  };
+
+
+
+
+
   // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO
   return {
     listarUsuarios,
@@ -51,6 +59,7 @@ export const adminComposable = () => {
     usuarios,
     pedidos,
     actualizarEstadoEnviado,
-    actualizarEstadoDireccionErronea
+    actualizarEstadoDireccionErronea,
+    actualizarEstadoEntregado
   };
 };

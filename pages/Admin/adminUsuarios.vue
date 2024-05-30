@@ -40,7 +40,7 @@
 
 
                     <q-td>
-                        <span v-html="obtenerDireccionesEnvio(props.row.direccionesEnvio)" ></span>
+                        <span v-html="obtenerDireccionesEnvio(props.row.direccionesEnvio)" style="text-align: left;" ></span>
                     </q-td>
 
 

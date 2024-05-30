@@ -153,7 +153,7 @@ export const adminStore = defineStore({
         console.log("NOMBRE ESTADO ENVIADO STORE", estado);
         return response;
       } catch (error) {
-        console.log("Error en ACTUALIZAR ROL  STORE ==> ", error);
+        console.log("Error en ESTADO ENVIADO ROL  STORE ==> ", error);
         return error.response;
       }
     },
@@ -175,6 +175,30 @@ export const adminStore = defineStore({
         return response;
       } catch (error) {
         console.log("Error en DIRECCION ERRONEA ROL  STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+
+
+    //STORE PARA ACTUALIZAR PEDIDO A ENTREGADO, LO PONDRÉ CUANDO EL REPARTIDOR VENGA CON TODS LOS PEDIDOS
+    async actualizarEstadoEntregado(pedidoId, estado) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("NOMBRE ESTADO STORE", estado);
+        const response = await useAxiosInstance().patch(
+          "/admin/pedidos/actualizarEstadoPedidoEntregado",
+          { pedidoId: pedidoId, estado: estado },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("NOMBRE ESTADO ENTREGADO STORE", estado);
+        return response;
+      } catch (error) {
+        console.log("Error en ENTREGADO ROL  STORE ==> ", error);
         return error.response;
       }
     },

@@ -65,7 +65,7 @@ onBeforeMount(async () => {
 })
 
 // El usuario es el de las stores
-const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea } = adminComposable();
+const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea, actualizarEstadoEntregado } = adminComposable();
 
 
 //USAR QUASAR
@@ -81,7 +81,8 @@ const regresar = () => {
 // FUNCIONES
 const opcionesParaEstado = [
     'ENVIADO',
-    'PENDIENTE_CONFIRMACION_DIRECCION'
+    'PENDIENTE_CONFIRMACION_DIRECCION',
+    'ENTREGADO'
 ];
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
@@ -118,6 +119,25 @@ const seleccionarEstado = async (idPedido, estado) => {
                         console.warn('Respuesta desconocida de actualizarEstadoDireccionErronea:', response2.data);
                 }
                 break;
+
+            case 'ENTREGADO':
+                const response3 = await actualizarEstadoEntregado(idPedido._id, idPedido.estado);
+                console.log("estado pedido entregado ", response3.data);
+
+                switch (response3.data) {
+                    case 'Se actualizo correctamente el pedido a entregado':
+                        mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
+                        break;
+                    case 'El pedido ya ha sido marcado como entregado':
+                        mostrarAlertaError('El pedido ya ha sido marcado como entregado', quasar);
+                        break;
+                    default:
+                        console.warn('Respuesta desconocida de actualizarEstadoEntregado:', response3.data);
+                }
+                break;
+
+
+
             default:
                 break;
         }
