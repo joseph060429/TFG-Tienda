@@ -1,12 +1,16 @@
 <template>
     <!-- <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" /> -->
-    <filtrado-estado-pedido @estado="(x) => estado = x"></filtrado-estado-pedido>
+
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+    <div class="filtrado">
+        <filtrado-estado-pedido @estado="(x) => estado = x"></filtrado-estado-pedido>
+    </div>
     <div class="tabla-container">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 pedidos -->
         <h5 class="titulo">PEDIDOS DE LOS USUARIOS</h5>
-        <q-table class="tabla" flat :rows="pedidosFiltrados" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
-            :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]" style="overflow-x: auto;">
+        <q-table class="tabla" flat :rows="pedidosFiltrados" row-key="index" virtual-scroll
+            :virtual-scroll-item-size="48" :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]"
+            style="overflow-x: auto;">
             <!-- Cabeceras de la tabla -->
             <template v-slot:header="props">
                 <q-tr :props="props">
@@ -73,7 +77,7 @@ onBeforeMount(async () => {
 })
 
 // El usuario es el de las stores
-const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea, actualizarEstadoEntregado, actualizarEstadoReproParaEntrega, enviarCorreoRetraso} = adminComposable();
+const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea, actualizarEstadoEntregado, actualizarEstadoReproParaEntrega, enviarCorreoRetraso } = adminComposable();
 
 
 //USAR QUASAR
@@ -175,9 +179,6 @@ const seleccionarEstado = async (idPedido, estado) => {
                         console.warn('Respuesta desconocida de actualizarEstadoEnviado:', response5.data);
                 }
                 break;
-
-
-
             default:
                 break;
         }
@@ -216,27 +217,16 @@ const listarTodosLosPedidos = async () => {
 
 
 .tabla {
-    height: 55vh;
+    height: 45vh;
     background-color: #A9A9A9;
     font-family: Arial, sans-serif;
     border: 3px solid black;
 }
 
 @media (max-width: 600px) {
-
-    // .tabla-container {
-    //     width: 98%;
-    //     overflow-x: auto;
-    //     margin: auto;
-    //     height: 50vh;
-    //     font-family: Arial, sans-serif;
-    //     // border: 3px solid black;
-    // }
-
-
     .tabla {
         width: 98%;
-        height: 45vh;
+        height: 40vh;
         margin: auto;
         background-color: #A9A9A9;
         font-family: Arial, sans-serif;

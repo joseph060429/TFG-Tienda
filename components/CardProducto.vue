@@ -95,7 +95,6 @@ const productosPaginados = computed(() => {
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  // justify-content: flex-start;
 
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
@@ -128,6 +127,8 @@ const productosPaginados = computed(() => {
   width: 45vh;
   box-sizing: border-box;
   padding-top: 1%;
+  cursor: pointer;
+
 
   /* Media query para ajustar el ancho en dispositivos móviles */
   @media screen and (max-width: 600px) {
