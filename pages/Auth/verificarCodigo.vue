@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-        <!-- <div class="q-pa-md d-flex justify-center align-center" style="height: 100vh;"> -->
         <div class="verification-container">
             <h1 class="text-h4 q-mb-md text-center q-mt-lg"
                 style="color: #333333; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
@@ -12,7 +11,7 @@
             <div class="verification-inputs" style="display: flex; flex-wrap: wrap; justify-content: center;">
                 <div v-for="index in 10" :key="index" class="verification-input" style="margin-right: 10px;">
                     <input v-model="codeInputs[index - 1]" type="text" maxlength="1" class="verification-character"
-                        @input="convertToUppercase(index - 1, $event)" />
+                        @input="convertToUppercase(index - 1, $event)" @keydown="moveFocus(index - 1, $event)" />
                 </div>
             </div>
             <div class="q-mt-lg d-flex justify-center">
@@ -28,6 +27,7 @@
 import { useRouter } from 'vue-router'
 import { mostrarAlertaExito, mostrarAlertaError } from '~/utils/alertas';
 import { useAuth } from '~/composables/useAuth.js';
+import { ref, nextTick } from 'vue';
 
 const { verificaCodigo } = useAuth();
 
@@ -49,6 +49,25 @@ const quasar = useQuasar()
 const convertToUppercase = (index, event) => {
     const newValue = event.target.value.toUpperCase();
     codeInputs.value[index] = newValue;
+
+    if (newValue && index < 9) {
+        nextTick(() => {
+            const inputs = document.querySelectorAll('.verification-character');
+            inputs[index + 1].focus();
+        });
+    }
+};
+
+const moveFocus = (index, event) => {
+    const key = event.key;
+    const currentValue = codeInputs.value[index];
+
+    if (key === 'Backspace' && !currentValue && index > 0) {
+        nextTick(() => {
+            const inputs = document.querySelectorAll('.verification-character');
+            inputs[index - 1].focus();
+        });
+    }
 };
 
 const verificarCodigo = async () => {
@@ -78,7 +97,7 @@ const regresar = () => {
 </script>
 
 <style scoped>
-/* Estilos para la verificación del código */
+
 .verification-container {
     max-width: 80%;
     margin: auto;
@@ -107,11 +126,8 @@ const regresar = () => {
 }
 
 .container {
-    /* Ancho máximo del contenedor */
     max-width: 100%;
-    /* Relleno */
     padding: 2vh;
     height: 80vh;
-    /* background-color: black; */
 }
 </style>

@@ -1,10 +1,11 @@
 <template>
     <!-- <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" /> -->
+    <filtrado-estado-pedido @estado="(x) => estado = x"></filtrado-estado-pedido>
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
     <div class="tabla-container">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 pedidos -->
         <h5 class="titulo">PEDIDOS DE LOS USUARIOS</h5>
-        <q-table class="tabla" flat :rows="pedidos" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
+        <q-table class="tabla" flat :rows="pedidosFiltrados" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
             :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]" style="overflow-x: auto;">
             <!-- Cabeceras de la tabla -->
             <template v-slot:header="props">
@@ -56,6 +57,13 @@ definePageMeta({
     role: ['ROLE_ADMIN']
 });
 
+const estado = ref('')
+const pedidosFiltrados = computed(() => {
+    if (estado.value != '') {
+        return pedidos.value.filter(p => p.estado == estado.value)
+    }
+    return pedidos.value
+})
 
 // const estadoPedidoSeleccionado = ref('');
 
