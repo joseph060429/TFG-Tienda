@@ -51,8 +51,8 @@ export const adminComposable = () => {
   };
 
 
-  const enviarCorreoRetraso = async (email) => {
-    return await store.enviarCorreoRetraso(email);
+  const enviarCorreoRetraso = async (pedidoId, estado) => {
+    return await store.enviarCorreoRetraso(pedidoId, estado);
   };
 
   

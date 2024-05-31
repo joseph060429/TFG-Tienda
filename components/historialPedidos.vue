@@ -1,9 +1,9 @@
 <template>
   <!-- :rows-per-page-options="[10]">  PARA QUE ME MUESTRE EL HISTORIAL DE PEDIDOS DE 10 EN 10-->
-  <q-dialog v-model="verPedidos">
-    <div class="q-pa-md">
-      <q-table class="tabla" flat bordered title="Historial de pedidos" title-tag="h2" :rows="pedidos"
-        row-key="index" virtual-scroll :virtual-scroll-item-size="48" :virtual-scroll-sticky-size-start="48"
+  <q-dialog v-model="verPedidos" >
+    <div class="q-pa-md" style="width: 100%; max-width: 100%;">
+      <q-table class="tabla" flat bordered title="Historial de pedidos" title-tag="h2" :rows="pedidos" row-key="index"
+        virtual-scroll :virtual-scroll-item-size="48" :virtual-scroll-sticky-size-start="48"
         :pagination="{ rowsPerPage: 50 }" :rows-per-page-options="[50]">
         <template v-slot:top-right>
           <!-- Botones cancelar y devolver  pedidos -->
@@ -38,7 +38,13 @@
               <span v-html="productosFormateados(props.row.productos)"></span>
             </q-td>
             <q-td>{{ props.row.estado }}</q-td>
-            <q-td>{{ props.row.direccionEnvio }}</q-td>
+            <q-td>{{ props.row.direccionEnvio }}
+              <div class="editar" v-if="props.row.estado == 'PENDIENTE_CONFIRMACION_DIRECCION'">
+                <q-btn @click="abrirFormuCambioDireEnvio(props.row)">
+                  <q-icon name="mdi-pencil" />
+                </q-btn>
+              </div>
+            </q-td>
 
           </q-tr>
         </template>
@@ -60,6 +66,7 @@
       </div>
     </q-dialog>
   </q-dialog>
+
 </template>
 
 <!-- SCRIPT -->
@@ -76,10 +83,23 @@ const quasar = useQuasar()
 const router = useRouter()
 
 const props = defineProps({
-  mostrarLosPedidos: Boolean
+  mostrarLosPedidos: Boolean,
+  actualizadaDireccion: Boolean,
+  // mostrarFormulario: Boolean
 })
 
+const emits = defineEmits(['mostrarCambiarDireccion'])
+
 const verPedidos = ref(props.mostrarLosPedidos)
+
+const mostrarFormuDireccionEnvio = ref(false);
+
+const abrirFormuCambioDireEnvio = (item) => {
+  // Abro el formulario si no esta abierto
+  emits('mostrarCambiarDireccion', item)
+};
+
+// const formularioEditarDireccionEnvio = ref(props.mostrarFormulario)
 
 // FUNCIONES
 // FUNCION PARA TRAER LOS PEDIDOS DEL USUARIO 
@@ -87,6 +107,7 @@ onBeforeMount(async () => {
   await historialDePedidos();
   console.log("PEDIDOS", pedidos);
 })
+
 
 // FUNCION PARA VER EL HISTORIAL DE PEDIDOS
 const pedidos = ref([]);
@@ -102,6 +123,14 @@ const historialDePedidos = async () => {
     mostrarAlertaError('Error al ver el historial de pedidos', quasar);
   }
 }
+
+watch(() => props.actualizadaDireccion, (x) => {
+  if (x) {
+    historialDePedidos();
+    console.log("PEDIDOS", pedidos);
+    props.actualizadaDireccion = false
+  }
+})
 
 // Referencia para controlar la visibilidad del diálogo
 const mostrarDialogoEliminar = ref(false);
@@ -136,8 +165,9 @@ const cancelarPedido = async () => {
       mostrarAlertaError('Pedido no cancelable: ya ha sido cancelado o tiene otro estado.', quasar);
     } else if (response.status === 200) {
       // Si el pedido se canceló exitosamente, muestro un mensaje de éxito
-      mostrarAlertaExito('Pedido cancelado. Se ha enviado un correo electrónico y los cambios se reflejarán al iniciar sesión nuevamente.', quasar)
-
+      mostrarAlertaExito('Pedido cancelado. Se ha enviado un correo electrónico.', quasar)
+      mostrarDialogoEliminar.value = false;
+      await historialDePedidos();
     }
     console.log("RESPONSE: ", response.data);
     console.log("RESPONSE: ", response.status);
@@ -162,7 +192,7 @@ const productosFormateados = (productos) => {
     });
     // Unir los productos formateados con saltos de línea
     return formattedProducts.join('');
-  } 
+  }
 };
 
 
@@ -178,7 +208,7 @@ const productosFormateados = (productos) => {
 
 <!-- STYLE -->
 <style lang="scss" scoped>
-.tabla{
+.tabla {
   height: 50vh;
   width: 100%;
   background-color: #A9A9A9;
@@ -197,7 +227,7 @@ const productosFormateados = (productos) => {
 
 
 .tabla td {
-    text-align: center;
+  text-align: center;
 }
 
 

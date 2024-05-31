@@ -376,6 +376,37 @@ export const usuarioStore = defineStore({
 
 
 
+    // ACTUALIZAR DIRECCIÓN ENVÍO
+    async actualizarDireccionEnvio(direccionEnvio) {
+      try {
+        console.log(direccionEnvio);
+        const token = localStorage.getItem("token");
+        const response = await useAxiosInstance().patch(
+          "/usuarios/actualizarDireccionEnvio",
+          {
+            direccion: direccionEnvio.direccion,
+            numero: direccionEnvio.numero,
+            piso: direccionEnvio.piso,
+            puerta: direccionEnvio.puerta,
+            codigoPostal: direccionEnvio.codigoPostal,
+            provincia: direccionEnvio.provincia
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // this.usuario.direccionesEnvioFacturacion.direccionesEnvio = response.data;
+        return response;
+      } catch (error) {
+        console.log("Error en ACTUALIZAR DIRECCION DE ENVIO USUARIO STORE ==> ", error);
+        return error.response;
+      }
+    },
+
+
+
 
 
 

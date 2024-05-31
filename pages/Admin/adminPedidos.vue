@@ -26,11 +26,7 @@
                     <!-- <q-td>{{ props.row.fechaEnvio}}</q-td> -->
                     <q-td>{{ props.row.numTelefono }}</q-td>
                     <q-td>{{ props.row.direccionEnvio }}</q-td>
-                    <q-td> {{ props.row.datosUsuarioPedidoDTO.email }}
-                        <q-btn @click="enviarEmailRetraso(props.row.datosUsuarioPedidoDTO.email)">
-                            <q-icon name="mdi-email-alert" />
-                        </q-btn>
-                    </q-td>
+                    <q-td> {{ props.row.datosUsuarioPedidoDTO.email }}</q-td>
                     <q-td>
                         <div v-for="(producto, index) in props.row.productos" :key="index" style="text-align: left;">
                             &bull; {{ producto.categoria }}
@@ -69,7 +65,7 @@ onBeforeMount(async () => {
 })
 
 // El usuario es el de las stores
-const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea, actualizarEstadoEntregado, actualizarEstadoReproParaEntrega, enviarCorreoRetraso } = adminComposable();
+const { listarPedidos, pedidos, actualizarEstadoEnviado, actualizarEstadoDireccionErronea, actualizarEstadoEntregado, actualizarEstadoReproParaEntrega, enviarCorreoRetraso} = adminComposable();
 
 
 //USAR QUASAR
@@ -87,7 +83,8 @@ const opcionesParaEstado = [
     'ENVIADO',
     'PENDIENTE_CONFIRMACION_DIRECCION',
     'ENTREGADO',
-    "REPROGRAMADO_PARA_ENTREGA"
+    "REPROGRAMADO_PARA_ENTREGA",
+    "RETRASO"
 ];
 
 // FUNCION PARA ACTUALIZAR EL ROL DE UN USUARIO
@@ -154,6 +151,25 @@ const seleccionarEstado = async (idPedido, estado) => {
                     default:
                         console.warn('Respuesta desconocida de actualizarEstadoReproParaEntrega:', response3.data);
                 }
+
+            case 'RETRASO':
+                const response5 = await enviarCorreoRetraso(idPedido._id, idPedido.estado);
+                console.log("RESPONSE de actualizarEstadoEnviado: ", response5.data);
+
+                switch (response5.data) {
+                    case 'Se actualizó correctamente el pedido a retrasado':
+                        mostrarAlertaExito('Se actualizó correctamente el pedido', quasar);
+                        break;
+                    case 'El pedido ya ha sido marcado como retrasado':
+                        mostrarAlertaError('El pedido ya ha sido marcado como retrasado', quasar);
+                        break;
+                    default:
+                        console.warn('Respuesta desconocida de actualizarEstadoEnviado:', response5.data);
+                }
+                break;
+
+
+
             default:
                 break;
         }
@@ -165,23 +181,6 @@ const seleccionarEstado = async (idPedido, estado) => {
         mostrarAlertaError('Hubo un error al actualizar el pedido', quasar);
     }
 }
-
-
-// FUNCIÓN PARA ENVIAR UN EMAIL CUANDO HUBO UN RETRASO EN SU PEDIDO
-const enviarEmailRetraso = async (email) => {
-    try {
-        const response = await enviarCorreoRetraso(email);
-        console.log("RESPONSE de enviarEmailRetraso ", response.data);
-        if (response.data === 'Correo de retraso enviado con éxito.')
-            mostrarAlertaExito(response.data, quasar);
-    } catch (error) {
-        // Error de red u otro error
-        console.error('Error al enviar email de retraso', error);
-        // mostrarAlertaError('Error al ver todos los pedidos', quasar);
-    }
-}
-
-
 
 // FUNCION PARA CARGAR LOS pedidos
 const listarTodosLosPedidos = async () => {

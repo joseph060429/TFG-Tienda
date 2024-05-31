@@ -46,7 +46,7 @@
                 <!-- {{ props.row.totalCarrito }}  -->
             </template>
         </q-table>
-        <q-btn @click="seguirComprando" :disable="tieneErrores" label="Comprar" class="boton-seguir-comprando">
+        <q-btn @click="seguirComprando" :disable="tieneErrores || usuario.carrito.length == 0" label="Comprar" class="boton-seguir-comprando">
             <q-icon name="mdi-cart-plus" />
         </q-btn>
     </div>

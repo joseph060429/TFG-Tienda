@@ -1,6 +1,9 @@
 <template>
     <!-- <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" /> -->
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
+    <div class="overlay" v-if="loadingPayment">
+        <img src="../assets/loading.gif" class="absolute-center loading-overlay" style="z-index: 2;">
+    </div>
     <div class="container">
         <eliminar-direcciones v-model="mostrarBorrarDireccion" :indice="indice" :modo="modo" />
         <!-- <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" /> -->
@@ -54,14 +57,16 @@
                 <div v-if="usuario.direccionesEnvioFacturacion.direccionesFacturacion.length > 0">
                     <h6 class="title">Direccion/es Facturación</h6>
                     <!-- EMPRESA-AUTONOMO -->
-                    <formulario-anadir-direccion-facturacion-empre-auto @pokemon="test($event)"
+                    <formulario-anadir-direccion-facturacion-empre-auto
+                        @cerrarFormulario="(v) => mostrarFormularioAnadirDirecionFacturacionEmpreAuto = false"
                         v-model="mostrarFormularioAnadirDirecionFacturacionEmpreAuto" />
                     <q-btn @click="anadirDireccionFacturacionEmpreAuto" class="boton-anadir-facturacion-empreAuto"
                         label="Empresa-Autónomo">
                         <q-icon name="mdi-briefcase-account" />
                     </q-btn>
                     <!-- PARTICULAR -->
-                    <formulario-anadir-direccion-facturacion-particular @pokemon="test($event)"
+                    <formulario-anadir-direccion-facturacion-particular
+                        @cerrarFormulario="(v) => mostrarFormularioAnadirDirecionFacturacionParticular = false"
                         v-model="mostrarFormularioAnadirDirecionFacturacionParticular" />
                     <q-btn @click="anadirDireccionFacturacionParticular" class="boton-anadir-facturacion-particular"
                         label="Particular">
@@ -136,7 +141,7 @@ const seleccionDireciones = ref({
 const mostrarBorrarDireccion = ref(false);
 const indice = ref(null);
 const modo = ref('');
-const paypalUrl = ref('');
+const loadingPayment = ref(false)
 
 function selectDireccion(direccion, tipo) {
     seleccionDireciones.value[tipo] = direccion
@@ -144,6 +149,7 @@ function selectDireccion(direccion, tipo) {
 }
 
 function crearPedido() {
+    loadingPayment.value = true
     if (seleccionDireciones.value.envio == '' || seleccionDireciones.value.facturacion == '') {
         return;
     }
@@ -530,6 +536,22 @@ const eliminarDireccionFacturacion = () => {
 
 .checked .q-icon {
     pointer-events: none;
+}
+
+.overlay {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    z-index: 2;
+    position: absolute;
+    top: 0%;
+    background-color: rgba(255, 255, 255, 0.6);
+
+    .loading-overlay {
+        width: 250px;
+        height: 250px;
+    }
 }
 
 @media (max-width: 600px) {

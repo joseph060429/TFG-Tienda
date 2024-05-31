@@ -224,20 +224,20 @@ export const adminStore = defineStore({
     },
 
     //STORE PARA ENVIAR UN EMAIL CUANDO UN PEDIDO SE HA RETRASADO
-    async enviarCorreoRetraso(email) {
+    async enviarCorreoRetraso(pedidoId, estado) {
       try {
         const token = localStorage.getItem("token");
-        console.log("NOMBRE EMAIL STORE", email);
-        const response = await useAxiosInstance().post(
+        console.log("NOMBRE ESTADO STORE", estado);
+        const response = await useAxiosInstance().patch(
           "/admin/pedidos/envioEmailRetraso",
-          { email: email },
+          { pedidoId: pedidoId, estado: estado },
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log("NOMBRE EMAIL STORE", email);
+        console.log("NOMBRE ESTADO STORE", estado);
         return response;
       } catch (error) {
         console.log("Error en enviarCorreoRetraso STORE ==> ", error);

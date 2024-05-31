@@ -179,7 +179,7 @@ const borrar = () => {
 };
 
 
-const emit = defineEmits(['pokemon'])
+const emit = defineEmits(['cerrarFormulario'])
 const esNumero = (val) => {
     if (!val || isNaN(val)) {
         return 'Por favor, introduce solo números.';
@@ -200,7 +200,7 @@ const envioFormulario = async () => {
         const response = await anadirDireccionFacturacionParticular(direccionDeFacturacionParticular);
 
         if (response.data === 'Dirección de facturación añadida exitosamente') {
-            emit('pokemon', false)
+            emit('cerrarFormulario', false)
             mostrarAlertaExito('Dirección anadida exitosamente', quasar);
             const direccionFormateada = formatearDireccion(direccionDeFacturacionParticular);
             usuario.value.direccionesEnvioFacturacion.direccionesFacturacion.push(direccionFormateada);

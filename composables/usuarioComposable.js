@@ -86,6 +86,13 @@ export const usuarioComposable = () => {
   };
 
 
+    //COMPOSABLE PARA ACTUALIZAR LAS DIRECCIONES DE ENVIO DEL USUARIO
+    const actualizarDireccionEnvio = async (direccionEnvio) => {
+      return await store.actualizarDireccionEnvio(direccionEnvio);
+    };
+  
+
+
   // COMPOSABLE PARA LIMPIAR LOS PEDIDOS DEL USUARIO DE LA STORE
   const limpiarPedidos = () => {
     store.limpiarPedidos();
@@ -119,6 +126,7 @@ export const usuarioComposable = () => {
     anadirDireccionFacturacionEmpreAuto,
     anadirDireccionFacturacionParticular,
     eliminarDireccionEnvio,
-    eliminarDireccionFacturacion
+    eliminarDireccionFacturacion,
+    actualizarDireccionEnvio
   };
 };

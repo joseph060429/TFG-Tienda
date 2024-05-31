@@ -21,7 +21,12 @@
       </div>
       <!-- Botón para ver el historial de los pedidos -->
       <div class="ver-pedidos">
-        <historial-pedidos v-model="verPedidos" />
+        <formulario-actualizar-direccion-envio v-model="mostrarFormuDireccionEnvio"
+          @cerrarFormulario="(v) => actualizarPedidos(v)"></formulario-actualizar-direccion-envio>
+
+        <historial-pedidos v-model="verPedidos" @mostrarCambiarDireccion="(v) => mostrarFormuDireccionEnvio = true"
+          :actualizadaDireccion = "actualizadaDireccion"
+          ref="testHistorial" />
         <!-- Botón para ver pedidos -->
         <q-btn @click="verMisPedidos" class="boton-ver-pedidos" label="Ver mis pedidos">
           <q-icon name="mdi-package-variant-closed" style="color:black" /> <!-- Icono de eliminar perfil -->
@@ -34,8 +39,6 @@
           <q-icon name="mdi-cart" /> <!-- Icono de eliminar perfil -->
         </q-btn>
       </div>
-
-
 
     </div>
     <div>
@@ -74,12 +77,21 @@ const { productos } = productoComposable();
 
 const nombre = authStore.auth.nombre
 
+const testHistorial = ref(null)
 
 const mostrarFormularioEditarPerfil = ref(false);
 const mostrarDarseDeBaja = ref(false);
 const verPedidos = ref(false);
 const verCarrito = ref(false);
 const router = useRouter();
+
+const mostrarFormuDireccionEnvio = ref(false)
+const actualizadaDireccion = ref(false)
+
+const actualizarPedidos = (v) => {
+  mostrarFormuDireccionEnvio.value = false
+  actualizadaDireccion.value = true
+}
 
 const editarPerfil = () => {
   // Abro el formulario si no esta abierto
@@ -99,13 +111,12 @@ const verMisPedidos = () => {
   // Abro el formulario si no esta abierto
   if (!verPedidos.value) {
     verPedidos.value = true;
-
   }
 };
 
 
 const verMiCarrito = () => {
-    router.push({ path: '/pedido/carritoCompra' });
+  router.push({ path: '/pedido/carritoCompra' });
 };
 
 
