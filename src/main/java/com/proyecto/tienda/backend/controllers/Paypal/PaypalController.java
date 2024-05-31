@@ -51,9 +51,8 @@ public class PaypalController {
     @Value("${paypal.success.redirect}")
     private String paypalSucces;
 
-
-    // @Value("${paypal.cancel.redirect}")
-    // private String paypalCancel;
+    @Value("${paypal.cancel.redirect}")
+    private String paypalCancel;
 
     // CONTROLADOR DEL PAYPAL PARA CUANDO HA IDO BIEN LO DEL PAYPAL
     @GetMapping("/payment/success")
@@ -112,7 +111,7 @@ public class PaypalController {
     // CONTROLADOR PARA CANCELAR EL PAGO DEL PEDIDO, POR ENDE NO SE PAGARA Y NO SE
     // ALMACENARA EN MI BASE DE DATOS
     @GetMapping("/payment/cancel/{id}")
-    public ResponseEntity<String> paymentCancel(@PathVariable("id") String id, HttpServletResponse res) {
+    public void paymentCancel(@PathVariable("id") String id, HttpServletResponse res) {
 
         Optional<PedidosModelo> pedidoOptional = pedidoRepositorio
                 .findBy_id(id);
@@ -121,11 +120,11 @@ public class PaypalController {
             pedidoRepositorio.deleteById(id);
         }
 
-        // res.setHeader("Location", paypalCancel);
-        // res.setStatus(400);
-        // return;
+        res.setHeader("Location", paypalCancel);
+        res.setStatus(302);
+        return;
 
-        return ResponseEntity.status(400).body("El pago ha sido cancelado");
+        // return ResponseEntity.status(400).body("El pago ha sido cancelado");
     }
 
     // CONTROLADOR POR SI HUBO UN ERROR EN EL PAGO

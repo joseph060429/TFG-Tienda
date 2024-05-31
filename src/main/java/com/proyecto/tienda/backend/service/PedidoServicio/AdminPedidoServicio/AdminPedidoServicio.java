@@ -40,4 +40,7 @@ public interface AdminPedidoServicio {
         // NADIE EN CASA O CUANDO NO RESPONDEN LA LLAMADA AL REPARTIDOR
         ResponseEntity<?> actualizarEstadoReprogramadoParaEntrega(String _id, ActualizarPedidoDTO actualizarPedidoDTO);
 
+        ResponseEntity<?> actualizarEstadoRetrasado(String _id,
+        ActualizarPedidoDTO actualizarPedidoDTO);
+
 }

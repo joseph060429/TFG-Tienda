@@ -45,9 +45,8 @@ public class ParticularDireccionFacturacionDTO {
     @Pattern(regexp = "^\\S(.*\\S)?$", message = "El número de facturación no puede contener espacios en blanco al principio ni al final")
     private String numeroDeFacturacion;
 
-    // @Min(value = 0, message = "El piso debe ser al menos 0")
-    // @Max(value = 9999999999L, message = "El número debe ser menor o igual a 9999999999")
-    @Pattern(regexp = "^\\d{1,10}$", message = "El número debe ser un valor entre 0 y 9999999999")
+    
+    @Size(max = 10, message = "El piso de facturacion puede tener un máximo de 10 dígitos")
     private String pisoDeFacturacion;
 
     private String puertaDeFacturacion;

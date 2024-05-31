@@ -8,22 +8,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarDireccionEnvioDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ActualizarPedidoDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.PedidoInfoDTO;
-import com.proyecto.tienda.backend.DTO.DTOUsuario.EnviarCorreoDTO;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.models.UsuarioModelo;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.ProductoRepositorio;
 import com.proyecto.tienda.backend.service.PedidoServicio.AdminPedidoServicio.AdminPedidoServicio;
-import com.proyecto.tienda.backend.util.ResendUtil;
 import jakarta.validation.Valid;
 
 @RequestMapping("/admin/pedidos")
@@ -39,9 +35,6 @@ public class AdminPedidosController {
 
     @Autowired
     AdminPedidoServicio adminPedidoServicio;
-
-    @Autowired
-    private ResendUtil resend;
 
     @GetMapping("/listarPedidos")
     public ResponseEntity<List<PedidoInfoDTO>> listarPedidos() {
@@ -60,14 +53,6 @@ public class AdminPedidosController {
 
         // Llamar al servicio para actualizar el estado del pedido
         return adminPedidoServicio.actualizarEstadoPedidoEnviado(pedidoId, estado, actualizarPedidoDTO);
-    }
-
-    // CONTROLADOR PARA NVIAR UN EMAIL CUANDO HAY UN RETRASO
-    @PostMapping("/envioEmailRetraso")
-    public String enviarCorreoRetraso(@RequestBody @Valid EnviarCorreoDTO correoDTO) {
-        resend.enviarEmailDeRetrasoDelPedido(correoDTO.getEmail().trim());
-        System.out.println("EMAIL ENVIADO A: " + correoDTO.getEmail());
-        return "Correo de retraso enviado con éxito.";
     }
 
     // CONTROLADOR PARA BUSCAR LOS PEDIDOS POR SU ESTADO, PAGINADO DE 10 EN 10
@@ -141,5 +126,17 @@ public class AdminPedidosController {
         // Llamo al servicio para actualizar el estado del pedido
         return adminPedidoServicio.actualizarEstadoReprogramadoParaEntrega(pedidoId, actualizarPedidoDTO);
     }
+
+    @PatchMapping("/envioEmailRetraso")
+    public ResponseEntity<?> actualizarPedidoRetrasado(
+            @Valid @RequestBody ActualizarPedidoDTO actualizarPedidoDTO) {
+
+        // Extraigo el ID del pedido y el estado del DTO
+        String pedidoId = actualizarPedidoDTO.getPedidoId().trim();
+
+        // Llamo al servicio para actualizar el estado del pedido
+        return adminPedidoServicio.actualizarEstadoRetrasado(pedidoId, actualizarPedidoDTO);
+    }
+
 
 }
