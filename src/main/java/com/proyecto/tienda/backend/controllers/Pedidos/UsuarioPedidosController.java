@@ -66,6 +66,7 @@ public class UsuarioPedidosController {
         return usuarioPedidoServicio.eliminarPedido(numeroPedido, token, jwtUtils);
     }
 
+    //CONTROLADOR PARA VER EL HISTORIAL DE LOS PEDIDOS
     @GetMapping("/historialPedidos")
     public ResponseEntity<List<PedidoInfoDTO>> historialPedidos(@RequestHeader("Authorization") String token) {
         ResponseEntity<List<PedidoInfoDTO>> responseEntity = usuarioPedidoServicio.historialPedidos(token, jwtUtils);

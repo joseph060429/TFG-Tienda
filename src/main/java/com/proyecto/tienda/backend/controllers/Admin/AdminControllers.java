@@ -48,9 +48,6 @@ public class AdminControllers {
     @Autowired
     private UsuarioDetailsServiceImpl userDetailsService;
 
-    // @Autowired
-	// private UsuarioRepositorio usuarioRepositorio
-
     // CONTROLADOR PARA LISTAR TODOS LOS USUARIOS (ESTE MÉTODO SOLO SE LO HE IMPLEMENTADO
     // AL ADMIN)
     @GetMapping("/listarUsuarios")

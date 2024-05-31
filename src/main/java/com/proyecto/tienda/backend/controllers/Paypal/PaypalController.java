@@ -124,7 +124,6 @@ public class PaypalController {
         res.setStatus(302);
         return;
 
-        // return ResponseEntity.status(400).body("El pago ha sido cancelado");
     }
 
     // CONTROLADOR POR SI HUBO UN ERROR EN EL PAGO
