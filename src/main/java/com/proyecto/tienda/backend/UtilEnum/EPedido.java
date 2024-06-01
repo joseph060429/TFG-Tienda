@@ -2,7 +2,7 @@ package com.proyecto.tienda.backend.UtilEnum;
 
 public enum EPedido {
     PENDIENTE_PAGO, // Cuando se crea un pedido, ya esta hecho en el front, cuando el usuario crea el pedido
-    PENDIENTE_ENVIO, // Cuando el pedido ha sido cancelado, ya esta hecho en el front, cuando el usuario paga el pedido
+    PENDIENTE_ENVÍO,// Cuando el pedido ha sido cancelado, ya esta hecho en el front, cuando el usuario paga el pedido
     CANCELADO, // Por si el usuario elimina su pedido antes de enviarlo, ya esta hecho en el front
     ENVIADO,  // Cuando yo como admin envio el pedido, ya esta hecho en el front
     PENDIENTE_CONFIRMACION_DIRECCION, // Cuando el repartidor llega a casa y la direccion no existe, ya esta hecho en el front

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.proyecto.tienda.backend.DTO.DTOPedido.FacturaDTO;
 import com.proyecto.tienda.backend.DTO.DTOPedido.ProductoPedidoDTO;
+import com.proyecto.tienda.backend.UtilEnum.EPedido;
 import com.proyecto.tienda.backend.models.PedidosModelo;
 import com.proyecto.tienda.backend.repositorios.CarritoRepositorio;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
@@ -69,7 +70,7 @@ public class PaypalController {
 
             // Actualizo el estado del pedido
             PedidosModelo pedidoActualizado = pedido.get();
-            pedidoActualizado.setEstado("PENDIENTE_ENVÍO");
+            pedidoActualizado.setEstado(EPedido.PENDIENTE_ENVÍO.toString());
             pedidoRepositorio.save(pedidoActualizado);
 
             // Resto la cantidad de cada producto del stock

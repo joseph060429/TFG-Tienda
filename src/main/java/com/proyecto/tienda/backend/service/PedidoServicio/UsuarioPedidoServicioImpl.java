@@ -104,7 +104,6 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             // crearPedidoDTO.setFechaEntregaEstimada();
             // pedido.setFechaEntregaEstimada(crearPedidoDTO.getFechaEntregaEstimada());
 
-
             // Procesar dirección de facturación
             ResponseEntity<?> resultadoDireccionFacturacion = procesarDireccionFacturacion(usuario, crearPedidoDTO,
                     pedido);
@@ -122,7 +121,6 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             System.out.println("Sesión ID en servicio crearPedido: " + ses.getId());
             System.out.println("Pedido almacenado en sesión de crear pedido: " + ses.getAttribute("pedido"));
             System.out.println("Factura almacenada en sesión de crear pedido: " + ses.getAttribute("factura"));
-
 
             // Realizar el pago a través de PayPal
             return paypalServicio.hacerPago(pedido, ses);
@@ -536,7 +534,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     if (pedido.getUsuario().equals(usuario)) {
                         // Verifico si el pedido está en estado "PENDIENTE de pago o pendiente de envío"
                         if (pedido.getEstado().equals(EPedido.PENDIENTE_PAGO.toString()) || 
-                        pedido.getEstado().equals(EPedido.PENDIENTE_ENVIO.toString())){
+                                pedido.getEstado().equals(EPedido.PENDIENTE_ENVÍO.toString()) 
+                                ) {
                             // Obtengo la lista de productos pedidos del pedido
                             List<ProductoPedidoDTO> productosPedidos = pedido.getProductos();
 
@@ -568,9 +567,10 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                                             .body("Producto no encontrado en la base de datos con ID: " + productoId);
                                 }
                             }
-                            // Cambio el estado del pedido y le enviare un correo al usuario diciendole que
+                            // Elimino el pedido de mi base de datos y le enviare un correo al usuario
+                            // diciendole que
                             // su pedido se ha cancelado exitosamente
-                            pedido.setEstado(EPedido.CANCELADO.toString());
+                            // pedido.setEstado(EPedido.CANCELADO.toString());
 
                             // Obtengo el email del usuario del pedido para enviar el email
                             String email = pedido.getUsuario().getEmail();
@@ -578,8 +578,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                             // Envio el email al usuario
                             resend.enviarEmailPedidoCanceladoUsuario(email);
 
-                            // Guardo el pedido con el nuevo estado
-                            pedidoRepositorio.save(pedido);
+                            // Elimino el pedido con el nuevo estado
+                            pedidoRepositorio.delete(pedido);
 
                             return ResponseEntity.ok("Pedido cancelado exitosamente");
                         } else {
