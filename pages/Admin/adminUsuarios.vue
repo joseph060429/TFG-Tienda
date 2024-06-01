@@ -226,8 +226,7 @@ const editarPerfil = (id) => {
     .tabla {
         width: 100%;
         // margin: 0 auto;
-        height: 45vh;
-        background-color: #FF4500;
+        height: 46vh;
         font-size: 0.8em;
     }
 }
