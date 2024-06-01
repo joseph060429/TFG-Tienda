@@ -163,7 +163,7 @@ const seleccionarEstado = async (idPedido, estado) => {
                     default:
                         console.warn('Respuesta desconocida de actualizarEstadoReproParaEntrega:', response3.data);
                 }
-
+                break;
             case 'RETRASO':
                 const response5 = await enviarCorreoRetraso(idPedido._id, idPedido.estado);
                 console.log("RESPONSE de actualizarEstadoEnviado: ", response5.data);

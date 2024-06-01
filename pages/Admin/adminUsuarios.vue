@@ -207,16 +207,6 @@ const editarPerfil = (id) => {
     console.log("Objeto usuario a editar", objetoUsuarioActualizar)
 };
 
-
-
-
-
-
-
-
-
-
-
 </script>
 
 
@@ -235,8 +225,9 @@ const editarPerfil = (id) => {
 @media (max-width: 600px) {
     .tabla {
         width: 100%;
-        margin: 0 auto;
-        height: 50vh;
+        // margin: 0 auto;
+        height: 45vh;
+        background-color: #FF4500;
         font-size: 0.8em;
     }
 }
