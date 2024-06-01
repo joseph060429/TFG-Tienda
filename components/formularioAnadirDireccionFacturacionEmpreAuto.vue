@@ -11,7 +11,7 @@
                                 // esNumero,
                                 val => val && val.length > 0 || 'Por favor, introduce algo',
                                 val => /^\S.*\S$/.test(val) || 'El Cif o Nif no puede empezar ni terminar con espacios en blanco y debe contener exactamente 9 caracteres alfanuméricos',
-                                val => /^[a-zA-Z0-9]{9}$/.test(val) || 'El Cif o Nif debe contener exactamente 9 caracteres alfanuméricos y no puede tener espacios en blanco'
+                                val => /^[a-zA-Z0-9ñÑ]{9}$/.test(val) || 'El Cif o Nif debe contener exactamente 9 caracteres alfanuméricos y no puede tener espacios en blanco'
                             ]">
                             <template v-slot:prepend>
                                 <q-icon name="mdi-account-card" />
