@@ -21,6 +21,7 @@ const estado = ref('');
 const options = [
     'PENDIENTE_PAGO',
     'PENDIENTE_ENVÍO',
+    'CANCELADO',
     'ENVIADO',
     'PENDIENTE_CONFIRMACION_DIRECCION',
     'DIRECCION_ACTUALIZADA',
