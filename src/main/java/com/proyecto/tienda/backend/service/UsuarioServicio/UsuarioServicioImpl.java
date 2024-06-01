@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.proyecto.tienda.backend.repositorios.CarritoRepositorio;
 import com.proyecto.tienda.backend.repositorios.PedidoRepositorio;
 import com.proyecto.tienda.backend.repositorios.UsuarioRepositorio;
 import com.proyecto.tienda.backend.security.jwt.JwtUtils;
@@ -32,6 +33,9 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
 
+    @Autowired
+    private CarritoRepositorio carritoRepositorio;
+
     // IMPLEMENTACION DEL METODO PARA ELIMINAR EL USUARIO SIENDO USUARIO
     @Override
     public String eliminarUsuarioSiendoUsuario(String token, JwtUtils jwtUtils) {
@@ -42,8 +46,12 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
         if (usuarioOptional.isPresent()) {
             UsuarioModelo usuario = usuarioOptional.get();
+
             if (usuario.getEmail().equals(emailFromToken)) {
                 usuarioRepositorio.deleteBy_id(usuario.get_id());
+
+                //Elimino el carrito asociado a ese usuario
+                carritoRepositorio.deleteByIdUsuario(usuario.get_id());
                 return "Usuario eliminado correctamente";
             } else {
                 return "No estás autorizado para eliminar este usuario";
