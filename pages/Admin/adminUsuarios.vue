@@ -1,7 +1,7 @@
 <template>
     <EliminarUsuario v-model="mostrarEliminarUsuario" :email="emailUsuarioAeliminar" />
     <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
-    <div class="q-pa-md">
+    <div class="tabla-container">
         <!-- :rows-per-page-options="[50]"  Esto hace que me muestre de 50 en 50 usuarios -->
         <h5 class="titulo">PANEL DE ADMINISTRACIÓN</h5>
         <q-table class="tabla" flat :rows="usuarios" row-key="index" virtual-scroll :virtual-scroll-item-size="48"
@@ -213,6 +213,15 @@ const editarPerfil = (id) => {
 
 <!-- STYLE -->
 <style lang="scss" scoped>
+
+.tabla-container {
+    width: 99%;
+    overflow-x: auto;
+    margin: auto;
+    // background-color: #FF4500;
+}
+
+
 .tabla {
     height: 55vh;
     width: 100%;
@@ -226,8 +235,9 @@ const editarPerfil = (id) => {
     .tabla {
         width: 100%;
         // margin: 0 auto;
-        height: 46vh;
+        height: 42vh;
         font-size: 0.8em;
+        
     }
 }
 
