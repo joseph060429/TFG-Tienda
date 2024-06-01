@@ -533,9 +533,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                     // Verifico si el pedido pertenece al usuario actual
                     if (pedido.getUsuario().equals(usuario)) {
                         // Verifico si el pedido está en estado "PENDIENTE de pago o pendiente de envío"
-                        if (pedido.getEstado().equals(EPedido.PENDIENTE_PAGO.toString()) || 
-                                pedido.getEstado().equals(EPedido.PENDIENTE_ENVÍO.toString()) 
-                                ) {
+                        if (pedido.getEstado().equals(EPedido.PENDIENTE_ENVÍO.toString())) {
                             // Obtengo la lista de productos pedidos del pedido
                             List<ProductoPedidoDTO> productosPedidos = pedido.getProductos();
 
@@ -567,10 +565,9 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                                             .body("Producto no encontrado en la base de datos con ID: " + productoId);
                                 }
                             }
-                            // Elimino el pedido de mi base de datos y le enviare un correo al usuario
-                            // diciendole que
+                            // Cambio el estado del pedido y le enviare un correo al usuario diciendole que
                             // su pedido se ha cancelado exitosamente
-                            // pedido.setEstado(EPedido.CANCELADO.toString());
+                            pedido.setEstado(EPedido.CANCELADO.toString());
 
                             // Obtengo el email del usuario del pedido para enviar el email
                             String email = pedido.getUsuario().getEmail();
@@ -578,8 +575,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                             // Envio el email al usuario
                             resend.enviarEmailPedidoCanceladoUsuario(email);
 
-                            // Elimino el pedido con el nuevo estado
-                            pedidoRepositorio.delete(pedido);
+                            // Guardo el pedido con el nuevo estado
+                            pedidoRepositorio.save(pedido);
 
                             return ResponseEntity.ok("Pedido cancelado exitosamente");
                         } else {
