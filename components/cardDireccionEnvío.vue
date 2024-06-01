@@ -112,10 +112,10 @@
                 </div>
             </div>
         </div>
+        <q-btn class="btn-crearPedido" label="crear pedido"
+            :disable="(seleccionDireciones.envio == '' || seleccionDireciones.facturacion == '')"
+            @click="crearPedido()"></q-btn>
     </div>
-    <q-btn class="btn-crearPedido" label="crear pedido"
-        :disable="(seleccionDireciones.envio == '' || seleccionDireciones.facturacion == '')"
-        @click="crearPedido()"></q-btn>
 </template>
 
 
@@ -325,12 +325,8 @@ const eliminarDireccionFacturacion = () => {
     max-height: 60vh;
     overflow: auto;
     text-align: center;
-    // flex-direction: column;
-    // justify-content: center; /* Centrar verticalmente */
     align-items: center;
-    /* Centrar horizontalmente */
-    // background-color: #3A7;
-    // border: 2px solid black;
+    // background-color: red;
 }
 
 @media (max-width: 600px) {
@@ -390,7 +386,7 @@ const eliminarDireccionFacturacion = () => {
         background-color: #e0e0e0;
         border-radius: 5px;
         border: 2px solid gray;
-        height: 27vh;
+        height: 33vh;
         width: 97%;
         margin-bottom: 1em;
         margin-top: 1em;
@@ -400,9 +396,9 @@ const eliminarDireccionFacturacion = () => {
         margin-top: 1em;
         background-color: #e0e0e0;
         border-radius: 5px;
-        // border: 2px solid gray;
+        border: 2px solid gray;
         text-align: center;
-        height: 18vh;
+        height: 20vh;
         width: 97%;
 
 

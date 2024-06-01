@@ -226,7 +226,7 @@ const listarTodosLosPedidos = async () => {
 @media (max-width: 600px) {
     .tabla {
         width: 98%;
-        height: 40vh;
+        height: 38vh;
         margin: auto;
         background-color: #A9A9A9;
         font-family: Arial, sans-serif;

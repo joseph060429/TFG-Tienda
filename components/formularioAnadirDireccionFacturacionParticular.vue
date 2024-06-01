@@ -6,8 +6,8 @@
                         <h3>Facturación Particular </h3>
 
                         <!-- Campo nombre -->
-                        <q-input v-model="direccionDeFacturacionParticular.nombreFacturacion" dense label="Nombre *" minlength="2" maxlength="70"
-                            lazy-rules :rules="[
+                        <q-input v-model="direccionDeFacturacionParticular.nombreFacturacion" dense label="Nombre *"
+                            minlength="2" maxlength="70" lazy-rules :rules="[
                                 val => val && val.length > 0 || 'Por favor, introduce algo',
                                 val => /^.{2,70}$/.test(val) || 'El nombre/s debe tener entre 2 y 70 caracteres',
                                 val => /^\S.*\S$/.test(val) || 'El nombre/s no puede empezar ni terminar con espacios en blanco',
@@ -20,8 +20,8 @@
                         </q-input>
 
                         <!-- Campo apellido -->
-                        <q-input  v-model="direccionDeFacturacionParticular.apellidoFacturacion" dense label="Apellidos *" min 
-                            minlength="2" maxlength="70" lazy-rules :rules="[
+                        <q-input v-model="direccionDeFacturacionParticular.apellidoFacturacion" dense
+                            label="Apellidos *" min minlength="2" maxlength="70" lazy-rules :rules="[
                                 val => val && val.length > 0 || 'Por favor, introduce algo',
                                 val => /^.{2,70}$/.test(val) || 'Los apellidos debe tener entre 2 y 70 caracteres',
                                 val => /^\S.*\S$/.test(val) || 'Los apellidos no pueden empezar ni terminar con espacios en blanco',
@@ -158,6 +158,7 @@ const router = useRouter()
 const direccionDeFacturacionParticular = reactive({
     nombreFacturacion: '',
     apellidoFacturacion: '',
+    numTelefonoFacturacion: '',
     direccionDeFacturacion: '',
     numeroDeFacturacion: '',
     pisoDeFacturacion: '',
@@ -170,6 +171,7 @@ const borrar = () => {
 
     direccionDeFacturacionParticular.nombreFacturacion = '',
         direccionDeFacturacionParticular.apellidoFacturacion = '',
+        direccionDeFacturacionParticular.numTelefonoFacturacion = '',
         direccionDeFacturacionParticular.direccionDeFacturacion = '',
         direccionDeFacturacionParticular.numeroDeFacturacion = '',
         direccionDeFacturacionParticular.pisoDeFacturacion = '',

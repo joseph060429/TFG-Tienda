@@ -146,8 +146,6 @@ const seguirComprando = () => {
     router.push({ path: '/pedido/formularioDireccion' });
 };
 
-
-
 const esNumero = (val) => {
     if (!val || isNaN(val)) {
         // return 'Por favor, introduce solo números.';
@@ -176,7 +174,7 @@ const esNumero = (val) => {
     .tabla {
         width: 90%;
         margin: 0 auto;
-        height: 45vh;
+        height: 40vh;
         font-size: 0.8em;
     }
 }
