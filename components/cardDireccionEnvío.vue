@@ -344,7 +344,7 @@ const eliminarDireccionFacturacion = () => {
     border-radius: 5px;
     border: 2px solid gray;
     text-align: center;
-    height: 22vh;
+    height: 26vh;
 }
 
 
