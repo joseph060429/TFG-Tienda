@@ -531,7 +531,7 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
                 if (numPedido.isPresent()) {
                     PedidosModelo pedido = numPedido.get();
                     // Verifico si el pedido pertenece al usuario actual
-                    if (pedido.getUsuario().equals(usuario)) {
+                    if (pedido.getUsuario().get_id().equals(usuario.get_id())) {
                         // Verifico si el pedido está en estado "PENDIENTE de pago o pendiente de envío"
                         if (pedido.getEstado().equals(EPedido.PENDIENTE_ENVÍO.toString())) {
                             // Obtengo la lista de productos pedidos del pedido
