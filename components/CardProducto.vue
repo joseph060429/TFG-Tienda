@@ -1,6 +1,6 @@
 <template>
   <div style="padding-bottom: 6%; overflow: auto;" class="contenedor">
-    <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links  />
+    <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links />
     <!-- Itero sobre cada producto en la página actual -->
     <div id="contenedor-items" class="flex flex-center">
       <div v-for="producto in productosPaginados" class="card-container w-100">
@@ -13,7 +13,7 @@
           <q-card-section>
             <!-- Nombre del producto -->
             <div>
-              Nombre: <span class="text-title">{{ producto.nombreProducto}}</span>
+              Nombre: <span class="text-title">{{ producto.nombreProducto }}</span>
             </div>
             <!-- Marca del producto -->
             <div class="text-subtitle1">
@@ -45,20 +45,35 @@ const { listarProductos, productos, buscarProductoPorEspecificacion } = producto
 
 //USAR QUASAR
 const quasar = useQuasar()
-
+const emits = defineEmits(['loaded', 'reloaded'])
 const router = useRouter()
+
+const props = defineProps({
+  reload: Boolean
+})
+
+watch(() => props.reload, () => {
+  if (props.reload) {
+    console.log('reload!!!!')
+    emits('reloaded', true)
+  }
+})
 
 // FUCNIONES
 
 // FUNCION PARA CARGAR LOS PRODUCTOS  ANTES DE QUE SE MONTE EL COMPONENTE
-onBeforeMount(async () => {
-  await cargarProductos();
+onBeforeMount(() => {
+  cargarProductos().then(() => {
+    emits('loaded', true)
+  });
+
   // console.log("Productos cargados en el componente card", productos.value);
 })
 
 function goTo(item) {
   router.push({ path: `/producto/${item._id}` })
 }
+
 
 // FUNCION PARA CARGAR LOS PRODUCTOS
 const cargarProductos = async () => {
@@ -151,6 +166,4 @@ const productosPaginados = computed(() => {
 .pagination-container {
   text-align: center;
 }
-
-
 </style>

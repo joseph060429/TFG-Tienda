@@ -3,10 +3,10 @@
         <q-card class="q-dialog" style="background-color: #f5f5f5;">
             <q-card-section class="text-center">
                 <!-- Input para el precio mínimo -->
-                <q-input v-model="precioMinimo" label="Precio mínimo" outlined type="number" color="#ffcccc"
+                <q-input v-model="datosBusqueda.precioMinimo" label="Precio mínimo" outlined type="number" color="#ffcccc"
                     class="input-custom" />
                 <!-- Input para el precio máximo -->
-                <q-input v-model="precioMaximo" label="Precio máximo" outlined type="number" color="#ffcccc"
+                <q-input v-model="datosBusqueda.precioMaximo" label="Precio máximo" outlined type="number" color="#ffcccc"
                     class="input-custom" />
             </q-card-section>
             <q-card-actions align="center" class="q-mt-lg">
@@ -36,50 +36,59 @@ const isAdmin = () => {
 const quasar = useQuasar()
 
 const props = defineProps({
-    mostrarBuscarPorPrecio: Boolean
+    mostrarBuscarPorPrecio: Boolean,
+    reload: Boolean
 });
+
+const emits = defineEmits(['mostrarBuscarPorPrecio']);
 
 const mostrarBuscarPorPrecio = ref(props.mostrarBuscarPorPrecio);
 
 const { buscarProductosPorRangoPrecio, productos } = productoComposable();
 const { buscarProductosPorRangoPrecioAdmin, productos: productosAdmin } = productoAdminComposable();
 
-const precioMinimo = ref('')
-const precioMaximo = ref('')
+// const precioMinimo = ref('')
+// const precioMaximo = ref('')
+
+watch(() => props.reload, () => {
+    if (props.reload) {
+        console.log('reload!!!!')
+        datosBusqueda.precioMinimo = 0
+        datosBusqueda.precioMaximo = ''
+    }
+})
+
+
+const datosBusqueda = reactive({
+    precioMinimo: 0,
+    precioMaximo: '',
+    categoria: '',
+    marca: ''
+});
+
 
 // FUNCION PARA BUSCAR PRECIO POR USUARIO
 const busquedaPorPrecio = async () => {
-    try {
-        const response = await buscarProductosPorRangoPrecio(precioMinimo.value, precioMaximo.value);
-        console.log("Response:", response.data)
-        if (response.data.length === 0) {
-            mostrarAlertaError('No hay productos que coincidan con la búsqueda', quasar)
-        } else {
-            const productosOrdenados = response.data.sort((a, b) => a.precioProducto - b.precioProducto);
-            productos.value = productosOrdenados;
-            cerrarDialogoBuscarPrecios();
-        }
-    } catch (error) {
-        console.log("error", error);
-    }
+        emits('mostrarBuscarPorPrecio', datosBusqueda)
 };
 
 // FUNCION PARA BUSCAR PRECIO POR ADMIN
 const busquedaPorPrecioAdmin = async () => {
-    try {
-        const response = await buscarProductosPorRangoPrecioAdmin(precioMinimo.value, precioMaximo.value);
-        console.log("Response:", response.data)
-        if (response.data.length === 0) {
-            mostrarAlertaError('No hay productos que coincidan con la búsqueda', quasar)
-        } else {
-            const productosOrdenados = response.data.sort((a, b) => a.precioProducto - b.precioProducto);
-            console.log('productos admin', productosAdmin);
-            productosAdmin.value = productosOrdenados;
-            cerrarDialogoBuscarPrecios();
-        }
-    } catch (error) {
-        console.log("error", error);
-    }
+    // try {
+    //     const response = await buscarProductosPorRangoPrecioAdmin(precioMinimo.value, precioMaximo.value);
+    //     console.log("Response:", response.data)
+    //     if (response.data.length === 0) {
+    //         mostrarAlertaError('No hay productos que coincidan con la búsqueda', quasar)
+    //     } else {
+    //         const productosOrdenados = response.data.sort((a, b) => a.precioProducto - b.precioProducto);
+    //         console.log('productos admin', productosAdmin);
+    //         productosAdmin.value = productosOrdenados;
+    //         cerrarDialogoBuscarPrecios();
+    //     }
+    // } catch (error) {
+    //     console.log("error", error);
+    // }
+    emits('mostrarBuscarPorPrecio', datosBusqueda)
 };
 
 const cerrarDialogoBuscarPrecios = () => {

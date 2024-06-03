@@ -1,14 +1,17 @@
 <template>
-  <template v-if="productos.length > 0">
-    <div class="barra-busqueda">
-      <BarraDeBusquedaUsuario />
-    </div>
+  <template v-if="loaded">
+    <template v-if="productos.length >= 0">
+      <div class="barra-busqueda">
+        <BarraDeBusquedaUsuario :reload="reload" @reloaded="reload = false" />
+      </div>
+    </template>
   </template>
+
   <q-btn @click="regresar" flat dense class="custom-regresar-button">
     Volver <q-icon name="mdi-refresh" />
   </q-btn>
   <div class="container">
-    <CardProducto />
+    <CardProducto @loaded="loaded = true"  />
   </div>
 </template>
 
@@ -18,10 +21,12 @@ import { useRouter } from 'vue-router'
 import { productoComposable } from '~/composables/productoComposable';
 
 const { productos } = productoComposable();
-
+const loaded = ref(false)
 definePageMeta({
   role: ['PUBLIC']
 })
+
+const reload = ref(false)
 
 // Rutas
 const router = useRouter()
@@ -30,7 +35,7 @@ const router = useRouter()
 const axios = useNuxtApp().$axios
 
 const regresar = () => {
-  window.location.reload();
+  reload.value = true
 };
 
 </script>

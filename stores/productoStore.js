@@ -70,25 +70,46 @@ export const productoStore = defineStore({
         return error.response;
       }
     },
-    
-    // STORE PARA BUSCAR POR RANGO DE PRECIO
-    async buscarProductosPorRangoPrecio(precioMinimo, precioMaximo) {
-        try {
-            const response = await useAxiosInstance().get("/buscarPorRangoDePrecio", {
-                params: {
-                    precioMin: precioMinimo,
-                    precioMax:precioMaximo
-                }
-            });
-            // Agrego los datos del producto recibido en la respuesta al objeto producto
-            // this.producto = response.data;
-            return response;
-        } catch (error) {
-            console.log("Error en BUSCAR POR RANGO DE PRECIO EN PRODUCTO STORE ==> ", error);
-            return error.response;
-        }
 
-    },
+    // STORE PARA BUSCAR POR RANGO DE PRECIO
+    // async buscarProductosPorRangoPrecio(precioMinimo, precioMaximo) {
+    //     try {
+    //         const response = await useAxiosInstance().get("/buscarPorRangoDePrecio", {
+    //             params: {
+    //                 precioMin: precioMinimo,
+    //                 precioMax:precioMaximo
+    //             }
+    //         });
+    //         // Agrego los datos del producto recibido en la respuesta al objeto producto
+    //         // this.producto = response.data;
+    //         return response;
+    //     } catch (error) {
+    //         console.log("Error en BUSCAR POR RANGO DE PRECIO EN PRODUCTO STORE ==> ", error);
+    //         return error.response;
+    //     }
+
+    // },
+
+
+    async buscarProductosPorRangoPrecio(precioMinimo, precioMaximo, categoria, marca) {
+      try {
+        const response = await useAxiosInstance().get("/buscarPorRangoDePrecio", {
+          params: {
+            precioMin: precioMinimo,
+            precioMax: precioMaximo,
+            marca: marca,
+            categoria: categoria
+          }
+        });
+        // Agrego los datos del producto recibido en la respuesta al objeto producto
+        // this.producto = response.data;
+        return response;
+      } catch (error) {
+        console.log("Error en BUSCAR POR RANGO DE PRECIO EN PRODUCTO STORE ==> ", error);
+        return error.response;
+      }
+    }
+
 
 
 

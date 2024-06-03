@@ -25,7 +25,7 @@
         </template>
     </div>
     <div class="boton-precio">
-        <busqueda-precio v-model="mostrarRangoPrecio" />
+        <busqueda-precio v-model="mostrarRangoPrecio" @mostrarBuscarPorPrecio="e => filtrarPrecios(e)" :reload="reload" />
         <q-btn @click="mostrarPrecios" class="boton-precio" label="Buscar por precios">
             <q-icon name="mdi-cash-multiple" /> <!-- Icono de precios -->
         </q-btn>
@@ -75,11 +75,52 @@ const marcasUnicas = ref(null);
 const categoriasUnicas = ref(null);
 const copiaProductos = [...productos.value];
 
+const precioMax = ref(null)
+const precioMin = ref(0)
+
+const props = defineProps({
+    reload: Boolean,
+})
+const emits = defineEmits(['reloaded'])
+
+const filtrarPrecios = (ev) => {
+    console.log(ev, 'probando emit dedsde busqueda precio')
+    precioMax.value = parseInt(ev.precioMaximo)
+    precioMin.value = parseInt(ev.precioMinimo)
+    if (marcaProductoSeleccionado.value || categoriaSeleccionada.value) {
+        console.log('hay!')
+        categoriaSeleccionada.value ? actualizarCategoria() : actualizarMarcas()
+    } else {
+        console.log('no hay!')
+        let filtrado = copiaProductos.filter((producto) => producto.precioProducto >= precioMin.value && producto.precioProducto <= precioMax.value)
+        productos.value = filtrado.sort((a, b) => a.precioProducto - b.precioProducto)
+    }
+}
+
 onBeforeMount(() => {
     marcasUnicas.value = [...new Set(productos.value.map(producto => producto.marcaProducto))];
     categoriasUnicas.value = [...new Set(productos.value.map(producto => producto.categoriaProducto))];
 })
 
+const resetFiltros = () => {
+    productos.value = copiaProductos;
+    precioMax.value = null
+    precioMin.value = 0
+
+    categoriaSeleccionada.value = null
+    marcaProductoSeleccionado.value = null
+    tipo_busqueda.value = null
+
+    // emits('reloaded', true)
+}
+
+watch(() => props.reload, () => {
+    if (props.reload) {
+        console.log('reload!!!!')
+        resetFiltros()
+        emits('reloaded', true)
+    }
+})
 
 const tipo_busqueda = ref('');
 
@@ -98,21 +139,44 @@ const actualizarFiltros = (e) => {
 }
 
 
+
+
 // FUNCION PARA BUSCAR POR MARCAS
 const actualizarMarcas = (e) => {
     console.log("marca seleccionada", marcaProductoSeleccionado.value);
     console.log("copiaProductos", copiaProductos);
-    const filtroPorMarca = copiaProductos.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value)
+    let filtroPorMarca = copiaProductos.filter(producto => producto.marcaProducto === marcaProductoSeleccionado.value);
     console.log('response desde marca', filtroPorMarca);
-    productos.value = filtroPorMarca
+
+    //Filtro por precio si se proporcionan precios mínimo y máximo
+    if (precioMax.value > precioMin.value) {
+        filtroPorMarca = filtroPorMarca.filter(producto => precioMin.value <= producto.precioProducto && precioMax.value >= producto.precioProducto);
+        filtroPorMarca = filtroPorMarca.sort((a, b) => a.precioProducto - b.precioProducto);
+        console.log('precieando');
+    }
+
+    console.log("filtro por marca", filtroPorMarca);
+    productos.value = filtroPorMarca;
+
+    // Restablecer la selección de categoría
+    categoriaSeleccionada.value = null;
 }
 
 // FUNCION PARA BUSCAR POR CATEGORIAS
 const actualizarCategoria = (e) => {
-    console.log("categoria seleccionada", categoriaSeleccionada.value);
+    console.log('EJECUTANDO');
+    console.log("categoria seleccionada 😁😁😁😁", categoriaSeleccionada.value);
     console.log("copiaProductos", copiaProductos);
-    const filtroPorCategoria = copiaProductos.filter(producto => producto.categoriaProducto === categoriaSeleccionada.value)
-    console.log('response desde categoria', filtroPorCategoria);
+
+    let filtroPorCategoria = copiaProductos.filter(producto => producto.categoriaProducto === categoriaSeleccionada.value)
+    console.log("Filtro por categoria 💕😁", filtroPorCategoria);
+    if (precioMax.value > precioMin.value) {
+        filtroPorCategoria = filtroPorCategoria.filter(producto => precioMin.value <= producto.precioProducto && precioMax.value >= producto.precioProducto)
+        filtroPorCategoria = filtroPorCategoria.sort((a, b) => a.precioProducto - b.precioProducto)
+        console.log('precieando')
+    }
+    console.log("Filtro por categoria 😁😁😁😁", filtroPorCategoria);
+    // console.log('response desde categoria', filtroPorCategoria);
     productos.value = filtroPorCategoria
 }
 
@@ -162,13 +226,18 @@ const mostrarPrecios = () => {
 }
 
 .boton-precio .q-btn {
-    background-color: #d2e8e6; /* Color de fondo verde */
-    transition: background-color 0.3s, color 0.3s; /* Transición suave */
+    background-color: #d2e8e6;
+    /* Color de fondo verde */
+    transition: background-color 0.3s, color 0.3s;
+    /* Transición suave */
 }
+
 @media (max-width: 600px) {
     .boton-precio .q-btn {
-        padding: 8px 16px; /* Espaciado interno más pequeño */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
+        padding: 8px 16px;
+        /* Espaciado interno más pequeño */
+        font-size: 12px;
+        /* Tamaño de fuente más pequeño */
     }
 }
 </style>

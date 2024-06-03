@@ -59,12 +59,34 @@ const quasar = useQuasar()
 
 const router = useRouter()
 
+const emits = defineEmits(['loaded', 'reloaded'])
+
+const props = defineProps({
+  reload: Boolean
+})
+
+
+watch(() => props.reload, () => {
+  if (props.reload) {
+    console.log('reload!!!!')
+    emits('reloaded', true)
+  }
+})
+
 // FUCNIONES
 
 // FUNCION PARA CARGAR LOS PRODUCTOS  ANTES DE QUE SE MONTE EL COMPONENTE
-onBeforeMount(async () => {
-    await cargarProductos();
-    console.log("Productos cargados en el componente card del admin", productos.value);
+// onBeforeMount(async () => {
+//     await cargarProductos();
+//     console.log("Productos cargados en el componente card del admin", productos.value);
+// })
+
+onBeforeMount(() => {
+  cargarProductos().then(() => {
+    emits('loaded', true)
+  });
+
+  // console.log("Productos cargados en el componente card", productos.value);
 })
 
 function goTo(item) {

@@ -34,15 +34,17 @@
             </div>
         </div>
         <div>
-            <template v-if="productos.length > 0">
-                <BarraDeBusquedaAdmin />
+            <template v-if="loaded">
+                <template v-if="productos.length >= 0">
+                    <BarraDeBusquedaAdmin :reload="reload" @reloaded="reload = false" />
+                </template>
             </template>
         </div>
         <q-btn @click="regresar" flat dense class="custom-regresar-button">
             Volver <q-icon name="mdi-refresh" />
         </q-btn>
         <div>
-            <CardProductoAdmin />
+            <CardProductoAdmin @loaded="loaded = true" />
         </div>
     </div>
 </template>
@@ -55,6 +57,9 @@ import { productoAdminComposable } from '~/composables/productoAdminComposable';
 definePageMeta({
     role: ['ROLE_ADMIN']
 });
+
+const loaded = ref(false)
+const reload = ref(false)
 
 // RUTAS
 const router = useRouter()
@@ -84,7 +89,7 @@ const todoPedidos = () => {
 };
 
 const regresar = () => {
-  window.location.reload();
+    reload.value = true
 };
 
 
@@ -139,14 +144,14 @@ const regresar = () => {
 }
 
 .boton-mi-perfil:hover {
-    background-color:  #464646;
+    background-color: #464646;
 }
 
 // BOTON DE PRODUCTO
 .boton-producto {
     // margin-top: 20px;
     /* Color naranja */
-    background-color:gray;
+    background-color: gray;
     /* Texto blanco */
     color: black;
     transition: background-color 0.3s;
@@ -155,7 +160,7 @@ const regresar = () => {
 }
 
 .boton-producto:hover {
-    background-color:  #464646;
+    background-color: #464646;
 }
 
 // BOTON DE USUARIOS
@@ -171,7 +176,8 @@ const regresar = () => {
 }
 
 .boton-usuarios:hover {
-    background-color:  #464646;;
+    background-color: #464646;
+    ;
 }
 
 // BOTON DE USUARIOS
@@ -187,6 +193,7 @@ const regresar = () => {
 }
 
 .boton-pedidos:hover {
-    background-color:  #464646;;
+    background-color: #464646;
+    ;
 }
 </style>

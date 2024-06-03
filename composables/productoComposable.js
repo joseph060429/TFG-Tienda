@@ -28,10 +28,14 @@ export const productoComposable = () => {
         return await store.buscarProductoPorEspecificacion(especificacionProducto)
     }
 
-    const buscarProductosPorRangoPrecio = async(precioMinimo, precioMaximo) =>{
-        return await store.buscarProductosPorRangoPrecio(precioMinimo,precioMaximo)
-    }
+    // const buscarProductosPorRangoPrecio = async(precioMinimo, precioMaximo) =>{
+    //     return await store.buscarProductosPorRangoPrecio(precioMinimo,precioMaximo)
+    // }
 
+
+    const buscarProductosPorRangoPrecio = async(precioMinimo, precioMaximo, categoria, marca) =>{
+        return await store.buscarProductosPorRangoPrecio(precioMinimo, precioMaximo, categoria, marca)
+    }
 
 
     // EXPORTO LAS FUNCIONES PARA PODER USARLA EN LAS VISTAS POR EJEMPLO

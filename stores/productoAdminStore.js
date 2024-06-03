@@ -174,7 +174,7 @@ export const productoAdminStore = defineStore({
       }
     },
 
-    async buscarProductosPorRangoPrecioAdmin(precioMinimo, precioMaximo) {
+    async buscarProductosPorRangoPrecioAdmin(precioMinimo, precioMaximo, categoria, marca) {
       const token = localStorage.getItem("token");
       try {
         const response = await useAxiosInstance().get(
@@ -187,6 +187,8 @@ export const productoAdminStore = defineStore({
             params: {
               precioMin: precioMinimo,
               precioMax: precioMaximo,
+              categoria: categoria,
+              marca: marca
             },
           }
         );

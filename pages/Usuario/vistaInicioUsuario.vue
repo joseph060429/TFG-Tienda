@@ -25,8 +25,7 @@
           @cerrarFormulario="(v) => actualizarPedidos(v)"></formulario-actualizar-direccion-envio>
 
         <historial-pedidos v-model="verPedidos" @mostrarCambiarDireccion="(v) => mostrarFormuDireccionEnvio = true"
-          :actualizadaDireccion = "actualizadaDireccion"
-          ref="testHistorial" />
+          :actualizadaDireccion="actualizadaDireccion" ref="testHistorial" />
         <!-- Botón para ver pedidos -->
         <q-btn @click="verMisPedidos" class="boton-ver-pedidos" label="Ver mis pedidos">
           <q-icon name="mdi-package-variant-closed" style="color:black" /> <!-- Icono de eliminar perfil -->
@@ -42,18 +41,17 @@
 
     </div>
     <div>
-      <template v-if="productos.length > 0">
-        <BarraDeBusquedaUsuario />
+      <template v-if="loaded">
+        <template v-if="productos.length >= 0">
+          <BarraDeBusquedaUsuario :reload="reload" @reloaded="reload = false" />
+        </template>
       </template>
     </div>
     <q-btn @click="regresar" flat dense class="custom-regresar-button">
       Volver <q-icon name="mdi-refresh" />
     </q-btn>
-
-
-
     <div>
-      <CardProducto />
+      <CardProducto @loaded="loaded = true" />
     </div>
   </div>
 </template>
@@ -71,6 +69,10 @@ definePageMeta({
 
 //USAR QUASAR
 const quasar = useQuasar()
+
+
+const loaded = ref(false)
+const reload = ref(false)
 
 let authStore = useAuthStore();
 const { productos } = productoComposable();
@@ -121,7 +123,7 @@ const verMiCarrito = () => {
 
 
 const regresar = () => {
-  window.location.reload();
+  reload.value = true
 };
 </script>
 
