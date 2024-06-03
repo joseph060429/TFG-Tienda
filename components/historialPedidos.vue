@@ -159,7 +159,7 @@ const cancelarPedido = async () => {
       mostrarAlertaError('Error al cancelar el pedido: Pedido no encontrado', quasar);
     } else if (response.status === 401) {
       // Si el usuario no tiene permiso para cancelar el pedido, muestro un mensaje de error
-      mostrarAlertaError('Error al cancelar el pedido: Solo puedes cancelar tus pedidos', quasar);
+      mostrarAlertaError('Error al cancelar el pedido: Pedido no encontrado', quasar);
     } else if (response.status === 400) {
       // Si el pedido no es cancelable por algún motivo, muestro un mensaje de error
       mostrarAlertaError('Pedido no cancelable: ya ha sido cancelado o tiene otro estado.', quasar);
