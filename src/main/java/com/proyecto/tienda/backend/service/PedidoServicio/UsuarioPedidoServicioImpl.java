@@ -611,7 +611,8 @@ public class UsuarioPedidoServicioImpl implements UsuarioPedidoServicio {
             }
 
             UsuarioModelo usuario = usuarioModelo.get();
-            List<PedidosModelo> pedidos = pedidoRepositorio.findByUsuario(usuario);
+            // List<PedidosModelo> pedidos = pedidoRepositorio.findByUsuario(usuario);
+            List<PedidosModelo> pedidos = pedidoRepositorio.findByUsuario_Id(usuario.get_id());
 
             List<PedidoInfoDTO> pedidosDTO = pedidos.stream()
                     .map(this::mapPedidoToDTO)
