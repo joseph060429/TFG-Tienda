@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
-
 // ESTO SON LAS CONSULTAS CLAVES DE SPRING DATA, AL IGUAL QUE TODOS LOS REPOSITORIOS
 @Repository
 public interface ProductoRepositorio extends MongoRepository<ProductoModelo, String> {
@@ -40,8 +39,9 @@ public interface ProductoRepositorio extends MongoRepository<ProductoModelo, Str
   // CONSULTA PERSONALIZADA EN MONGODB QUE BUSCA DOCUMENTOS DONDE EL CAMPO
   // PRECIOPRODUCTO ESTÉ ENTRE LOS VALORES PROPORCIONADOS
   // ($GTE SIGNIFICA "MAYOR O IGUAL QUE" Y $LTE SIGNIFICA "MENOR O IGUAL QUE").
-  @Query("{ 'precioProducto' : { $gte: ?0, $lte: ?1 } }")
-  Page<ProductoModelo> findByPrecioProductoBetween(double precioMin, double precioMax, Pageable pageable);
+  // @Query("{ 'precioProducto' : { $gte: ?0, $lte: ?1 } }")
+  // Page<ProductoModelo> findByPrecioProductoBetween(double precioMin, double
+  // precioMax, Pageable pageable);
 
   // CONSULTA DE BUSQUEDA POR MARCA DEL PRODUCTO IGNORANDO MAYUSCULAS Y MINUSCULAS
   Page<ProductoModelo> findByMarcaProductoContainingIgnoreCase(String marca, Pageable pageable);
@@ -52,8 +52,10 @@ public interface ProductoRepositorio extends MongoRepository<ProductoModelo, Str
   // CONSULTA PARA ELIMINAR UN PRODUCTO
   Optional<ProductoModelo> deleteBy_id(String _id);
 
-  // CONSULTA PERSONALIZADA EN MONGODB QUE BUSCA PRODUCTOS DONDE ALGUNO DE LOS CAMPOS
-  // COINCIDA CON LA EXPRESIÓN REGULAR PROPORCIONADA, IGNORANDO MAYÚSCULAS Y MINÚSCULAS.
+  // CONSULTA PERSONALIZADA EN MONGODB QUE BUSCA PRODUCTOS DONDE ALGUNO DE LOS
+  // CAMPOS
+  // COINCIDA CON LA EXPRESIÓN REGULAR PROPORCIONADA, IGNORANDO MAYÚSCULAS Y
+  // MINÚSCULAS.
   @Query("{" +
       "'$or': [" +
       "{ 'categoriaProducto': { '$regex' : ?0, '$options': 'i' } }," +
@@ -70,7 +72,23 @@ public interface ProductoRepositorio extends MongoRepository<ProductoModelo, Str
   // CONSULTA DE BUSQUEDA POR CUALQUIER ESPECIFICACION
   Page<ProductoModelo> findByAllFieldsContainingIgnoreCase(String especificacion, Pageable pageable);
 
+  // @Query("{ 'precioProducto' : { $gte: ?0, $lte: ?1 } }")
+  // Page<ProductoModelo> findByPrecioProductoBetween(double precioMin, double
+  // precioMax, Pageable pageable);
 
-  
+  @Query("{ 'precioProducto' : { $gte: ?0, $lte: ?1 } }")
+  Page<ProductoModelo> findByPrecioProductoBetween(double precioMin, double precioMax, Pageable pageable);
+
+  @Query("{ 'precioProducto' : { $gte: ?0, $lte: ?1 }, 'categoriaProducto': { $regex: ?2, $options: 'i' } }")
+  Page<ProductoModelo> findByPrecioProductoBetweenAndCategoriaProducto(double precioMin, double precioMax,
+      String categoria, Pageable pageable);
+
+  @Query("{ 'precioProducto' : { $gte: ?0, $lte: ?1 }, 'marcaProducto': { $regex: ?2, $options: 'i' } }")
+  Page<ProductoModelo> findByPrecioProductoBetweenAndMarcaProducto(double precioMin, double precioMax, String marca,
+      Pageable pageable);
+
+  @Query("{ 'precioProducto' : { $gte: ?0, $lte: ?1 }, 'categoriaProducto': { $regex: ?2, $options: 'i' }, 'marcaProducto': { $regex: ?3, $options: 'i' } }")
+  Page<ProductoModelo> findByPrecioProductoBetweenAndCategoriaProductoAndMarcaProducto(double precioMin,
+      double precioMax, String categoria, String marca, Pageable pageable);
 
 }

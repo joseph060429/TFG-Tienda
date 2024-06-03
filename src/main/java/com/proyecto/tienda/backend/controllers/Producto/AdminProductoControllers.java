@@ -149,19 +149,17 @@ public class AdminProductoControllers {
     public ResponseEntity<List<Map<String, Object>>> buscarProductosPorRangoDePrecio(
             @RequestParam(required = false) Optional<Double> precioMin,
             @RequestParam(required = false) Optional<Double> precioMax,
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String marca,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "1000") int size) {
-        try {
-            // Obtener el valor o usar 0 si está ausente
-            double min = precioMin.orElse(0.0);
-            double max = precioMax.orElse(Double.MAX_VALUE);
 
-            List<Map<String, Object>> productos = adminProductoServicio.buscarProductosPorRangoDePrecio(min, max,
-                    page, size);
-            return ResponseEntity.ok(productos);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null);
-        }
+        double min = precioMin.orElse(0.0);
+        double max = precioMax.orElse(Double.MAX_VALUE);
+
+        List<Map<String, Object>> productos = adminProductoServicio.buscarProductosPorRangoDePrecio(min, max, categoria,
+                marca, page, size);
+        return ResponseEntity.ok(productos);
     }
 
 }

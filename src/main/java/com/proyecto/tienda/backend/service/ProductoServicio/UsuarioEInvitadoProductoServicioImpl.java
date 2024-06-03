@@ -178,14 +178,63 @@ public class UsuarioEInvitadoProductoServicioImpl implements UsuarioEInvitadoPro
     }
 
     // IMPLEMENTACION DEL METODO PARA HACER UNA BUSQUEDA DE PRECIO
+    // @Override
+    // public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double
+    // precioMin, double precioMax, int page,
+    // int size) {
+    // Pageable pageable = PageRequest.of(page, size);
+
+    // try {
+    // Page<ProductoModelo> productosPage =
+    // productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax,
+    // pageable);
+
+    // List<Map<String, Object>> productosResponse = new ArrayList<>();
+
+    // for (ProductoModelo producto : productosPage.getContent()) {
+    // Map<String, Object> mapaProductos = new HashMap<>();
+    // mapaProductos.put("_id", producto.get_id());
+    // mapaProductos.put("descripcionProducto", producto.getDescripcionProducto());
+    // mapaProductos.put("categoriaProducto", producto.getCategoriaProducto());
+    // mapaProductos.put("nombreProducto", producto.getNombreProducto());
+    // mapaProductos.put("precioProducto", producto.getPrecioProducto());
+    // mapaProductos.put("marcaProducto", producto.getMarcaProducto());
+    // mapaProductos.put("especificacionesTecnicas",
+    // producto.getEspecificacionesTecnicas());
+    // mapaProductos.put("imagenProducto", producto.getImagenProducto());
+    // mapaProductos.put("disponibilidad", producto.isDisponibilidadProducto());
+
+    // productosResponse.add(mapaProductos);
+    // }
+    // return productosResponse;
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // // Mensaje de error, DEVUELVO LA LISTA VACÍA
+    // System.out.println("Error al buscar productos por rango de precio: " +
+    // e.getMessage());
+    // return Collections.emptyList();
+    // }
+    // }
+
     @Override
-    public List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax, int page,
-            int size) {
+    public List<Map<String, Object>> buscarProductosPorRango(double precioMin, double precioMax, String categoria,
+            String marca, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         try {
-            Page<ProductoModelo> productosPage = productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax,
-                    pageable);
+            Page<ProductoModelo> productosPage;
+            if (categoria != null && marca != null) {
+                productosPage = productoRepositorio.findByPrecioProductoBetweenAndCategoriaProductoAndMarcaProducto(
+                        precioMin, precioMax, categoria, marca, pageable);
+            } else if (categoria != null) {
+                productosPage = productoRepositorio.findByPrecioProductoBetweenAndCategoriaProducto(precioMin,
+                        precioMax, categoria, pageable);
+            } else if (marca != null) {
+                productosPage = productoRepositorio.findByPrecioProductoBetweenAndMarcaProducto(precioMin, precioMax,
+                        marca, pageable);
+            } else {
+                productosPage = productoRepositorio.findByPrecioProductoBetween(precioMin, precioMax, pageable);
+            }
 
             List<Map<String, Object>> productosResponse = new ArrayList<>();
 

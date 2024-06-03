@@ -19,7 +19,9 @@ public interface UsuarioEInvitadoProductoServicio {
     List<Map<String, Object>> buscarProductosPorEspecificacion(String especificacion, int page, int size);
 
     // METODO PARA BUSCAR PRODUCTOS POR EL RANGO DE PRECIO
-    List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax, int page, int size);
+    // List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax, int page, int size);
+    List<Map<String, Object>> buscarProductosPorRango(double precioMin, double precioMax, String categoria,
+            String marca, int page, int size);
 
     // METODO PARA LISTAR UN PRODUCTO POR ID
     ResponseEntity<?> listarUnProducto(String _id);

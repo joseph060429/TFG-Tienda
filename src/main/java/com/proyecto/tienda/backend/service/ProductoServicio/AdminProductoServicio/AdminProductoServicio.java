@@ -34,7 +34,7 @@ public interface AdminProductoServicio {
 
         // METODO PARA BUSCAR POR RANGO DE PRECIO
         List<Map<String, Object>> buscarProductosPorRangoDePrecio(double precioMin, double precioMax,
-                        int page, int size);
+            String categoria, String marca, int page, int size);
 
         // METODO PARA LISTAR TODOS LOS PRODUCTOS
         Page<ProductoModelo> listarProductosAdmin(int page, int size);
