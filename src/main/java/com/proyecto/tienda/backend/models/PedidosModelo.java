@@ -39,7 +39,7 @@ public class PedidosModelo {
 
     // Le pongo JsonIgnore para que no aparezca en el JSON con el usuario completo,
     // solo con el dto que es lo que quiero
-    @DBRef
+    // @DBRef
     @Field("id_usuario")
     // @JsonIgnore
     private UsuarioModelo usuario;
