@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- Título principal -->
-    <h1 class="title">Bienvenido/a, {{ nombre }}</h1>
+    <h1 class="title">Bienvenido/a Usuario, {{ nombre }}</h1>
     <!-- Sección del perfil -->
     <div class="botones">
       <div class="perfil">
