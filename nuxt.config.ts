@@ -17,20 +17,40 @@ export default defineNuxtConfig({
       },
     },
     plugins: ["Notify"],
-    
+
   },
 
   plugins: [
     '~/plugins/axios.js', // Ruta del archivo del plugin de Axios
-    
+
   ],
-  css:[
+  css: [
     '~/assets/main.scss'
   ],
   // Para que solo funcionen como SPA es decir que no me deje visualizar nada de la pagina en la que esta sin estar autenticado
   routeRules: {
-    '/usuario/**' : { ssr: false },
-    '/admin/**' : { ssr: false },
-    
-  }
+    '/usuario/**': { ssr: false },
+    '/admin/**': { ssr: false },
+
+  },
+
+  //Quitar los logs 
+  vite: {
+    esbuild: {
+      drop: ['debugger'],
+      pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
+    },
+  },
+
+
+  nitro: {
+    esbuild: {
+      options: {
+        drop: ["console"],
+      },
+    },
+  },
+
+  
+
 });
