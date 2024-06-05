@@ -174,6 +174,7 @@ const regresar = () => {
   width: 45vh;
   box-sizing: border-box;
   padding-top: 1%;
+  cursor: pointer;
 
   /* Media query para ajustar el ancho en dispositivos móviles */
 //     /* Media query para ajustar el ancho en dispositivos móviles */
