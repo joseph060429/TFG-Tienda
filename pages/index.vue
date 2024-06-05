@@ -45,7 +45,10 @@ const regresar = () => {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  height: 70vh;
+  height: auto;
+  // background-color: red;
+  padding-bottom: 4em;
+  margin: 0 auto;
 }
 
 .card-producto {

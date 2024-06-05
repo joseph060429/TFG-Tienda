@@ -136,9 +136,8 @@ const regresar = () => {
   margin: 0 auto;
   /* Relleno */
   /* 1% de la altura de la ventana */
-  // padding: 2vh;
-  height: 80vh;
-  // background-color: black;
+  padding-bottom: 4em;
+  height: auto;
 }
 
 /* TITULO */

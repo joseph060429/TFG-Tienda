@@ -97,15 +97,11 @@ const regresar = () => {
 
 <style lang="scss" scoped>
 .container {
-    /* Ancho máximo del contenedor */
     max-width: 100%;
-    // height: 20vh;
-    /* Centrar horizontalmente */
     margin: 0 auto;
-    /* Relleno */
-    /* 1% de la altura de la ventana */
-    // padding: 2vh;
-    height: 80vh;
+    height: auto;
+    padding-bottom: 4em;
+
 }
 
 /* TITULO */
