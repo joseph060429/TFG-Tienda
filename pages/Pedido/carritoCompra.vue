@@ -203,6 +203,8 @@ const esNumero = (val) => {
 .input-custom {
     text-align: center;
     margin: auto;
+    height: 4vh;
+    padding: 0;
 }
 
 
