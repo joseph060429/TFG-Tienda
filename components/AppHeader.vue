@@ -128,7 +128,8 @@ const cerrarSesion = () => {
   padding-bottom: 0;
   margin: 0;
   height: 10vh;
-
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .logo-container {
@@ -141,7 +142,6 @@ const cerrarSesion = () => {
 }
 
 .header-text {
-  color: white;
   font-size: 1.9em;
   margin-right: 20px;
   text-transform: uppercase;
@@ -152,12 +152,9 @@ const cerrarSesion = () => {
   font-weight: bold;
   /* Texto en negrita */
   font-family: 'Arial', sans-serif;
-  /* Tipo de fuente personalizado */
-  text-transform: uppercase;
   /* Convertir el texto a mayúsculas */
   letter-spacing: 2px;
-  /* Espaciado entre letras */
-  margin-right: 20px;
+  overflow: hidden;
 }
 
 .custom-btn {
@@ -193,6 +190,83 @@ const cerrarSesion = () => {
   .custom-btn {
     font-size: 0.75rem;
     /* Tamaño de fuente más pequeño para botones en dispositivos pequeños */
+  }
+}
+
+@media (max-width: 1340px) {
+  .header-text {
+    font-size: 1.7em;
+    margin-right: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+    // display: none;
+  }
+}
+
+
+
+@media (max-width: 1248px) {
+  .header-text {
+    font-size: 1.5em;
+    margin-right: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+}
+
+
+@media (max-width: 1200px) {
+  .header-text {
+    font-size: 1.5em;
+    margin-right: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+
+  }
+}
+
+
+@media (max-width: 1160px) {
+  .header-text {
+    font-size: 1.2em;
+    margin-right: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+
+  }
+}
+
+
+@media (max-width: 1038px) {
+  .header-text {
+    font-size: 1em;
+    margin-right: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+
+  }
+}
+
+
+@media (max-width: 992px) {
+  .header-text {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-text {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-text {
+    display: none;
   }
 }
 </style>
