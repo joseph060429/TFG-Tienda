@@ -276,7 +276,7 @@ const regresar = () => {
 /* Estilos para dispositivos extra pequeños */
 @media (max-width: 976px) {
   .b-tn-eliminar {
-    top: 23.5%;
+    top: 24.5%;
     bottom: 96%;
     margin-right: 2%;
     position: absolute;
