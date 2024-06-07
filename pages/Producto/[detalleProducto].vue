@@ -165,11 +165,9 @@ const agregarAlCarrito = async () => {
   margin: 0 auto;
 }
 
-// // El boton del carrito se pone abajo del todo
 @media only screen and (max-width: 600px) {
   .info-section {
     padding: 5px;
-
   }
 
   .image-section {
@@ -210,16 +208,32 @@ const agregarAlCarrito = async () => {
   background-color: #3b8af9;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
 
   /* Estilos responsivos para dispositivos móviles */
   .btn-anadir-carrito {
-    top: 11%;
+    top: 20%;
     bottom: 96%;
     margin-right: 2%;
     position: absolute;
     right: 0px;
-    font-size: 13px;
+    padding-bottom: 30px;
+    font-size: 11px;
   }
+}
+
+
+@media (max-width: 840px) {
+
+/* Estilos responsivos para dispositivos móviles */
+.btn-anadir-carrito {
+  top: 20%;
+  bottom: 96%;
+  margin-right: 2%;
+  position: absolute;
+  right: 30px;
+  padding-bottom: 30px;
+  font-size: 11px;
+}
 }
 </style>

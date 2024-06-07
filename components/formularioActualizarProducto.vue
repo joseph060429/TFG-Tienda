@@ -94,10 +94,10 @@
                             </q-input>
 
                             <!-- Campo imagenProducto -->
-                            <q-file v-model="datosProductoActualizar.imagen" @update:model-value="onFileChange" filled
+                            <q-file ref="imgProducto" v-model="datosProductoActualizar.imagen" @update:model-value="onFileChange" filled
                                 label="Imagen del Producto *">
                                 <template v-slot:append>
-                                    <q-icon name="mdi-paperclip" />
+                                    <q-icon name="mdi-paperclip" @click="pickFile()" class="cursor-pointer" />
                                     <q-icon name="mdi-close" @click.stop.prevent="datosProductoActualizar.imagen = null"
                                         class="cursor-pointer" />
 
@@ -151,6 +151,14 @@ const router = useRouter()
 
 //USAR QUASAR
 const quasar = useQuasar()
+
+const imgProducto = ref(null)
+
+
+// pickFiles es de Quasar
+function pickFile() {
+    imgProducto.value.pickFiles();
+}
 
 // DECLARACION DE VARIABLES
 const datosProductoActualizar = reactive({

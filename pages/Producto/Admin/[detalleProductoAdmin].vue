@@ -1,9 +1,9 @@
 <template>
   <q-btn @click="regresar" flat dense icon="mdi-arrow-left" class="custom-regresar-button" />
   <FormularioActualizarProducto v-if="mostrarFormularioEditarProducto" v-model="mostrarFormularioEditarProducto" />
-  <q-btn @click="abrirFormulario" label="Actualizar" icon="mdi-update" class="b-tn-actualizar"/>
+  <q-btn @click="abrirFormulario" label="Actualizar" icon="mdi-update" class="button b-tn-actualizar" />
   <EliminarProducto v-if="mostrarEliminarProducto" v-model="mostrarEliminarProducto" />
-  <q-btn @click="eliminarProducto" label="Eliminar"  icon="mdi-delete" class="b-tn-eliminar" />
+  <q-btn @click="eliminarProducto" label="Eliminar" icon="mdi-delete" class="button b-tn-eliminar" />
   <div style="overflow: auto;">
     <div class="q-pa-xs" style="width: 90%; max-height: 100vh; margin: auto">
       <!-- Sección de información del producto -->
@@ -15,7 +15,7 @@
         </div>
         <br>
         <div class="text-subtitle1" style="margin-bottom: 4px;">
-          <strong> CATEGORÍA: </strong> {{ productoAdmin.categoriaProducto}}
+          <strong> CATEGORÍA: </strong> {{ productoAdmin.categoriaProducto }}
         </div>
         <br>
         <!-- Identificador del producto -->
@@ -192,42 +192,36 @@ const regresar = () => {
   position: relative;
 }
 
-/* Estilos para el botón "Añadir al carrito" */
-.b-tn-eliminar {
-  /* Posiciona el botón de forma absoluta dentro de la tarjeta */
+
+.button {
   position: fixed;
+  z-index: 1;
+  font-size: 16px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+/* Estilos para el botón "Eliminar" */
+.b-tn-eliminar {
   top: 15%;
   right: 3%;
-  /* Para que esté por encima del contenido */
-  z-index: 1;
-  // padding: 10px 20px;
-  border-radius: 20px;
   background-color: #ff4757;
   color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .b-tn-eliminar:hover {
-  background-color:red
+  background-color: red
 }
 
+
 .b-tn-actualizar {
-  /* Posiciona el botón de forma absoluta dentro de la tarjeta */
-  position: fixed;
   top: 15%;
   right: 15%;
-  /* Para que esté por encima del contenido */
-  z-index: 1;
-  padding: 10px 20px;
   border-radius: 20px;
   background-color: #3b8af9;
   color: white;
   font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
@@ -235,7 +229,7 @@ const regresar = () => {
   background-color: #1e6fd4;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 652px) {
 
   /* Estilos responsivos para dispositivos móviles */
   .b-tn-eliminar {
@@ -247,13 +241,107 @@ const regresar = () => {
     font-size: 13px;
   }
 
-  .b-tn-actualizar{
+  .b-tn-actualizar {
     top: 20%;
     bottom: 96%;
     margin-right: 2%;
     position: absolute;
     right: 0px;
     font-size: 13px;
+  }
+}
+
+
+@media (max-width: 1160px) {
+
+  /* Estilos responsivos para dispositivos móviles */
+  .b-tn-eliminar {
+    top: 24.5%;
+    bottom: 96%;
+    margin-right: 2%;
+    position: absolute;
+    right: 60px;
+    font-size: 13px;
+  }
+
+  .b-tn-actualizar {
+    top: 20%;
+    bottom: 96%;
+    margin-right: 2%;
+    position: absolute;
+    right: 60px;
+    font-size: 13px;
+  }
+
+  .button {
+    width: 180px;
+  }
+}
+
+
+
+
+/* Estilos para dispositivos medianos */
+@media (max-width: 1270px) {
+  .button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+}
+
+/* Estilos para dispositivos pequeños */
+@media (max-width: 1134px) {
+  .button {
+    font-size: 12px;
+    padding: 6px 12px;
+    margin-right: 1em;
+  }
+}
+
+/* Estilos para dispositivos extra pequeños */
+@media (max-width: 987px) {
+  .button {
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 15px;
+  }
+}
+
+@media (max-width: 850px) {
+  .button {
+    font-size: 9px;
+    padding: 4px 10px;
+    border-radius: 15px;
+  }
+}
+
+
+@media (max-width: 776px) {
+  .button {
+    font-size: 8px;
+    padding: 4px 10px;
+    border-radius: 15px;
+    margin-top: 5em;
+  }
+}
+
+
+@media (max-width: 734px) {
+  .button {
+    font-size: 7px;
+    padding: 4px 10px;
+    border-radius: 15px;
+    margin-top: 5em;
+  }
+}
+
+@media (max-width: 650px) {
+  .button {
+    font-size: 7px;
+    padding: 4px 10px;
+    border-radius: 15px;
+    margin-top: 5em;
   }
 }
 </style>

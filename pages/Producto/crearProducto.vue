@@ -98,10 +98,10 @@
                     </q-input>
 
                     <!-- Campo imagenProducto -->
-                    <q-file v-model="datosProducto.imagen" @update:model-value="onFileChange" filled
+                    <q-file ref="imgProducto" v-model="datosProducto.imagen" @update:model-value="onFileChange" filled
                         label="Imagen del Producto *" :rules="[val => !!val || 'Por favor, selecciona una imagen']">
                         <template v-slot:append>
-                            <q-icon name="mdi-paperclip" />
+                            <q-icon name="mdi-paperclip" @click="pickFile()" class="cursor-pointer" />
                             <q-icon name="mdi-close" @click.stop.prevent="datosProducto.imagen = null"
                                 class="cursor-pointer" />
 
@@ -165,6 +165,15 @@ const datosProducto = reactive({
     especificacionesTecnicas: '',
     imagen: null
 })
+
+
+const imgProducto = ref(null)
+
+
+// pickFiles es de Quasar
+function pickFile() {
+    imgProducto.value.pickFiles();
+}
 
 // Subir imagen
 function onFileChange(event) {
