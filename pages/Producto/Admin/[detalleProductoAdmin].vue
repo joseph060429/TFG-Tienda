@@ -257,15 +257,16 @@ const regresar = () => {
 
 
 /* Estilos para dispositivos medianos */
-@media (max-width: 1024px) {
+@media (max-width: 1260px) {
   .button {
-    font-size: 14px;
+    font-size: 12px;
     padding: 8px 16px;
+    margin-right: 50px;
   }
 }
 
 /* Estilos para dispositivos pequeños */
-@media (max-width: 768px) {
+@media (max-width: 1055px) {
   .button {
     font-size: 12px;
     padding: 6px 12px;
@@ -273,16 +274,26 @@ const regresar = () => {
 }
 
 /* Estilos para dispositivos extra pequeños */
-@media (max-width: 480px) {
-  .button {
-    font-size: 10px;
-    padding: 4px 10px;
-    border-radius: 15px;
+@media (max-width: 976px) {
+  .b-tn-eliminar {
+    top: 23.5%;
+    bottom: 96%;
+    margin-right: 2%;
+    position: absolute;
+    font-size: 13px;
   }
 
-  .button-large {
-    top: 5%;
-    right: 10%;
+  .b-tn-actualizar {
+    top: 19%;
+    bottom: 96%;
+    margin-right: 2%;
+    position: absolute;
+    font-size: 13px;
+  }
+
+  .button{
+    width: 150px;
+    right: 30px;
   }
 }
 </style>
