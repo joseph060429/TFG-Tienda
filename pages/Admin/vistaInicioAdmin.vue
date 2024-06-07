@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <!-- Título principal -->
-        <h1 class="title">Bienvenido/a Admin, {{ nombre }}</h1>
+        <h1 class="title">Bienvenido(a) Admin, {{ nombre }}</h1>
         <!-- Sección del perfil -->
         <div class="botones">
             <div class="perfil">
@@ -119,6 +119,34 @@ const regresar = () => {
     /* Sombra de texto */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
+
+/* Pantallas medianas */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 2em;
+    margin-bottom: 18px;
+  }
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5em;
+    margin-bottom: 16px;
+  }
+}
+
+/* Pantallas extra pequeñas */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.2em;
+    margin-bottom: 14px;
+  }
+}
+
+
+
+
 
 // CONTENEDOR BOTONES
 .botones {
