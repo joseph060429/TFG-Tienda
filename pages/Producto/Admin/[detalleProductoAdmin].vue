@@ -293,7 +293,7 @@ const regresar = () => {
 
   .button {
     width: 150px;
-    right: 30px;
+    right: 20px;
   }
 }
 </style>
