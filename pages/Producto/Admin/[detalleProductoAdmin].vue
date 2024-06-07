@@ -229,7 +229,7 @@ const regresar = () => {
   background-color: #1e6fd4;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
 
   /* Estilos responsivos para dispositivos móviles */
   .b-tn-eliminar {
@@ -250,7 +250,7 @@ const regresar = () => {
     font-size: 13px;
   }
 
-  .button{
+  .button {
     width: 150px;
   }
 }
@@ -291,7 +291,7 @@ const regresar = () => {
     font-size: 13px;
   }
 
-  .button{
+  .button {
     width: 150px;
     right: 30px;
   }
