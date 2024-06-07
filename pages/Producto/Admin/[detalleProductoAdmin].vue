@@ -229,7 +229,7 @@ const regresar = () => {
   background-color: #1e6fd4;
 }
 
-@media (max-width: 652px) {
+@media (max-width: 600px) {
 
   /* Estilos responsivos para dispositivos móviles */
   .b-tn-eliminar {
@@ -249,99 +249,40 @@ const regresar = () => {
     right: 0px;
     font-size: 13px;
   }
-}
 
-
-@media (max-width: 1160px) {
-
-  /* Estilos responsivos para dispositivos móviles */
-  .b-tn-eliminar {
-    top: 24.5%;
-    bottom: 96%;
-    margin-right: 2%;
-    position: absolute;
-    right: 60px;
-    font-size: 13px;
-  }
-
-  .b-tn-actualizar {
-    top: 20%;
-    bottom: 96%;
-    margin-right: 2%;
-    position: absolute;
-    right: 60px;
-    font-size: 13px;
-  }
-
-  .button {
-    width: 180px;
+  .button{
+    width: 150px;
   }
 }
-
-
 
 
 /* Estilos para dispositivos medianos */
-@media (max-width: 1270px) {
+@media (max-width: 1024px) {
   .button {
     font-size: 14px;
     padding: 8px 16px;
   }
-
 }
 
 /* Estilos para dispositivos pequeños */
-@media (max-width: 1134px) {
+@media (max-width: 768px) {
   .button {
     font-size: 12px;
     padding: 6px 12px;
-    margin-right: 1em;
   }
 }
 
 /* Estilos para dispositivos extra pequeños */
-@media (max-width: 987px) {
+@media (max-width: 480px) {
   .button {
     font-size: 10px;
     padding: 4px 10px;
     border-radius: 15px;
   }
-}
 
-@media (max-width: 850px) {
-  .button {
-    font-size: 9px;
-    padding: 4px 10px;
-    border-radius: 15px;
-  }
-}
-
-
-@media (max-width: 776px) {
-  .button {
-    font-size: 8px;
-    padding: 4px 10px;
-    border-radius: 15px;
-    margin-top: 5em;
-  }
-}
-
-
-@media (max-width: 734px) {
-  .button {
-    font-size: 7px;
-    padding: 4px 10px;
-    border-radius: 15px;
-    margin-top: 5em;
-  }
-}
-
-@media (max-width: 650px) {
-  .button {
-    font-size: 7px;
-    padding: 4px 10px;
-    border-radius: 15px;
-    margin-top: 5em;
+  .button-large {
+    top: 5%;
+    right: 10%;
   }
 }
 </style>
